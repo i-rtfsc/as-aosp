@@ -1,0 +1,52 @@
+rootProject.name = "aosp"
+
+//ext fwk
+include ':i-ext-framework'
+include ':i-ext-services'
+
+include ':ext-framework'
+include ':ext-services'
+
+include ':test'
+
+//如果要编译demo app, 需要把以下原生模块都注释
+
+/*************** aosp ***************/
+include ':framework'
+include ':services'
+include ':framework-res'
+
+//SystemUI相关
+include ':SystemUI'
+include ':SystemUIPluginLib'
+
+//Settings相关
+include ':Settings'
+include ':SettingsLib'
+
+include ':SettingsProvider'
+/*************** aosp ***************/
+
+/*************** flyme ***************/
+include ':flyme-framework'
+include ':flyme-services'
+include ':flyme-framework-res'
+/*************** flyme ***************/
+
+/*************** miui ***************/
+include ':miui-framework'
+include ':miui-services'
+include ':miui-framework-res'
+/*************** miui ***************/
+
+/*************** oppo ***************/
+include ':oppo-framework'
+include ':oppo-services'
+include ':oppo-framework-res'
+/*************** oppo ***************/
+
+/*************** vivo ***************/
+include ':vivo-framework'
+include ':vivo-services'
+include ':vivo-framework-res'
+/*************** vivo ***************/

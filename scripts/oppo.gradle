@@ -1,0 +1,26 @@
+ext {
+    //设置源码所在的目录
+    oppoDir = "/home/solo/code/oppo"
+    if (org.gradle.internal.os.OperatingSystem.current().isMacOsX()) {
+        oppoDir = "/Users/solo/code/oppo"
+    }
+
+    /*************** 配置原生 oppo-fwk,oppo-services 路径 ***************/
+    oppoFrameworkDir = [
+            "$oppoDir/frameworks/base/core/java/",
+    ]
+
+    oppoServiceDir = [
+            "$oppoDir/frameworks/base/services/core/java/",
+            "$oppoDir/frameworks/base/services/java/",
+    ]
+    /*************** 配置原生 oppo-fwk,oppo-services 路径 ***************/
+
+    /*************** 配置 oppo-framework-res 路径 ***************/
+    oppoFrameworkResDir = [
+            "$oppoDir/frameworks/base/core/res/res",
+    ]
+
+    oppoFrameworkManifestDir = "$oppoDir/frameworks/base/core/res/AndroidManifest.xml"
+    /*************** 配置 oppo-framework-res 路径 ***************/
+}

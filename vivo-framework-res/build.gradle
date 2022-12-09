@@ -1,0 +1,20 @@
+ext {
+    BUILD_APPLICATION = false
+    BUILD_MANIFEST = rootProject.ext.vivoFrameworkManifestDir
+    BUILD_RES = rootProject.ext.vivoFrameworkResDir
+    BUILD_ASSETS = 'assets'
+    BUILD_SRC = 'src'
+    BUILD_AIDL = 'aidl'
+}
+
+apply from: "${rootDir}/scripts/android-build.gradle"
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    if (rootProject.ext.enable_boot_jar.toBoolean()) {
+        compileOnly fileTree(include: ['*.jar'], dir: '../system_libs')
+    }
+
+    rootProject.ext.allModules.each { dependence -> compileOnly project(dependence.value) }
+}
+

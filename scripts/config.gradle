@@ -1,0 +1,55 @@
+ext {
+    //app版本
+    versionCode = 1
+    versionName = "v1.0"
+
+    enable_boot_jar = false
+    build_app = false
+
+    //android开发版本配置
+    androidSdk = [
+            applicationId    : "com.android.extfwk",
+            buildToolsVersion: "30.0.3",
+            compileSdkVersion: 31,
+            targetSdkVersion : 31,
+            minSdkVersion    : 31,
+    ]
+
+    //列举所有的模块
+    allModules = [
+            "framework"          : ":framework",
+            "services"           : ":services",
+
+            "i-ext-framework"    : ":i-ext-framework",
+            "ext-framework"      : ":ext-framework",
+
+            "i-ext-services"     : ":i-ext-services",
+            "ext-services"       : ":ext-services",
+
+            "framework-res"      : ":framework-res",
+
+            "SettingsLib"        : ":SettingsLib",
+            "Settings"           : ":Settings",
+
+            "SystemUIPluginLib"  : ":SystemUIPluginLib",
+            "SystemUI"           : ":SystemUI",
+
+            "SettingsProvider"   : ":SettingsProvider",
+
+            "flyme-framework"    : ":flyme-framework",
+            "flyme-services"     : ":flyme-services",
+            "flyme-framework-res": ":flyme-framework-res",
+
+            "miui-framework"    : ":miui-framework",
+            "miui-services"     : ":miui-services",
+            "miui-framework-res": ":miui-framework-res",
+
+            "oppo-framework"    : ":oppo-framework",
+            "oppo-services"     : ":oppo-services",
+            "oppo-framework-res": ":oppo-framework-res",
+
+            "vivo-framework"    : ":vivo-framework",
+            "vivo-services"     : ":vivo-services",
+            "vivo-framework-res": ":vivo-framework-res",
+    ]
+}

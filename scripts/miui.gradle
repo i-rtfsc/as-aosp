@@ -1,0 +1,27 @@
+ext {
+    //设置源码所在的目录
+    miuiDir = "/home/solo/code/miui"
+    if (org.gradle.internal.os.OperatingSystem.current().isMacOsX()) {
+        miuiDir = "/Users/solo/code/miui"
+    }
+
+    /*************** 配置原生 miui-fwk,miui-services 路径 ***************/
+    miuiFrameworkDir = [
+            "$miuiDir/frameworks/base/core/java/",
+    ]
+
+    miuiServiceDir = [
+            "$miuiDir/frameworks/base/services/core/java/",
+            "$miuiDir/frameworks/base/services/java/",
+    ]
+    /*************** 配置原生 miui-fwk,miui-services 路径 ***************/
+
+    /*************** 配置 miui-framework-res 路径 ***************/
+    miuiFrameworkResDir = [
+            "$miuiDir/frameworks/base/core/res/res",
+            "$miuiDir/frameworks/base/core/res/toggle-res",
+    ]
+
+    miuiFrameworkManifestDir = "$miuiDir/frameworks/base/core/res/AndroidManifest.xml"
+    /*************** 配置 miui-framework-res 路径 ***************/
+}

@@ -1,0 +1,21 @@
+ext {
+    //设置扩展framework源码所在的目录
+    extDir = "/home/solo/code/aosp/ext-aosp"
+
+    /*************** 配置 ext 路径 ***************/
+    iExtFrameworkDir = [
+            "$extDir/frameworks/base/core/java/",
+    ]
+
+    iExtServiceDir = [
+            "$extDir/frameworks/base/services/core/java/",
+    ]
+
+    extFrameworkDir = [
+            "$extDir/frameworks/ext/core/java/",
+    ]
+    extServiceDir = [
+            "$extDir/frameworks/ext/services/core/java/",
+    ]
+    /*************** 配置 ext 路径 ***************/
+}

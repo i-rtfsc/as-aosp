@@ -1,0 +1,57 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+apply from: 'scripts/config.gradle'
+apply from: 'scripts/aosp.gradle'
+apply from: 'scripts/ext.gradle'
+apply from: 'scripts/miui.gradle'
+apply from: 'scripts/flyme.gradle'
+apply from: 'scripts/oppo.gradle'
+apply from: 'scripts/vivo.gradle'
+
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+        maven {
+            url 'http://maven.aliyun.com/repository/gradle-plugin/'
+            allowInsecureProtocol true
+        }
+        maven {
+            url 'http://maven.aliyun.com/repository/google/'
+            allowInsecureProtocol true
+        }
+        maven {
+            url 'http://maven.aliyun.com/repository/public/'
+            allowInsecureProtocol true
+        }
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:7.2.1'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.20"
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        maven {
+            url 'http://maven.aliyun.com/repository/gradle-plugin/'
+            allowInsecureProtocol true
+        }
+        maven {
+            url 'http://maven.aliyun.com/repository/google/'
+            allowInsecureProtocol true
+        }
+        maven {
+            url 'http://maven.aliyun.com/repository/public/'
+            allowInsecureProtocol true
+        }
+    }
+}
+
+task clean(type: Delete) {
+//    delete project(':test').buildDir
+    delete rootProject.buildDir
+}
+
+defaultTasks 'clean', 'assembleRelease'

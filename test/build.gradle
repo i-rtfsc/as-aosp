@@ -1,0 +1,20 @@
+ext {
+    BUILD_APPLICATION = true
+    BUILD_MANIFEST = 'AndroidManifest.xml'
+    BUILD_RES = 'res'
+    BUILD_ASSETS = 'assets'
+    BUILD_SRC = 'src'
+    BUILD_AIDL = 'aidl'
+}
+
+apply from: "${rootDir}/scripts/android-build.gradle"
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+
+    implementation project(':i-ext-framework')
+    implementation project(':i-ext-services')
+    implementation project(':ext-framework')
+    implementation project(':ext-services')
+
+}

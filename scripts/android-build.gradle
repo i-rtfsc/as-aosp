@@ -1,0 +1,112 @@
+if (BUILD_APPLICATION.toBoolean()) {
+    //作为独立App应用运行
+    apply plugin: 'com.android.application'
+} else {
+    //作为组件运行
+    apply plugin: 'com.android.library'
+}
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-parcelize'
+
+android {
+    def androidSdk = rootProject.ext.androidSdk
+    compileSdkVersion androidSdk.compileSdkVersion
+    buildToolsVersion androidSdk.buildToolsVersion
+    defaultConfig {
+        if (BUILD_APPLICATION.toBoolean()) {
+            applicationId androidSdk.applicationId
+            versionCode rootProject.ext.versionCode
+            versionName rootProject.ext.versionName
+        }
+        minSdkVersion androidSdk.minSdkVersion
+        targetSdkVersion androidSdk.targetSdkVersion
+    }
+
+    sourceSets {
+        main {
+            manifest.srcFile BUILD_MANIFEST
+            assets.srcDirs = [BUILD_ASSETS]
+            res.srcDirs = [BUILD_RES]
+            java.srcDirs = [BUILD_SRC]
+            aidl.srcDirs = [BUILD_AIDL]
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    if (BUILD_APPLICATION.toBoolean()) {
+        signingConfigs {
+            release {
+                storeFile file("${rootDir}/keystore/platform.jks")
+                storePassword 'android'
+                keyAlias 'platform'
+                keyPassword 'android'
+            }
+            debug {
+                storeFile file("${rootDir}/keystore/platform.jks")
+                storePassword 'android'
+                keyAlias 'platform'
+                keyPassword 'android'
+            }
+        }
+
+        buildTypes {
+            release {
+                zipAlignEnabled true
+                minifyEnabled false
+                proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), "${project.rootDir}/proguard-rules.pro"
+                if (BUILD_APPLICATION.toBoolean()) {
+                    signingConfig signingConfigs.release
+                }
+            }
+            debug {
+                zipAlignEnabled true
+                minifyEnabled false
+                proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), "${project.rootDir}/proguard-rules.pro"
+                if (BUILD_APPLICATION.toBoolean()) {
+                    signingConfig signingConfigs.debug
+                }
+            }
+        }
+    }
+
+    preBuild {
+        doLast {
+            def imlFile = file(project.name + ".iml")
+            println('Change ' + project.name + '.iml order')
+            try {
+                def parsedXml = (new XmlParser()).parse(imlFile)
+                def jdkNode = parsedXml.component[1].orderEntry.find { it.'@type' == 'jdk' }
+                parsedXml.component[1].remove(jdkNode)
+                def sdkString = "Android API " + android.compileSdkVersion.substring("android-".length()) + " Platform"
+                new groovy.util.Node(parsedXml.component[1], 'orderEntry', ['type': 'jdk', 'jdkName': sdkString, 'jdkType': 'Android SDK'])
+                groovy.xml.XmlUtil.serialize(parsedXml, new FileOutputStream(imlFile))
+            } catch (FileNotFoundException e) {
+                // nop, iml not found
+            }
+        }
+    }
+    gradle.projectsEvaluated {
+        tasks.withType(JavaCompile) {
+            Set<File> fileSet = options.bootstrapClasspath.getFiles()
+            List<File> newFileList = new ArrayList<>();
+            newFileList.add(new File("${rootDir}/system_libs/framework-minus-apex.jar"))
+            newFileList.addAll(fileSet)
+            options.bootstrapClasspath = files(newFileList.toArray())
+        }
+    }
+
+    if (BUILD_APPLICATION.toBoolean()) {
+        applicationVariants.all { variant ->
+            variant.outputs.all { output ->
+                def apkName = "ExtFwk.apk"
+                outputFileName = new File("./../../../../build/", apkName)
+                //logger.log(LogLevel.WARN, "----------> output apk = ${outputFileName}")
+            }
+        }
+    }
+}

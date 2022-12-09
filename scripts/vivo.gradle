@@ -1,0 +1,26 @@
+ext {
+    //设置源码所在的目录
+    vivoDir = "/home/solo/code/vivo"
+    if (org.gradle.internal.os.OperatingSystem.current().isMacOsX()) {
+        vivoDir = "/Users/solo/code/vivo"
+    }
+
+    /*************** 配置原生 vivo-fwk,vivo-services 路径 ***************/
+    vivoFrameworkDir = [
+            "$vivoDir/frameworks/base/core/java/",
+    ]
+
+    vivoServiceDir = [
+            "$vivoDir/frameworks/base/services/core/java/",
+            "$vivoDir/frameworks/base/services/java/",
+    ]
+    /*************** 配置原生 vivo-fwk,vivo-services 路径 ***************/
+
+    /*************** 配置 vivo-framework-res 路径 ***************/
+    vivoFrameworkResDir = [
+            "$vivoDir/frameworks/base/core/res/res",
+    ]
+
+    vivoFrameworkManifestDir = "$vivoDir/frameworks/base/core/res/AndroidManifest.xml"
+    /*************** 配置 miui-framework-res 路径 ***************/
+}

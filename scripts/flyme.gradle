@@ -1,0 +1,26 @@
+ext {
+    //设置源码所在的目录
+    flymeDir = "/home/solo/code/flyme"
+    if (org.gradle.internal.os.OperatingSystem.current().isMacOsX()) {
+        flymeDir = "/Users/solo/code/flyme"
+    }
+
+    /*************** 配置原生 flyme-fwk,flyme-services 路径 ***************/
+    flymeFrameworkDir = [
+            "$flymeDir/frameworks/base/core/java/",
+    ]
+
+    flymeServiceDir = [
+            "$flymeDir/frameworks/base/services/core/java/",
+            "$flymeDir/frameworks/base/services/java/",
+    ]
+    /*************** 配置原生 flyme-fwk,flyme-services 路径 ***************/
+
+    /*************** 配置 flyme-framework-res 路径 ***************/
+    flymeFrameworkResDir = [
+            "$flymeDir/frameworks/base/core/res/res",
+    ]
+
+    flymeFrameworkManifestDir = "$flymeDir/frameworks/base/core/res/AndroidManifest.xml"
+    /*************** 配置 miui-framework-res 路径 ***************/
+}
