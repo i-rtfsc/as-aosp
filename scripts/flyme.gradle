@@ -1,6 +1,6 @@
 ext {
     //设置源码所在的目录
-    flymeDir = "/home/solo/code/flyme"
+    flymeDir = "/home/solo/code/flyme/vendor/flyme"
     if (org.gradle.internal.os.OperatingSystem.current().isMacOsX()) {
         flymeDir = "/Users/solo/code/flyme"
     }
@@ -17,8 +17,10 @@ ext {
     /*************** 配置原生 flyme-fwk,flyme-services 路径 ***************/
 
     /*************** 配置 flyme-framework-res 路径 ***************/
+    flymeDir = "/home/solo/code/flyme"
     flymeFrameworkResDir = [
             "$flymeDir/frameworks/base/core/res/res",
+            "$flymeDir/frameworks/base/core/res/flyme-res",
     ]
 
     flymeFrameworkManifestDir = "$flymeDir/frameworks/base/core/res/AndroidManifest.xml"

@@ -1,6 +1,6 @@
 ext {
     //设置源码所在的目录
-    aospDir = "/home/solo/code/aosp"
+    aospDir = "/home/solo/code/flyme"
     if (org.gradle.internal.os.OperatingSystem.current().isMacOsX()) {
         aospDir = "/Users/solo/code/aosp"
     }
