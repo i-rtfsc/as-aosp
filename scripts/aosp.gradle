@@ -1,253 +1,282 @@
 ext {
+
     //设置源码所在的目录
     aospDir = "/home/solo/code/aosp"
     if (org.gradle.internal.os.OperatingSystem.current().isMacOsX()) {
         aospDir = "/Users/solo/code/aosp"
     }
 
-    /*************** 配置原生 fwk,services 路径 ***************/
-    //通过 frameworks/base/Android.bp的filegroup framework-non-updatable-sources
-    //找到大部分java文件目录，但还不是全部
-    frameworkDir = [
-            "$aospDir/frameworks/libs/modules-utils/java/",
-            "$aospDir/frameworks/base/apex/blobstore/framework/java",
-            "$aospDir/frameworks/base/core/java/",
-            "$aospDir/frameworks/base/drm/java/",
-            "$aospDir/frameworks/base/graphics/java/",
-            "$aospDir/frameworks/base/apex/jobscheduler/framework/java/",
-            "$aospDir/frameworks/base/keystore/java/",
-            "$aospDir/frameworks/base/identity/java/",
-            "$aospDir/frameworks/base/location/java/",
-            "$aospDir/frameworks/base/lowpan/java/",
-            "$aospDir/frameworks/base/media/mca/effect/java/",
-            "$aospDir/frameworks/base/media/mca/filterfw/java/",
-            "$aospDir/frameworks/base/media/mca/filterpacks/java/",
-            "$aospDir/frameworks/base/media/java/",
-            "$aospDir/frameworks/base/mms/java/",
-            "$aospDir/frameworks/base/omapi/java/",
-            "$aospDir/frameworks/base/opengl/java/",
-            "$aospDir/frameworks/base/rs/java/",
-            "$aospDir/frameworks/base/sax/java/",
-            "$aospDir/frameworks/base/telecomm/java/",
-            "$aospDir/frameworks/base/telephony/common/",
-            "$aospDir/frameworks/base/telephony/java/",
-            "$aospDir/frameworks/base/wifi/java/src/",
+    aosp = [
+            root             : "$aospDir",
+
+            /*************** 配置原生 fwk 路径 ***************/
+            framework        : [
+                    manifest: "AndroidManifest.xml",
+                    res     : "res",
+                    assets  : "assets",
+                    jni     : "$aospDir",
+                    src     : [
+                            //通过 frameworks/base/Android.bp的filegroup framework-non-updatable-sources
+                            //找到大部分java文件目录，但还不是全部
+                            "$aospDir/frameworks/libs/modules-utils/java/",
+                            "$aospDir/frameworks/base/apex/blobstore/framework/java",
+                            "$aospDir/frameworks/base/core/java/",
+                            "$aospDir/frameworks/base/drm/java/",
+                            "$aospDir/frameworks/base/graphics/java/",
+                            "$aospDir/frameworks/base/apex/jobscheduler/framework/java/",
+                            "$aospDir/frameworks/base/keystore/java/",
+                            "$aospDir/frameworks/base/identity/java/",
+                            "$aospDir/frameworks/base/location/java/",
+                            "$aospDir/frameworks/base/lowpan/java/",
+                            "$aospDir/frameworks/base/media/mca/effect/java/",
+                            "$aospDir/frameworks/base/media/mca/filterfw/java/",
+                            "$aospDir/frameworks/base/media/mca/filterpacks/java/",
+                            "$aospDir/frameworks/base/media/java/",
+                            "$aospDir/frameworks/base/mms/java/",
+                            "$aospDir/frameworks/base/omapi/java/",
+                            "$aospDir/frameworks/base/opengl/java/",
+                            "$aospDir/frameworks/base/rs/java/",
+                            "$aospDir/frameworks/base/sax/java/",
+                            "$aospDir/frameworks/base/telecomm/java/",
+                            "$aospDir/frameworks/base/telephony/common/",
+                            "$aospDir/frameworks/base/telephony/java/",
+                            "$aospDir/frameworks/base/wifi/java/src/",
+                    ],
+            ],
+
+            /*************** 配置原生 services 路径 ***************/
+            services          : [
+                    manifest: "AndroidManifest.xml",
+                    res     : "res",
+                    assets  : "assets",
+                    jni     : [],
+                    src     : [
+                            //通过frameworks/base/services/Android.bp的filegroup services-non-updatable-sources
+                            //找到大部分java文件目录，但还不是全部
+                            "$aospDir/frameworks/base/services/accessibility/java/",
+                            "$aospDir/frameworks/base/services/appprediction/java/",
+                            "$aospDir/frameworks/base/services/appwidget/java/",
+                            "$aospDir/frameworks/base/services/autofill/java/",
+                            "$aospDir/frameworks/base/services/backup/java/",
+                            "$aospDir/frameworks/base/services/backup/backuplib/java/",
+                            "$aospDir/frameworks/base/services/companion/java/",
+                            "$aospDir/frameworks/base/services/contentcapture/java/",
+                            "$aospDir/frameworks/base/services/contentsuggestions/java/",
+                            "$aospDir/frameworks/base/services/core/java/",
+                            "$aospDir/frameworks/base/services/coverage/java/",
+                            "$aospDir/frameworks/base/services/devicepolicy/java/",
+                            "$aospDir/frameworks/base/services/java/",
+                            "$aospDir/frameworks/base/services/midi/java/",
+                            "$aospDir/frameworks/base/services/musicrecognition/java/",
+                            "$aospDir/frameworks/base/services/net/java/",
+                            "$aospDir/frameworks/base/services/people/java/",
+                            "$aospDir/frameworks/base/services/print/java/",
+                            "$aospDir/frameworks/base/services/profcollect/src/",
+                            "$aospDir/frameworks/base/services/restrictions/java/",
+                            "$aospDir/frameworks/base/services/restrictions/java/",
+                            "$aospDir/frameworks/base/services/searchui/java/",
+                            "$aospDir/frameworks/base/services/smartspace/java/",
+                            "$aospDir/frameworks/base/services/systemcaptions/java/",
+                            "$aospDir/frameworks/base/services/texttospeech/java/",
+                            "$aospDir/frameworks/base/services/translation/java/",
+                            "$aospDir/frameworks/base/services/usage/java/",
+                            "$aospDir/frameworks/base/services/usb/java/",
+                            "$aospDir/frameworks/base/services/uwb/java/",
+                            "$aospDir/frameworks/base/services/voiceinteraction/java/",
+                            "$aospDir/frameworks/base/services/wifi/java/",
+                            "$aospDir/packages/modules/Bluetooth/service/java/",
+                    ],
+            ],
+
+            /*************** 配置 framework-res 路径 ***************/
+            frameworkRes     : [
+                    manifest: "$aospDir/frameworks/base/core/res/AndroidManifest.xml",
+                    res     : [
+                            "$aospDir/frameworks/base/core/res/res/",
+                            "$aospDir/frameworks/base/core/res/remote_color_resources_res/",
+                    ],
+                    assets  : [
+                            "$aospDir/frameworks/base/core/res/assets",
+                    ],
+                    jni     : [],
+                    src     : [],
+
+
+            ],
+
+            /*************** 配置 SystemUI 路径 ***************/
+            SystemUI         : [
+                    //"$aospDir/frameworks/base/packages/SystemUI/animation/AndroidManifest.xml"
+                    //"$aospDir/frameworks/base/packages/SystemUI/shared/AndroidManifest.xml"
+                    manifest: "$aospDir/frameworks/base/packages/SystemUI/AndroidManifest.xml",
+                    res     : [
+                            "$aospDir/frameworks/base/packages/SystemUI/res/",
+                            "$aospDir/frameworks/base/packages/SystemUI/res-product/",
+                            "$aospDir/frameworks/base/packages/SystemUI/res-keyguard/",
+                            "$aospDir/frameworks/base/packages/SystemUI/animation/res",
+                    ],
+                    assets  : [
+                            "$aospDir/frameworks/base/core/res/assets",
+                    ],
+                    jni     : [],
+                    src     : [
+                            "$aospDir/frameworks/base/packages/SystemUI/src",
+                            "$aospDir/frameworks/base/packages/SystemUI/src-release",
+                            "$aospDir/frameworks/base/packages/SystemUI/animation/src",
+                            "$aospDir/frameworks/base/packages/SystemUI/shared/src",
+                    ],
+            ],
+
+            /*************** 配置 SystemUIPluginLib 路径 ***************/
+            SystemUIPluginLib: [
+                    manifest: "$aospDir/frameworks/base/packages/SystemUI/plugin/AndroidManifest.xml",
+                    res     : [],
+                    assets  : [],
+                    jni     : [],
+                    src     : [
+                            "$aospDir/frameworks/base/packages/SystemUI/plugin_core/src",
+                            "$aospDir/frameworks/base/packages/SystemUI/plugin/src",
+                            "$aospDir/frameworks/base/packages/SystemUI/plugin/bcsmartspace/src",
+                    ],
+            ],
+
+            /*************** 配置 Settings 路径 ***************/
+            Settings         : [
+                    manifest: "$aospDir/packages/apps/Settings/AndroidManifest.xml",
+                    res     : [
+                            "$aospDir/packages/apps/Settings/res/",
+                    ],
+                    assets  : [],
+                    jni     : [],
+                    src     : [
+                            "$aospDir/packages/apps/Settings/src",
+                    ],
+            ],
+
+            /*************** 配置 SettingsLib 路径 ***************/
+            //以下目录是通过脚本生成, 可能会有出入。
+            SettingsLib      : [
+                    //"$aospDir/frameworks/base/packages/SettingsLib/ActionBarShadow/AndroidManifest.xml"
+                    //"$aospDir/frameworks/base/packages/SettingsLib/ActionButtonsPreference/AndroidManifest.xml"
+                    //"$aospDir/frameworks/base/packages/SettingsLib/ActivityEmbedding/AndroidManifest.xml"
+                    //"$aospDir/frameworks/base/packages/SettingsLib/AdaptiveIcon/AndroidManifest.xml"
+                    //"$aospDir/frameworks/base/packages/SettingsLib/AppPreference/AndroidManifest.xml"
+                    //"$aospDir/frameworks/base/packages/SettingsLib/BannerMessagePreference/AndroidManifest.xml"
+                    //"$aospDir/frameworks/base/packages/SettingsLib/BarChartPreference/AndroidManifest.xml"
+                    //"$aospDir/frameworks/base/packages/SettingsLib/ButtonPreference/AndroidManifest.xml"
+                    //"$aospDir/frameworks/base/packages/SettingsLib/CollapsingToolbarBaseActivity/AndroidManifest.xml"
+                    //"$aospDir/frameworks/base/packages/SettingsLib/DisplayDensityUtils/AndroidManifest.xml"
+                    //"$aospDir/frameworks/base/packages/SettingsLib/EmergencyNumber/AndroidManifest.xml"
+                    //"$aospDir/frameworks/base/packages/SettingsLib/EntityHeaderWidgets/AndroidManifest.xml"
+                    //"$aospDir/frameworks/base/packages/SettingsLib/FooterPreference/AndroidManifest.xml"
+                    //"$aospDir/frameworks/base/packages/SettingsLib/HelpUtils/AndroidManifest.xml"
+                    //"$aospDir/frameworks/base/packages/SettingsLib/IllustrationPreference/AndroidManifest.xml"
+                    //"$aospDir/frameworks/base/packages/SettingsLib/LayoutPreference/AndroidManifest.xml"
+                    //"$aospDir/frameworks/base/packages/SettingsLib/MainSwitchPreference/AndroidManifest.xml"
+                    //"$aospDir/frameworks/base/packages/SettingsLib/ProgressBar/AndroidManifest.xml"
+                    //"$aospDir/frameworks/base/packages/SettingsLib/RadioButtonPreference/AndroidManifest.xml"
+                    //"$aospDir/frameworks/base/packages/SettingsLib/RestrictedLockUtils/AndroidManifest.xml"
+                    //"$aospDir/frameworks/base/packages/SettingsLib/SchedulesProvider/AndroidManifest.xml"
+                    //"$aospDir/frameworks/base/packages/SettingsLib/SearchProvider/AndroidManifest.xml"
+                    //"$aospDir/frameworks/base/packages/SettingsLib/SearchWidget/AndroidManifest.xml"
+                    //"$aospDir/frameworks/base/packages/SettingsLib/SelectorWithWidgetPreference/AndroidManifest.xml"
+                    //"$aospDir/frameworks/base/packages/SettingsLib/SettingsSpinner/AndroidManifest.xml"
+                    //"$aospDir/frameworks/base/packages/SettingsLib/SettingsTheme/AndroidManifest.xml"
+                    //"$aospDir/frameworks/base/packages/SettingsLib/SettingsTransition/AndroidManifest.xml"
+                    //"$aospDir/frameworks/base/packages/SettingsLib/Tile/AndroidManifest.xml"
+                    //"$aospDir/frameworks/base/packages/SettingsLib/TopIntroPreference/AndroidManifest.xml"
+                    //"$aospDir/frameworks/base/packages/SettingsLib/TwoTargetPreference/AndroidManifest.xml"
+                    //"$aospDir/frameworks/base/packages/SettingsLib/UsageProgressBarPreference/AndroidManifest.xml"
+                    //"$aospDir/frameworks/base/packages/SettingsLib/Utils/AndroidManifest.xml"
+                    //"$aospDir/frameworks/base/packages/SettingsLib/search/AndroidManifest.xml"
+                    manifest: "$aospDir/frameworks/base/packages/SettingsLib/AndroidManifest.xml",
+                    res     : [
+                            "$aospDir/frameworks/base/packages/SettingsLib/ActionBarShadow/res",
+                            "$aospDir/frameworks/base/packages/SettingsLib/ActionButtonsPreference/res",
+                            "$aospDir/frameworks/base/packages/SettingsLib/ActivityEmbedding/res",
+                            "$aospDir/frameworks/base/packages/SettingsLib/AdaptiveIcon/res",
+                            "$aospDir/frameworks/base/packages/SettingsLib/AppPreference/res",
+                            "$aospDir/frameworks/base/packages/SettingsLib/BannerMessagePreference/res",
+                            "$aospDir/frameworks/base/packages/SettingsLib/BarChartPreference/res",
+                            "$aospDir/frameworks/base/packages/SettingsLib/ButtonPreference/res",
+                            "$aospDir/frameworks/base/packages/SettingsLib/CollapsingToolbarBaseActivity/res",
+                            "$aospDir/frameworks/base/packages/SettingsLib/DisplayDensityUtils/res",
+                            "$aospDir/frameworks/base/packages/SettingsLib/EmergencyNumber/res",
+                            "$aospDir/frameworks/base/packages/SettingsLib/EntityHeaderWidgets/res",
+                            "$aospDir/frameworks/base/packages/SettingsLib/FooterPreference/res",
+                            "$aospDir/frameworks/base/packages/SettingsLib/HelpUtils/res",
+                            "$aospDir/frameworks/base/packages/SettingsLib/IllustrationPreference/res",
+                            "$aospDir/frameworks/base/packages/SettingsLib/LayoutPreference/res",
+                            "$aospDir/frameworks/base/packages/SettingsLib/MainSwitchPreference/res",
+                            "$aospDir/frameworks/base/packages/SettingsLib/ProgressBar/res",
+                            "$aospDir/frameworks/base/packages/SettingsLib/RadioButtonPreference/res",
+                            "$aospDir/frameworks/base/packages/SettingsLib/RestrictedLockUtils/res",
+                            "$aospDir/frameworks/base/packages/SettingsLib/SchedulesProvider/res",
+                            "$aospDir/frameworks/base/packages/SettingsLib/SearchProvider/res",
+                            "$aospDir/frameworks/base/packages/SettingsLib/SearchWidget/res",
+                            "$aospDir/frameworks/base/packages/SettingsLib/SelectorWithWidgetPreference/res",
+                            "$aospDir/frameworks/base/packages/SettingsLib/SettingsSpinner/res",
+                            "$aospDir/frameworks/base/packages/SettingsLib/SettingsTheme/res",
+                            "$aospDir/frameworks/base/packages/SettingsLib/SettingsTransition/res",
+                            "$aospDir/frameworks/base/packages/SettingsLib/Tile/res",
+                            "$aospDir/frameworks/base/packages/SettingsLib/TopIntroPreference/res",
+                            "$aospDir/frameworks/base/packages/SettingsLib/TwoTargetPreference/res",
+                            "$aospDir/frameworks/base/packages/SettingsLib/UsageProgressBarPreference/res",
+                            "$aospDir/frameworks/base/packages/SettingsLib/Utils/res",
+                            "$aospDir/frameworks/base/packages/SettingsLib/res",
+                            "$aospDir/frameworks/base/packages/SettingsLib/search/res",
+                    ],
+                    assets  : [],
+                    jni     : [],
+                    src     : [
+                            "$aospDir/frameworks/base/packages/SettingsLib/ActionBarShadow/src",
+                            "$aospDir/frameworks/base/packages/SettingsLib/ActionButtonsPreference/src",
+                            "$aospDir/frameworks/base/packages/SettingsLib/ActivityEmbedding/src",
+                            "$aospDir/frameworks/base/packages/SettingsLib/AdaptiveIcon/src",
+                            "$aospDir/frameworks/base/packages/SettingsLib/AppPreference/src",
+                            "$aospDir/frameworks/base/packages/SettingsLib/BannerMessagePreference/src",
+                            "$aospDir/frameworks/base/packages/SettingsLib/BarChartPreference/src",
+                            "$aospDir/frameworks/base/packages/SettingsLib/ButtonPreference/src",
+                            "$aospDir/frameworks/base/packages/SettingsLib/CollapsingToolbarBaseActivity/src",
+                            "$aospDir/frameworks/base/packages/SettingsLib/DisplayDensityUtils/src",
+                            "$aospDir/frameworks/base/packages/SettingsLib/EmergencyNumber/src",
+                            "$aospDir/frameworks/base/packages/SettingsLib/EntityHeaderWidgets/src",
+                            "$aospDir/frameworks/base/packages/SettingsLib/FooterPreference/src",
+                            "$aospDir/frameworks/base/packages/SettingsLib/HelpUtils/src",
+                            "$aospDir/frameworks/base/packages/SettingsLib/IllustrationPreference/src",
+                            "$aospDir/frameworks/base/packages/SettingsLib/LayoutPreference/src",
+                            "$aospDir/frameworks/base/packages/SettingsLib/MainSwitchPreference/src",
+                            "$aospDir/frameworks/base/packages/SettingsLib/ProgressBar/src",
+                            "$aospDir/frameworks/base/packages/SettingsLib/RadioButtonPreference/src",
+                            "$aospDir/frameworks/base/packages/SettingsLib/RestrictedLockUtils/src",
+                            "$aospDir/frameworks/base/packages/SettingsLib/SchedulesProvider/src",
+                            "$aospDir/frameworks/base/packages/SettingsLib/SearchProvider/src",
+                            "$aospDir/frameworks/base/packages/SettingsLib/SearchWidget/src",
+                            "$aospDir/frameworks/base/packages/SettingsLib/SelectorWithWidgetPreference/src",
+                            "$aospDir/frameworks/base/packages/SettingsLib/SettingsSpinner/src",
+                            "$aospDir/frameworks/base/packages/SettingsLib/SettingsTheme/src",
+                            "$aospDir/frameworks/base/packages/SettingsLib/SettingsTransition/src",
+                            "$aospDir/frameworks/base/packages/SettingsLib/Tile/src",
+                            "$aospDir/frameworks/base/packages/SettingsLib/TopIntroPreference/src",
+                            "$aospDir/frameworks/base/packages/SettingsLib/TwoTargetPreference/src",
+                            "$aospDir/frameworks/base/packages/SettingsLib/UsageProgressBarPreference/src",
+                            "$aospDir/frameworks/base/packages/SettingsLib/Utils/src",
+                            "$aospDir/frameworks/base/packages/SettingsLib/search/src",
+                    ],
+            ],
+
+            /*************** 配置 SettingsProvider 路径 ***************/
+            SettingsProvider : [
+                    manifest: "$aospDir/frameworks/base/packages/SettingsProvider/AndroidManifest.xml",
+                    res     : [
+                            "$aospDir/frameworks/base/packages/SettingsProvider/res/",
+                    ],
+                    assets  : [],
+                    jni     : [],
+                    src     : [
+                            "$aospDir/frameworks/base/packages/SettingsProvider/src",
+                    ],
+            ],
     ]
 
-    //通过frameworks/base/services/Android.bp的filegroup services-non-updatable-sources
-    //找到大部分java文件目录，但还不是全部
-    serviceDir = [
-            "$aospDir/frameworks/base/services/accessibility/java/",
-            "$aospDir/frameworks/base/services/appprediction/java/",
-            "$aospDir/frameworks/base/services/appwidget/java/",
-            "$aospDir/frameworks/base/services/autofill/java/",
-            "$aospDir/frameworks/base/services/backup/java/",
-            "$aospDir/frameworks/base/services/backup/backuplib/java/",
-            "$aospDir/frameworks/base/services/companion/java/",
-            "$aospDir/frameworks/base/services/contentcapture/java/",
-            "$aospDir/frameworks/base/services/contentsuggestions/java/",
-            "$aospDir/frameworks/base/services/core/java/",
-            "$aospDir/frameworks/base/services/coverage/java/",
-            "$aospDir/frameworks/base/services/devicepolicy/java/",
-            "$aospDir/frameworks/base/services/java/",
-            "$aospDir/frameworks/base/services/midi/java/",
-            "$aospDir/frameworks/base/services/musicrecognition/java/",
-            "$aospDir/frameworks/base/services/net/java/",
-            "$aospDir/frameworks/base/services/people/java/",
-            "$aospDir/frameworks/base/services/print/java/",
-            "$aospDir/frameworks/base/services/profcollect/src/",
-            "$aospDir/frameworks/base/services/restrictions/java/",
-            "$aospDir/frameworks/base/services/restrictions/java/",
-            "$aospDir/frameworks/base/services/searchui/java/",
-            "$aospDir/frameworks/base/services/smartspace/java/",
-            "$aospDir/frameworks/base/services/systemcaptions/java/",
-            "$aospDir/frameworks/base/services/texttospeech/java/",
-            "$aospDir/frameworks/base/services/translation/java/",
-            "$aospDir/frameworks/base/services/usage/java/",
-            "$aospDir/frameworks/base/services/usb/java/",
-            "$aospDir/frameworks/base/services/uwb/java/",
-            "$aospDir/frameworks/base/services/voiceinteraction/java/",
-            "$aospDir/frameworks/base/services/wifi/java/",
-            "$aospDir/packages/modules/Bluetooth/service/java/",
-    ]
-    /*************** 配置原生 fwk,services 路径 ***************/
-
-    /*************** 配置 framework-res 路径 ***************/
-    frameworkResDir = [
-            "$aospDir/frameworks/base/core/res/res/",
-            "$aospDir/frameworks/base/core/res/remote_color_resources_res/",
-    ]
-
-    frameworkManifestDir = "$aospDir/frameworks/base/core/res/AndroidManifest.xml"
-
-    frameworkAssetsDir = [
-            "$aospDir/frameworks/base/core/res/assets",
-    ]
-    /*************** 配置 framework-res 路径 ***************/
-
-    /*************** 配置 SystemUI 路径 ***************/
-    SystemUIDir = [
-            "$aospDir/frameworks/base/packages/SystemUI/src",
-            "$aospDir/frameworks/base/packages/SystemUI/src-release",
-            "$aospDir/frameworks/base/packages/SystemUI/animation/src",
-            "$aospDir/frameworks/base/packages/SystemUI/shared/src",
-    ]
-
-    SystemUIResDir = [
-            "$aospDir/frameworks/base/packages/SystemUI/res/",
-            "$aospDir/frameworks/base/packages/SystemUI/res-product/",
-            "$aospDir/frameworks/base/packages/SystemUI/res-keyguard/",
-            "$aospDir/frameworks/base/packages/SystemUI/animation/res",
-    ]
-
-    //"$aospDir/frameworks/base/packages/SystemUI/animation/AndroidManifest.xml"
-    //"$aospDir/frameworks/base/packages/SystemUI/shared/AndroidManifest.xml"
-    SystemUIManifestDir = "$aospDir/frameworks/base/packages/SystemUI/AndroidManifest.xml"
-    /*************** 配置 SystemUI 路径 ***************/
-
-    /*************** 配置 SystemUIPluginLib 路径 ***************/
-    SystemUIPluginLibDir = [
-            "$aospDir/frameworks/base/packages/SystemUI/plugin_core/src",
-            "$aospDir/frameworks/base/packages/SystemUI/plugin/src",
-            "$aospDir/frameworks/base/packages/SystemUI/plugin/bcsmartspace/src",
-    ]
-
-    //"$aospDir/frameworks/base/packages/SystemUI/plugin_core/AndroidManifest.xml",
-    SystemUIPluginLibManifestDir = "$aospDir/frameworks/base/packages/SystemUI/plugin/AndroidManifest.xml"
-    /*************** 配置 SystemUIPluginLib 路径 ***************/
-
-    /*************** 配置 Settings 路径 ***************/
-    SettingsDir = [
-            "$aospDir/packages/apps/Settings/src",
-    ]
-
-    SettingsResDir = [
-            "$aospDir/packages/apps/Settings/res/",
-    ]
-
-    SettingsManifestDir = "$aospDir/packages/apps/Settings/AndroidManifest.xml"
-    /*************** 配置 Settings 路径 ***************/
-
-    /*************** 配置 SettingsLib 路径 ***************/
-    //以下目录是通过脚本生成, 可能会有出入。
-    SettingsLibDir = [
-            "$aospDir/frameworks/base/packages/SettingsLib/ActionBarShadow/src",
-            "$aospDir/frameworks/base/packages/SettingsLib/ActionButtonsPreference/src",
-            "$aospDir/frameworks/base/packages/SettingsLib/ActivityEmbedding/src",
-            "$aospDir/frameworks/base/packages/SettingsLib/AdaptiveIcon/src",
-            "$aospDir/frameworks/base/packages/SettingsLib/AppPreference/src",
-            "$aospDir/frameworks/base/packages/SettingsLib/BannerMessagePreference/src",
-            "$aospDir/frameworks/base/packages/SettingsLib/BarChartPreference/src",
-            "$aospDir/frameworks/base/packages/SettingsLib/ButtonPreference/src",
-            "$aospDir/frameworks/base/packages/SettingsLib/CollapsingToolbarBaseActivity/src",
-            "$aospDir/frameworks/base/packages/SettingsLib/DisplayDensityUtils/src",
-            "$aospDir/frameworks/base/packages/SettingsLib/EmergencyNumber/src",
-            "$aospDir/frameworks/base/packages/SettingsLib/EntityHeaderWidgets/src",
-            "$aospDir/frameworks/base/packages/SettingsLib/FooterPreference/src",
-            "$aospDir/frameworks/base/packages/SettingsLib/HelpUtils/src",
-            "$aospDir/frameworks/base/packages/SettingsLib/IllustrationPreference/src",
-            "$aospDir/frameworks/base/packages/SettingsLib/LayoutPreference/src",
-            "$aospDir/frameworks/base/packages/SettingsLib/MainSwitchPreference/src",
-            "$aospDir/frameworks/base/packages/SettingsLib/ProgressBar/src",
-            "$aospDir/frameworks/base/packages/SettingsLib/RadioButtonPreference/src",
-            "$aospDir/frameworks/base/packages/SettingsLib/RestrictedLockUtils/src",
-            "$aospDir/frameworks/base/packages/SettingsLib/SchedulesProvider/src",
-            "$aospDir/frameworks/base/packages/SettingsLib/SearchProvider/src",
-            "$aospDir/frameworks/base/packages/SettingsLib/SearchWidget/src",
-            "$aospDir/frameworks/base/packages/SettingsLib/SelectorWithWidgetPreference/src",
-            "$aospDir/frameworks/base/packages/SettingsLib/SettingsSpinner/src",
-            "$aospDir/frameworks/base/packages/SettingsLib/SettingsTheme/src",
-            "$aospDir/frameworks/base/packages/SettingsLib/SettingsTransition/src",
-            "$aospDir/frameworks/base/packages/SettingsLib/Tile/src",
-            "$aospDir/frameworks/base/packages/SettingsLib/TopIntroPreference/src",
-            "$aospDir/frameworks/base/packages/SettingsLib/TwoTargetPreference/src",
-            "$aospDir/frameworks/base/packages/SettingsLib/UsageProgressBarPreference/src",
-            "$aospDir/frameworks/base/packages/SettingsLib/Utils/src",
-            "$aospDir/frameworks/base/packages/SettingsLib/search/src",
-    ]
-
-    SettingsLibResDir = [
-            "$aospDir/frameworks/base/packages/SettingsLib/ActionBarShadow/res",
-            "$aospDir/frameworks/base/packages/SettingsLib/ActionButtonsPreference/res",
-            "$aospDir/frameworks/base/packages/SettingsLib/ActivityEmbedding/res",
-            "$aospDir/frameworks/base/packages/SettingsLib/AdaptiveIcon/res",
-            "$aospDir/frameworks/base/packages/SettingsLib/AppPreference/res",
-            "$aospDir/frameworks/base/packages/SettingsLib/BannerMessagePreference/res",
-            "$aospDir/frameworks/base/packages/SettingsLib/BarChartPreference/res",
-            "$aospDir/frameworks/base/packages/SettingsLib/ButtonPreference/res",
-            "$aospDir/frameworks/base/packages/SettingsLib/CollapsingToolbarBaseActivity/res",
-            "$aospDir/frameworks/base/packages/SettingsLib/DisplayDensityUtils/res",
-            "$aospDir/frameworks/base/packages/SettingsLib/EmergencyNumber/res",
-            "$aospDir/frameworks/base/packages/SettingsLib/EntityHeaderWidgets/res",
-            "$aospDir/frameworks/base/packages/SettingsLib/FooterPreference/res",
-            "$aospDir/frameworks/base/packages/SettingsLib/HelpUtils/res",
-            "$aospDir/frameworks/base/packages/SettingsLib/IllustrationPreference/res",
-            "$aospDir/frameworks/base/packages/SettingsLib/LayoutPreference/res",
-            "$aospDir/frameworks/base/packages/SettingsLib/MainSwitchPreference/res",
-            "$aospDir/frameworks/base/packages/SettingsLib/ProgressBar/res",
-            "$aospDir/frameworks/base/packages/SettingsLib/RadioButtonPreference/res",
-            "$aospDir/frameworks/base/packages/SettingsLib/RestrictedLockUtils/res",
-            "$aospDir/frameworks/base/packages/SettingsLib/SchedulesProvider/res",
-            "$aospDir/frameworks/base/packages/SettingsLib/SearchProvider/res",
-            "$aospDir/frameworks/base/packages/SettingsLib/SearchWidget/res",
-            "$aospDir/frameworks/base/packages/SettingsLib/SelectorWithWidgetPreference/res",
-            "$aospDir/frameworks/base/packages/SettingsLib/SettingsSpinner/res",
-            "$aospDir/frameworks/base/packages/SettingsLib/SettingsTheme/res",
-            "$aospDir/frameworks/base/packages/SettingsLib/SettingsTransition/res",
-            "$aospDir/frameworks/base/packages/SettingsLib/Tile/res",
-            "$aospDir/frameworks/base/packages/SettingsLib/TopIntroPreference/res",
-            "$aospDir/frameworks/base/packages/SettingsLib/TwoTargetPreference/res",
-            "$aospDir/frameworks/base/packages/SettingsLib/UsageProgressBarPreference/res",
-            "$aospDir/frameworks/base/packages/SettingsLib/Utils/res",
-            "$aospDir/frameworks/base/packages/SettingsLib/res",
-            "$aospDir/frameworks/base/packages/SettingsLib/search/res",
-    ]
-
-    //"$aospDir/frameworks/base/packages/SettingsLib/ActionBarShadow/AndroidManifest.xml"
-    //"$aospDir/frameworks/base/packages/SettingsLib/ActionButtonsPreference/AndroidManifest.xml"
-    //"$aospDir/frameworks/base/packages/SettingsLib/ActivityEmbedding/AndroidManifest.xml"
-    //"$aospDir/frameworks/base/packages/SettingsLib/AdaptiveIcon/AndroidManifest.xml"
-    //"$aospDir/frameworks/base/packages/SettingsLib/AppPreference/AndroidManifest.xml"
-    //"$aospDir/frameworks/base/packages/SettingsLib/BannerMessagePreference/AndroidManifest.xml"
-    //"$aospDir/frameworks/base/packages/SettingsLib/BarChartPreference/AndroidManifest.xml"
-    //"$aospDir/frameworks/base/packages/SettingsLib/ButtonPreference/AndroidManifest.xml"
-    //"$aospDir/frameworks/base/packages/SettingsLib/CollapsingToolbarBaseActivity/AndroidManifest.xml"
-    //"$aospDir/frameworks/base/packages/SettingsLib/DisplayDensityUtils/AndroidManifest.xml"
-    //"$aospDir/frameworks/base/packages/SettingsLib/EmergencyNumber/AndroidManifest.xml"
-    //"$aospDir/frameworks/base/packages/SettingsLib/EntityHeaderWidgets/AndroidManifest.xml"
-    //"$aospDir/frameworks/base/packages/SettingsLib/FooterPreference/AndroidManifest.xml"
-    //"$aospDir/frameworks/base/packages/SettingsLib/HelpUtils/AndroidManifest.xml"
-    //"$aospDir/frameworks/base/packages/SettingsLib/IllustrationPreference/AndroidManifest.xml"
-    //"$aospDir/frameworks/base/packages/SettingsLib/LayoutPreference/AndroidManifest.xml"
-    //"$aospDir/frameworks/base/packages/SettingsLib/MainSwitchPreference/AndroidManifest.xml"
-    //"$aospDir/frameworks/base/packages/SettingsLib/ProgressBar/AndroidManifest.xml"
-    //"$aospDir/frameworks/base/packages/SettingsLib/RadioButtonPreference/AndroidManifest.xml"
-    //"$aospDir/frameworks/base/packages/SettingsLib/RestrictedLockUtils/AndroidManifest.xml"
-    //"$aospDir/frameworks/base/packages/SettingsLib/SchedulesProvider/AndroidManifest.xml"
-    //"$aospDir/frameworks/base/packages/SettingsLib/SearchProvider/AndroidManifest.xml"
-    //"$aospDir/frameworks/base/packages/SettingsLib/SearchWidget/AndroidManifest.xml"
-    //"$aospDir/frameworks/base/packages/SettingsLib/SelectorWithWidgetPreference/AndroidManifest.xml"
-    //"$aospDir/frameworks/base/packages/SettingsLib/SettingsSpinner/AndroidManifest.xml"
-    //"$aospDir/frameworks/base/packages/SettingsLib/SettingsTheme/AndroidManifest.xml"
-    //"$aospDir/frameworks/base/packages/SettingsLib/SettingsTransition/AndroidManifest.xml"
-    //"$aospDir/frameworks/base/packages/SettingsLib/Tile/AndroidManifest.xml"
-    //"$aospDir/frameworks/base/packages/SettingsLib/TopIntroPreference/AndroidManifest.xml"
-    //"$aospDir/frameworks/base/packages/SettingsLib/TwoTargetPreference/AndroidManifest.xml"
-    //"$aospDir/frameworks/base/packages/SettingsLib/UsageProgressBarPreference/AndroidManifest.xml"
-    //"$aospDir/frameworks/base/packages/SettingsLib/Utils/AndroidManifest.xml"
-    //"$aospDir/frameworks/base/packages/SettingsLib/search/AndroidManifest.xml"
-    SettingsLibManifestDir = "$aospDir/frameworks/base/packages/SettingsLib/AndroidManifest.xml"
-    /*************** 配置 SettingsLib 路径 ***************/
-
-    /*************** 配置 SettingsProvider 路径 ***************/
-    SettingsProviderDir = [
-            "$aospDir/frameworks/base/packages/SettingsProvider/src",
-    ]
-
-    SettingsProviderResDir = [
-            "$aospDir/frameworks/base/packages/SettingsProvider/res/",
-    ]
-
-    SettingsProviderManifestDir = "$aospDir/frameworks/base/packages/SettingsProvider/AndroidManifest.xml"
-    /*************** 配置 SettingsProvider 路径 ***************/
 }

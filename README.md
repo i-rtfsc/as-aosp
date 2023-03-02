@@ -1,11 +1,12 @@
 # as aosp
 
 ## 简介
-此as工程可以快速的导入aosp framework(java部分)、 aosp 系统app、 国内某些厂商扩展的fwk代码，比这个 https://www.jianshu.com/p/2ba5d6bd461e 方案还快，并且“联想”也很方便。
+此as工程可以快速的导入aosp framework(包含java/native部分)、 aosp 系统app、 国内某些厂商扩展的fwk代码，比这个 https://www.jianshu.com/p/2ba5d6bd461e 方案还快，并且“联想”也很方便。
 
 ## 警告
 关于此工程中包含miui、flyme、oppo、vivo等配置，只是一个空的gradle配置；该工程中不涉及到任何这几家公司的代码。
-请勿小事化大！
+
+请勿小事化大！尊重事实，切勿胡说八道！
 
 
 ## 配置介绍
@@ -27,7 +28,7 @@ apply from: 'scripts/vivo.gradle'
 ```
 
 ### config.gradle
-除了一些基础配置，还维护一个allModules数组，如果在settings.gradle里新增一个module，应该同时新增到config.gradle的allModules数组里。
+allModules不需要手动维护，在settings.gradle里新增一个module，脚本会自动识别到project name并添加到allModules数组。
 这个allModules数组的作用是方便每个module快速的互相依赖，如：
 ```bash
 rootProject.ext.allModules.each { dependence -> compileOnly project(dependence.value) }

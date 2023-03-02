@@ -1,26 +1,47 @@
 ext {
     //设置源码所在的目录
-    flymeDir = "/home/solo/code/flyme"
+    flymeDir = "/home/solo/code/flyme/vendor/flyme"
     if (org.gradle.internal.os.OperatingSystem.current().isMacOsX()) {
         flymeDir = "/Users/solo/code/flyme"
     }
 
-    /*************** 配置原生 flyme-fwk,flyme-services 路径 ***************/
-    flymeFrameworkDir = [
-            "$flymeDir/frameworks/base/core/java/",
+    flyme = [
+            root        : "$flymeDir",
+
+            /*************** 配置 flyme fwk 路径 ***************/
+            framework   : [
+                    manifest: "AndroidManifest.xml",
+                    res     : "res",
+                    assets  : "assets",
+                    jni     : "$flymeDir",
+                    src     : [
+                            "$flymeDir/frameworks/base/core/java/",
+                    ],
+            ],
+
+            /*************** 配置 flyme services 路径 ***************/
+            services    : [
+                    manifest: "AndroidManifest.xml",
+                    res     : "res",
+                    assets  : "assets",
+                    jni     : [],
+                    src     : [
+                            "$flymeDir/frameworks/base/services/core/java/",
+                            "$flymeDir/frameworks/base/services/java/",
+                    ],
+            ],
+
+            /*************** 配置 flyme framework-res 路径 ***************/
+            frameworkRes: [
+                    manifest: "AndroidManifest.xml",
+                    res     : [],
+                    assets  : [
+                            "$flymeDir/../../frameworks/base/core/res/flyme-res",
+                    ],
+                    jni     : [],
+                    src     : [],
+            ],
+
     ]
 
-    flymeServiceDir = [
-            "$flymeDir/frameworks/base/services/core/java/",
-            "$flymeDir/frameworks/base/services/java/",
-    ]
-    /*************** 配置原生 flyme-fwk,flyme-services 路径 ***************/
-
-    /*************** 配置 flyme-framework-res 路径 ***************/
-    flymeFrameworkResDir = [
-            "$flymeDir/frameworks/base/core/res/res",
-    ]
-
-    flymeFrameworkManifestDir = "$flymeDir/frameworks/base/core/res/AndroidManifest.xml"
-    /*************** 配置 miui-framework-res 路径 ***************/
 }

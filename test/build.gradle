@@ -5,12 +5,19 @@ ext {
     BUILD_ASSETS = 'assets'
     BUILD_SRC = 'src'
     BUILD_AIDL = 'aidl'
+    BUILD_NATIVE = false
+    BUILD_NATIVE_ROOT = ''
 }
 
 apply from: "${rootDir}/scripts/android-build.gradle"
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+    if (rootProject.ext.enable_boot_jar.toBoolean()) {
+        compileOnly fileTree(include: ['*.jar'], dir: '../system_libs')
+    }
+
+    implementation "androidx.appcompat:appcompat:1.1.0"
 
     implementation project(':i-ext-framework')
     implementation project(':i-ext-services')
