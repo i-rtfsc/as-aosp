@@ -5,22 +5,44 @@ ext {
         oppoDir = "/Users/solo/code/oppo"
     }
 
-    /*************** 配置原生 oppo-fwk,oppo-services 路径 ***************/
-    oppoFrameworkDir = [
-            "$oppoDir/frameworks/base/core/java/",
+    oppo = [
+            root        : "$oppoDir",
+
+            /*************** 配置 oppo fwk 路径 ***************/
+            framework   : [
+                    manifest: "AndroidManifest.xml",
+                    res     : "res",
+                    assets  : "assets",
+                    jni     : "$oppoDir",
+                    src     : [
+                            "$oppoDir/frameworks/base/core/java/",
+                    ],
+            ],
+
+            /*************** 配置 oppo services 路径 ***************/
+            services    : [
+                    manifest: "AndroidManifest.xml",
+                    res     : "res",
+                    assets  : "assets",
+                    jni     : [],
+                    src     : [
+                            "$oppoDir/frameworks/base/services/core/java/",
+                            "$oppoDir/frameworks/base/services/java/",
+                    ],
+            ],
+
+            /*************** 配置 oppo framework-res 路径 ***************/
+            frameworkRes: [
+                    manifest: "$oppoDir/frameworks/base/core/res/AndroidManifest.xml",
+                    res     : [],
+                    assets  : [
+                            "$oppoDir/frameworks/base/core/res/res",
+                            "$oppoDir/frameworks/base/core/res/toggle-res",
+                    ],
+                    jni     : [],
+                    src     : [],
+            ],
+
     ]
 
-    oppoServiceDir = [
-            "$oppoDir/frameworks/base/services/core/java/",
-            "$oppoDir/frameworks/base/services/java/",
-    ]
-    /*************** 配置原生 oppo-fwk,oppo-services 路径 ***************/
-
-    /*************** 配置 oppo-framework-res 路径 ***************/
-    oppoFrameworkResDir = [
-            "$oppoDir/frameworks/base/core/res/res",
-    ]
-
-    oppoFrameworkManifestDir = "$oppoDir/frameworks/base/core/res/AndroidManifest.xml"
-    /*************** 配置 oppo-framework-res 路径 ***************/
 }

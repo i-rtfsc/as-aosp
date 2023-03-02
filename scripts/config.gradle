@@ -15,41 +15,13 @@ ext {
             minSdkVersion    : 31,
     ]
 
-    //列举所有的模块
-    allModules = [
-            "framework"          : ":framework",
-            "services"           : ":services",
-
-            "i-ext-framework"    : ":i-ext-framework",
-            "ext-framework"      : ":ext-framework",
-
-            "i-ext-services"     : ":i-ext-services",
-            "ext-services"       : ":ext-services",
-
-            "framework-res"      : ":framework-res",
-
-            "SettingsLib"        : ":SettingsLib",
-            "Settings"           : ":Settings",
-
-            "SystemUIPluginLib"  : ":SystemUIPluginLib",
-            "SystemUI"           : ":SystemUI",
-
-            "SettingsProvider"   : ":SettingsProvider",
-
-            "flyme-framework"    : ":flyme-framework",
-            "flyme-services"     : ":flyme-services",
-            "flyme-framework-res": ":flyme-framework-res",
-
-            "miui-framework"    : ":miui-framework",
-            "miui-services"     : ":miui-services",
-            "miui-framework-res": ":miui-framework-res",
-
-            "oppo-framework"    : ":oppo-framework",
-            "oppo-services"     : ":oppo-services",
-            "oppo-framework-res": ":oppo-framework-res",
-
-            "vivo-framework"    : ":vivo-framework",
-            "vivo-services"     : ":vivo-services",
-            "vivo-framework-res": ":vivo-framework-res",
-    ]
+    //获取所有的模块
+    allModules =[:]
+    for (Project subproject : project.subprojects) {
+        def project_name = subproject.getName().toString()
+        if ("test".equals(project_name)) {
+            continue
+        }
+        allModules.put(project_name, ":"+project_name)
+    }
 }

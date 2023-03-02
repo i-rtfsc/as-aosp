@@ -5,20 +5,51 @@ ext {
         extDir = "/Users/solo/code/flyme/vendor/xjsd"
     }
 
-    /*************** 配置 ext 路径 ***************/
-    iExtFrameworkDir = [
-            "$extDir/frameworks/base/core/java/",
+    extfwk = [
+            root      : "$extDir",
+            /*************** 配置 i-framework 路径 ***************/
+            iframework: [
+                    manifest: "AndroidManifest.xml",
+                    res     : [],
+                    assets  : [],
+                    jni     : [],
+                    src     : [
+                            "$extDir/frameworks/base/core/java/",
+                    ],
+            ],
+
+            /*************** 配置 ext-framework 路径 ***************/
+            framework : [
+                    manifest: "AndroidManifest.xml",
+                    res     : [],
+                    assets  : [],
+                    jni     : [],
+                    src     : [
+                            "$extDir/frameworks/ext/core/java/",
+                    ],
+            ],
+
+            /*************** 配置 i-services 路径 ***************/
+            iservices : [
+                    manifest: "AndroidManifest.xml",
+                    res     : [],
+                    assets  : [],
+                    jni     : [],
+                    src     : [
+                            "$extDir/frameworks/base/services/core/java/",
+                    ],
+            ],
+
+            /*************** 配置 ext-services 路径 ***************/
+            services  : [
+                    manifest: "AndroidManifest.xml",
+                    res     : [],
+                    assets  : [],
+                    jni     : [],
+                    src     : [
+                            "$extDir/frameworks/ext/services/core/java/",
+                    ],
+            ],
     ]
 
-    iExtServiceDir = [
-            "$extDir/frameworks/base/services/core/java/",
-    ]
-
-    extFrameworkDir = [
-            "$extDir/frameworks/ext/core/java/",
-    ]
-    extServiceDir = [
-            "$extDir/frameworks/ext/services/core/java/",
-    ]
-    /*************** 配置 ext 路径 ***************/
 }

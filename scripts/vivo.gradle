@@ -1,26 +1,47 @@
 ext {
     //设置源码所在的目录
-    vivoDir = "/home/solo/code/vivo"
+    vivoDir = "/home/solo/code/vivo/vendor/vivo"
     if (org.gradle.internal.os.OperatingSystem.current().isMacOsX()) {
         vivoDir = "/Users/solo/code/vivo"
     }
 
-    /*************** 配置原生 vivo-fwk,vivo-services 路径 ***************/
-    vivoFrameworkDir = [
-            "$vivoDir/frameworks/base/core/java/",
+    vivo = [
+            root        : "$vivoDir",
+
+            /*************** 配置 vivo fwk 路径 ***************/
+            framework   : [
+                    manifest: "AndroidManifest.xml",
+                    res     : "res",
+                    assets  : "assets",
+                    jni     : "$vivoDir",
+                    src     : [
+                            "$vivoDir/frameworks/base/core/java/",
+                    ],
+            ],
+
+            /*************** 配置 vivo services 路径 ***************/
+            services    : [
+                    manifest: "AndroidManifest.xml",
+                    res     : "res",
+                    assets  : "assets",
+                    jni     : [],
+                    src     : [
+                            "$vivoDir/frameworks/base/services/core/java/",
+                            "$vivoDir/frameworks/base/services/java/",
+                    ],
+            ],
+
+            /*************** 配置 vivo framework-res 路径 ***************/
+            frameworkRes: [
+                    manifest: "AndroidManifest.xml",
+                    res     : [],
+                    assets  : [
+                            "$vivoDir/../../frameworks/base/core/res/vivo-res",
+                    ],
+                    jni     : [],
+                    src     : [],
+            ],
+
     ]
 
-    vivoServiceDir = [
-            "$vivoDir/frameworks/base/services/core/java/",
-            "$vivoDir/frameworks/base/services/java/",
-    ]
-    /*************** 配置原生 vivo-fwk,vivo-services 路径 ***************/
-
-    /*************** 配置 vivo-framework-res 路径 ***************/
-    vivoFrameworkResDir = [
-            "$vivoDir/frameworks/base/core/res/res",
-    ]
-
-    vivoFrameworkManifestDir = "$vivoDir/frameworks/base/core/res/AndroidManifest.xml"
-    /*************** 配置 miui-framework-res 路径 ***************/
 }

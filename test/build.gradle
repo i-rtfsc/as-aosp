@@ -5,6 +5,8 @@ ext {
     BUILD_ASSETS = 'assets'
     BUILD_SRC = 'src'
     BUILD_AIDL = 'aidl'
+    BUILD_NATIVE = false
+    BUILD_NATIVE_ROOT = ''
 }
 
 apply from: "${rootDir}/scripts/android-build.gradle"

@@ -21,6 +21,14 @@ android {
         }
         minSdkVersion androidSdk.minSdkVersion
         targetSdkVersion androidSdk.targetSdkVersion
+
+        if (BUILD_NATIVE.toBoolean()) {
+            externalNativeBuild {
+                cmake {
+                    arguments "-DBUILD_NATIVE_ROOT=" + BUILD_NATIVE_ROOT
+                }
+            }
+        }
     }
 
     sourceSets {
@@ -30,6 +38,14 @@ android {
             res.srcDirs = [BUILD_RES]
             java.srcDirs = [BUILD_SRC]
             aidl.srcDirs = [BUILD_AIDL]
+        }
+    }
+
+    if (BUILD_NATIVE.toBoolean()) {
+        externalNativeBuild {
+            cmake {
+                path "CMakeLists.txt"
+            }
         }
     }
 

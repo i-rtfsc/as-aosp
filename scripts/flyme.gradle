@@ -1,27 +1,88 @@
 ext {
     //设置源码所在的目录
-    flymeDir = "/home/solo/code/flyme/vendor/flyme"
+    flymeDir = "/home/solo/code/flyme/"
     if (org.gradle.internal.os.OperatingSystem.current().isMacOsX()) {
         flymeDir = "/Users/solo/code/flyme"
     }
 
-    /*************** 配置原生 flyme-fwk,flyme-services 路径 ***************/
-    flymeFrameworkDir = [
-            "$flymeDir/frameworks/base/core/java/",
+    flymeVendorDir = "$flymeDir/vendor/flyme"
+
+    flyme = [
+            root        : "$flymeDir",
+
+            /*************** 配置 flyme fwk 路径 ***************/
+            framework   : [
+                    manifest: "AndroidManifest.xml",
+                    res     : "res",
+                    assets  : "assets",
+                    jni     : "$flymeDir",
+                    src     : [
+                            "$flymeVendorDir/frameworks/base/core/java/",
+                    ],
+            ],
+
+            /*************** 配置 flyme services 路径 ***************/
+            services    : [
+                    manifest: "AndroidManifest.xml",
+                    res     : "res",
+                    assets  : "assets",
+                    jni     : [],
+                    src     : [
+                            "$flymeVendorDir/frameworks/base/services/core/java/",
+                            "$flymeVendorDir/frameworks/base/services/java/",
+                    ],
+            ],
+
+            /*************** 配置 flyme framework-res 路径 ***************/
+            frameworkRes: [
+                    manifest: "AndroidManifest.xml",
+                    res     : [],
+                    assets  : [
+                            "$flymeDir/frameworks/base/core/res/flyme-res",
+                    ],
+                    jni     : [],
+                    src     : [],
+            ],
+
+            /*************** 配置 SystemUI 路径 ***************/
+            SystemUI         : [
+                    manifest: "$flymeDir/../../packages/apps/SystemUI/AndroidManifest.xml",
+                    res     : [
+                            "$flymeDir/packages/apps/SystemUI/res/",
+                            "$flymeDir/packages/apps/SystemUI/res-flyme/",
+                            "$flymeDir/packages/apps/SystemUI/res-keyguard/",
+                            "$flymeDir/packages/apps/SystemUI/res-keyguard-flyme/",
+                            "$flymeDir/packages/apps/SystemUI/res-product/",
+                            "$flymeDir/packages/apps/SystemUI/res-volume-flyme/",
+                            "$flymeDir/packages/apps/SystemUI/animation/res",
+                            "$flymeDir/packages/apps/SystemUI/animation/res-flyme",
+                    ],
+                    assets  : [
+                            "$flymeDir/frameworks/base/core/res/assets",
+                    ],
+                    jni     : [],
+                    src     : [
+                            "$flymeDir/frameworks/base/packages/SystemUI/src",
+                            "$flymeDir/frameworks/base/packages/SystemUI/src-release",
+                            "$flymeDir/frameworks/base/packages/SystemUI/animation/src",
+                            "$flymeDir/frameworks/base/packages/SystemUI/monet/src",
+                            "$flymeDir/frameworks/base/packages/SystemUI/shared/src",
+                    ],
+            ],
+
+            /*************** 配置 SystemUIPluginLib 路径 ***************/
+            SystemUIPluginLib: [
+                    manifest: "$flymeDir/frameworks/base/packages/SystemUI/plugin/AndroidManifest.xml",
+                    res     : [],
+                    assets  : [],
+                    jni     : [],
+                    src     : [
+                            "$flymeDir/frameworks/base/packages/SystemUI/plugin_core/src",
+                            "$flymeDir/frameworks/base/packages/SystemUI/plugin/src",
+                            "$flymeDir/frameworks/base/packages/SystemUI/plugin/bcsmartspace/src",
+                            "$flymeDir/frameworks/base/packages/SystemUI/plugin_flyme/src",
+                    ],
+            ],
     ]
 
-    flymeServiceDir = [
-            "$flymeDir/frameworks/base/services/core/java/",
-            "$flymeDir/frameworks/base/services/java/",
-    ]
-    /*************** 配置原生 flyme-fwk,flyme-services 路径 ***************/
-
-    /*************** 配置 flyme-framework-res 路径 ***************/
-    flymeDir = "/home/solo/code/flyme"
-    flymeFrameworkResDir = [
-            "$flymeDir/frameworks/base/core/res/flyme-res",
-    ]
-
-    flymeFrameworkManifestDir = "$flymeDir/frameworks/base/core/res/AndroidManifest.xml"
-    /*************** 配置 miui-framework-res 路径 ***************/
 }
