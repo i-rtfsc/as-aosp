@@ -46,7 +46,7 @@ ext {
 
             /*************** 配置 SystemUI 路径 ***************/
             SystemUI         : [
-                    manifest: "$flymeDir/../../packages/apps/SystemUI/AndroidManifest.xml",
+                    manifest: "$flymeDir/packages/apps/SystemUI/AndroidManifest.xml",
                     res     : [
                             "$flymeDir/packages/apps/SystemUI/res/",
                             "$flymeDir/packages/apps/SystemUI/res-flyme/",
@@ -58,29 +58,29 @@ ext {
                             "$flymeDir/packages/apps/SystemUI/animation/res-flyme",
                     ],
                     assets  : [
-                            "$flymeDir/frameworks/base/core/res/assets",
+                            "$flymeDir/packages/apps/SystemUI/assets",
                     ],
                     jni     : [],
                     src     : [
-                            "$flymeDir/frameworks/base/packages/SystemUI/src",
-                            "$flymeDir/frameworks/base/packages/SystemUI/src-release",
-                            "$flymeDir/frameworks/base/packages/SystemUI/animation/src",
-                            "$flymeDir/frameworks/base/packages/SystemUI/monet/src",
-                            "$flymeDir/frameworks/base/packages/SystemUI/shared/src",
+                            "$flymeDir/packages/apps/SystemUI/src",
+                            "$flymeDir/packages/apps/SystemUI/src-release",
+                            "$flymeDir/packages/apps/SystemUI/animation/src",
+                            "$flymeDir/packages/apps/SystemUI/monet/src",
+                            "$flymeDir/packages/apps/SystemUI/shared/src",
                     ],
             ],
 
             /*************** 配置 SystemUIPluginLib 路径 ***************/
             SystemUIPluginLib: [
-                    manifest: "$flymeDir/frameworks/base/packages/SystemUI/plugin/AndroidManifest.xml",
+                    manifest: "$flymeDir/packages/apps/SystemUI/plugin/AndroidManifest.xml",
                     res     : [],
                     assets  : [],
                     jni     : [],
                     src     : [
-                            "$flymeDir/frameworks/base/packages/SystemUI/plugin_core/src",
-                            "$flymeDir/frameworks/base/packages/SystemUI/plugin/src",
-                            "$flymeDir/frameworks/base/packages/SystemUI/plugin/bcsmartspace/src",
-                            "$flymeDir/frameworks/base/packages/SystemUI/plugin_flyme/src",
+                            "$flymeDir/packages/apps/SystemUI/plugin_core/src",
+                            "$flymeDir/packages/apps/SystemUI/plugin/src",
+                            "$flymeDir/packages/apps/SystemUI/plugin/bcsmartspace/src",
+                            "$flymeDir/packages/apps/SystemUI/plugin_flyme/src",
                     ],
             ],
     ]
