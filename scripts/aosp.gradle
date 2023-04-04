@@ -275,6 +275,33 @@ ext {
                             "$aospDir/frameworks/base/packages/SettingsProvider/src",
                     ],
             ],
+
+            /*************** 配置原生 car-framework 路径 ***************/
+            carFramework        : [
+                    manifest: "$aospDir/packages/services/Car/car-lib/AndroidManifest.xml",
+                    res     : "res",
+                    assets  : "assets",
+                    jni     : "$aospDir",
+                    src     : [
+                            "$aospDir/packages/services/Car/car-lib/src",
+                            "$aospDir/packages/services/Car/car-builtin-lib/src",
+                    ],
+            ],
+
+            /*************** 配置原生 car-services 路径 ***************/
+            carServices          : [
+                    manifest: "$aospDir/packages/services/Car/service/AndroidManifest.xml",
+                    res     : [
+                            "$aospDir/packages/services/Car/service/res",
+                            "$aospDir/packages/services/Car/service-builtin/res",
+                    ],
+                    assets  : "assets",
+                    jni     : "$aospDir",
+                    src     : [
+                            "$aospDir/packages/services/Car/service/src",
+                            "$aospDir/packages/services/Car/service-builtin/src",
+                    ],
+            ],
     ]
 
 }
