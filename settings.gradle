@@ -27,6 +27,11 @@ include ':SettingsLib'
 include ':SettingsProvider'
 /*************** aosp ***************/
 
+/*************** aaos ***************/
+include ':car-framework'
+include ':car-services'
+/*************** aaos ***************/
+
 /*************** flyme ***************/
 include ':flyme-framework'
 include ':flyme-services'
