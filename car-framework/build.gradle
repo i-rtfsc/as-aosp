@@ -1,4 +1,4 @@
-def androidRoot = rootProject.ext.aosp.carFramework
+def androidRoot = rootProject.ext.car.framework
 
 ext {
     BUILD_APPLICATION = false

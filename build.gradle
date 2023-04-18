@@ -1,6 +1,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 apply from: 'scripts/config.gradle'
 apply from: 'scripts/aosp.gradle'
+apply from: 'scripts/car.gradle'
 apply from: 'scripts/ext.gradle'
 apply from: 'scripts/miui.gradle'
 apply from: 'scripts/flyme.gradle'
