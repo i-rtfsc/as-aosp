@@ -36,10 +36,10 @@ ext {
             /*************** 配置 flyme framework-res 路径 ***************/
             frameworkRes: [
                     manifest: "AndroidManifest.xml",
-                    res     : [],
-                    assets  : [
-                            "$flymeDir/frameworks/base/core/res/flyme-res",
+                    res     : [
+                            "$flymeDir/frameworks/base/core/res/flyme-res"
                     ],
+                    assets  : [],
                     jni     : [],
                     src     : [],
             ],
