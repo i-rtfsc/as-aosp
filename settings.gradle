@@ -24,8 +24,15 @@ include ':SystemUIPluginLib'
 include ':Settings'
 include ':SettingsLib'
 
+//SettingsProvider相关
 include ':SettingsProvider'
 /*************** aosp ***************/
+
+/*************** aosp native ***************/
+include ':android-runtime'
+include ':inputflinger'
+include ':surfaceflinger'
+/*************** aosp native ***************/
 
 /*************** aaos ***************/
 include ':car-framework'

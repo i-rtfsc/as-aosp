@@ -1,0 +1,23 @@
+apply plugin: 'com.android.library'
+
+android {
+    def androidSdk = rootProject.ext.androidSdk
+    compileSdkVersion androidSdk.compileSdkVersion
+    buildToolsVersion androidSdk.buildToolsVersion
+
+    defaultConfig {
+
+        externalNativeBuild {
+            cmake {
+                arguments "-DBUILD_NATIVE_ROOT=" + BUILD_NATIVE_ROOT
+            }
+        }
+    }
+
+    externalNativeBuild {
+        cmake {
+            path "CMakeLists.txt"
+        }
+    }
+
+}
