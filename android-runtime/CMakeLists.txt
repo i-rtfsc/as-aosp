@@ -4,13 +4,12 @@ project(libandroid_runtime)
 set(ANDROID_ROOT ${BUILD_NATIVE_ROOT})
 
 file(GLOB SOURCE_FILES
-        # libandroid_runtime
+        ${ANDROID_ROOT}/frameworks/base/core/jni/*.c
         ${ANDROID_ROOT}/frameworks/base/core/jni/*.cpp
-        # libservices
-        ${ANDROID_ROOT}/frameworks/base/services/core/*.cpp
-        ${ANDROID_ROOT}/frameworks/base/services/core/**/*.cpp
-        ${ANDROID_ROOT}/frameworks/base/libs/services/src/content/ComponentName.cpp
-        ${ANDROID_ROOT}/frameworks/base/libs/services/src/os/DropBoxManager.cpp
+        ${ANDROID_ROOT}/frameworks/base/core/jni/android/opengl/*.c
+        ${ANDROID_ROOT}/frameworks/base/core/jni/android/opengl/*.cpp
+        ${ANDROID_ROOT}/frameworks/base/core/jni/hwbinder/*.c
+        ${ANDROID_ROOT}/frameworks/base/core/jni/hwbinder/*.cpp
 )
 
 include_directories(
@@ -64,9 +63,6 @@ include_directories(
         "${ANDROID_ROOT}/frameworks/av/media/libmedia/aidl"
         "${ANDROID_ROOT}/frameworks/av/media/libstagefright/foundation/include"
         "${ANDROID_ROOT}/frameworks/av/media/img_utils/include"
-        # libservices
-        "${ANDROID_ROOT}/frameworks/base/libs/services/include"
-        "${ANDROID_ROOT}/frameworks/base/libs/services"
 )
 
 file (GLOB_RECURSE HEADERS
@@ -120,10 +116,6 @@ file (GLOB_RECURSE HEADERS
         "${ANDROID_ROOT}/frameworks/av/media/libmedia/aidl/**/*.h"
         "${ANDROID_ROOT}/frameworks/av/media/libstagefright/foundation/include/**/*.h"
         "${ANDROID_ROOT}/frameworks/av/media/img_utils/include/**/*.h"
-        # libservices
-        "${ANDROID_ROOT}/frameworks/base/services/core/jni/**/*.h"
-        "${ANDROID_ROOT}/frameworks/base/libs/services/include/**/*.h"
-        "${ANDROID_ROOT}/frameworks/base/libs/services/**/*.h"
 )
 
 add_executable(
