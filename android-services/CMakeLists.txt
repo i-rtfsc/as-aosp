@@ -18,6 +18,8 @@ file(GLOB SOURCE_FILES
         ${ANDROID_ROOT}/frameworks/base/services/core/jni/gnss/*.cpp
         ${ANDROID_ROOT}/frameworks/base/services/core/jni/stats/*.c
         ${ANDROID_ROOT}/frameworks/base/services/core/jni/stats/*.cpp
+        ${ANDROID_ROOT}/frameworks/base/services/core/jni/tvinput/*.c
+        ${ANDROID_ROOT}/frameworks/base/services/core/jni/tvinput/*.cpp
         ${ANDROID_ROOT}/frameworks/base/services/incremental/*.c
         ${ANDROID_ROOT}/frameworks/base/services/incremental/*.cpp
         ${ANDROID_ROOT}/frameworks/base/services/incremental/test/*.c
@@ -34,6 +36,7 @@ include_directories(
         ${ANDROID_ROOT}/frameworks/base/services/core/jni/BroadcastRadio
         ${ANDROID_ROOT}/frameworks/base/services/core/jni/gnss
         ${ANDROID_ROOT}/frameworks/base/services/core/jni/stats
+        ${ANDROID_ROOT}/frameworks/base/services/core/jni/tvinput
         ${ANDROID_ROOT}/frameworks/base/services/incremental
         ${ANDROID_ROOT}/frameworks/base/services/incremental/include
         ${ANDROID_ROOT}/frameworks/base/services/incremental/test
@@ -52,6 +55,8 @@ file (GLOB_RECURSE HEADERS
         ${ANDROID_ROOT}/frameworks/base/services/core/jni/gnss/*.hpp
         ${ANDROID_ROOT}/frameworks/base/services/core/jni/stats/*.h
         ${ANDROID_ROOT}/frameworks/base/services/core/jni/stats/*.hpp
+        ${ANDROID_ROOT}/frameworks/base/services/core/jni/tvinput/*.h
+        ${ANDROID_ROOT}/frameworks/base/services/core/jni/tvinput/*.hpp
         ${ANDROID_ROOT}/frameworks/base/services/incremental/*.h
         ${ANDROID_ROOT}/frameworks/base/services/incremental/*.hpp
         ${ANDROID_ROOT}/frameworks/base/services/incremental/include/*.h

@@ -8,6 +8,8 @@ file(GLOB SOURCE_FILES
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/*.cpp
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/CompositionEngine/*.c
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/CompositionEngine/*.cpp
+        ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/CompositionEngine/QtiExtension/*.c
+        ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/CompositionEngine/QtiExtension/*.cpp
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/CompositionEngine/mock/*.c
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/CompositionEngine/mock/*.cpp
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/CompositionEngine/src/*.c
@@ -18,16 +20,24 @@ file(GLOB SOURCE_FILES
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/CompositionEngine/tests/*.cpp
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/CompositionEngine/tests/planner/*.c
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/CompositionEngine/tests/planner/*.cpp
+        ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/Display/*.c
+        ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/Display/*.cpp
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/DisplayHardware/*.c
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/DisplayHardware/*.cpp
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/Effects/*.c
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/Effects/*.cpp
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/EventLog/*.c
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/EventLog/*.cpp
+        ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/FlymeExtension/*.c
+        ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/FlymeExtension/*.cpp
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/FrameTimeline/*.c
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/FrameTimeline/*.cpp
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/FrameTracer/*.c
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/FrameTracer/*.cpp
+        ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/FrontEnd/*.c
+        ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/FrontEnd/*.cpp
+        ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/QtiExtension/*.c
+        ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/QtiExtension/*.cpp
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/Scheduler/*.c
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/Scheduler/*.cpp
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/Scheduler/src/*.c
@@ -48,8 +58,6 @@ file(GLOB SOURCE_FILES
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/layerproto/*.cpp
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/tests/*.c
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/tests/*.cpp
-        ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/tests/fakehwc/*.c
-        ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/tests/fakehwc/*.cpp
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/tests/tracing/*.c
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/tests/tracing/*.cpp
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/tests/unittests/*.c
@@ -69,6 +77,7 @@ file(GLOB SOURCE_FILES
 include_directories(
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/CompositionEngine
+        ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/CompositionEngine/QtiExtension
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/CompositionEngine/include/compositionengine
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/CompositionEngine/include/compositionengine/impl
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/CompositionEngine/include/compositionengine/impl/planner
@@ -78,13 +87,18 @@ include_directories(
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/CompositionEngine/src/planner
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/CompositionEngine/tests
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/CompositionEngine/tests/planner
+        ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/Display
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/DisplayHardware
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/Effects
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/EventLog
+        ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/FlymeExtension
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/FrameTimeline
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/FrameTracer
+        ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/FrontEnd
+        ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/QtiExtension
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/Scheduler
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/Scheduler/include/scheduler
+        ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/Scheduler/include/scheduler/interface
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/Scheduler/src
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/Scheduler/tests
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/TimeStats
@@ -93,11 +107,11 @@ include_directories(
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/TimeStats/timestatsproto/include/timestatsproto
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/Tracing
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/Tracing/tools
+        ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/Utils
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/fuzzer
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/layerproto
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/layerproto/include/layerproto
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/tests
-        ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/tests/fakehwc
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/tests/tracing
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/tests/unittests
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/tests/unittests/fake
@@ -112,6 +126,8 @@ include_directories(
 file (GLOB_RECURSE HEADERS
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/*.h
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/*.hpp
+        ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/CompositionEngine/QtiExtension/*.h
+        ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/CompositionEngine/QtiExtension/*.hpp
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/CompositionEngine/include/compositionengine/*.h
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/CompositionEngine/include/compositionengine/*.hpp
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/CompositionEngine/include/compositionengine/impl/*.h
@@ -122,20 +138,30 @@ file (GLOB_RECURSE HEADERS
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/CompositionEngine/include/compositionengine/mock/*.hpp
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/CompositionEngine/tests/*.h
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/CompositionEngine/tests/*.hpp
+        ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/Display/*.h
+        ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/Display/*.hpp
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/DisplayHardware/*.h
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/DisplayHardware/*.hpp
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/Effects/*.h
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/Effects/*.hpp
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/EventLog/*.h
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/EventLog/*.hpp
+        ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/FlymeExtension/*.h
+        ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/FlymeExtension/*.hpp
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/FrameTimeline/*.h
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/FrameTimeline/*.hpp
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/FrameTracer/*.h
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/FrameTracer/*.hpp
+        ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/FrontEnd/*.h
+        ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/FrontEnd/*.hpp
+        ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/QtiExtension/*.h
+        ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/QtiExtension/*.hpp
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/Scheduler/*.h
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/Scheduler/*.hpp
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/Scheduler/include/scheduler/*.h
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/Scheduler/include/scheduler/*.hpp
+        ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/Scheduler/include/scheduler/interface/*.h
+        ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/Scheduler/include/scheduler/interface/*.hpp
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/Scheduler/tests/*.h
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/Scheduler/tests/*.hpp
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/TimeStats/*.h
@@ -148,14 +174,14 @@ file (GLOB_RECURSE HEADERS
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/Tracing/*.hpp
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/Tracing/tools/*.h
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/Tracing/tools/*.hpp
+        ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/Utils/*.h
+        ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/Utils/*.hpp
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/fuzzer/*.h
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/fuzzer/*.hpp
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/layerproto/include/layerproto/*.h
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/layerproto/include/layerproto/*.hpp
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/tests/*.h
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/tests/*.hpp
-        ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/tests/fakehwc/*.h
-        ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/tests/fakehwc/*.hpp
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/tests/unittests/*.h
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/tests/unittests/*.hpp
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/tests/unittests/fake/*.h

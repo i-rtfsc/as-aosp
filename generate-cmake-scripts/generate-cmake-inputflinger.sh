@@ -19,4 +19,4 @@
 # (inputflinger) frameworks/native/services/inputflinger
 # (libinputservice) frameworks/base/libs/input
 # (libuinputcommand_jni) frameworks/base/cmds/uinput/jni
-python generate-cmake.py -p inputflinger -r /home/solo/code/aosp -d frameworks/native/services/inputflinger,frameworks/base/libs/input,frameworks/base/cmds/uinput/jni
+python generate-cmake.py -p inputflinger -r /home/solo/code/flyme -d frameworks/native/services/inputflinger,frameworks/base/libs/input,frameworks/base/cmds/uinput/jni

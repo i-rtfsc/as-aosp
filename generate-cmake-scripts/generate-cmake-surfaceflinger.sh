@@ -16,4 +16,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-python generate-cmake.py -p surfaceflinger -r /home/solo/code/aosp -d frameworks/native/services/surfaceflinger
+python generate-cmake.py -p surfaceflinger -r /home/solo/code/flyme -d frameworks/native/services/surfaceflinger

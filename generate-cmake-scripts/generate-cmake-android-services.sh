@@ -20,4 +20,4 @@
 # (libservices.core) frameworks/base/services/core/jni
 # (libservices) frameworks/base/libs/services
 # (service.incremental) frameworks/base/services/incremental
-python generate-cmake.py -p android-services -r /home/solo/code/aosp -d frameworks/base/services/core/jni,frameworks/base/libs/services,frameworks/base/services/incremental
+python generate-cmake.py -p android-services -r /home/solo/code/flyme -d frameworks/base/services/core/jni,frameworks/base/libs/services,frameworks/base/services/incremental

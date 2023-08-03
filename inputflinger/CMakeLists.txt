@@ -26,6 +26,8 @@ file(GLOB SOURCE_FILES
         ${ANDROID_ROOT}/frameworks/native/services/inputflinger/reader/mapper/*.cpp
         ${ANDROID_ROOT}/frameworks/native/services/inputflinger/reader/mapper/accumulator/*.c
         ${ANDROID_ROOT}/frameworks/native/services/inputflinger/reader/mapper/accumulator/*.cpp
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/reader/mapper/gestures/*.c
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/reader/mapper/gestures/*.cpp
         ${ANDROID_ROOT}/frameworks/native/services/inputflinger/reporter/*.c
         ${ANDROID_ROOT}/frameworks/native/services/inputflinger/reporter/*.cpp
         ${ANDROID_ROOT}/frameworks/native/services/inputflinger/tests/*.c
@@ -50,6 +52,7 @@ include_directories(
         ${ANDROID_ROOT}/frameworks/native/services/inputflinger/reader/include
         ${ANDROID_ROOT}/frameworks/native/services/inputflinger/reader/mapper
         ${ANDROID_ROOT}/frameworks/native/services/inputflinger/reader/mapper/accumulator
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/reader/mapper/gestures
         ${ANDROID_ROOT}/frameworks/native/services/inputflinger/reporter
         ${ANDROID_ROOT}/frameworks/native/services/inputflinger/tests
         ${ANDROID_ROOT}/frameworks/native/services/inputflinger/tests/fuzzers
@@ -82,10 +85,14 @@ file (GLOB_RECURSE HEADERS
         ${ANDROID_ROOT}/frameworks/native/services/inputflinger/reader/mapper/*.hpp
         ${ANDROID_ROOT}/frameworks/native/services/inputflinger/reader/mapper/accumulator/*.h
         ${ANDROID_ROOT}/frameworks/native/services/inputflinger/reader/mapper/accumulator/*.hpp
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/reader/mapper/gestures/*.h
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/reader/mapper/gestures/*.hpp
         ${ANDROID_ROOT}/frameworks/native/services/inputflinger/reporter/*.h
         ${ANDROID_ROOT}/frameworks/native/services/inputflinger/reporter/*.hpp
         ${ANDROID_ROOT}/frameworks/native/services/inputflinger/tests/*.h
         ${ANDROID_ROOT}/frameworks/native/services/inputflinger/tests/*.hpp
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/tests/fuzzers/*.h
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/tests/fuzzers/*.hpp
 )
 
 add_executable(
