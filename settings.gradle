@@ -30,6 +30,7 @@ include ':SettingsProvider'
 
 /*************** aosp native ***************/
 include ':android-runtime'
+include ':android-services'
 include ':inputflinger'
 include ':surfaceflinger'
 /*************** aosp native ***************/

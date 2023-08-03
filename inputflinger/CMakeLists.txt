@@ -4,43 +4,89 @@ project(inputflinger)
 set(ANDROID_ROOT ${BUILD_NATIVE_ROOT})
 
 file(GLOB SOURCE_FILES
+        ${ANDROID_ROOT}/frameworks/base/cmds/uinput/jni/*.c
+        ${ANDROID_ROOT}/frameworks/base/cmds/uinput/jni/*.cpp
+        ${ANDROID_ROOT}/frameworks/base/libs/input/*.c
         ${ANDROID_ROOT}/frameworks/base/libs/input/*.cpp
-        ${ANDROID_ROOT}/frameworks/base/libs/input/**/*.cpp
-        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/**/*.cpp
+        ${ANDROID_ROOT}/frameworks/base/libs/input/tests/*.c
+        ${ANDROID_ROOT}/frameworks/base/libs/input/tests/*.cpp
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/*.c
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/*.cpp
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/benchmarks/*.c
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/benchmarks/*.cpp
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/dispatcher/*.c
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/dispatcher/*.cpp
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/host/*.c
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/host/*.cpp
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/reader/*.c
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/reader/*.cpp
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/reader/controller/*.c
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/reader/controller/*.cpp
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/reader/mapper/*.c
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/reader/mapper/*.cpp
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/reader/mapper/accumulator/*.c
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/reader/mapper/accumulator/*.cpp
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/reporter/*.c
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/reporter/*.cpp
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/tests/*.c
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/tests/*.cpp
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/tests/fuzzers/*.c
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/tests/fuzzers/*.cpp
 )
 
 include_directories(
-        "${ANDROID_ROOT}/frameworks/base/libs/input"
-        "${ANDROID_ROOT}/frameworks/native/services/inputflinger"
-        "${ANDROID_ROOT}/frameworks/native/services/inputflinger/include"
-        "${ANDROID_ROOT}/frameworks/native/services/inputflinger/dispatcher/include"
-        "${ANDROID_ROOT}/frameworks/native/services/inputflinger/benchmarks"
-        "${ANDROID_ROOT}/frameworks/native/services/inputflinger/reporter"
-        "${ANDROID_ROOT}/frameworks/native/services/inputflinger/host"
-        "${ANDROID_ROOT}/frameworks/native/services/inputflinger/reader"
-        "${ANDROID_ROOT}/frameworks/native/services/inputflinger/reader/controller"
-        "${ANDROID_ROOT}/frameworks/native/services/inputflinger/reader/include"
-        "${ANDROID_ROOT}/frameworks/native/services/inputflinger/reader/mapper"
-        "${ANDROID_ROOT}/frameworks/native/services/inputflinger/reader/mapper/accumulator"
-
+        ${ANDROID_ROOT}/frameworks/base/cmds/uinput/jni
+        ${ANDROID_ROOT}/frameworks/base/libs/input
+        ${ANDROID_ROOT}/frameworks/base/libs/input/tests
+        ${ANDROID_ROOT}/frameworks/base/libs/input/tests/mocks
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/benchmarks
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/dispatcher
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/dispatcher/include
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/host
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/include
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/reader
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/reader/controller
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/reader/include
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/reader/mapper
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/reader/mapper/accumulator
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/reporter
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/tests
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/tests/fuzzers
 )
-
 
 file (GLOB_RECURSE HEADERS
-        "${ANDROID_ROOT}/frameworks/base/libs/input/**/*.h"
-        "${ANDROID_ROOT}/frameworks/native/services/inputflinger/**/*.h"
-        "${ANDROID_ROOT}/frameworks/native/services/inputflinger/include/**/*.h"
-        "${ANDROID_ROOT}/frameworks/native/services/inputflinger/benchmarks/**/*.h"
-        "${ANDROID_ROOT}/frameworks/native/services/inputflinger/dispatcher/include/**/*.h"
-        "${ANDROID_ROOT}/frameworks/native/services/inputflinger/reporter/**/*.h"
-        "${ANDROID_ROOT}/frameworks/native/services/inputflinger/host/**/*.h"
-        "${ANDROID_ROOT}/frameworks/native/services/inputflinger/reader/**/*.h"
-        "${ANDROID_ROOT}/frameworks/native/services/inputflinger/reader/controller/**/*.h"
-        "${ANDROID_ROOT}/frameworks/native/services/inputflinger/reader/include/**/*.h"
-        "${ANDROID_ROOT}/frameworks/native/services/inputflinger/reader/mapper/**/*.h"
-        "${ANDROID_ROOT}/frameworks/native/services/inputflinger/reader/mapper/accumulator/**/*.h"
+        ${ANDROID_ROOT}/frameworks/base/cmds/uinput/jni/*.h
+        ${ANDROID_ROOT}/frameworks/base/cmds/uinput/jni/*.hpp
+        ${ANDROID_ROOT}/frameworks/base/libs/input/*.h
+        ${ANDROID_ROOT}/frameworks/base/libs/input/*.hpp
+        ${ANDROID_ROOT}/frameworks/base/libs/input/tests/mocks/*.h
+        ${ANDROID_ROOT}/frameworks/base/libs/input/tests/mocks/*.hpp
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/*.h
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/*.hpp
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/dispatcher/*.h
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/dispatcher/*.hpp
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/dispatcher/include/*.h
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/dispatcher/include/*.hpp
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/host/*.h
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/host/*.hpp
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/include/*.h
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/include/*.hpp
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/reader/*.h
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/reader/*.hpp
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/reader/controller/*.h
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/reader/controller/*.hpp
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/reader/include/*.h
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/reader/include/*.hpp
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/reader/mapper/*.h
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/reader/mapper/*.hpp
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/reader/mapper/accumulator/*.h
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/reader/mapper/accumulator/*.hpp
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/reporter/*.h
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/reporter/*.hpp
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/tests/*.h
+        ${ANDROID_ROOT}/frameworks/native/services/inputflinger/tests/*.hpp
 )
-
 
 add_executable(
         inputflinger
