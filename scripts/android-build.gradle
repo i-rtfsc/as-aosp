@@ -25,6 +25,8 @@ android {
         if (BUILD_NATIVE.toBoolean()) {
             externalNativeBuild {
                 cmake {
+                    cppFlags "-std=c++11"
+                    abiFilters "arm64-v8a"
                     arguments "-DBUILD_NATIVE_ROOT=" + BUILD_NATIVE_ROOT
                 }
             }
