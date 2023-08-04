@@ -47,7 +47,7 @@ include ':flyme-services'
 include ':flyme-framework-res'
 /*************** flyme ***************/
 
-<<<<<<< HEAD
+
 ///*************** miui ***************/
 //include ':miui-framework'
 //include ':miui-services'
