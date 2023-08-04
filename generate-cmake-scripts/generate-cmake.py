@@ -25,6 +25,8 @@ from string import Template
 cmake_template = """cmake_minimum_required(VERSION 3.5)
 project(${project_name})
 
+set(CMAKE_CXX_STANDARD 17)
+
 set(ANDROID_ROOT ${BUILD_NATIVE_ROOT})
 
 file(GLOB SOURCE_FILES${code_files})
@@ -54,14 +56,16 @@ def parseargs():
     usage = "usage: %prog [options] arg1 arg2"
     parser = optparse.OptionParser(usage=usage)
 
-    buildoptiongroup = optparse.OptionGroup(parser, "git push to gerrit options")
+    buildoptiongroup = optparse.OptionGroup(parser, "generate cmake file")
 
-    buildoptiongroup.add_option("-p", "--project", dest="project",
-                                help="project name", default="android-services")
     buildoptiongroup.add_option("-r", "--root", dest="root",
                                 help="root dir", default="/home/solo/code/flyme")
-    buildoptiongroup.add_option("-d", "--dir", dest="dir",
-                                help="project dir", default="frameworks/base/services/core/jni,frameworks/base/libs/services,frameworks/base/services/incremental")
+    buildoptiongroup.add_option("-p", "--project", dest="project",
+                                help="project name(android_runtime,android_services,inputflinger,surfaceflinger,media), or aosp-native[all projects]",
+                                default="aosp-native")
+    buildoptiongroup.add_option("-f", "--full", dest="full",
+                                help="make full code dir", default="0")
+
 
     parser.add_option_group(buildoptiongroup)
 
@@ -71,8 +75,7 @@ def parseargs():
 
 
 def file_is_code(file):
-    # codes = ["c", "cpp", "cc", "c++"]
-    codes = ["c", "cpp"]
+    codes = [".c", ".cpp", ".cc"]
     real = False
     for code in codes:
         if file.endswith(code):
@@ -83,7 +86,6 @@ def file_is_code(file):
 
 
 def file_is_headers(file):
-    # headers = ["h", "hpp", "h++"]
     headers = ["h", "hpp"]
     real = False
     for header in headers:
@@ -113,34 +115,54 @@ def write_text(file, text):
         f.write(text)
 
 
-
-
 def work(project_name, root, project_list):
     code_dirs = []
     header_dirs = []
     include_dirs = []
 
     for project_dir in project_list:
-        project_dirs = fast_scandir(project_dir)
-        project_dirs.append(project_dir)
+        project_dirs = fast_scandir(os.path.join(root, project_dir))
+        project_dirs.append(os.path.join(root, project_dir))
         project_dirs.sort()
 
         for dir in project_dirs:
+            if ".git" in dir or "x86" in dir:
+                continue
+
             # 代码文件夹
+
             for file in os.listdir(dir):
-                if file_is_code(file):
-                    code_dirs.append(dir)
-                    include_dirs.append(dir)
-                    break
+                if file.endswith(".c"):
+                    code_dirs.append("        ${ANDROID_ROOT}/" + os.path.relpath(dir, root) + "/*.c\n")
+                    # include_dirs.append("        ${ANDROID_ROOT}/" + os.path.relpath(dir, root) + "\n")
+                elif file.endswith(".cc"):
+                    code_dirs.append("        ${ANDROID_ROOT}/" + os.path.relpath(dir, root) + "/*.cc\n")
+                    # include_dirs.append("        ${ANDROID_ROOT}/" + os.path.relpath(dir, root) + "\n")
+                elif file.endswith(".cpp"):
+                    code_dirs.append("        ${ANDROID_ROOT}/" + os.path.relpath(dir, root) + "/*.cpp\n")
+                    # include_dirs.append("        ${ANDROID_ROOT}/" + os.path.relpath(dir, root) + "\n")
+
             # 头文件文件夹
             for file in os.listdir(dir):
-                if file_is_headers(file):
-                    header_dirs.append(dir)
-                    include_dirs.append(dir)
-                    break
 
+                if os.path.isdir(os.path.join(dir)):
+                    if "include" in os.path.basename(dir):
+                        include_dirs.append("        ${ANDROID_ROOT}/" + os.path.relpath(dir, root) + "\n")
+
+                if file.endswith(".h"):
+                    header_dirs.append("        ${ANDROID_ROOT}/" + os.path.relpath(dir, root) + "/*.h\n")
+                    include_dirs.append("        ${ANDROID_ROOT}/" + os.path.relpath(dir, root) + "\n")
+                elif file.endswith(".hpp"):
+                    header_dirs.append("        ${ANDROID_ROOT}/" + os.path.relpath(dir, root) + "/*.hpp\n")
+                    include_dirs.append("        ${ANDROID_ROOT}/" + os.path.relpath(dir, root) + "\n")
+
+
+    # 去重
+    code_dirs = list(dict.fromkeys(code_dirs))
+    header_dirs = list(dict.fromkeys(header_dirs))
     include_dirs = list(dict.fromkeys(include_dirs))
 
+    # 排序
     code_dirs.sort()
     header_dirs.sort()
     include_dirs.sort()
@@ -151,24 +173,23 @@ def work(project_name, root, project_list):
 
     code_files = "\n"
     for code in code_dirs:
-        code_files += "        ${ANDROID_ROOT}/" + os.path.relpath(code, root) + "/*.c\n"
-        code_files += "        ${ANDROID_ROOT}/" + os.path.relpath(code, root) + "/*.cpp\n"
+        code_files += code
 
     # print(code_files)
 
     header_files = "\n"
     for header in header_dirs:
-        header_files += "        ${ANDROID_ROOT}/" + os.path.relpath(header, root) + "/*.h\n"
-        header_files += "        ${ANDROID_ROOT}/" + os.path.relpath(header, root) + "/*.hpp\n"
+        header_files += header
 
     # print(header_files)
 
     include_directories = "\n"
     for project in include_dirs:
-        include_directories += "        ${ANDROID_ROOT}/" + os.path.relpath(project, root) + "\n"
+        include_directories += project
 
     # print(include_directories)
 
+    # cmake_file = os.path.join(os.path.dirname(__file__), project_name, "CMakeLists.txt")
     cmake_file = os.path.join(os.path.dirname(__file__), "../", project_name, "CMakeLists.txt")
     cmake_file_text = Template(cmake_template).substitute({'project_name': project_name,
                                                            'code_files': code_files,
@@ -180,23 +201,190 @@ def work(project_name, root, project_list):
                                                            })
     write_text(cmake_file, cmake_file_text)
 
+    # gradle_file = os.path.join(os.path.dirname(__file__), project_name, "build.gradle")
     gradle_file = os.path.join(os.path.dirname(__file__), "../", project_name, "build.gradle")
     gradle_file_text = Template(gradle_template).substitute({'rootDir': "${rootDir}"})
     write_text(gradle_file, gradle_file_text)
 
 
+# aosp_projects = [
+#     "frameworks/av/camera",
+#     "frameworks/av/media/img_utils",
+#     "frameworks/av/media/libaudioclient",
+#     "frameworks/av/media/libaudiofoundation",
+#     "frameworks/av/media/liberror",
+#     "frameworks/av/media/libmedia",
+#     "frameworks/av/media/libmediahelper",
+#     "frameworks/av/media/libmediametrics",
+#     "frameworks/av/media/libstagefright",
+#     "frameworks/av/media/ndk",
+#     "frameworks/base/apex/jobscheduler/service/jni",
+#     "frameworks/base/cmds/app_process/",
+#     "frameworks/base/cmds/bootanimation",
+#     "frameworks/base/cmds/uinput/jni",
+#     "frameworks/base/core/jni",
+#     "frameworks/base/drm/jni",
+#     "frameworks/base/libs/androidfw",
+#     "frameworks/base/libs/hostgraphics",
+#     "frameworks/base/libs/hwui",
+#     "frameworks/base/libs/incident",
+#     "frameworks/base/libs/input",
+#     "frameworks/base/libs/protoutil",
+#     "frameworks/base/libs/services",
+#     "frameworks/base/libs/storage",
+#     "frameworks/base/media/jni",
+#     "frameworks/base/services/core/jni",
+#     "frameworks/base/services/incremental",
+#     "frameworks/native/headers/media_plugin",
+#     "frameworks/native/libs/arect",
+#     "frameworks/native/libs/battery",
+#     "frameworks/native/libs/binder",
+#     "frameworks/native/libs/binderthreadstate",
+#     "frameworks/native/libs/cputimeinstate",
+#     "frameworks/native/libs/gralloc",
+#     "frameworks/native/libs/graphicsenv",
+#     "frameworks/native/libs/gui",
+#     "frameworks/native/libs/math",
+#     "frameworks/native/libs/nativebase",
+#     "frameworks/native/libs/nativedisplay",
+#     "frameworks/native/libs/nativewindow",
+#     "frameworks/native/libs/permission",
+#     "frameworks/native/libs/sensor",
+#     "frameworks/native/libs/ui",
+#     "frameworks/native/opengl",
+#     "frameworks/native/services/inputflinger",
+#     "frameworks/native/services/surfaceflinger",
+#     "hardware/libhardware",
+#     "libnativehelper",
+#     "system/core/libprocessgroup",
+#     "system/core/libsystem",
+#     "system/core/libutils",
+#     "system/core/libcutils",
+#     "system/core/property_service/libpropertyinfoparser",
+#     "system/libbase",
+#     "system/libhidl",
+#     "system/libhwbinder",
+#     "system/logging/liblog",
+# ]
+def get_dirs(project, full):
+
+    common_projects = [
+        "frameworks/native/include",
+        "frameworks/native/libs/arect",
+        "frameworks/native/libs/battery",
+        "frameworks/native/libs/binder",
+        "frameworks/native/libs/binderthreadstate",
+        "frameworks/native/libs/cputimeinstate",
+        "frameworks/native/libs/gralloc",
+        "frameworks/native/libs/graphicsenv",
+        "frameworks/native/libs/gui",
+        "frameworks/native/libs/math",
+        "frameworks/native/libs/nativebase",
+        "frameworks/native/libs/nativedisplay",
+        "frameworks/native/libs/nativewindow",
+        "frameworks/native/libs/permission",
+        "frameworks/native/libs/sensor",
+        "frameworks/native/libs/ui",
+        "frameworks/native/opengl",
+        "hardware/libhardware",
+        "libnativehelper",
+        "system/core/libprocessgroup",
+        "system/core/libsystem",
+        "system/core/libutils",
+        "system/core/libcutils",
+        "system/core/property_service/libpropertyinfoparser",
+        "system/libbase",
+        "system/libhidl",
+        "system/libhwbinder",
+        "system/logging/liblog",
+    ]
+
+    android_runtime = [
+        "frameworks/base/apex/jobscheduler/service/jni",
+        "frameworks/base/cmds/app_process/",
+        "frameworks/base/cmds/bootanimation",
+        "frameworks/base/core/jni",
+        "frameworks/base/drm/jni",
+        "frameworks/base/libs/androidfw",
+        "frameworks/base/libs/hostgraphics",
+        "frameworks/base/libs/hwui",
+        "frameworks/base/libs/incident",
+        "frameworks/base/libs/protoutil",
+        "frameworks/base/libs/storage",
+    ]
+
+    android_services = [
+        "frameworks/base/libs/services",
+        "frameworks/base/services/core/jni",
+        "frameworks/base/services/incremental",
+    ]
+
+    inputflinger = [
+        "system/core/libcutils",
+        "frameworks/native/services/inputflinger",
+        "frameworks/base/libs/input",
+        "frameworks/base/cmds/uinput/jni",
+    ]
+
+    surfaceflinger = [
+        "frameworks/native/services/surfaceflinger",
+    ]
+
+    media = [
+        "frameworks/av/camera",
+        "frameworks/av/media/img_utils",
+        "frameworks/av/media/libaudioclient",
+        "frameworks/av/media/libaudiofoundation",
+        "frameworks/av/media/liberror",
+        "frameworks/av/media/libmedia",
+        "frameworks/av/media/libmediahelper",
+        "frameworks/av/media/libmediametrics",
+        "frameworks/av/media/libstagefright",
+        "frameworks/av/media/ndk",
+        "frameworks/base/media/jni",
+        "frameworks/native/headers/media_plugin",
+    ]
+
+    if full == "1":
+        dirs = common_projects
+    else:
+        dirs = []
+
+    if project == "android_runtime":
+        dirs.extend(common_projects)
+        dirs.extend(android_runtime)
+    elif project == "android_services":
+        dirs.extend(android_services)
+    elif project == "inputflinger":
+        dirs.extend(inputflinger)
+    elif project == "surfaceflinger":
+        dirs.extend(surfaceflinger)
+    elif project == "media":
+        dirs.extend(media)
+    else:
+        dirs.extend(common_projects)
+        dirs.extend(android_runtime)
+        dirs.extend(android_services)
+        dirs.extend(inputflinger)
+        dirs.extend(surfaceflinger)
+        dirs.extend(media)
+
+    # 删除重复并重新排序
+    aosp_projects = list(dict.fromkeys(dirs))
+    aosp_projects.sort()
+
+    # return ["system/core/libcutils"]
+    return aosp_projects
+
 def main():
     (options, args) = parseargs()
     root = options.root.strip()
-    project_dir = options.dir.strip()
     project = options.project.strip()
+    full = options.full.strip()
 
-    project_list = []
-    for dir in project_dir.split(","):
-        print(dir)
-        project_list.append(os.path.join(root, dir))
+    aosp_projects = get_dirs(project, full)
 
-    work(project, root, project_list)
+    work(project, root, aosp_projects)
 
     return 0
 

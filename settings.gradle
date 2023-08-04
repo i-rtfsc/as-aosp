@@ -29,10 +29,11 @@ include ':SettingsProvider'
 /*************** aosp ***************/
 
 /*************** aosp native ***************/
-include ':android-runtime'
-include ':android-services'
-include ':inputflinger'
-include ':surfaceflinger'
+include ':aosp-native'
+//include ':android-runtime'
+//include ':android-services'
+//include ':inputflinger'
+//include ':surfaceflinger'
 /*************** aosp native ***************/
 
 /*************** aaos ***************/
