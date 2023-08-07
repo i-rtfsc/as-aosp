@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
 project(android_runtime)
 
-set(CMAKE_CXX_STANDARD 17)
+# set(CMAKE_CXX_STANDARD 20)
 
 set(ANDROID_ROOT ${BUILD_NATIVE_ROOT})
 
