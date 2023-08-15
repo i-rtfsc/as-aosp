@@ -56,6 +56,7 @@ ext {
                             "$flymeDir/packages/apps/SystemUI/res-volume-flyme/",
                             "$flymeDir/packages/apps/SystemUI/animation/res",
                             "$flymeDir/packages/apps/SystemUI/animation/res-flyme",
+                            "$flymeDir/frameworks/base/libs/WindowManager/Shell/res",
                     ],
                     assets  : [
                             "$flymeDir/packages/apps/SystemUI/assets",
@@ -67,6 +68,12 @@ ext {
                             "$flymeDir/packages/apps/SystemUI/animation/src",
                             "$flymeDir/packages/apps/SystemUI/monet/src",
                             "$flymeDir/packages/apps/SystemUI/shared/src",
+                            "$flymeDir/frameworks/base/libs/WindowManager/Shell/src",
+                            "$flymeDir/frameworks/libs/systemui/animationlib/src",
+                            "$flymeDir/frameworks/libs/systemui/iconloaderlib/src",
+                            "$flymeDir/frameworks/libs/systemui/iconloaderlib/src_full_lib",
+                            "$flymeDir/frameworks/libs/systemui/motiontoollib/src",
+                            "$flymeDir/frameworks/libs/systemui/viewcapturelib/src",
                     ],
             ],
 

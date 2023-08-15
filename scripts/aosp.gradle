@@ -112,6 +112,7 @@ ext {
                             "$aospDir/frameworks/base/packages/SystemUI/res-product/",
                             "$aospDir/frameworks/base/packages/SystemUI/res-keyguard/",
                             "$aospDir/frameworks/base/packages/SystemUI/animation/res",
+                            "$aospDir/frameworks/base/libs/WindowManager/Shell/res",
                     ],
                     assets  : [
                             "$aospDir/frameworks/base/core/res/assets",
@@ -122,6 +123,12 @@ ext {
                             "$aospDir/frameworks/base/packages/SystemUI/src-release",
                             "$aospDir/frameworks/base/packages/SystemUI/animation/src",
                             "$aospDir/frameworks/base/packages/SystemUI/shared/src",
+                            "$aospDir/frameworks/base/libs/WindowManager/Shell/src",
+                            "$aospDir/frameworks/libs/systemui/animationlib/src",
+                            "$aospDir/frameworks/libs/systemui/iconloaderlib/src",
+                            "$aospDir/frameworks/libs/systemui/iconloaderlib/src_full_lib",
+                            "$aospDir/frameworks/libs/systemui/motiontoollib/src",
+                            "$aospDir/frameworks/libs/systemui/viewcapturelib/src",
                     ],
             ],
 
