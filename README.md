@@ -4,12 +4,21 @@
 
 此as工程可以快速的导入aosp framework(包含java/native部分)、 aosp 系统app、 国内某些厂商扩展的fwk代码，比这个 https://www.jianshu.com/p/2ba5d6bd461e 方案还快，并且“联想”也很方便。
 
+下面以cpp代码为例，演示代码的跳转以及提示、补全。
+
+### 跳转
+![](./res-readme/code_jump.gif)
+
+### 提示、补全
+![](./res-readme/code_completion.gif)
+
 
 ## 警告
 
 关于此工程中包含miui、flyme、oppo、vivo等配置，只是一个空的gradle配置；该工程中不涉及到任何这几家公司的代码。
 
 请勿小事化大！切勿胡说八道！
+
 
 
 ## 配置介绍
