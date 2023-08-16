@@ -18,6 +18,7 @@ def static isNotNull(Object value) {
 }
 
 android {
+    namespace 'aosp.' + project.getName()
     def androidSdk = rootProject.ext.androidSdk
     compileSdkVersion androidSdk.compileSdkVersion
     buildToolsVersion androidSdk.buildToolsVersion
