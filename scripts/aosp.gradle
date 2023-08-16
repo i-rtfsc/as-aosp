@@ -309,6 +309,79 @@ ext {
                             "$aospDir/packages/services/Car/service-builtin/src",
                     ],
             ],
+
+            /*************** 配置原生 Connectivity 路径 ***************/
+            Connectivity     : [
+                    // "$aospDir/packages/modules/Connectivity/Tethering/AndroidManifest.xml",
+                    // "$aospDir/packages/modules/Connectivity/Tethering/apex/AndroidManifest.xml",
+                    // "$aospDir/packages/modules/Connectivity/service/ServiceConnectivityResources/AndroidManifest.xml",
+                    // "$aospDir/packages/modules/Connectivity/nearby/halfsheet/AndroidManifest.xml",
+                    manifest: "$aospDir/packages/modules/Connectivity/Tethering/AndroidManifest.xml",
+                    res     : [
+                            "$aospDir/packages/modules/Connectivity/Tethering/res",
+                            "$aospDir/packages/modules/Connectivity/service/ServiceConnectivityResources/res",
+                            "$aospDir/packages/modules/Connectivity/nearby/halfsheet/res",
+                    ],
+                    assets  : "assets",
+                    jni     : "$aospDir",
+                    src     : [
+                            "$aospDir/packages/modules/Connectivity/common/src",
+                            "$aospDir/packages/modules/Connectivity/framework/src",
+                            "$aospDir/packages/modules/Connectivity/Tethering/src",
+                            "$aospDir/packages/modules/Connectivity/Tethering/common/TetheringLib/src",
+                            "$aospDir/packages/modules/Connectivity/service/src",
+                            "$aospDir/packages/modules/Connectivity/service/libconnectivity/src",
+                            "$aospDir/packages/modules/Connectivity/nearby/framework/java",
+                            "$aospDir/packages/modules/Connectivity/nearby/halfsheet/src",
+                            "$aospDir/packages/modules/Connectivity/nearby/service/java",
+                            "$aospDir/packages/modules/Connectivity/nearby/service/proto/src",
+                            "$aospDir/packages/modules/Connectivity/framework-t/src",
+                            "$aospDir/packages/modules/Connectivity/service-t/src",
+                            "$aospDir/frameworks/libs/net/client-libs/netd",
+                            "$aospDir/frameworks/libs/net/common/device",
+                            "$aospDir/frameworks/libs/net/common/framework",
+                            "$aospDir/frameworks/libs/net/common/netd/binder",
+                    ],
+            ],
+
+            /*************** 配置原生 Wifi 路径 ***************/
+            Wifi     : [
+                    // "$aospDir/packages/modules/Wifi/OsuLogin/AndroidManifest.xml",
+                    // "$aospDir/packages/modules/Wifi/apex/AndroidManifest.xml",
+                    // "$aospDir/packages/modules/Wifi/service/ServiceWifiResources/AndroidManifest.xml",
+                    // "$aospDir/packages/modules/Wifi/WifiDialog/AndroidManifest.xml",
+                    manifest: "$aospDir/packages/modules/Wifi/apex/AndroidManifest.xml",
+                    res     : [
+                            "$aospDir/packages/modules/Wifi/OsuLogin/res",
+                            "$aospDir/packages/modules/Wifi/service/java/com/android/server/wifi/entitlement/response",
+                            "$aospDir/packages/modules/Wifi/service/ServiceWifiResources/res-mz",
+                            "$aospDir/packages/modules/Wifi/service/ServiceWifiResources/res",
+                            "$aospDir/packages/modules/Wifi/service/ServiceWifiResources/resources-certs",
+                            "$aospDir/packages/modules/Wifi/WifiDialog/res",
+                    ],
+                    assets  : "assets",
+                    jni     : "$aospDir",
+                    src     : [
+                            "$aospDir/packages/modules/Wifi/OsuLogin/src",
+                            "$aospDir/packages/modules/Wifi/framework/java",
+                            "$aospDir/packages/modules/Wifi/service/java",
+                            "$aospDir/packages/modules/Wifi/service/proto/src",
+                            "$aospDir/packages/modules/Wifi/WifiDialog/src",
+                    ],
+            ],
+
+            /*************** 配置原生 ExtServices 路径 ***************/
+            ExtServices     : [
+                    manifest: "$aospDir/packages/modules/ExtServices/AndroidManifest.xml",
+                    res     : [
+                            "$aospDir/packages/modules/ExtServices/java/res",
+                    ],
+                    assets  : "assets",
+                    jni     : "$aospDir",
+                    src     : [
+                            "$aospDir/packages/modules/ExtServices/java/src",
+                    ],
+            ],
     ]
 
 }
