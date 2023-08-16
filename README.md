@@ -12,6 +12,11 @@
 ### 提示、补全
 ![](./res-readme/code_completion.gif)
 
+### 约定
+
+- aosp模块：大驼峰命名
+- aosp模块变种或厂商模块：小写命名（包含字符-）
+
 
 ## 警告
 
@@ -57,21 +62,25 @@ rootProject.ext.allModules.each { dependence -> compileOnly project(dependence.v
 
 #### aosp.gradle
 
-- aospDir: 设置源码所在的目录，如: aospDir = "/home/solo/code/flyme"。
+- aospDir: 设置源码所在的目录，如: aospDir = "/home/solo/code/aosp"。
 - aosp: 一个大数组，维护很多模块需要的路径。 
   - root: 等同于aospDir所设置的android源码根目录。
-  - framework: 配置framework.jar的源码路径
-  - services: 配置services.jar的源码路径
-  - frameworkRes: 配置frameworkRes.apk的源码路径
+  - Framework: 配置framework.jar的源码路径
+  - Services: 配置services.jar的源码路径
+  - FrameworkRes: 配置frameworkRes.apk的源码路径
   - SystemUI: 配置SystemUI.apk的源码路径
   - SystemUIPluginLib: 配置SystemUIPluginLib.jar的源码路径
   - Settings: 配置Settings.apk的源码路径
   - SettingsLib: 配置SettingsLib.aar的源码路径
   - SettingsProvider: 配置SettingsProvider.apk的源码路径
-  - carFramework: 配置carFramework的源码路径
-  - carServices: 配置carServices.apk的源码路径
+  - CarFramework: 配置CarFramework的源码路径
+  - CarServices: 配置CarServices.apk的源码路径
+  - Connectivity: 连接相关，包括Tethering、nearby、netd等等的源码路径
+  - Wifi: 配置wifi相关的源码路径
+  - ExtServices: ExtServices.apk的源码路径
 
-> 以上的 framework、services、frameworkRes、SystemUI、SystemUIPluginLib、Settings、SettingsLib、SettingsProvider、carFramework、carServices
+
+> 以上的 Framework、Services、FrameworkRes、SystemUI、SystemUIPluginLib、Settings、SettingsLib、SettingsProvider、CarFramework、CarServices
 > 通过manifest、res、assets、jni、src来分别配置AndroidManifest.xml、资源文件目录、assets目录、jni代码目录、java\kt源码目录等。
 > 
 > 不需要的可以写空或者随便写一个不存在的文件、目录。
@@ -121,18 +130,23 @@ vivo代码所在的路径，主要是配置了framework、services、frameworkRe
 ```bash
 /*************** aosp native ***************/
 include ':aosp-native'
-//include ':android-runtime'
-//include ':android-services'
-//include ':inputflinger'
-//include ':surfaceflinger'
+//include ':AndroidRuntime'
+//include ':AndroidServices'
+//include ':InputFlinger'
+//include ':SurfaceFlinger'
+//include ':NeuralNetworks'
+//include ':TensorFlow'
 /*************** aosp native ***************/
 ```
 
-- android-runtime: 对应的是frameworks/base/core/jni/Android.bp写的libandroid_runtime。也就是frameworks base core jni。
-- android-services: 对应的是 frameworks/base/libs/services、frameworks/base/services/core/jni、frameworks/base/services/incremental。也就是libservic、libservices.core、libservices.core-gnss、service.incremental的和。
-- inputflinger: 对应的是frameworks/native/services/inputflinger。
-- surfaceflinger: 对应的是frameworks/native/services/surfaceflinger。
+- AndroidRuntime: 对应的是frameworks/base/core/jni/Android.bp写的libandroid_runtime。也就是frameworks base core jni。
+- AndroidServices: 对应的是 frameworks/base/libs/services、frameworks/base/services/core/jni、frameworks/base/services/incremental。也就是libservic、libservices.core、libservices.core-gnss、service.incremental的和。
+- InputFlinger: 对应的是frameworks/native/services/inputflinger。
+- SurfaceFlinger: 对应的是frameworks/native/services/surfaceflinger。
 - aosp-native: 是把以上四个模块的整合到一起了，这么做是因为都放在一个模块里跳转方便，占用的内存也最少。
+
+- NeuralNetworks: 封装tensorflow源码
+- TensorFlow: google的tensorflow源码
 
 在每个cmake文件里都设置了这么一些变量，主要是用来控制是否加载相应的代码目录。
 

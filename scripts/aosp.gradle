@@ -10,8 +10,8 @@ ext {
             root             : "$aospDir",
 
             /*************** 配置原生 fwk 路径 ***************/
-            framework        : [
-                    manifest: "AndroidManifest.xml",
+            Framework        : [
+                    manifest: "",
                     res     : "res",
                     assets  : "assets",
                     jni     : "$aospDir",
@@ -45,8 +45,8 @@ ext {
             ],
 
             /*************** 配置原生 services 路径 ***************/
-            services          : [
-                    manifest: "AndroidManifest.xml",
+            Services          : [
+                    manifest: "",
                     res     : "res",
                     assets  : "assets",
                     jni     : [],
@@ -89,7 +89,7 @@ ext {
             ],
 
             /*************** 配置 framework-res 路径 ***************/
-            frameworkRes     : [
+            FrameworkRes     : [
                     manifest: "$aospDir/frameworks/base/core/res/AndroidManifest.xml",
                     res     : [
                             "$aospDir/frameworks/base/core/res/res/",
@@ -114,9 +114,7 @@ ext {
                             "$aospDir/frameworks/base/packages/SystemUI/animation/res",
                             "$aospDir/frameworks/base/libs/WindowManager/Shell/res",
                     ],
-                    assets  : [
-                            "$aospDir/frameworks/base/core/res/assets",
-                    ],
+                    assets  : [],
                     jni     : [],
                     src     : [
                             "$aospDir/frameworks/base/packages/SystemUI/src",
@@ -284,7 +282,7 @@ ext {
             ],
 
             /*************** 配置原生 car-framework 路径 ***************/
-            carFramework        : [
+            CarFramework        : [
                     manifest: "$aospDir/packages/services/Car/car-lib/AndroidManifest.xml",
                     res     : "res",
                     assets  : "assets",
@@ -296,7 +294,7 @@ ext {
             ],
 
             /*************** 配置原生 car-services 路径 ***************/
-            carServices          : [
+            CarServices          : [
                     manifest: "$aospDir/packages/services/Car/service/AndroidManifest.xml",
                     res     : [
                             "$aospDir/packages/services/Car/service/res",

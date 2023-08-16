@@ -1,4 +1,4 @@
-def androidRoot = rootProject.ext.vivo.frameworkRes
+def androidRoot = rootProject.ext.vivo.FrameworkRes
 
 ext {
     BUILD_APPLICATION = false
@@ -7,18 +7,7 @@ ext {
     BUILD_ASSETS = androidRoot.assets
     BUILD_SRC = androidRoot.src
     BUILD_AIDL = androidRoot.src
-    BUILD_NATIVE = false
-    BUILD_NATIVE_ROOT = androidRoot.jni
+    BUILD_NATIVE_ROOT = ""
 }
 
 apply from: "${rootDir}/scripts/android-build.gradle"
-
-dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
-    if (rootProject.ext.enable_boot_jar.toBoolean()) {
-        compileOnly fileTree(include: ['*.jar'], dir: '../system_libs')
-    }
-
-    rootProject.ext.allModules.each { dependence -> compileOnly project(dependence.value) }
-}
-

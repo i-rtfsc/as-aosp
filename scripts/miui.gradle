@@ -9,7 +9,7 @@ ext {
             root        : "$miuiDir",
 
             /*************** 配置 miui fwk 路径 ***************/
-            framework   : [
+            Framework   : [
                     manifest: "AndroidManifest.xml",
                     res     : "res",
                     assets  : "assets",
@@ -20,7 +20,7 @@ ext {
             ],
 
             /*************** 配置 miui services 路径 ***************/
-            services    : [
+            Services    : [
                     manifest: "AndroidManifest.xml",
                     res     : "res",
                     assets  : "assets",
@@ -32,7 +32,7 @@ ext {
             ],
 
             /*************** 配置 miui framework-res 路径 ***************/
-            frameworkRes: [
+            FrameworkRes: [
                     manifest: "$miuiDir/frameworks/base/core/res/AndroidManifest.xml",
                     res     : [],
                     assets  : [

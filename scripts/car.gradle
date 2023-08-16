@@ -10,7 +10,7 @@ ext {
             root             : "$aospDir",
 
             /*************** 配置原生 car-framework 路径 ***************/
-            framework        : [
+            Framework        : [
                     manifest: "$aospDir/packages/services/Car/car-lib/AndroidManifest.xml",
                     res     : "res",
                     assets  : "assets",
@@ -22,7 +22,7 @@ ext {
             ],
 
             /*************** 配置原生 car-services 路径 ***************/
-            services          : [
+            Services          : [
                     manifest: "$aospDir/packages/services/Car/service/AndroidManifest.xml",
                     res     : [
                             "$aospDir/packages/services/Car/service/res",

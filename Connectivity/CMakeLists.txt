@@ -3,11 +3,11 @@ project(Connectivity)
 
 # set(CMAKE_CXX_STANDARD 20)
 
-#set(ANDROID_ROOT "/home/solo/code/aosp")
+#set(ANDROID_ROOT "/home/solo/code/flyme")
 set(ANDROID_ROOT ${BUILD_NATIVE_ROOT})
 
 set(AOSP_SYSTEM_COMMON true)
-set(AOSP_FWK true)
+set(AOSP_FWK false)
 set(AOSP_AV false)
 set(AOSP_BIONIC false)
 set(AOSP_SYSTEM false)
