@@ -8,7 +8,7 @@ ext {
     extfwk = [
             root      : "$extDir",
             /*************** 配置 i-framework 路径 ***************/
-            iframework: [
+            IFramework: [
                     manifest: "AndroidManifest.xml",
                     res     : [],
                     assets  : [],
@@ -16,12 +16,10 @@ ext {
                     src     : [
                             "$extDir/frameworks/base/core/java/",
                     ],
-
-
             ],
 
             /*************** 配置 ext-framework 路径 ***************/
-            framework : [
+            Framework : [
                     manifest: "AndroidManifest.xml",
                     res     : [],
                     assets  : [],
@@ -29,12 +27,10 @@ ext {
                     src     : [
                             "$extDir/frameworks/ext/core/java/",
                     ],
-
-
             ],
 
             /*************** 配置 i-services 路径 ***************/
-            iservices : [
+            IServices : [
                     manifest: "AndroidManifest.xml",
                     res     : [],
                     assets  : [],
@@ -42,12 +38,10 @@ ext {
                     src     : [
                             "$extDir/frameworks/base/services/core/java/",
                     ],
-
-
             ],
 
             /*************** 配置 ext-services 路径 ***************/
-            services  : [
+            Services  : [
                     manifest: "AndroidManifest.xml",
                     res     : [],
                     assets  : [],
@@ -55,8 +49,6 @@ ext {
                     src     : [
                             "$extDir/frameworks/ext/services/core/java/",
                     ],
-
-
             ],
     ]
 

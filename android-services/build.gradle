@@ -1,7 +1,0 @@
-def androidRoot = rootProject.ext.aosp.root
-
-ext {
-    BUILD_NATIVE_ROOT = androidRoot
-}
-
-apply from: "${rootDir}/scripts/asop-native-build.gradle"

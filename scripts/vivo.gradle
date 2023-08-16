@@ -9,7 +9,7 @@ ext {
             root        : "$vivoDir",
 
             /*************** 配置 vivo fwk 路径 ***************/
-            framework   : [
+            Framework   : [
                     manifest: "AndroidManifest.xml",
                     res     : "res",
                     assets  : "assets",
@@ -20,7 +20,7 @@ ext {
             ],
 
             /*************** 配置 vivo services 路径 ***************/
-            services    : [
+            Services    : [
                     manifest: "AndroidManifest.xml",
                     res     : "res",
                     assets  : "assets",
@@ -32,7 +32,7 @@ ext {
             ],
 
             /*************** 配置 vivo framework-res 路径 ***************/
-            frameworkRes: [
+            FrameworkRes: [
                     manifest: "AndroidManifest.xml",
                     res     : [],
                     assets  : [

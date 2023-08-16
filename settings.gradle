@@ -1,20 +1,9 @@
 rootProject.name = "aosp"
 
-//ext fwk
-include ':i-ext-framework'
-include ':i-ext-services'
-
-include ':ext-framework'
-include ':ext-services'
-
-include ':test'
-
-//如果要编译demo app, 需要把以下原生模块都注释
-
 /*************** aosp ***************/
-include ':framework'
-include ':services'
-include ':framework-res'
+include ':Framework'
+include ':Services'
+include ':FrameworkRes'
 
 //SystemUI相关
 include ':SystemUI'
@@ -30,23 +19,37 @@ include ':SettingsProvider'
 //packages/modules相关
 include ':Connectivity'
 include ':Wifi'
-//include ':ExtServices'
+// include ':ExtServices'
 /*************** aosp ***************/
+
+
+/*************** ext、test ***************/
+include ':ext-iframework'
+include ':ext-iservices'
+
+include ':ext-framework'
+include ':ext-services'
+
+include ':test'
+/*************** ext、test ***************/
+
 
 /*************** aosp native ***************/
 include ':aosp-native'
-//include ':android-runtime'
-//include ':android-services'
-//include ':inputflinger'
-//include ':surfaceflinger'
-//include ':NeuralNetworks'
-//include ':TensorFlow'
+// include ':AndroidRuntime'
+// include ':AndroidServices'
+// include ':InputFlinger'
+// include ':SurfaceFlinger'
+// include ':NeuralNetworks'
+// include ':TensorFlow'
 /*************** aosp native ***************/
 
+
 /*************** aaos ***************/
-include ':car-framework'
-include ':car-services'
+include ':CarFramework'
+include ':CarServices'
 /*************** aaos ***************/
+
 
 /*************** flyme ***************/
 include ':flyme-framework'
@@ -54,17 +57,20 @@ include ':flyme-services'
 include ':flyme-framework-res'
 /*************** flyme ***************/
 
+
 /*************** miui ***************/
 include ':miui-framework'
 include ':miui-services'
 include ':miui-framework-res'
 /*************** miui ***************/
 
+
 /*************** oppo ***************/
 include ':oppo-framework'
 include ':oppo-services'
 include ':oppo-framework-res'
 /*************** oppo ***************/
+
 
 /*************** vivo ***************/
 include ':vivo-framework'

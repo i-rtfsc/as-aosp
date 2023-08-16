@@ -1,4 +1,4 @@
-def androidRoot = rootProject.ext.aosp.Settings
+def androidRoot = rootProject.ext.aosp.FrameworkRes
 
 ext {
     BUILD_APPLICATION = false

@@ -9,6 +9,14 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-parcelize'
 
+def static isNotNull(Object value) {
+    if ( !( value == null || value.isEmpty() ) ) {
+        return true
+    } else {
+        return false
+    }
+}
+
 android {
     def androidSdk = rootProject.ext.androidSdk
     compileSdkVersion androidSdk.compileSdkVersion
@@ -22,10 +30,11 @@ android {
         minSdkVersion androidSdk.minSdkVersion
         targetSdkVersion androidSdk.targetSdkVersion
 
-        if (BUILD_NATIVE.toBoolean()) {
+        if (isNotNull(BUILD_NATIVE_ROOT)) {
+            println(project.getName() + " config c/cpp code, root dir = " + BUILD_NATIVE_ROOT)
             externalNativeBuild {
                 cmake {
-                    cppFlags "-std=c++11"
+                    cppFlags "-std=c++20"
                     abiFilters "arm64-v8a"
                     arguments "-DBUILD_NATIVE_ROOT=" + BUILD_NATIVE_ROOT
                 }
@@ -35,15 +44,29 @@ android {
 
     sourceSets {
         main {
-            manifest.srcFile BUILD_MANIFEST
-            assets.srcDirs = [BUILD_ASSETS]
-            res.srcDirs = [BUILD_RES]
-            java.srcDirs = [BUILD_SRC]
-            aidl.srcDirs = [BUILD_AIDL]
+            if (isNotNull(BUILD_MANIFEST)) {
+                manifest.srcFile BUILD_MANIFEST
+            }
+
+            if (isNotNull(BUILD_ASSETS)) {
+                assets.srcDirs = [BUILD_ASSETS]
+            }
+
+            if (isNotNull(BUILD_RES)) {
+                res.srcDirs = [BUILD_RES]
+            }
+
+            if (isNotNull(BUILD_SRC)) {
+                java.srcDirs = [BUILD_SRC]
+            }
+
+            if (isNotNull(BUILD_AIDL)) {
+                aidl.srcDirs = [BUILD_AIDL]
+            }
         }
     }
 
-    if (BUILD_NATIVE.toBoolean()) {
+    if (isNotNull(BUILD_NATIVE_ROOT)) {
         externalNativeBuild {
             cmake {
                 path "CMakeLists.txt"
@@ -127,4 +150,14 @@ android {
             }
         }
     }
+
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    if (rootProject.ext.enable_boot_jar.toBoolean()) {
+        compileOnly fileTree(include: ['*.jar'], dir: '../system_libs')
+    }
+
+    rootProject.ext.allModules.each { dependence -> compileOnly project(dependence.value) }
 }

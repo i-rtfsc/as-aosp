@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
 project(libcar_service)
 
+#set(ANDROID_ROOT "/home/solo/code/aosp")
 set(ANDROID_ROOT ${BUILD_NATIVE_ROOT})
 
 file(GLOB
