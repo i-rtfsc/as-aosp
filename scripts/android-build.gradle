@@ -116,23 +116,9 @@ android {
         }
     }
 
-    preBuild {
-        doLast {
-            def imlFile = file(project.name + ".iml")
-            println('Change ' + project.name + '.iml order')
-            try {
-                def parsedXml = (new XmlParser()).parse(imlFile)
-                def jdkNode = parsedXml.component[1].orderEntry.find { it.'@type' == 'jdk' }
-                parsedXml.component[1].remove(jdkNode)
-                def sdkString = "Android API " + android.compileSdkVersion.substring("android-".length()) + " Platform"
-                new groovy.util.Node(parsedXml.component[1], 'orderEntry', ['type': 'jdk', 'jdkName': sdkString, 'jdkType': 'Android SDK'])
-                groovy.xml.XmlUtil.serialize(parsedXml, new FileOutputStream(imlFile))
-            } catch (FileNotFoundException e) {
-                // nop, iml not found
-            }
-        }
-    }
     gradle.projectsEvaluated {
+        preBuild.dependsOn deleteAndroidSdk
+
         tasks.withType(JavaCompile) {
             Set<File> fileSet = options.bootstrapClasspath.getFiles()
             List<File> newFileList = new ArrayList<>();
@@ -140,6 +126,7 @@ android {
             newFileList.addAll(fileSet)
             options.bootstrapClasspath = files(newFileList.toArray())
         }
+
     }
 
     if (BUILD_APPLICATION.toBoolean()) {
@@ -154,11 +141,26 @@ android {
 
 }
 
+task deleteAndroidSdk {
+    def dir = "${rootDir}" + File.separator + ".idea" + File.separator + "modules" + File.separator + project.name + File.separator
+    def scriptFile = file("${rootDir}/scripts/delete-sdk.py")
+    def cmd = "python " + scriptFile + " -d " + dir
+    println(cmd)
+    def script = cmd.execute()
+    script.waitFor()
+}
+
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     if (rootProject.ext.enable_boot_jar.toBoolean()) {
         compileOnly fileTree(include: ['*.jar'], dir: '../system_libs')
     }
 
-    rootProject.ext.allModules.each { dependence -> compileOnly project(dependence.value) }
+    rootProject.ext.allModules.each { dependence ->
+        if (dependence.key == project.name) {
+            println("Don't compileOnly myself, project = " + project.name)
+        } else {
+            compileOnly project(dependence.value)
+        }
+    }
 }

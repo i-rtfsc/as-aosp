@@ -164,6 +164,29 @@ set(AOSP_PACKAGES false)
 set(AOSP_HARDWARE false)
 ```
 
+### 删除android.jar
+根据以上步骤配置好后看，c/cpp代码可以正确跳转了；但java有的代码还是跳转到Android SDK的android.jar里。所以还需要多做一步额外的配置，如下图：
+![](./res-readme/gradle_impl.jpg)
+
+如果在 .idea/modules 文件夹下没看到所有已经使能的“以模块为名词”文件夹，那需要如上图勾选"generate *.impl files for modules import from gradle"。
+接着点sync按钮，sync过程中gralde会执行deleteAndroidSdk 任务。这个task主要的作用就是去删除iml文件中的：
+```bash
+<arg>$USER_HOME$/Android/Sdk/platforms/android-34/android.jar</arg>
+<arg>$USER_HOME$/Android/Sdk/build-tools/34.0.0/core-lambda-stubs.jar</arg>
+
+<orderEntry type="jdk" jdkName="Android API 34, extension level 7 Platform" jdkType="Android SDK" />
+```
+也就是这个工程不设置Android SDK。
+sync之后要把勾选"generate *.impl files for modules import from gradle" 去掉，然后确认iml文件中以上提到sdk被删除之后要重启AS。
+重启之后会打开一个任意一个java代码都会看到：
+![](./res-readme/code_jump_source_code.gif)
+可以看到打开java文件后提示“Module JDK is not defined”，忽略掉这个烦人的提示。点KeyEvent已经能正确跳转到源码了，而不是跳转到Android SDK的android.jar里。
+
+> 关于勾选"generate *.impl files for modules import from gradle"后，要不要去掉勾选的问题，可以视情况而定。
+> 其目的只是为了 .idea/modules 文件夹下每个模块都有自己的iml配置。并确保配置中没有任何Android SDK的配置即可。
+> 如果配置目录新增了src或者配置了新的路径对的，建议更新iml并重新sync(确保删除Android SDK的配置)。
+
+
 ## 编译
 此功能无法编译framework.jar或者services.jar，请使用aosp推荐的编译方式。
 若要编译demo app调试，可以查看settings.gradle注释，根据提示注释一些module；并在config.gradle中把enable_boot_jar、build_app设置为true。
