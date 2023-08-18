@@ -40,11 +40,13 @@ def work(root_dir):
     for root, dirs, files in os.walk(root_dir):
         for file in files:
             path = os.path.join(root, file)
+
             new_text = ""
+
             with open(path, 'r') as f:
                 for line in f.readlines():
-                    delete_line = ("Android SDK" in line or "Android/Sdk" in line)
-                    if delete_line is False:
+                    is_delete_line = ("Android/Sdk" in line)
+                    if (is_delete_line is False):
                         new_text += line
 
                 with open(path, 'w') as f:
