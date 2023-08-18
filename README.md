@@ -168,9 +168,9 @@ set(AOSP_HARDWARE false)
 根据以上步骤配置好后看，c/cpp代码可以正确跳转了；但java有的代码还是跳转到Android SDK的android.jar里。所以还需要多做一步额外的配置，如下图：
 ![](./res-readme/gradle_impl.jpg)
 
-如果在 .idea/modules 文件夹下没看到所有已经使能的“以模块为名词”文件夹，那需要如上图勾选"generate *.impl files for modules import from gradle"。
+如果在 .idea/modules 文件夹下没看到“以模块为名词”文件夹，那需要如上图勾选"generate *.impl files for modules import from gradle"。
 
-接着点sync按钮，sync过程中gralde会执行deleteAndroidSdk 任务。这个task主要的作用就是去删除iml文件中的：
+看到.idea/modules文件夹下生成“以模块为名词”文件夹，接着sync，sync过程中gralde会执行deleteAndroidSdk 任务。这个task主要的作用就是去删除iml文件中的：
 
 ```bash
 <arg>$USER_HOME$/Android/Sdk/platforms/android-34/android.jar</arg>
@@ -183,13 +183,15 @@ set(AOSP_HARDWARE false)
 <orderEntry type="jdk" jdkName="Android API 34, extension level 7 Platform" jdkType="Android SDK" />
 ```
 
-sync后确认iml文件中以上提的都已经执行好了，就可以重启AS；重启之后会打开一个任意一个java代码都会看到：
+sync后确认iml文件中以上提的都已经执行好了，就可以重启AS；重启之后打开一个任意一个java代码都会看到：
 
 ![](./res-readme/code_jump_source_code.gif)
 点KeyEvent已经能正确跳转到源码了，而不是跳转到Android SDK的android.jar里。
 
 > 关于勾选"generate *.impl files for modules import from gradle"后，要不要去掉勾选的问题，可以视情况而定。
-> 其目的只是为了 .idea/modules 文件夹下每个模块都有自己的iml配置。并确保配置中没有android.jar的配置和jdk的排序在最后面即可。
+>
+> 其目的只是为了 .idea/modules 文件夹下每个模块都有自己的iml配置。并确保iml中没有android.jar的配置和jdk的排序在最后面即可。
+>
 > 如果配置目录新增了src或者配置了新的路径对的，建议更新iml并重新sync(确保删除Android SDK的配置)。
 
 
