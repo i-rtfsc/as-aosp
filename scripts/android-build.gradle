@@ -10,7 +10,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-parcelize'
 
 def static isNotNull(Object value) {
-    if ( !( value == null || value.isEmpty() ) ) {
+    if (!(value == null || value.isEmpty())) {
         return true
     } else {
         return false
@@ -143,15 +143,28 @@ android {
 
 task deleteAndroidSdk {
     def dir = "${rootDir}" + File.separator + ".idea" + File.separator + "modules" + File.separator + project.name + File.separator
+
     def scriptFile = file("${rootDir}/scripts/delete-sdk.py")
     def cmd = "python " + scriptFile + " -d " + dir
     println(cmd)
     def script = cmd.execute()
     script.waitFor()
+
+    def files = fileTree(dir).filter { it.isFile() }.files.name
+    files.forEach { file ->
+        def imlFile = dir + file
+        println(imlFile)
+        def parsedXml = (new XmlParser()).parse(imlFile)
+        def jdkNode = parsedXml.component[1].orderEntry.find { it.'@type' == 'jdk' }
+        def jdkName = jdkNode.attributes().get('jdkName')
+        parsedXml.component[1].remove(jdkNode)
+        new groovy.util.Node(parsedXml.component[1], 'orderEntry', ['type': 'jdk', 'jdkName': jdkName, 'jdkType': 'Android SDK'])
+        groovy.xml.XmlUtil.serialize(parsedXml, new FileOutputStream(imlFile))
+    }
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    //implementation fileTree(include: ['*.jar'], dir: 'libs')
     if (rootProject.ext.enable_boot_jar.toBoolean()) {
         compileOnly fileTree(include: ['*.jar'], dir: '../system_libs')
     }
