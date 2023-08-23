@@ -18,6 +18,9 @@ ext {
                     src     : [
                             "$aospDir/packages/services/Car/car-lib/src",
                             "$aospDir/packages/services/Car/car-builtin-lib/src",
+                            "$aospDir/frameworks/opt/car/services/updatableServices/src",
+                            "$aospDir/frameworks/opt/car/services/builtInServices/src_imms",
+                            "$aospDir/frameworks/opt/car/services/builtInServices/src",
                     ],
             ],
 
