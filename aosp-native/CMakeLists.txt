@@ -353,7 +353,6 @@ file(GLOB SOURCE_FILES
         )
 
 include_directories(
-        "${ANDROID_ROOT}/frameworks/base"
         "${ANDROID_ROOT}/frameworks/base/apct-tests/perftests/core/jni"
         "${ANDROID_ROOT}/frameworks/base/apex/jobscheduler/service/jni"
         "${ANDROID_ROOT}/frameworks/base/cmds/app_process"
@@ -745,7 +744,7 @@ include_directories(
         "${ANDROID_ROOT}/frameworks/native/vulkan/vkjson"
 )
 
-file(GLOB_RECURSE HEADERS
+file(GLOB HEADERS
         "${ANDROID_ROOT}/frameworks/base/**/*.h"
         "${ANDROID_ROOT}/frameworks/base/apct-tests/perftests/core/jni/**/*.h"
         "${ANDROID_ROOT}/frameworks/base/apex/jobscheduler/service/jni/**/*.h"
@@ -1552,7 +1551,7 @@ if (${AOSP_SYSTEM_COMMON})
     )
 
     # add aosp system common header file
-    file(GLOB_RECURSE HEADERS_SYSTEM_COMMON
+    file(GLOB HEADERS_SYSTEM_COMMON
             "${ANDROID_ROOT}/libnativehelper/header_only_include/**/*.h"
             "${ANDROID_ROOT}/libnativehelper/include/**/*.h"
             "${ANDROID_ROOT}/libnativehelper/include_jni/**/*.h"
@@ -2575,7 +2574,7 @@ if (${AOSP_AV})
     )
 
     # add aosp av header file
-    file(GLOB_RECURSE HEADERS_AV
+    file(GLOB HEADERS_AV
             "${ANDROID_ROOT}/frameworks/av/camera/**/*.h"
             "${ANDROID_ROOT}/frameworks/av/camera/cameraserver/**/*.h"
             "${ANDROID_ROOT}/frameworks/av/camera/include/**/*.h"
@@ -3021,7 +3020,7 @@ if (${AOSP_ART})
     )
 
     # add aosp art header file
-    file(GLOB_RECURSE HEADERS_ART
+    file(GLOB HEADERS_ART
             "${ANDROID_ROOT}/art/libdexfile/external/include/**/*.h"
             "${ANDROID_ROOT}/art/libnativebridge/include/**/*.h"
             "${ANDROID_ROOT}/art/libnativeloader/include/**/*.h"
@@ -3055,7 +3054,7 @@ if (${AOSP_BIONIC})
     )
 
     # add aosp bionic header file
-    file(GLOB_RECURSE HEADERS_BIONIC
+    file(GLOB HEADERS_BIONIC
             "${ANDROID_ROOT}/bionic/libc/**/*.h"
             "${ANDROID_ROOT}/bionic/libc/async_safe/include/**/*.h"
             "${ANDROID_ROOT}/bionic/libc/dns/include/**/*.h"
@@ -3143,7 +3142,7 @@ if (${AOSP_SYSTEM})
     )
 
     # add aosp system header file
-    file(GLOB_RECURSE HEADERS_SYSTEM
+    file(GLOB HEADERS_SYSTEM
             "${ANDROID_ROOT}/system/apex/apexd/**/*.h"
             "${ANDROID_ROOT}/system/bpf/progs/include/**/*.h"
             "${ANDROID_ROOT}/system/extras/ext4_utils/include/**/*.h"
@@ -3376,7 +3375,7 @@ if (${AOSP_EXTERNAL})
     )
 
     # add aosp external header file
-    file(GLOB_RECURSE HEADERS_EXTERNAL
+    file(GLOB HEADERS_EXTERNAL
             "${ANDROID_ROOT}/external/aac/libAACdec/include/**/*.h"
             "${ANDROID_ROOT}/external/aac/libAACenc/include/**/*.h"
             "${ANDROID_ROOT}/external/aac/libArithCoding/include/**/*.h"
@@ -3579,7 +3578,7 @@ if (${AOSP_PACKAGES})
     )
 
     # add aosp packages header file
-    file(GLOB_RECURSE HEADERS_PACKAGES
+    file(GLOB HEADERS_PACKAGES
             "${ANDROID_ROOT}/packages/modules/Bluetooth/system/gd/**/*.h"
             "${ANDROID_ROOT}/packages/modules/Bluetooth/system/types/**/*.h"
             "${ANDROID_ROOT}/packages/modules/DnsResolver/include/dnsproxyd_protocol/**/*.h"
@@ -3613,7 +3612,7 @@ if (${AOSP_BOOTABLE})
     )
 
     # add aosp bootable header file
-    file(GLOB_RECURSE HEADERS_BOOTABLE
+    file(GLOB HEADERS_BOOTABLE
             "${ANDROID_ROOT}/bootable/recovery/bootloader_message/include/**/*.h"
             "${ANDROID_ROOT}/bootable/recovery/minui/include/**/*.h"
             )
@@ -5255,7 +5254,7 @@ if (${AOSP_HARDWARE})
     )
 
     # add aosp hardware header file
-    file(GLOB_RECURSE HEADERS_HARDWARE
+    file(GLOB HEADERS_HARDWARE
             "${ANDROID_ROOT}/frameworks/hardware/interfaces/automotive/display/1.0/**/*.h"
             "${ANDROID_ROOT}/frameworks/hardware/interfaces/automotive/display/1.0/vts/functional/**/*.h"
             "${ANDROID_ROOT}/frameworks/hardware/interfaces/automotive/display/aidl/vts/functional/**/*.h"
@@ -9938,7 +9937,7 @@ if (${AOSP_OUT})
     )
 
     # add aosp out header file
-    file(GLOB_RECURSE HEADERS_OUT
+    file(GLOB HEADERS_OUT
             "${ANDROID_ROOT}/out/soong/.intermediates/bionic/libc/libc/android_vendor.34_arm64_armv8-a-branchprot_shared/gen/include/**/*.h"
             "${ANDROID_ROOT}/out/soong/.intermediates/external/libbpf/libbpf_headers/gen/**/*.h"
             "${ANDROID_ROOT}/out/soong/.intermediates/external/libchrome/libchrome-include/gen/gensrcs/external/libchrome/**/*.h"
