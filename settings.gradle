@@ -30,7 +30,7 @@ include ':ext-iservices'
 include ':ext-framework'
 include ':ext-services'
 
-include ':test'
+// include ':test'
 /*************** ext、test ***************/
 
 
