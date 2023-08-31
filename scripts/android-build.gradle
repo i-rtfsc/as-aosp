@@ -155,12 +155,16 @@ task deleteAndroidSdk {
     files.forEach { file ->
         def imlFile = dir + file
         println(imlFile)
-        def parsedXml = (new XmlParser()).parse(imlFile)
-        def jdkNode = parsedXml.component[1].orderEntry.find { it.'@type' == 'jdk' }
-        def jdkName = jdkNode.attributes().get('jdkName')
-        parsedXml.component[1].remove(jdkNode)
-        new groovy.util.Node(parsedXml.component[1], 'orderEntry', ['type': 'jdk', 'jdkName': jdkName, 'jdkType': 'Android SDK'])
-        groovy.xml.XmlUtil.serialize(parsedXml, new FileOutputStream(imlFile))
+        try {
+            def parsedXml = (new XmlParser()).parse(imlFile)
+            def jdkNode = parsedXml.component[1].orderEntry.find { it.'@type' == 'jdk' }
+            def jdkName = jdkNode.attributes().get('jdkName')
+            parsedXml.component[1].remove(jdkNode)
+            new groovy.util.Node(parsedXml.component[1], 'orderEntry', ['type': 'jdk', 'jdkName': jdkName, 'jdkType': 'Android SDK'])
+            groovy.xml.XmlUtil.serialize(parsedXml, new FileOutputStream(imlFile))
+        } catch (FileNotFoundException e) {
+            // nop, iml not found
+        }
     }
 }
 
