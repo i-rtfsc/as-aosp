@@ -41,6 +41,7 @@ def parseargs():
 
 def work(project, file):
     old = "      <sourceFolder url=\"file://$MODULE_DIR$/../../../../../{project}\" type=\"native-Source-root\"/>"
+    old_space = "      <sourceFolder url=\"file://$MODULE_DIR$/../../../../../{project}\" type=\"native-Source-root\" />"
 
     new = "      <sourceFolder url=\"file://$MODULE_DIR$/../../../../../{project}\" type=\"native-Source-root\"/>\n" \
           "      <excludeFolder url=\"file://$MODULE_DIR$/../../../../../{project}/art\"/>\n" \
@@ -75,6 +76,8 @@ def work(project, file):
     check_line="      <excludeFolder url=\"file://$MODULE_DIR$/../../../../../{project}/art\"/>".format(project=project)
 
     old = old.format(project=project)
+    old_space = old_space.format(project=project)
+
     new = new.format(project=project)
 
     with open(file, 'r') as f:
@@ -84,7 +87,10 @@ def work(project, file):
             print("has't been exclude folder")
             return
 
-        lines = lines.replace(old, new)
+        if old in lines:
+            lines = lines.replace(old, new)
+        elif old_space in lines:
+            lines = lines.replace(old_space, new)
 
         with open(file, 'w') as f:
             f.write(lines)
