@@ -1,4 +1,4 @@
-def androidRoot = rootProject.ext.aosp.Settings
+def androidRoot = rootProject.ext.flyme.Settings
 
 ext {
     BUILD_APPLICATION = false

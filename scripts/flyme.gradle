@@ -90,6 +90,25 @@ ext {
                             "$flymeDir/packages/apps/SystemUI/plugin_flyme/src",
                     ],
             ],
+
+            /*************** 配置 Settings 路径 ***************/
+            Settings         : [
+                    manifest: "$flymeDir/packages/apps/Settings/AndroidManifest.xml",
+                    res     : [
+                            "$flymeDir/packages/apps/Settings/res/",
+                            "$flymeDir/packages/apps/Settings/res-export/",
+                            "$flymeDir/packages/apps/Settings/res_flyme/",
+                            "$flymeDir/packages/apps/Settings/res-product/",
+                    ],
+                    assets  : [
+                            "$flymeDir/packages/apps/Settings/assets_flyme",
+                    ],
+                    jni     : [],
+                    src     : [
+                            "$flymeDir/packages/apps/Settings/src",
+                            "$flymeDir/packages/apps/Settings/src_flyme",
+                    ],
+            ],
     ]
 
 }
