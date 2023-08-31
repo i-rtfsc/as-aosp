@@ -7,9 +7,11 @@
 下面以cpp代码为例，演示代码的跳转以及提示、补全。
 
 ### 跳转
+
 ![](./res-readme/code_jump.gif)
 
 ### 提示、补全
+
 ![](./res-readme/code_completion.gif)
 
 ### 约定
@@ -37,6 +39,7 @@ settings.gradle位于根目录下，用于项目的配置，常见的是配置�
 
 
 ### 根目录build.gradle
+
 根目录build.gradle文件配置了很多扩展的gradle脚本，可根据实际情况自行添加到对应的脚本或者新增脚本。
 ```bash
 apply from: 'scripts/config.gradle'
@@ -165,6 +168,7 @@ set(AOSP_HARDWARE false)
 ```
 
 ### 删除android.jar
+
 根据以上步骤配置好后看，c/cpp代码可以正确跳转了；但java有的代码还是跳转到Android SDK的android.jar里。所以还需要多做一步额外的配置，如下图：
 ![](./res-readme/gradle_impl.jpg)
 
@@ -195,7 +199,55 @@ sync后确认iml文件中以上提的都已经执行好了，就可以重启AS�
 > 如果配置目录新增了src或者配置了新的路径对的，建议更新iml并重新sync(确保删除Android SDK的配置)。
 
 
+## 首次加载
+
+如果设置的root目录包含整个aosp工程，首次打开会很慢。可以把.idea/misc.xml改成如下：
+打开AS会比较快，后续在sync project的时候会在gralde的excludeFolder认为在真正的module里把忽略的文件夹放到对应的iml配置里。
+若当前配置的忽略文件夹跟你需要有出入，可以在 scripts/exclude-folder.py 里自行修改。
+
+```bash
+<project version="4">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_17" default="true" project-jdk-name="jbr-17" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+    <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/art" />
+      <excludeFolder url="file://$MODULE_DIR$/bionic" />
+      <excludeFolder url="file://$MODULE_DIR$/bootable" />
+      <excludeFolder url="file://$MODULE_DIR$/build" />
+      <excludeFolder url="file://$MODULE_DIR$/cts" />
+      <excludeFolder url="file://$MODULE_DIR$/dalvik" />
+      <excludeFolder url="file://$MODULE_DIR$/developers" />
+      <excludeFolder url="file://$MODULE_DIR$/development" />
+      <excludeFolder url="file://$MODULE_DIR$/device" />
+      <excludeFolder url="file://$MODULE_DIR$/disregard" />
+      <excludeFolder url="file://$MODULE_DIR$/external" />
+      <excludeFolder url="file://$MODULE_DIR$/hardware" />
+      <excludeFolder url="file://$MODULE_DIR$/kernel" />
+      <excludeFolder url="file://$MODULE_DIR$/libcore" />
+      <excludeFolder url="file://$MODULE_DIR$/libnativehelper" />
+      <excludeFolder url="file://$MODULE_DIR$/out" />
+      <excludeFolder url="file://$MODULE_DIR$/packages" />
+      <excludeFolder url="file://$MODULE_DIR$/pdk" />
+      <excludeFolder url="file://$MODULE_DIR$/platform" />
+      <excludeFolder url="file://$MODULE_DIR$/platform_testing" />
+      <excludeFolder url="file://$MODULE_DIR$/prebuilts" />
+      <excludeFolder url="file://$MODULE_DIR$/.repo" />
+      <excludeFolder url="file://$MODULE_DIR$/sdk" />
+      <excludeFolder url="file://$MODULE_DIR$/system" />
+      <excludeFolder url="file://$MODULE_DIR$/test" />
+      <excludeFolder url="file://$MODULE_DIR$/toolchain" />
+      <excludeFolder url="file://$MODULE_DIR$/tools" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor" />
+    </content>
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>
+```
+
 ## 编译
+
 此功能无法编译framework.jar或者services.jar，请使用aosp推荐的编译方式。
 若要编译demo app调试，可以查看settings.gradle注释，根据提示注释一些module；并在config.gradle中把enable_boot_jar、build_app设置为true。
 
