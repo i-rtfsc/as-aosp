@@ -1,9 +1,9 @@
 ext {
-    //设置源码所在的目录
-    oppoDir = "/home/solo/code/oppo"
-    if (org.gradle.internal.os.OperatingSystem.current().isMacOsX()) {
-        oppoDir = "/Users/solo/code/oppo"
-    }
+    //通过scripts/config.gradle获取到设置的源码路径，
+    //这里也可以改成自己定义的路径
+    oppoDir = rootProject.ext.aospRoot
+
+    oppoVendorDir = "$oppoDir/oppo"
 
     oppo = [
             root        : "$oppoDir",
@@ -15,7 +15,7 @@ ext {
                     assets  : "assets",
                     jni     : "$oppoDir",
                     src     : [
-                            "$oppoDir/frameworks/base/core/java/",
+                            "$oppoVendorDir/frameworks/base/core/java/",
                     ],
             ],
 
@@ -26,19 +26,19 @@ ext {
                     assets  : "assets",
                     jni     : [],
                     src     : [
-                            "$oppoDir/frameworks/base/services/core/java/",
-                            "$oppoDir/frameworks/base/services/java/",
+                            "$oppoVendorDir/frameworks/base/services/core/java/",
+                            "$oppoVendorDir/frameworks/base/services/java/",
                     ],
             ],
 
             /*************** 配置 oppo framework-res 路径 ***************/
             FrameworkRes: [
-                    manifest: "$oppoDir/frameworks/base/core/res/AndroidManifest.xml",
-                    res     : [],
-                    assets  : [
-                            "$oppoDir/frameworks/base/core/res/res",
-                            "$oppoDir/frameworks/base/core/res/toggle-res",
+                    manifest: "$oppoVendorDir/frameworks/base/core/res/AndroidManifest.xml",
+                    res     : [
+                            "$oppoVendorDir/frameworks/base/core/res/res",
+                            "$oppoVendorDir/frameworks/base/core/res/toggle-res",
                     ],
+                    assets  : [],
                     jni     : [],
                     src     : [],
             ],

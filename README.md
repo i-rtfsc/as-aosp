@@ -54,6 +54,10 @@ apply from: 'scripts/vivo.gradle'
 
 #### config.gradle
 
+config.gradle最重要的功能就是通过aospRoot配置Android源码的根目录。
+
+> aosp.gradle、car.gradle、 ext.gradle、miui.gradle、flyme.gradle、oppo.gradle、vivo.gradle都是通过config.gradle的aospRoot获取到Android源码的根目录。
+
 config.gradle脚本除了配置基本的android sdk；还有一个很重要的功能，就是获取所有的模块名称（也就是settings.gradle配置的子模块）。
 
 也就是说 allModules不需要手动维护，在settings.gradle里新增一个module，脚本会自动识别到project name并添加到allModules数组。
@@ -65,8 +69,8 @@ rootProject.ext.allModules.each { dependence -> compileOnly project(dependence.v
 
 #### aosp.gradle
 
-- aospDir: 设置源码所在的目录，如: aospDir = "/home/solo/code/aosp"。
-- aosp: 一个大数组，维护很多模块需要的路径。 
+- aospDir: 通过config.gradle的aospRoot获取到Android源码的根目录。也可以自己配置源码所在的目录，如: aospDir = "/home/solo/code/aosp"。
+- aosp: 一个大数组，维护很多模块需要的路径。
   - root: 等同于aospDir所设置的android源码根目录。
   - Framework: 配置framework.jar的源码路径
   - Services: 配置services.jar的源码路径
@@ -85,13 +89,13 @@ rootProject.ext.allModules.each { dependence -> compileOnly project(dependence.v
 
 > 以上的 Framework、Services、FrameworkRes、SystemUI、SystemUIPluginLib、Settings、SettingsLib、SettingsProvider、CarFramework、CarServices
 > 通过manifest、res、assets、jni、src来分别配置AndroidManifest.xml、资源文件目录、assets目录、jni代码目录、java\kt源码目录等。
-> 
+>
 > 不需要的可以写空或者随便写一个不存在的文件、目录。
 
 > 温馨提示
-> 
+>
 > 在这个文件中只需要把 aospDir 设置成自己android源码的根目录就可以。
-> 
+>
 > 里面具体模块的源码路径基本上都添加了（但确实不是100%添加），如果因为使用aosp版本不一致或者别的原因可以根据自己需要再添加。
 
 #### ext.gradle

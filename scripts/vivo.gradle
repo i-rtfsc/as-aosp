@@ -1,9 +1,9 @@
 ext {
-    //设置源码所在的目录
-    vivoDir = "/home/solo/code/vivo/vendor/vivo"
-    if (org.gradle.internal.os.OperatingSystem.current().isMacOsX()) {
-        vivoDir = "/Users/solo/code/vivo"
-    }
+    //通过scripts/config.gradle获取到设置的源码路径，
+    //这里也可以改成自己定义的路径
+    vivoDir = rootProject.ext.aospRoot
+
+    vivoVendorDir = "$vivoDir/vivo"
 
     vivo = [
             root        : "$vivoDir",
@@ -15,7 +15,7 @@ ext {
                     assets  : "assets",
                     jni     : "$vivoDir",
                     src     : [
-                            "$vivoDir/frameworks/base/core/java/",
+                            "$vivoVendorDir/frameworks/base/core/java/",
                     ],
             ],
 
@@ -26,18 +26,19 @@ ext {
                     assets  : "assets",
                     jni     : [],
                     src     : [
-                            "$vivoDir/frameworks/base/services/core/java/",
-                            "$vivoDir/frameworks/base/services/java/",
+                            "$vivoVendorDir/frameworks/base/services/core/java/",
+                            "$vivoVendorDir/frameworks/base/services/java/",
                     ],
             ],
 
             /*************** 配置 vivo framework-res 路径 ***************/
             FrameworkRes: [
                     manifest: "AndroidManifest.xml",
-                    res     : [],
-                    assets  : [
-                            "$vivoDir/../../frameworks/base/core/res/vivo-res",
+                    res     : [
+                            "$vivoVendorDir/frameworks/base/core/res/res",
+                            "$vivoVendorDir/frameworks/base/core/res/toggle-res",
                     ],
+                    assets  : [],
                     jni     : [],
                     src     : [],
             ],

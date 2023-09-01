@@ -1,9 +1,9 @@
 ext {
-    //设置源码所在的目录
-    miuiDir = "/home/solo/code/miui"
-    if (org.gradle.internal.os.OperatingSystem.current().isMacOsX()) {
-        miuiDir = "/Users/solo/code/miui"
-    }
+    //通过scripts/config.gradle获取到设置的源码路径，
+    //这里也可以改成自己定义的路径
+    miuiDir = rootProject.ext.aospRoot
+
+    miuiVendorDir = "$miuiDir/miui"
 
     miui = [
             root        : "$miuiDir",
@@ -15,7 +15,7 @@ ext {
                     assets  : "assets",
                     jni     : "$miuiDir",
                     src     : [
-                            "$miuiDir/frameworks/base/core/java/",
+                            "$miuiVendorDir/frameworks/base/core/java/",
                     ],
             ],
 
@@ -26,19 +26,19 @@ ext {
                     assets  : "assets",
                     jni     : [],
                     src     : [
-                            "$miuiDir/frameworks/base/services/core/java/",
-                            "$miuiDir/frameworks/base/services/java/",
+                            "$miuiVendorDir/frameworks/base/services/core/java/",
+                            "$miuiVendorDir/frameworks/base/services/java/",
                     ],
             ],
 
             /*************** 配置 miui framework-res 路径 ***************/
             FrameworkRes: [
-                    manifest: "$miuiDir/frameworks/base/core/res/AndroidManifest.xml",
-                    res     : [],
-                    assets  : [
-                            "$miuiDir/frameworks/base/core/res/res",
-                            "$miuiDir/frameworks/base/core/res/toggle-res",
+                    manifest: "$miuiVendorDir/frameworks/base/core/res/AndroidManifest.xml",
+                    res     : [
+                            "$miuiVendorDir/frameworks/base/core/res/res",
+                            "$miuiVendorDir/frameworks/base/core/res/toggle-res",
                     ],
+                    assets  : [],
                     jni     : [],
                     src     : [],
             ],

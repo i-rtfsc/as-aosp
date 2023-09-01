@@ -1,10 +1,7 @@
 ext {
-
-    //设置源码所在的目录
-    aospDir = "/home/solo/code/aosp"
-    if (org.gradle.internal.os.OperatingSystem.current().isMacOsX()) {
-        aospDir = "/Users/solo/code/aosp"
-    }
+    //通过scripts/config.gradle获取到设置的源码路径，
+    //这里也可以改成自己定义的路径
+    aospDir = rootProject.ext.aospRoot
 
     aosp = [
             root             : "$aospDir",
@@ -46,7 +43,7 @@ ext {
             ],
 
             /*************** 配置原生 services 路径 ***************/
-            Services          : [
+            Services         : [
                     manifest: "",
                     res     : "res",
                     assets  : "assets",
@@ -103,8 +100,6 @@ ext {
                     ],
                     jni     : [],
                     src     : [],
-
-
             ],
 
             /*************** 配置 SystemUI 路径 ***************/
@@ -287,7 +282,7 @@ ext {
             ],
 
             /*************** 配置原生 car-framework 路径 ***************/
-            CarFramework        : [
+            CarFramework     : [
                     manifest: "$aospDir/packages/services/Car/car-lib/AndroidManifest.xml",
                     res     : "res",
                     assets  : "assets",
@@ -299,7 +294,7 @@ ext {
             ],
 
             /*************** 配置原生 car-services 路径 ***************/
-            CarServices          : [
+            CarServices      : [
                     manifest: "$aospDir/packages/services/Car/service/AndroidManifest.xml",
                     res     : [
                             "$aospDir/packages/services/Car/service/res",
@@ -348,7 +343,7 @@ ext {
             ],
 
             /*************** 配置原生 Wifi 路径 ***************/
-            Wifi     : [
+            Wifi             : [
                     // "$aospDir/packages/modules/Wifi/OsuLogin/AndroidManifest.xml",
                     // "$aospDir/packages/modules/Wifi/apex/AndroidManifest.xml",
                     // "$aospDir/packages/modules/Wifi/service/ServiceWifiResources/AndroidManifest.xml",
@@ -374,7 +369,7 @@ ext {
             ],
 
             /*************** 配置原生 ExtServices 路径 ***************/
-            ExtServices     : [
+            ExtServices      : [
                     manifest: "$aospDir/packages/modules/ExtServices/AndroidManifest.xml",
                     res     : [
                             "$aospDir/packages/modules/ExtServices/java/res",

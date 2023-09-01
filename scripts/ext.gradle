@@ -1,9 +1,7 @@
 ext {
-    //设置扩展framework源码所在的目录
-    extDir = "/home/solo/code/aosp/ext-aosp"
-    if (org.gradle.internal.os.OperatingSystem.current().isMacOsX()) {
-        extDir = "/Users/solo/code/aosp/ext-aosp"
-    }
+    //通过scripts/config.gradle获取到设置的源码路径，
+    //这里也可以改成自己定义的路径
+    extDir = rootProject.ext.aospRoot
 
     extfwk = [
             root      : "$extDir",
