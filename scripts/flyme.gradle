@@ -1,9 +1,7 @@
 ext {
-    //设置源码所在的目录
-    flymeDir = "/home/solo/code/flyme/"
-    if (org.gradle.internal.os.OperatingSystem.current().isMacOsX()) {
-        flymeDir = "/Users/solo/code/flyme"
-    }
+    //通过scripts/config.gradle获取到设置的源码路径，
+    //这里也可以改成自己定义的路径
+    flymeDir = rootProject.ext.aospRoot
 
     flymeVendorDir = "$flymeDir/vendor/flyme"
 

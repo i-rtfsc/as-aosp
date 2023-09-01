@@ -1,4 +1,10 @@
 ext {
+    //设置源码所在的目录
+    aospRoot = "/home/solo/code/flyme"
+    if (org.gradle.internal.os.OperatingSystem.current().isMacOsX()) {
+        aospRoot = "/Users/solo/code/flyme"
+    }
+
     //app版本
     versionCode = 1
     versionName = "v1.0"
