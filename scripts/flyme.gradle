@@ -6,10 +6,10 @@ ext {
     flymeVendorDir = "$flymeDir/vendor/flyme"
 
     flyme = [
-            root        : "$flymeDir",
+            root             : "$flymeDir",
 
             /*************** 配置 flyme fwk 路径 ***************/
-            Framework   : [
+            Framework        : [
                     manifest: "AndroidManifest.xml",
                     res     : "res",
                     assets  : "assets",
@@ -20,7 +20,7 @@ ext {
             ],
 
             /*************** 配置 flyme services 路径 ***************/
-            Services    : [
+            Services         : [
                     manifest: "AndroidManifest.xml",
                     res     : "res",
                     assets  : "assets",
@@ -32,7 +32,7 @@ ext {
             ],
 
             /*************** 配置 flyme framework-res 路径 ***************/
-            FrameworkRes: [
+            FrameworkRes     : [
                     manifest: "AndroidManifest.xml",
                     res     : [
                             "$flymeDir/frameworks/base/core/res/flyme-res"

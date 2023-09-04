@@ -43,7 +43,7 @@ ext {
             ],
 
             /*************** 配置原生 services 路径 ***************/
-            Services          : [
+            Services         : [
                     manifest: "",
                     res     : "res",
                     assets  : "assets",
@@ -282,7 +282,7 @@ ext {
             ],
 
             /*************** 配置原生 car-framework 路径 ***************/
-            CarFramework        : [
+            CarFramework     : [
                     manifest: "$aospDir/packages/services/Car/car-lib/AndroidManifest.xml",
                     res     : "res",
                     assets  : "assets",
@@ -294,7 +294,7 @@ ext {
             ],
 
             /*************** 配置原生 car-services 路径 ***************/
-            CarServices          : [
+            CarServices      : [
                     manifest: "$aospDir/packages/services/Car/service/AndroidManifest.xml",
                     res     : [
                             "$aospDir/packages/services/Car/service/res",
@@ -343,7 +343,7 @@ ext {
             ],
 
             /*************** 配置原生 Wifi 路径 ***************/
-            Wifi     : [
+            Wifi             : [
                     // "$aospDir/packages/modules/Wifi/OsuLogin/AndroidManifest.xml",
                     // "$aospDir/packages/modules/Wifi/apex/AndroidManifest.xml",
                     // "$aospDir/packages/modules/Wifi/service/ServiceWifiResources/AndroidManifest.xml",
@@ -369,7 +369,7 @@ ext {
             ],
 
             /*************** 配置原生 ExtServices 路径 ***************/
-            ExtServices     : [
+            ExtServices      : [
                     manifest: "$aospDir/packages/modules/ExtServices/AndroidManifest.xml",
                     res     : [
                             "$aospDir/packages/modules/ExtServices/java/res",
