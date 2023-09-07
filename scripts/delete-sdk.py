@@ -45,7 +45,7 @@ def work(root_dir):
 
             with open(path, 'r') as f:
                 for line in f.readlines():
-                    is_delete_line = ("Android/Sdk" in line)
+                    is_delete_line = ("Android/Sdk".upper() in line.upper())
                     if (is_delete_line is False):
                         new_text += line
 
