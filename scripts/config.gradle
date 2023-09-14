@@ -1,8 +1,8 @@
 ext {
     //设置源码所在的目录
-    aospRoot = "/home/solo/code/miui"
+    aospRoot = "/home/solo/code/aosp"
     if (org.gradle.internal.os.OperatingSystem.current().isMacOsX()) {
-        aospRoot = "/Users/solo/code/miui"
+        aospRoot = "/Users/solo/code/aosp"
     }
 
     //app版本
