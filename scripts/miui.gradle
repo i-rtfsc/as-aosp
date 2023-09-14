@@ -35,6 +35,13 @@ ext {
             FrameworkRes: [
                     manifest: "$miuiVendorDir/frameworks/base/core/res/AndroidManifest.xml",
                     res     : [
+                            "$miuiVendorDir/frameworks/base/core/res/miui10-res",
+                            "$miuiVendorDir/frameworks/base/core/res/miui11-res",
+                            "$miuiVendorDir/frameworks/base/core/res/popup-camera-res",
+                            "$miuiVendorDir/frameworks/base/core/res/process-mxtelcel-res",
+                            "$miuiVendorDir/frameworks/base/core/res/process-pad-res",
+                            "$miuiVendorDir/frameworks/base/core/res/process-phone-global-res",
+                            "$miuiVendorDir/frameworks/base/core/res/process-phone-res",
                             "$miuiVendorDir/frameworks/base/core/res/res",
                             "$miuiVendorDir/frameworks/base/core/res/toggle-res",
                     ],
