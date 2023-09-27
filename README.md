@@ -4,6 +4,87 @@
 
 此as工程可以快速的导入aosp framework(包含java/native部分)、 aosp 系统app、 国内某些厂商扩展的fwk代码，比这个 https://www.jianshu.com/p/2ba5d6bd461e 方案还快，并且“联想”也很方便。
 
+### 对比 asfp 优缺点
+
+<table>
+
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center">as-asop</th>
+<th align="center">asfp</th>
+</tr>
+</thead>
+
+<tbody><tr>
+
+<td align="center">author</td>
+<td align="center">Solo</td>
+<td align="center">Google</td>
+</tr>
+
+<tr>
+<td align="center">发布时间</td>
+<td align="center">2022下半年</td>
+<td align="center">2023下半年</td>
+</tr>
+
+<tr>
+<td align="center">支持平台</td>
+<td align="center">linux、macos、win</td>
+<td align="center">linux</td>
+</tr>
+
+<tr>
+<td align="center">Android Studio 版本</td>
+<td align="center">任意版本</td>
+<td align="center">特殊版本，即asfp版本</td>
+</tr>
+
+<tr>
+<td align="center">以下代码支持跳转、提示</td>
+<td align="center">java、kotlin、c、c++</td>
+<td align="center">java、kotlin、c、c++</td>
+</tr>
+
+<tr>
+<td align="center">是否需要编译</td>
+<td align="center">否</td>
+<td align="center">需要全编</td>
+</tr>
+
+<tr>
+<td align="center">是否需要下载完整代码</td>
+<td align="center">否</td>
+<td align="center">需要下载完整的aosp代码</td>
+</tr>
+
+<tr>
+<td align="center">首次加载耗时</td>
+<td align="center">根目录只有部分模块代码，加载几分钟；<br>根目录包含所有aosp代码，加载1.5h左右</td>
+<td align="center">代码已全编译，加载1h左右；<br>代码未全编译，编译时间+加载1h左右</td>
+</tr>
+
+<tr>
+<td align="center">UI</td>
+<td align="center">无UI，通过改脚本来实现功能，自定义度高</td>
+<td align="center">有UI，可通过界面添加模块（依赖每个模块的android.bp，无法自定义）</td>
+</tr>
+
+</tbody>
+
+</table>
+
+
+> 关于 “首次加载耗时” 提到 “根目录只有部分模块代码” ，我试过两种方案：
+> 1. 软链接：比如完整的aosp代码是在/home/solo/workspace/code/aosp，我把需要加载的模块通过软链接的方式 ln 到 /home/solo/code/aosp
+> 2. 只下载需要模块。
+>
+> “支持平台” 提到as-asop支持win，理论上是没问题的。因无win环境，在win平台上未测试，若有问题，基本上是win平台目录使用的斜杠跟linux不一样导致。
+>
+> 总结：遥遥领先[狗头]
+
+
 下面以cpp代码为例，演示代码的跳转以及提示、补全。
 
 ### 跳转
@@ -56,7 +137,14 @@ apply from: 'scripts/vivo.gradle'
 
 config.gradle最重要的功能就是通过aospRoot配置Android源码的根目录。
 
-> aosp.gradle、car.gradle、 ext.gradle、miui.gradle、flyme.gradle、oppo.gradle、vivo.gradle都是通过config.gradle的aospRoot获取到Android源码的根目录。
+> aosp.gradle
+> car.gradle
+> ext.gradle
+> miui.gradle
+> flyme.gradle
+> oppo.gradle
+> vivo.gradle
+> 意思gradle脚本都是通过config.gradle的aospRoot获取到Android源码的根目录。
 
 config.gradle脚本除了配置基本的android sdk；还有一个很重要的功能，就是获取所有的模块名称（也就是settings.gradle配置的子模块）。
 
