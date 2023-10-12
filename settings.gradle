@@ -1,4 +1,4 @@
-rootProject.name = "aosp"
+rootProject.name = "lineage"
 
 /*************** aosp ***************/
 include ':Framework'
@@ -23,15 +23,15 @@ include ':Wifi'
 /*************** aosp ***************/
 
 
-/*************** ext、test ***************/
-include ':ext-iframework'
-include ':ext-iservices'
+// /*************** ext、test ***************/
+// include ':ext-iframework'
+// include ':ext-iservices'
 
-include ':ext-framework'
-include ':ext-services'
+// include ':ext-framework'
+// include ':ext-services'
 
-// include ':test'
-/*************** ext、test ***************/
+// // include ':test'
+// /*************** ext、test ***************/
 
 
 /*************** aosp native ***************/
@@ -51,36 +51,39 @@ include ':CarServices'
 /*************** aaos ***************/
 
 
-/*************** flyme ***************/
-include ':flyme-framework'
-include ':flyme-services'
-include ':flyme-framework-res'
-/*************** flyme ***************/
+// /*************** flyme ***************/
+// include ':flyme-framework'
+// include ':flyme-services'
+// include ':flyme-framework-res'
+// /*************** flyme ***************/
 
 
-/*************** miui ***************/
-include ':miui-framework'
-include ':miui-services'
-include ':miui-framework-res'
-/*************** miui ***************/
+// /*************** miui ***************/
+// include ':miui-framework'
+// include ':miui-services'
+// include ':miui-framework-res'
+// /*************** miui ***************/
 
 
-/*************** oppo ***************/
-include ':oppo-framework'
-include ':oppo-services'
-include ':oppo-framework-res'
-/*************** oppo ***************/
+// /*************** oppo ***************/
+// include ':oppo-framework'
+// include ':oppo-services'
+// include ':oppo-framework-res'
+// /*************** oppo ***************/
 
 
-/*************** vivo ***************/
-include ':vivo-framework'
-include ':vivo-services'
-include ':vivo-framework-res'
-/*************** vivo ***************/
+// /*************** vivo ***************/
+// include ':vivo-framework'
+// include ':vivo-services'
+// include ':vivo-framework-res'
+// /*************** vivo ***************/
 
 
 /*************** lineage ***************/
 include ':lineage-framework'
 include ':lineage-services'
 include ':lineage-framework-res'
+
+include ':lineage-preference-lib'
+include ':lineage-settings-provider'
 /*************** lineage ***************/
