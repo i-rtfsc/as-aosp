@@ -77,3 +77,10 @@ include ':vivo-framework'
 include ':vivo-services'
 include ':vivo-framework-res'
 /*************** vivo ***************/
+
+
+/*************** lineage ***************/
+include ':lineage-framework'
+include ':lineage-services'
+include ':lineage-framework-res'
+/*************** lineage ***************/

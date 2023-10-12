@@ -1,0 +1,74 @@
+ext {
+    //通过scripts/config.gradle获取到设置的源码路径，
+    //这里也可以改成自己定义的路径
+    lineageDir = rootProject.ext.aospRoot
+
+    lineageVendorDir = "$lineageDir/lineage-sdk"
+
+    lineage = [
+            root                : "$lineageDir",
+
+            /*************** 配置 lineage fwk 路径 ***************/
+            Framework           : [
+                    manifest: "AndroidManifest.xml",
+                    res     : "res",
+                    assets  : [],
+                    jni     : "$lineageDir",
+                    src     : [
+                            "$lineageVendorDir/sdk/src/java/",
+                    ],
+            ],
+
+            /*************** 配置 lineage services 路径 ***************/
+            Services            : [
+                    manifest: "",
+                    assets  : [],
+                    assets  : [],
+                    jni     : [],
+                    src     : [
+                            "$lineageVendorDir/lineage/lib/main/java/org/lineageos/platform/internal/",
+
+                            "$lineageVendorDir/frameworks/base/services/java/",
+                    ],
+            ],
+
+            /*************** 配置 lineage framework-res 路径 ***************/
+            FrameworkRes        : [
+                    manifest: "$lineageVendorDir/lineage/res/AndroidManifest.xml",
+                    res     : [
+                            "$lineageVendorDir/lineage/res/res"
+                    ],
+                    assets  : [],
+                    jni     : [],
+                    src     : [],
+            ],
+
+            /*************** 配置 LineagePreferenceLib 路径 ***************/
+            LineagePreferenceLib: [
+                    manifest               : "$lineageVendorDir/packages/LineagePreferenceLib/AndroidManifest.xml",
+                    res                    : [
+                            "$lineageVendorDir/packages/LineagePreferenceLib/res",
+                    ],
+                    assets                 : [],
+                    jni                    : [],
+                    src                    : [
+                            "$lineageVendorDir/packages/LineagePreferenceLib/java",
+                    ],
+
+            ],
+
+            /*************** 配置 LineageSettingsProvider 路径 ***************/
+            LineageSettingsProvider: [
+                    manifest: "$lineageVendorDir/packages/LineageSettingsProvider/AndroidManifest.xml",
+                    res     : [
+                            "$lineageVendorDir/packages/LineageSettingsProvider/res",
+                    ],
+                    assets  : [],
+                    jni     : [],
+                    src     : [
+                            "$lineageVendorDir/packages/LineageSettingsProvider/java",
+                    ],
+            ],
+    ]
+
+}
