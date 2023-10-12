@@ -7,6 +7,7 @@ apply from: 'scripts/miui.gradle'
 apply from: 'scripts/flyme.gradle'
 apply from: 'scripts/oppo.gradle'
 apply from: 'scripts/vivo.gradle'
+apply from: 'scripts/lineage.gradle'
 
 buildscript {
     repositories {
