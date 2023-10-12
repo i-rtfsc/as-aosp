@@ -55,6 +55,7 @@ include ':CarServices'
 include ':flyme-framework'
 include ':flyme-services'
 include ':flyme-framework-res'
+include ':flyme-launcher'
 /*************** flyme ***************/
 
 
