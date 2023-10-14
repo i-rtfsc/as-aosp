@@ -125,11 +125,8 @@ settings.gradle位于根目录下，用于项目的配置，常见的是配置�
 ```bash
 apply from: 'scripts/config.gradle'
 apply from: 'scripts/aosp.gradle'
-apply from: 'scripts/ext.gradle'
+apply from: 'scripts/car.gradle'
 apply from: 'scripts/miui.gradle'
-apply from: 'scripts/flyme.gradle'
-apply from: 'scripts/oppo.gradle'
-apply from: 'scripts/vivo.gradle'
 ```
 
 
@@ -186,36 +183,12 @@ rootProject.ext.allModules.each { dependence -> compileOnly project(dependence.v
 >
 > 里面具体模块的源码路径基本上都添加了（但确实不是100%添加），如果因为使用aosp版本不一致或者别的原因可以根据自己需要再添加。
 
-#### ext.gradle
-
-扩展framework源码所在的目录，一般用不得。
-
-如果有需要可以改extDir对应的目录即可。
-
 
 #### miui.gradle
 
-miui代码所在的路径，主要是配置了framework、services、frameworkRes。
+miui代码所在的路径，主要是配置了 miui-framework、miui-services、miui-framework-res。
 
 可以根据自己的需要修改miuiDir对应的目录即可。
-
-#### flyme.gradle
-
-flyme代码所在的路径，主要是配置了framework、services、frameworkRes、SystemUI、SystemUIPluginLib。
-
-可以根据自己的需要修改flymeDir对应的目录即可。
-
-#### oppo.gradle
-
-oppo代码所在的路径，主要是配置了framework、services、frameworkRes。
-
-可以根据自己的需要修改oppoDir对应的目录即可。
-
-#### vivo.gradle
-
-vivo代码所在的路径，主要是配置了framework、services、frameworkRes。
-
-可以根据自己的需要修改vivoDir对应的目录即可。
 
 
 ### native
@@ -348,3 +321,12 @@ sync后确认iml文件中以上提的都已经执行好了，就可以重启AS�
 cp out/target/common/obj/JAVA_LIBRARIES/framework-minus-apex_intermediates/classes.jar ../system_libs/framework-minus-apex.jar
 cp out/target/common/obj/JAVA_LIBRARIES/services_intermediates/classes.jar ../system_libs/services.jar
 ```
+
+## 后话
+真是服了有些老6了，已经一再说明此工程包含的 miui、flyme、oppo、vivo 等配置 不涉及任何这几家公司的代码。
+
+还是被举报了，不知道有些人是何心态。
+
+我分享这个工程的目的不就是为了大家能提高工作效率吗？大家都是做技术的，何必呢？
+
+改工程我会拆封成很多分支，默认是 aosp 分支。我只能说一句，切分支有惊喜，其他就不多说了，没意义。
