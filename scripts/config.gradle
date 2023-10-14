@@ -1,8 +1,8 @@
 ext {
     //设置源码所在的目录
-    aospRoot = "/home/solo/code/aosp"
+    aospRoot = "/home/solo/code/oppo"
     if (org.gradle.internal.os.OperatingSystem.current().isMacOsX()) {
-        aospRoot = "/Users/solo/code/aosp"
+        aospRoot = "/Users/solo/code/oppo"
     }
 
     //app版本
