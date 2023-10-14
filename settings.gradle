@@ -23,17 +23,6 @@ include ':Wifi'
 /*************** aosp ***************/
 
 
-/*************** ext、test ***************/
-include ':ext-iframework'
-include ':ext-iservices'
-
-include ':ext-framework'
-include ':ext-services'
-
-//include ':test'
-/*************** ext、test ***************/
-
-
 /*************** aosp native ***************/
 include ':aosp-native'
 // include ':AndroidRuntime'
@@ -58,23 +47,3 @@ include ':flyme-framework-res'
 include ':flyme-launcher'
 /*************** flyme ***************/
 
-
-///*************** miui ***************/
-//include ':miui-framework'
-//include ':miui-services'
-//include ':miui-framework-res'
-///*************** miui ***************/
-//
-//
-///*************** oppo ***************/
-//include ':oppo-framework'
-//include ':oppo-services'
-//include ':oppo-framework-res'
-///*************** oppo ***************/
-//
-//
-///*************** vivo ***************/
-//include ':vivo-framework'
-//include ':vivo-services'
-//include ':vivo-framework-res'
-///*************** vivo ***************/
