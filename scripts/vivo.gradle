@@ -11,8 +11,8 @@ ext {
             /*************** 配置 vivo fwk 路径 ***************/
             Framework   : [
                     manifest: "AndroidManifest.xml",
-                    res     : "res",
-                    assets  : "assets",
+                    res     : [],
+                    assets  : [],
                     jni     : "$vivoDir",
                     src     : [
                             "$vivoVendorDir/frameworks/base/core/java/",
@@ -22,8 +22,8 @@ ext {
             /*************** 配置 vivo services 路径 ***************/
             Services    : [
                     manifest: "AndroidManifest.xml",
-                    res     : "res",
-                    assets  : "assets",
+                    res     : [],
+                    assets  : [],
                     jni     : [],
                     src     : [
                             "$vivoVendorDir/frameworks/base/services/core/java/",
