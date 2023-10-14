@@ -1,4 +1,4 @@
-rootProject.name = "aosp"
+rootProject.name = "vivo"
 
 /*************** aosp ***************/
 include ':Framework'
