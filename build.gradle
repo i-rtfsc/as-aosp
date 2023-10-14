@@ -2,11 +2,6 @@
 apply from: 'scripts/config.gradle'
 apply from: 'scripts/aosp.gradle'
 apply from: 'scripts/car.gradle'
-apply from: 'scripts/ext.gradle'
-apply from: 'scripts/miui.gradle'
-apply from: 'scripts/flyme.gradle'
-apply from: 'scripts/oppo.gradle'
-apply from: 'scripts/vivo.gradle'
 apply from: 'scripts/lineage.gradle'
 
 buildscript {
