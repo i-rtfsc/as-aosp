@@ -15,7 +15,8 @@ ext {
                     assets  : "assets",
                     jni     : "$flymeDir",
                     src     : [
-                            "$flymeDir/frameworks/base/flyme-extras/services/core/java/",
+                            "$flymeDir/frameworks/base/flyme-extras/core/java/",
+                            "$flymeDir/frameworks/base/flyme-extras/media/java/",
                             "$flymeVendorDir/frameworks/base/core/java/",
                     ],
             ],
