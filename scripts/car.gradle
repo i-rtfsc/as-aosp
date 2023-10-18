@@ -9,12 +9,18 @@ ext {
             /*************** 配置原生 car-framework 路径 ***************/
             Framework        : [
                     manifest: "$aospDir/packages/services/Car/car-lib/AndroidManifest.xml",
-                    res     : "res",
+                    res     : [
+                            "$aospDir/packages/services/Car/FrameworkPackageStubs/res/",
+                            "$aospDir/packages/services/Car/car-admin-ui-lib/src/main/res",
+                    ],
                     assets  : "assets",
                     jni     : "$aospDir",
                     src     : [
-                            "$aospDir/packages/services/Car/car-lib/src",
+                            "$aospDir/packages/services/Car/FrameworkPackageStubs/src",
+                            "$aospDir/packages/services/Car/car-admin-ui-lib/src/main/java",
                             "$aospDir/packages/services/Car/car-builtin-lib/src",
+                            "$aospDir/packages/services/Car/car-evs-helper-lib/src",
+                            "$aospDir/packages/services/Car/car-lib/src",
                             "$aospDir/frameworks/opt/car/services/updatableServices/src",
                             "$aospDir/frameworks/opt/car/services/builtInServices/src_imms",
                             "$aospDir/frameworks/opt/car/services/builtInServices/src",
