@@ -77,8 +77,8 @@
 
 
 > 关于 “首次加载耗时” 提到 “根目录只有部分模块代码” ，我试过两种方案：
-> 1. 软链接：比如完整的aosp代码是在/home/solo/workspace/code/aosp，我把需要加载的模块通过软链接的方式 ln 到 /home/solo/code/aosp。/
->    可以参考工程里的 ln.sh 脚本文件，SOURCE、DEST改成自己的源目录，目标目录即可。
+> 1. 软链接：比如完整的aosp代码是在/home/solo/workspace/code/aosp，我把需要加载的模块通过软链接的方式 ln 到 /home/solo/code/aosp。
+>    可以参考工程里的 ln.sh 脚本文件（感谢 https://github.com/aqxuwenda 提供的脚本），SOURCE、DEST改成自己的源目录，目标目录即可；也可以在数组projects中添加自己需要的模块目录。
 >    ln.sh 脚本文件里只软链接了常用的一些模块，每个人可以根据自己的需求删改。
 > 2. 只下载需要模块。
 >
