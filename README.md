@@ -77,10 +77,15 @@
 
 
 > 关于 “首次加载耗时” 提到 “根目录只有部分模块代码” ，我试过两种方案：
-> 1. 软链接：比如完整的aosp代码是在/home/solo/workspace/code/aosp，我把需要加载的模块通过软链接的方式 ln 到 /home/solo/code/aosp
+> 1. 软链接：比如完整的aosp代码是在/home/solo/workspace/code/aosp，我把需要加载的模块通过软链接的方式 ln 到 /home/solo/code/aosp。/
+>    可以参考工程里的 ln.sh 脚本文件，SOURCE、DEST改成自己的源目录，目标目录即可。
+>    ln.sh 脚本文件里只软链接了常用的一些模块，每个人可以根据自己的需求删改。
 > 2. 只下载需要模块。
 >
-> “支持平台” 提到as-asop支持win，理论上是没问题的。因无win环境，在win平台上未测试，若有问题，基本上是win平台目录使用的斜杠跟linux不一样导致。
+> “支持平台” 提到as-asop支持win，经过朋友的测试，是没任何问题的，但有一点需要注意：
+> 如果你的代码目录是 D:\code\aosp\
+> 请不要写成 D:\\code\\aosp\\
+> 正确的写法 D:/code/aosp/
 >
 > 总结：遥遥领先[狗头]
 
@@ -336,4 +341,4 @@ cp out/target/common/obj/JAVA_LIBRARIES/services_intermediates/classes.jar ../sy
 
 我分享这个工程的目的不就是为了大家能提高工作效率吗？大家都是做技术的，何必呢？
 
-改工程我会拆封成很多分支，默认是 aosp 分支。我只能说一句，切分支有惊喜，其他就不多说了，没意义。
+该工程我会拆封成很多分支，默认是 aosp 分支。我只能说一句，切分支有惊喜，其他就不多说了，没意义。
