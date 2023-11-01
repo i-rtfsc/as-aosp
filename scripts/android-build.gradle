@@ -162,8 +162,8 @@ task deleteAndroidSdk {
             parsedXml.component[1].remove(jdkNode)
             new groovy.util.Node(parsedXml.component[1], 'orderEntry', ['type': 'jdk', 'jdkName': jdkName, 'jdkType': 'Android SDK'])
             groovy.xml.XmlUtil.serialize(parsedXml, new FileOutputStream(imlFile))
-        } catch (FileNotFoundException e) {
-            // nop, iml not found
+        } catch (Exception e) {
+            println("sort sdk node error, " + e)
         }
     }
 }
