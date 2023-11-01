@@ -318,20 +318,15 @@ sync后确认iml文件中以上提的都已经执行好了，就可以重启AS�
 
 ## 编译
 
-此功能无法编译framework.jar或者services.jar，请使用aosp推荐的编译方式。
-若要编译demo app调试，可以查看settings.gradle注释，根据提示注释一些module；并在config.gradle中把enable_boot_jar、build_app设置为true。
+此工程无法编译framework.jar或者services.jar，请使用aosp推荐的编译方式。
 
-如果需要还得copy framework.jar和services.jar到system_libs中
-```bash
-cp out/target/common/obj/JAVA_LIBRARIES/framework-minus-apex_intermediates/classes.jar ../system_libs/framework-minus-apex.jar
-cp out/target/common/obj/JAVA_LIBRARIES/services_intermediates/classes.jar ../system_libs/services.jar
-```
+[global_scripts](https://github.com/i-rtfsc/global_scripts) 工程里的 [gs_android_build.sh](https://github.com/i-rtfsc/global_scripts/blob/main/plugins/android/build/gs_android_build.sh) 脚本实现了很多模块编译的快捷键。
+可以单独下载这个脚本并放到环境变量里，或者是用整个 [global_scripts](https://github.com/i-rtfsc/global_scripts) 实现插件化的方案【详情可以参考该工程的README】。
 
 ## 后话
-真是服了有些老6了，已经一再说明此工程包含的 miui、flyme、oppo、vivo 等配置 不涉及任何这几家公司的代码。
 
-还是被举报了，不知道有些人是何心态。
+再次说明此工程包含的 miui、flyme、oppo、vivo 等配置 不涉及任何这几家公司的代码，所以并没有泄露任何公司的代码！
 
-我分享这个工程的目的不就是为了大家能提高工作效率吗？大家都是做技术的，何必呢？
+分享此工程的目的是为了android系统工程师能提高工作效率！请勿小事化大！
 
-该工程我会拆封成很多分支，默认是 aosp 分支。我只能说一句，切分支有惊喜，其他就不多说了，没意义。
+此工程拆封成很多分支，默认是 aosp 分支。切分支有惊喜[狗头]。
