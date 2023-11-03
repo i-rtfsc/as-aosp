@@ -140,6 +140,10 @@ android {
         }
     }
 
+
+    buildFeatures {
+        aidl = true
+    }
 }
 
 task deleteAndroidSdk {
@@ -190,15 +194,16 @@ dependencies {
     if (isNotNull(BUILD_NATIVE_ROOT)) {
         println("Native [" + project.getName() + "] don't dependence other project")
     } else {
-        //implementation fileTree(include: ['*.jar'], dir: 'libs')
-        if (rootProject.ext.enable_boot_jar.toBoolean()) {
-            compileOnly fileTree(include: ['*.jar'], dir: '../system_libs')
-        }
         rootProject.ext.allModules.each { dependence ->
             if (dependence.key == project.name) {
                 println("Don't compileOnly myself, project = " + project.name)
             } else {
-                compileOnly project(dependence.value)
+                if (rootProject.ext.build_aidl.toBoolean()) {
+                    println("don't implementation forEach when build aidl")
+                } else {
+                    println(dependence.value)
+                    implementation project(dependence.value)
+                }
             }
         }
     }
