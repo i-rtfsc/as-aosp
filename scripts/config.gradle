@@ -10,9 +10,9 @@ ext {
     versionName = "v1.0"
 
     // aidl 文件生成 java 文件
-    // 可以先设置成 true ，并 "Rebuild Project" 生成java文件后再设置成 false ，保证正常跳转
+    // 可以先设置成 true ，接着 "Rebuild Project" 生成java文件后再设置成 false ，保证正常跳转
     // 因为设置成 true 后，模块为了能正常编译出 java 文件，不能循环模块依赖
-    build_aidl = true
+    build_aidl = false
 
     //android开发版本配置
     androidSdk = [

@@ -140,8 +140,9 @@ android {
         }
     }
 
-
     buildFeatures {
+        //这里不加 build_aidl 熟悉判断的原因是:
+        //如果加了判断，改 false 后，as就不会把生成的java当做源文件对待
         aidl = true
     }
 }
