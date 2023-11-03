@@ -276,6 +276,24 @@ sync后确认iml文件中以上提的都已经执行好了，就可以重启AS�
 > 如果配置目录新增了src或者配置了新的路径对的，建议更新iml并重新sync(确保删除Android SDK的配置)。
 
 
+### 支持AIDL
+
+在 scripts/config.gradle 里配置 build_aidl = true ，并 "Rebuild Project" 就可以生成java文件。
+
+生成 java 文件后改成 false ，确保模块直接能正常跳转。
+
+因为前面提到过模块互相循环依赖，无法无法编译； 所以在 scripts/android-build.gradle 里配置了如下：
+
+```
+if (rootProject.ext.build_aidl.toBoolean()) {
+    println("don't implementation forEach when build aidl")
+} else {
+    println(dependence.value)
+    implementation project(dependence.value)
+}
+```
+
+
 ## 首次加载
 
 如果设置的root目录包含整个aosp工程，首次打开会很慢。可以把.idea/misc.xml改成如下：
