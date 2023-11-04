@@ -10,20 +10,29 @@ ext {
 
             /*************** 配置 oppo fwk 路径 ***************/
             Framework   : [
-                    manifest: "AndroidManifest.xml",
-                    res     : "res",
-                    assets  : "assets",
+                    manifest: "",
+                    res     : [],
+                    assets  : [],
                     jni     : "$oppoDir",
                     src     : [
                             "$oppoVendorDir/frameworks/base/core/java/",
+                    ],
+                    aidl    : [
+                            //"$oppoDir/frameworks/base/core/java",
+                            //"$oppoDir/hardware/interfaces/biometrics/fingerprint/aidl/aidl_api/android.hardware.biometrics.fingerprint/current",
+                            //"$oppoDir/frameworks/base/location/java",
+                            //"$oppoDir/frameworks/base/media/java",
+                            //"$oppoDir/frameworks/base/media/java/android/media/tv/tunerresourcemanager/aidl",
+                            //"$oppoDir/frameworks/native/libs/gui",
+                            //"$oppoDir/frameworks/native/libs/gui/aidl",
                     ],
             ],
 
             /*************** 配置 oppo services 路径 ***************/
             Services    : [
-                    manifest: "AndroidManifest.xml",
-                    res     : "res",
-                    assets  : "assets",
+                    manifest: "",
+                    res     : [],
+                    assets  : [],
                     jni     : [],
                     src     : [
                             "$oppoVendorDir/frameworks/base/services/core/java/",
