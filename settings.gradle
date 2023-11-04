@@ -24,7 +24,7 @@ include ':Wifi'
 
 
 /*************** aosp native ***************/
-// include ':aosp-native'
+ include ':aosp-native'
 // include ':AndroidRuntime'
 // include ':AndroidServices'
 // include ':InputFlinger'
