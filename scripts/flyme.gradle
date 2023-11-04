@@ -10,39 +10,50 @@ ext {
 
             /*************** 配置 flyme fwk 路径 ***************/
             Framework        : [
-                    manifest: "AndroidManifest.xml",
-                    res     : "res",
-                    assets  : "assets",
+                    manifest: "",
+                    res     : [],
+                    assets  : [],
                     jni     : "$flymeDir",
                     src     : [
                             "$flymeDir/frameworks/base/flyme-extras/core/java/",
                             "$flymeDir/frameworks/base/flyme-extras/media/java/",
                             "$flymeVendorDir/frameworks/base/core/java/",
                     ],
+                    aidl    : [
+                            //"$flymeDir/frameworks/base/core/java",
+                            //"$flymeDir/hardware/interfaces/biometrics/fingerprint/aidl/aidl_api/android.hardware.biometrics.fingerprint/current",
+                            //"$flymeDir/frameworks/base/location/java",
+                            //"$flymeDir/frameworks/base/media/java",
+                            //"$flymeDir/frameworks/base/media/java/android/media/tv/tunerresourcemanager/aidl",
+                            //"$flymeDir/frameworks/native/libs/gui",
+                            //"$flymeDir/frameworks/native/libs/gui/aidl",
+                    ],
             ],
 
             /*************** 配置 flyme services 路径 ***************/
             Services         : [
-                    manifest: "AndroidManifest.xml",
-                    res     : "res",
-                    assets  : "assets",
+                    manifest: "",
+                    res     : [],
+                    assets  : [],
                     jni     : [],
                     src     : [
                             "$flymeDir/frameworks/base/flyme-extras/services/core/java/",
                             "$flymeVendorDir/frameworks/base/services/core/java/",
                             "$flymeVendorDir/frameworks/base/services/java/",
                     ],
+                    aidl    : [],
             ],
 
             /*************** 配置 flyme framework-res 路径 ***************/
             FrameworkRes     : [
-                    manifest: "AndroidManifest.xml",
+                    manifest: "",
                     res     : [
                             "$flymeDir/frameworks/base/core/res/flyme-res"
                     ],
                     assets  : [],
                     jni     : [],
                     src     : [],
+                    aidl    : [],
             ],
 
             /*************** 配置 SystemUI 路径 ***************/
@@ -76,6 +87,7 @@ ext {
                             "$flymeDir/frameworks/libs/systemui/motiontoollib/src",
                             "$flymeDir/frameworks/libs/systemui/viewcapturelib/src",
                     ],
+                    aidl    : [],
             ],
 
             /*************** 配置 SystemUIPluginLib 路径 ***************/
@@ -109,19 +121,21 @@ ext {
                             "$flymeDir/packages/apps/Settings/src",
                             "$flymeDir/packages/apps/Settings/src_flyme",
                     ],
+                    aidl    : [],
             ],
 
             /*************** 配置 Launcher 路径 ***************/
+
             Launcher         : [
-//                    "$flymeDir/packages/apps/Launcher3/AndroidManifest.xml",
-//                    "$flymeDir/packages/apps/Launcher3/toolsXmlgetter/src/main/AndroidManifest.xml",
-//                    "$flymeDir/packages/apps/Launcher3/toolsAssistantPageDemo/src/main/AndroidManifest.xml",
-//                    "$flymeDir/packages/apps/Launcher3/quickstep/AndroidManifest.xml",
-//                    "$flymeDir/packages/apps/Launcher3/searchLauncher/AndroidManifest.xml",
-//                    "$flymeDir/packages/apps/Launcher3/go/AndroidManifest.xml",
-//                    "$flymeDir/packages/apps/Launcher3/launcherClient/src/main/AndroidManifest.xml",
-//                    "$flymeDir/packages/apps/Launcher3/toolsDynamicAppWidgetDemo/src/main/AndroidManifest.xml",
-//                    "$flymeDir/packages/apps/Launcher3/popupContainer/src/main/AndroidManifest.xml",
+                    //"$flymeDir/packages/apps/Launcher3/AndroidManifest.xml",
+                    //"$flymeDir/packages/apps/Launcher3/toolsXmlgetter/src/main/AndroidManifest.xml",
+                    //"$flymeDir/packages/apps/Launcher3/toolsAssistantPageDemo/src/main/AndroidManifest.xml",
+                    //"$flymeDir/packages/apps/Launcher3/quickstep/AndroidManifest.xml",
+                    //"$flymeDir/packages/apps/Launcher3/searchLauncher/AndroidManifest.xml",
+                    //"$flymeDir/packages/apps/Launcher3/go/AndroidManifest.xml",
+                    //"$flymeDir/packages/apps/Launcher3/launcherClient/src/main/AndroidManifest.xml",
+                    //"$flymeDir/packages/apps/Launcher3/toolsDynamicAppWidgetDemo/src/main/AndroidManifest.xml",
+                    //"$flymeDir/packages/apps/Launcher3/popupContainer/src/main/AndroidManifest.xml",
                     manifest: "$flymeDir/packages/apps/Launcher3/AndroidManifest.xml",
                     res     : [
                             "$flymeDir/packages/apps/Launcher3/res-mz",
@@ -137,7 +151,6 @@ ext {
                             "$flymeDir/packages/apps/Launcher3/launcherClient/src/main/res",
                             "$flymeDir/packages/apps/Launcher3/toolsDynamicAppWidgetDemo/src/main/res",
                             "$flymeDir/packages/apps/Launcher3/popupContainer/src/main/res",
-
                     ],
                     assets  : [
                             "$flymeDir/packages/apps/Launcher3/assets",
@@ -167,6 +180,7 @@ ext {
                             "$flymeDir/packages/apps/Launcher3/popupContainer/src/main/java",
                             "$flymeDir/packages/apps/Launcher3/popupContainer/src/androidTest/java",
                     ],
+                    aidl    : [],
             ],
     ]
 

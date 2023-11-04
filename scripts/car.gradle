@@ -13,7 +13,7 @@ ext {
                             "$aospDir/packages/services/Car/FrameworkPackageStubs/res/",
                             "$aospDir/packages/services/Car/car-admin-ui-lib/src/main/res",
                     ],
-                    assets  : "assets",
+                    assets  : [],
                     jni     : "$aospDir",
                     src     : [
                             "$aospDir/packages/services/Car/FrameworkPackageStubs/src",
@@ -25,6 +25,7 @@ ext {
                             "$aospDir/frameworks/opt/car/services/builtInServices/src_imms",
                             "$aospDir/frameworks/opt/car/services/builtInServices/src",
                     ],
+                    aidl : [],
             ],
 
             /*************** 配置原生 car-services 路径 ***************/
@@ -34,12 +35,13 @@ ext {
                             "$aospDir/packages/services/Car/service/res",
                             "$aospDir/packages/services/Car/service-builtin/res",
                     ],
-                    assets  : "assets",
+                    assets  : [],
                     jni     : "$aospDir",
                     src     : [
                             "$aospDir/packages/services/Car/service/src",
                             "$aospDir/packages/services/Car/service-builtin/src",
                     ],
+                    aidl : [],
             ],
     ]
 
