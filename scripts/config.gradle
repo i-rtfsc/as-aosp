@@ -5,14 +5,10 @@ ext {
         aospRoot = "/Users/solo/code/lineage"
     }
 
-    //app版本
-    versionCode = 1
-    versionName = "v1.0"
-
     // aidl 文件生成 java 文件
     // 可以先设置成 true ，接着 "Rebuild Project" 生成java文件后再设置成 false ，保证正常跳转
     // 因为设置成 true 后，模块为了能正常编译出 java 文件，不能循环模块依赖
-    build_aidl = false
+    build_aidl = true
 
     //android开发版本配置
     androidSdk = [
@@ -24,12 +20,12 @@ ext {
     ]
 
     //获取所有的模块
-    allModules =[:]
+    allModules = [:]
     for (Project subproject : project.subprojects) {
         def project_name = subproject.getName().toString()
         if ("test".equals(project_name)) {
             continue
         }
-        allModules.put(project_name, ":"+project_name)
+        allModules.put(project_name, ":" + project_name)
     }
 }

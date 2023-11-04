@@ -9,44 +9,57 @@ ext {
             /*************** 配置原生 fwk 路径 ***************/
             Framework        : [
                     manifest: "",
-                    res     : "res",
-                    assets  : "assets",
+                    res     : [],
+                    assets  : [],
                     jni     : "$aospDir",
                     src     : [
                             //通过 frameworks/base/Android.bp的filegroup framework-non-updatable-sources
                             //找到大部分java文件目录，但还不是全部
-                            "$aospDir/frameworks/libs/modules-utils/java/",
+                            "$aospDir/frameworks/libs/modules-utils/java",
                             "$aospDir/frameworks/base/apex/blobstore/framework/java",
-                            "$aospDir/frameworks/base/core/java/",
-                            "$aospDir/frameworks/base/drm/java/",
-                            "$aospDir/frameworks/base/graphics/java/",
-                            "$aospDir/frameworks/base/apex/jobscheduler/framework/java/",
-                            "$aospDir/frameworks/base/keystore/java/",
-                            "$aospDir/frameworks/base/identity/java/",
-                            "$aospDir/frameworks/base/location/java/",
-                            "$aospDir/frameworks/base/media/mca/effect/java/",
-                            "$aospDir/frameworks/base/media/mca/filterfw/java/",
-                            "$aospDir/frameworks/base/media/mca/filterpacks/java/",
-                            "$aospDir/frameworks/base/media/java/",
-                            "$aospDir/frameworks/base/mms/java/",
-                            "$aospDir/frameworks/base/omapi/java/",
-                            "$aospDir/frameworks/base/opengl/java/",
-                            "$aospDir/frameworks/base/rs/java/",
-                            "$aospDir/frameworks/base/sax/java/",
-                            "$aospDir/frameworks/base/telecomm/java/",
-                            "$aospDir/frameworks/base/telephony/common/",
-                            "$aospDir/frameworks/base/telephony/java/",
-                            "$aospDir/frameworks/base/wifi/java/src/",
+                            "$aospDir/frameworks/base/core/java",
+                            "$aospDir/frameworks/base/drm/java",
+                            "$aospDir/frameworks/base/graphics/java",
+                            "$aospDir/frameworks/base/apex/jobscheduler/framework/java",
+                            "$aospDir/frameworks/base/keystore/java",
+                            "$aospDir/frameworks/base/identity/java",
+                            "$aospDir/frameworks/base/location/java",
+                            "$aospDir/frameworks/base/media/mca/effect/java",
+                            "$aospDir/frameworks/base/media/mca/filterfw/java",
+                            "$aospDir/frameworks/base/media/mca/filterpacks/java",
+                            "$aospDir/frameworks/base/media/java",
+                            "$aospDir/frameworks/base/mms/java",
+                            "$aospDir/frameworks/base/omapi/java",
+                            "$aospDir/frameworks/base/opengl/java",
+                            "$aospDir/frameworks/base/rs/java",
+                            "$aospDir/frameworks/base/sax/java",
+                            "$aospDir/frameworks/base/telecomm/java",
+                            "$aospDir/frameworks/base/telephony/common",
+                            "$aospDir/frameworks/base/telephony/java",
+                            "$aospDir/frameworks/base/wifi/java/src",
                             "$aospDir/frameworks/base/packages/services/PacProcessor/src",
-                            "$aospDir/frameworks/base/packages/services/Proxy/src/",
+                            "$aospDir/frameworks/base/packages/services/Proxy/src",
+
+                    ],
+                    aidl    : [
+                            "$aospDir/frameworks/av/camera/aidl",
+                            "$aospDir/frameworks/base/media/java/android/media/tv/tunerresourcemanager/aidl",
+                            "$aospDir/frameworks/native/libs/input",
+                            "$aospDir/frameworks/native/libs/gui",
+                            "$aospDir/frameworks/native/libs/gui/aidl",
+                            "$aospDir/hardware/interfaces/graphics/common/aidl/aidl_api/android.hardware.graphics.common/current",
+                            "$aospDir/hardware/interfaces/biometrics/fingerprint/aidl/aidl_api/android.hardware.biometrics.fingerprint/current/",
+                            "$aospDir/libcore/luni/src/main/java",
+                            "$aospDir/packages/modules/Connectivity/framework/aidl-export",
+                            "$aospDir/system/gsid/aidl",
                     ],
             ],
 
             /*************** 配置原生 services 路径 ***************/
             Services         : [
                     manifest: "",
-                    res     : "res",
-                    assets  : "assets",
+                    res     : [],
+                    assets  : [],
                     jni     : [],
                     src     : [
                             //通过frameworks/base/services/Android.bp的filegroup services-non-updatable-sources
@@ -86,6 +99,7 @@ ext {
                             "$aospDir/frameworks/base/services/wallpapereffectsgeneration/java/",
                             "$aospDir/frameworks/base/services/wifi/java/",
                     ],
+                    aidl    : [],
             ],
 
             /*************** 配置 framework-res 路径 ***************/
@@ -100,6 +114,7 @@ ext {
                     ],
                     jni     : [],
                     src     : [],
+                    aidl    : [],
             ],
 
             /*************** 配置 SystemUI 路径 ***************/
@@ -128,6 +143,9 @@ ext {
                             "$aospDir/frameworks/libs/systemui/motiontoollib/src",
                             "$aospDir/frameworks/libs/systemui/viewcapturelib/src",
                     ],
+                    aidl    : [
+//                            "$aospDir/frameworks/base/core/java",
+                    ],
             ],
 
             /*************** 配置 SystemUIPluginLib 路径 ***************/
@@ -141,6 +159,7 @@ ext {
                             "$aospDir/frameworks/base/packages/SystemUI/plugin/src",
                             "$aospDir/frameworks/base/packages/SystemUI/plugin/bcsmartspace/src",
                     ],
+                    aidl    : [],
             ],
 
             /*************** 配置 Settings 路径 ***************/
@@ -154,6 +173,7 @@ ext {
                     src     : [
                             "$aospDir/packages/apps/Settings/src",
                     ],
+                    aidl    : [],
             ],
 
             /*************** 配置 SettingsLib 路径 ***************/
@@ -266,6 +286,7 @@ ext {
                             "$aospDir/frameworks/base/packages/SettingsLib/Utils/src",
                             "$aospDir/frameworks/base/packages/SettingsLib/search/src",
                     ],
+                    aidl    : [],
             ],
 
             /*************** 配置 SettingsProvider 路径 ***************/
@@ -279,18 +300,20 @@ ext {
                     src     : [
                             "$aospDir/frameworks/base/packages/SettingsProvider/src",
                     ],
+                    aidl    : [],
             ],
 
             /*************** 配置原生 car-framework 路径 ***************/
             CarFramework     : [
                     manifest: "$aospDir/packages/services/Car/car-lib/AndroidManifest.xml",
-                    res     : "res",
-                    assets  : "assets",
+                    res     : [],
+                    assets  : [],
                     jni     : "$aospDir",
                     src     : [
                             "$aospDir/packages/services/Car/car-lib/src",
                             "$aospDir/packages/services/Car/car-builtin-lib/src",
                     ],
+                    aidl    : [],
             ],
 
             /*************** 配置原生 car-services 路径 ***************/
@@ -300,12 +323,13 @@ ext {
                             "$aospDir/packages/services/Car/service/res",
                             "$aospDir/packages/services/Car/service-builtin/res",
                     ],
-                    assets  : "assets",
+                    assets  : [],
                     jni     : "$aospDir",
                     src     : [
                             "$aospDir/packages/services/Car/service/src",
                             "$aospDir/packages/services/Car/service-builtin/src",
                     ],
+                    aidl    : [],
             ],
 
             /*************** 配置原生 Connectivity 路径 ***************/
@@ -320,7 +344,7 @@ ext {
                             "$aospDir/packages/modules/Connectivity/service/ServiceConnectivityResources/res",
                             "$aospDir/packages/modules/Connectivity/nearby/halfsheet/res",
                     ],
-                    assets  : "assets",
+                    assets  : [],
                     jni     : "$aospDir",
                     src     : [
                             "$aospDir/packages/modules/Connectivity/common/src",
@@ -340,6 +364,12 @@ ext {
                             "$aospDir/frameworks/libs/net/common/framework",
                             "$aospDir/frameworks/libs/net/common/netd/binder",
                     ],
+                    aidl    : [
+//                            "$aospDir/packages/modules/Connectivity/framework/aidl-export",
+//                            "$aospDir/frameworks/base/core/java",
+//                            "$aospDir/hardware/interfaces/biometrics/fingerprint/aidl/aidl_api/android.hardware.biometrics.fingerprint/current",
+//                            "$aospDir/frameworks/base/location/java",
+                    ],
             ],
 
             /*************** 配置原生 Wifi 路径 ***************/
@@ -357,7 +387,7 @@ ext {
                             "$aospDir/packages/modules/Wifi/service/ServiceWifiResources/resources-certs",
                             "$aospDir/packages/modules/Wifi/WifiDialog/res",
                     ],
-                    assets  : "assets",
+                    assets  : [],
                     jni     : "$aospDir",
                     src     : [
                             "$aospDir/packages/modules/Wifi/OsuLogin/src",
@@ -365,6 +395,10 @@ ext {
                             "$aospDir/packages/modules/Wifi/service/java",
                             "$aospDir/packages/modules/Wifi/service/proto/src",
                             "$aospDir/packages/modules/Wifi/WifiDialog/src",
+                    ],
+                    aidl    : [
+//                            "$aospDir/packages/modules/Connectivity/framework/aidl-export",
+//                            "$aospDir/frameworks/libs/modules-utils/java",
                     ],
             ],
 
@@ -374,11 +408,12 @@ ext {
                     res     : [
                             "$aospDir/packages/modules/ExtServices/java/res",
                     ],
-                    assets  : "assets",
+                    assets  : [],
                     jni     : "$aospDir",
                     src     : [
                             "$aospDir/packages/modules/ExtServices/java/src",
                     ],
+                    aidl    : [],
             ],
     ]
 

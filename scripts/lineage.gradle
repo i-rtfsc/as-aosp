@@ -10,19 +10,28 @@ ext {
 
             /*************** 配置 lineage fwk 路径 ***************/
             Framework           : [
-                    manifest: "AndroidManifest.xml",
-                    res     : "res",
+                    manifest: "",
+                    res     : [],
                     assets  : [],
                     jni     : "$lineageDir",
                     src     : [
                             "$lineageVendorDir/sdk/src/java/",
+                    ],
+                    aidl    : [
+                            //"lineageDir/frameworks/base/core/java",
+                            //"lineageDir/hardware/interfaces/biometrics/fingerprint/aidl/aidl_api/android.hardware.biometrics.fingerprint/current",
+                            //"lineageDir/frameworks/base/location/java",
+                            //"lineageDir/frameworks/base/media/java",
+                            //"lineageDir/frameworks/base/media/java/android/media/tv/tunerresourcemanager/aidl",
+                            //"lineageDir/frameworks/native/libs/gui",
+                            //"lineageDir/frameworks/native/libs/gui/aidl",
                     ],
             ],
 
             /*************** 配置 lineage services 路径 ***************/
             Services            : [
                     manifest: "",
-                    assets  : [],
+                    res  : [],
                     assets  : [],
                     jni     : [],
                     src     : [
@@ -30,6 +39,7 @@ ext {
 
                             "$lineageVendorDir/frameworks/base/services/java/",
                     ],
+                    aidl    : [],
             ],
 
             /*************** 配置 lineage framework-res 路径 ***************/
@@ -41,6 +51,7 @@ ext {
                     assets  : [],
                     jni     : [],
                     src     : [],
+                    aidl    : [],
             ],
 
             /*************** 配置 LineagePreferenceLib 路径 ***************/
@@ -54,6 +65,7 @@ ext {
                     src                    : [
                             "$lineageVendorDir/packages/LineagePreferenceLib/java",
                     ],
+                    aidl    : [],
 
             ],
 
@@ -68,6 +80,7 @@ ext {
                     src     : [
                             "$lineageVendorDir/packages/LineageSettingsProvider/src",
                     ],
+                    aidl    : [],
             ],
     ]
 
