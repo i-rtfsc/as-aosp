@@ -10,25 +10,35 @@ ext {
 
             /*************** 配置 miui fwk 路径 ***************/
             Framework   : [
-                    manifest: "AndroidManifest.xml",
-                    res     : "res",
-                    assets  : "assets",
+                    manifest: "",
+                    res     : [],
+                    assets  : [],
                     jni     : "$miuiDir",
                     src     : [
                             "$miuiVendorDir/frameworks/base/core/java/",
+                    ],
+                    aidl    : [
+                            //"$miuiDir/frameworks/base/core/java",
+                            //"$miuiDir/hardware/interfaces/biometrics/fingerprint/aidl/aidl_api/android.hardware.biometrics.fingerprint/current",
+                            //"$miuiDir/frameworks/base/location/java",
+                            //"$miuiDir/frameworks/base/media/java",
+                            //"$miuiDir/frameworks/base/media/java/android/media/tv/tunerresourcemanager/aidl",
+                            //"$miuiDir/frameworks/native/libs/gui",
+                            //"$miuiDir/frameworks/native/libs/gui/aidl",
                     ],
             ],
 
             /*************** 配置 miui services 路径 ***************/
             Services    : [
-                    manifest: "AndroidManifest.xml",
-                    res     : "res",
-                    assets  : "assets",
+                    manifest: "",
+                    res     : [],
+                    assets  : [],
                     jni     : [],
                     src     : [
                             "$miuiVendorDir/frameworks/base/services/core/java/",
                             "$miuiVendorDir/frameworks/base/services/java/",
                     ],
+                    aidl    : [],
             ],
 
             /*************** 配置 miui framework-res 路径 ***************/
@@ -48,6 +58,7 @@ ext {
                     assets  : [],
                     jni     : [],
                     src     : [],
+                    aidl    : [],
             ],
 
     ]
