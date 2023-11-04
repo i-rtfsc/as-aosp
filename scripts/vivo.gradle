@@ -10,18 +10,27 @@ ext {
 
             /*************** 配置 vivo fwk 路径 ***************/
             Framework   : [
-                    manifest: "AndroidManifest.xml",
+                    manifest: "",
                     res     : [],
                     assets  : [],
                     jni     : "$vivoDir",
                     src     : [
                             "$vivoVendorDir/frameworks/base/core/java/",
                     ],
+                    aidl    : [
+                            //"$vivoDir/frameworks/base/core/java",
+                            //"$vivoDir/hardware/interfaces/biometrics/fingerprint/aidl/aidl_api/android.hardware.biometrics.fingerprint/current",
+                            //"$vivoDir/frameworks/base/location/java",
+                            //"$vivoDir/frameworks/base/media/java",
+                            //"$vivoDir/frameworks/base/media/java/android/media/tv/tunerresourcemanager/aidl",
+                            //"$vivoDir/frameworks/native/libs/gui",
+                            //"$vivoDir/frameworks/native/libs/gui/aidl",
+                    ],
             ],
 
             /*************** 配置 vivo services 路径 ***************/
             Services    : [
-                    manifest: "AndroidManifest.xml",
+                    manifest: "",
                     res     : [],
                     assets  : [],
                     jni     : [],
@@ -29,6 +38,7 @@ ext {
                             "$vivoVendorDir/frameworks/base/services/core/java/",
                             "$vivoVendorDir/frameworks/base/services/java/",
                     ],
+                    aidl    : [],
             ],
 
             /*************** 配置 vivo framework-res 路径 ***************/
@@ -41,6 +51,7 @@ ext {
                     assets  : [],
                     jni     : [],
                     src     : [],
+                    aidl    : [],
             ],
 
     ]
