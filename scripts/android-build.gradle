@@ -61,7 +61,7 @@ android {
                 java.srcDirs = [BUILD_SRC]
             }
 
-            if (isNotNull(BUILD_AIDL)) {
+            if (rootProject.ext.build_aidl.toBoolean() && isNotNull(BUILD_AIDL)) {
                 aidl.srcDirs = [BUILD_AIDL]
             }
         }
