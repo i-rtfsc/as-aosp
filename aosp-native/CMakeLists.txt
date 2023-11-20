@@ -15,6 +15,7 @@ set(AOSP_EXTERNAL false)
 set(AOSP_PACKAGES false)
 set(AOSP_BOOTABLE false)
 set(AOSP_HARDWARE false)
+set(AOSP_VENDOR false)
 set(AOSP_OUT false)
 
 file(GLOB SOURCE_FILES
@@ -147,6 +148,7 @@ file(GLOB SOURCE_FILES
         ${ANDROID_ROOT}/frameworks/native/cmds/idlcli/vibrator/*.cpp
         ${ANDROID_ROOT}/frameworks/native/cmds/installd/*.c
         ${ANDROID_ROOT}/frameworks/native/cmds/installd/*.cpp
+        ${ANDROID_ROOT}/frameworks/native/cmds/installd/android/os/*.cpp
         ${ANDROID_ROOT}/frameworks/native/cmds/installd/tests/*.cpp
         ${ANDROID_ROOT}/frameworks/native/cmds/lshal/*.cpp
         ${ANDROID_ROOT}/frameworks/native/cmds/lshal/libprocpartition/*.cpp
@@ -200,6 +202,7 @@ file(GLOB SOURCE_FILES
         ${ANDROID_ROOT}/frameworks/native/libs/input/tests/*.cpp
         ${ANDROID_ROOT}/frameworks/native/libs/math/tests/*.cpp
         ${ANDROID_ROOT}/frameworks/native/libs/nativedisplay/*.cpp
+        ${ANDROID_ROOT}/frameworks/native/libs/nativedisplay/QtiExtension/*.cpp
         ${ANDROID_ROOT}/frameworks/native/libs/nativedisplay/surfacetexture/*.cpp
         ${ANDROID_ROOT}/frameworks/native/libs/nativewindow/*.cpp
         ${ANDROID_ROOT}/frameworks/native/libs/nativewindow/tests/*.c
@@ -216,6 +219,7 @@ file(GLOB SOURCE_FILES
         ${ANDROID_ROOT}/frameworks/native/libs/renderengine/skia/filters/*.cpp
         ${ANDROID_ROOT}/frameworks/native/libs/renderengine/tests/*.cpp
         ${ANDROID_ROOT}/frameworks/native/libs/renderengine/threaded/*.cpp
+        ${ANDROID_ROOT}/frameworks/native/libs/runtimelog/*.cpp
         ${ANDROID_ROOT}/frameworks/native/libs/sensor/*.cpp
         ${ANDROID_ROOT}/frameworks/native/libs/sensor/fuzz/bittube_fuzzer/*.cpp
         ${ANDROID_ROOT}/frameworks/native/libs/sensor/fuzz/sensor_fuzzer/*.cpp
@@ -353,6 +357,7 @@ file(GLOB SOURCE_FILES
         )
 
 include_directories(
+        "${ANDROID_ROOT}/frameworks/base"
         "${ANDROID_ROOT}/frameworks/base/apct-tests/perftests/core/jni"
         "${ANDROID_ROOT}/frameworks/base/apex/jobscheduler/service/jni"
         "${ANDROID_ROOT}/frameworks/base/cmds/app_process"
@@ -569,6 +574,7 @@ include_directories(
         "${ANDROID_ROOT}/frameworks/native/libs/renderengine/benchmark"
         "${ANDROID_ROOT}/frameworks/native/libs/renderengine/include"
         "${ANDROID_ROOT}/frameworks/native/libs/renderengine/tests"
+        "${ANDROID_ROOT}/frameworks/native/libs/runtimelog"
         "${ANDROID_ROOT}/frameworks/native/libs/sensor"
         "${ANDROID_ROOT}/frameworks/native/libs/sensor/fuzz/bittube_fuzzer"
         "${ANDROID_ROOT}/frameworks/native/libs/sensor/fuzz/sensor_fuzzer"
@@ -661,6 +667,7 @@ include_directories(
         "${ANDROID_ROOT}/frameworks/native/services/gpuservice/gpuwork"
         "${ANDROID_ROOT}/frameworks/native/services/gpuservice/gpuwork/bpfprogs/include"
         "${ANDROID_ROOT}/frameworks/native/services/gpuservice/gpuwork/include"
+        "${ANDROID_ROOT}/frameworks/native/services/gpuservice/include"
         "${ANDROID_ROOT}/frameworks/native/services/gpuservice/tests/unittests"
         "${ANDROID_ROOT}/frameworks/native/services/gpuservice/tracing"
         "${ANDROID_ROOT}/frameworks/native/services/gpuservice/tracing/include"
@@ -742,6 +749,11 @@ include_directories(
         "${ANDROID_ROOT}/frameworks/native/vulkan/libvulkan"
         "${ANDROID_ROOT}/frameworks/native/vulkan/nulldrv"
         "${ANDROID_ROOT}/frameworks/native/vulkan/vkjson"
+        "${ANDROID_ROOT}/frameworks/opt/net/wifi/libwifi_hal/include"
+        "${ANDROID_ROOT}/frameworks/opt/net/wifi/libwifi_system/include"
+        "${ANDROID_ROOT}/frameworks/opt/net/wifi/libwifi_system_iface/include"
+        "${ANDROID_ROOT}/frameworks/rs"
+        "${ANDROID_ROOT}/frameworks/wilhelm/include"
 )
 
 file(GLOB_RECURSE HEADERS
@@ -962,6 +974,7 @@ file(GLOB_RECURSE HEADERS
         "${ANDROID_ROOT}/frameworks/native/libs/renderengine/benchmark/**/*.h"
         "${ANDROID_ROOT}/frameworks/native/libs/renderengine/include/**/*.h"
         "${ANDROID_ROOT}/frameworks/native/libs/renderengine/tests/**/*.h"
+        "${ANDROID_ROOT}/frameworks/native/libs/runtimelog/**/*.h"
         "${ANDROID_ROOT}/frameworks/native/libs/sensor/**/*.h"
         "${ANDROID_ROOT}/frameworks/native/libs/sensor/fuzz/bittube_fuzzer/**/*.h"
         "${ANDROID_ROOT}/frameworks/native/libs/sensor/fuzz/sensor_fuzzer/**/*.h"
@@ -1054,6 +1067,7 @@ file(GLOB_RECURSE HEADERS
         "${ANDROID_ROOT}/frameworks/native/services/gpuservice/gpuwork/**/*.h"
         "${ANDROID_ROOT}/frameworks/native/services/gpuservice/gpuwork/bpfprogs/include/**/*.h"
         "${ANDROID_ROOT}/frameworks/native/services/gpuservice/gpuwork/include/**/*.h"
+        "${ANDROID_ROOT}/frameworks/native/services/gpuservice/include/**/*.h"
         "${ANDROID_ROOT}/frameworks/native/services/gpuservice/tests/unittests/**/*.h"
         "${ANDROID_ROOT}/frameworks/native/services/gpuservice/tracing/**/*.h"
         "${ANDROID_ROOT}/frameworks/native/services/gpuservice/tracing/include/**/*.h"
@@ -1135,7 +1149,13 @@ file(GLOB_RECURSE HEADERS
         "${ANDROID_ROOT}/frameworks/native/vulkan/libvulkan/**/*.h"
         "${ANDROID_ROOT}/frameworks/native/vulkan/nulldrv/**/*.h"
         "${ANDROID_ROOT}/frameworks/native/vulkan/vkjson/**/*.h"
+        "${ANDROID_ROOT}/frameworks/opt/net/wifi/libwifi_hal/include/**/*.h"
+        "${ANDROID_ROOT}/frameworks/opt/net/wifi/libwifi_system/include/**/*.h"
+        "${ANDROID_ROOT}/frameworks/opt/net/wifi/libwifi_system_iface/include/**/*.h"
+        "${ANDROID_ROOT}/frameworks/rs/**/*.h"
+        "${ANDROID_ROOT}/frameworks/wilhelm/include/**/*.h"
         )
+
 
 
 # add aosp system common
@@ -1512,6 +1532,7 @@ if (${AOSP_SYSTEM_COMMON})
             "${ANDROID_ROOT}/system/logging/logd"
             "${ANDROID_ROOT}/system/logging/logd/fuzz"
             "${ANDROID_ROOT}/system/logging/logkit"
+            "${ANDROID_ROOT}/system/logging/logkit/binder"
             "${ANDROID_ROOT}/system/logging/logwrapper"
             "${ANDROID_ROOT}/system/logging/logwrapper/include"
             "${ANDROID_ROOT}/system/tools/aidl/analyzer/include"
@@ -1757,6 +1778,7 @@ if (${AOSP_SYSTEM_COMMON})
             "${ANDROID_ROOT}/system/logging/logd/**/*.h"
             "${ANDROID_ROOT}/system/logging/logd/fuzz/**/*.h"
             "${ANDROID_ROOT}/system/logging/logkit/**/*.h"
+            "${ANDROID_ROOT}/system/logging/logkit/binder/**/*.h"
             "${ANDROID_ROOT}/system/logging/logwrapper/**/*.h"
             "${ANDROID_ROOT}/system/logging/logwrapper/include/**/*.h"
             "${ANDROID_ROOT}/system/tools/aidl/**/*.h"
@@ -1968,6 +1990,7 @@ if (${AOSP_AV})
             ${ANDROID_ROOT}/frameworks/av/media/libmediaplayerservice/*.cpp
             ${ANDROID_ROOT}/frameworks/av/media/libmediaplayerservice/datasource/*.cpp
             ${ANDROID_ROOT}/frameworks/av/media/libmediaplayerservice/fuzzer/*.cpp
+            ${ANDROID_ROOT}/frameworks/av/media/libmediaplayerservice/mpctl/*.cpp
             ${ANDROID_ROOT}/frameworks/av/media/libmediaplayerservice/nuplayer/*.cpp
             ${ANDROID_ROOT}/frameworks/av/media/libmediaplayerservice/tests/*.cpp
             ${ANDROID_ROOT}/frameworks/av/media/libmediaplayerservice/tests/stagefrightRecorder/*.cpp
@@ -6260,6 +6283,187 @@ if (${AOSP_HARDWARE})
 endif ()
 
 
+# add aosp vendor
+if (${AOSP_VENDOR})
+    message("enable aosp vendor")
+
+    # add aosp vendor src
+    file(GLOB SOURCE_FILES_VENDOR
+            ${ANDROID_ROOT}/vendor/meizu/proprietary/demo/*.cpp
+            ${ANDROID_ROOT}/vendor/meizu/proprietary/ese-test-client/source/*.cpp
+            ${ANDROID_ROOT}/vendor/meizu/proprietary/fbase_defrag/common_fragment/*.c
+            ${ANDROID_ROOT}/vendor/meizu/proprietary/fbase_defrag/f2fs_fragment/*.c
+            ${ANDROID_ROOT}/vendor/meizu/proprietary/fbase_defrag/fbase_defrag/*.c
+            ${ANDROID_ROOT}/vendor/meizu/proprietary/fbase_defrag/fbase_defrag/1.0/default/*.cpp
+            ${ANDROID_ROOT}/vendor/meizu/proprietary/fbase_defrag/fbase_defrag/1.0/helper/*.cpp
+            ${ANDROID_ROOT}/vendor/meizu/proprietary/fbase_defrag/ufs-utils/*.c
+            ${ANDROID_ROOT}/vendor/meizu/proprietary/fido/2.0/default/*.cpp
+            ${ANDROID_ROOT}/vendor/meizu/proprietary/ifaa/1.0/default/*.cpp
+            ${ANDROID_ROOT}/vendor/meizu/proprietary/ir/*.cpp
+            ${ANDROID_ROOT}/vendor/meizu/proprietary/meizu_charging/*.c
+            ${ANDROID_ROOT}/vendor/meizu/proprietary/meizu_charging/1.0/default/*.cpp
+            ${ANDROID_ROOT}/vendor/meizu/proprietary/meizu_charging/1.0/helper/*.cpp
+            ${ANDROID_ROOT}/vendor/meizu/proprietary/meizu_charging/iniparser/*.c
+            ${ANDROID_ROOT}/vendor/meizu/proprietary/mzbp/common/*.c
+            ${ANDROID_ROOT}/vendor/meizu/proprietary/mzbp/userspace/*.c
+            ${ANDROID_ROOT}/vendor/meizu/proprietary/mzbp/userspace/startup/*.c
+            ${ANDROID_ROOT}/vendor/meizu/proprietary/qteedebug/*.cpp
+            ${ANDROID_ROOT}/vendor/meizu/proprietary/rpmb/rpmbd/*.cpp
+            ${ANDROID_ROOT}/vendor/meizu/proprietary/smart_scene/1.0/default/*.cpp
+            ${ANDROID_ROOT}/vendor/meizu/proprietary/smart_scene/1.0/default/perfboost/*.cpp
+            ${ANDROID_ROOT}/vendor/meizu/proprietary/smart_scene/aidl/*.cpp
+            ${ANDROID_ROOT}/vendor/meizu/proprietary/smart_scene/aidl/perfboost/*.cpp
+            ${ANDROID_ROOT}/vendor/meizu/proprietary/spu/client/*.cpp
+            ${ANDROID_ROOT}/vendor/meizu/proprietary/tiktap_hidl/*.cpp
+            ${ANDROID_ROOT}/vendor/xingji/proprietary/face/1.0/default/*.cpp
+            ${ANDROID_ROOT}/vendor/xingji/proprietary/face/aidl/default/*.cpp
+            ${ANDROID_ROOT}/vendor/xingji/proprietary/face/libfacebase/*.cpp
+            ${ANDROID_ROOT}/vendor/xingji/proprietary/face/libfaceservice/*.cpp
+            ${ANDROID_ROOT}/vendor/xingji/proprietary/face/libfaceservice/vendor/jiigan/*.cpp
+            ${ANDROID_ROOT}/vendor/xingji/proprietary/face/libfaceservice/vendor/sensetime/*.cpp
+            ${ANDROID_ROOT}/vendor/xingji/proprietary/secstore/1.0/default/*.cpp
+            )
+    # append aosp vendor src
+    list(APPEND SOURCE_FILES ${SOURCE_FILES_VENDOR})
+
+    # add aosp vendor header dir
+    include_directories(
+            "${ANDROID_ROOT}/device/meizu/common"
+            "${ANDROID_ROOT}/device/qcom/pineapple-kernel/kernel-headers"
+            "${ANDROID_ROOT}/vendor/flyme/frameworks/av/include"
+            "${ANDROID_ROOT}/vendor/meizu/aac/interface/richtap/vibrator/1.0"
+            "${ANDROID_ROOT}/vendor/meizu/aac/interface/richtap/vibrator/aidl"
+            "${ANDROID_ROOT}/vendor/meizu/interfaces/hardware/aw_light/1.0"
+            "${ANDROID_ROOT}/vendor/meizu/interfaces/hardware/fbase_defrag/1.0"
+            "${ANDROID_ROOT}/vendor/meizu/interfaces/hardware/fido/1.0"
+            "${ANDROID_ROOT}/vendor/meizu/interfaces/hardware/fido/2.0"
+            "${ANDROID_ROOT}/vendor/meizu/interfaces/hardware/ifaa/1.0"
+            "${ANDROID_ROOT}/vendor/meizu/interfaces/hardware/meizu_charging/1.0"
+            "${ANDROID_ROOT}/vendor/meizu/interfaces/hardware/smart_scene/1.0"
+            "${ANDROID_ROOT}/vendor/meizu/interfaces/hardware/tiktap_hidl/1.0"
+            "${ANDROID_ROOT}/vendor/meizu/interfaces/sensor_aux/1.0"
+            "${ANDROID_ROOT}/vendor/meizu/proprietary/demo"
+            "${ANDROID_ROOT}/vendor/meizu/proprietary/ese-test-client"
+            "${ANDROID_ROOT}/vendor/meizu/proprietary/fbase_defrag/common_fragment"
+            "${ANDROID_ROOT}/vendor/meizu/proprietary/fbase_defrag/f2fs_fragment"
+            "${ANDROID_ROOT}/vendor/meizu/proprietary/fbase_defrag/fbase_defrag"
+            "${ANDROID_ROOT}/vendor/meizu/proprietary/fbase_defrag/fbase_defrag/1.0/default"
+            "${ANDROID_ROOT}/vendor/meizu/proprietary/fbase_defrag/fbase_defrag/1.0/helper"
+            "${ANDROID_ROOT}/vendor/meizu/proprietary/fbase_defrag/ufs-utils"
+            "${ANDROID_ROOT}/vendor/meizu/proprietary/fido/2.0/default"
+            "${ANDROID_ROOT}/vendor/meizu/proprietary/ifaa/1.0/default"
+            "${ANDROID_ROOT}/vendor/meizu/proprietary/ir"
+            "${ANDROID_ROOT}/vendor/meizu/proprietary/meizu_charging"
+            "${ANDROID_ROOT}/vendor/meizu/proprietary/meizu_charging/1.0/default"
+            "${ANDROID_ROOT}/vendor/meizu/proprietary/meizu_charging/1.0/helper"
+            "${ANDROID_ROOT}/vendor/meizu/proprietary/mzbp/common"
+            "${ANDROID_ROOT}/vendor/meizu/proprietary/mzbp/common/include"
+            "${ANDROID_ROOT}/vendor/meizu/proprietary/mzbp/kernel/export_include"
+            "${ANDROID_ROOT}/vendor/meizu/proprietary/mzbp/userspace"
+            "${ANDROID_ROOT}/vendor/meizu/proprietary/mzbp/userspace/include"
+            "${ANDROID_ROOT}/vendor/meizu/proprietary/qteedebug"
+            "${ANDROID_ROOT}/vendor/meizu/proprietary/rpmb/rpmbd"
+            "${ANDROID_ROOT}/vendor/meizu/proprietary/smart_scene/1.0/default"
+            "${ANDROID_ROOT}/vendor/meizu/proprietary/smart_scene/aidl"
+            "${ANDROID_ROOT}/vendor/meizu/proprietary/spu/client"
+            "${ANDROID_ROOT}/vendor/meizu/proprietary/tiktap_hidl"
+            "${ANDROID_ROOT}/vendor/qcom/opensource/commonsys-intf/display/gralloc"
+            "${ANDROID_ROOT}/vendor/qcom/opensource/commonsys-intf/display/include"
+            "${ANDROID_ROOT}/vendor/qcom/opensource/commonsys-intf/display/libqdmetadata"
+            "${ANDROID_ROOT}/vendor/qcom/opensource/commonsys-intf/display/services"
+            "${ANDROID_ROOT}/vendor/qcom/proprietary/commonsys/perf-core/mp-ctl-client"
+            "${ANDROID_ROOT}/vendor/qcom/proprietary/commonsys/securemsm/QSEEComAPI"
+            "${ANDROID_ROOT}/vendor/qcom/proprietary/securemsm/QSEEComAPI"
+            "${ANDROID_ROOT}/vendor/qcom/proprietary/securemsm/mink/inc/interface"
+            "${ANDROID_ROOT}/vendor/qcom/proprietary/securemsm/mink/inc/qtvm"
+            "${ANDROID_ROOT}/vendor/qcom/proprietary/securemsm/mink/inc/uid"
+            "${ANDROID_ROOT}/vendor/qcom/proprietary/securemsm/smcinvoke/inc"
+            "${ANDROID_ROOT}/vendor/qcom/proprietary/spu/sputils/inc"
+            "${ANDROID_ROOT}/vendor/xingji/hal/star_core/proto"
+            "${ANDROID_ROOT}/vendor/xingji/interfaces/hal/starCore/1.0"
+            "${ANDROID_ROOT}/vendor/xingji/interfaces/hal/starCore/1.1"
+            "${ANDROID_ROOT}/vendor/xingji/interfaces/hardware/biometrics/face/1.0"
+            "${ANDROID_ROOT}/vendor/xingji/interfaces/hardware/qsee/store/1.0"
+            "${ANDROID_ROOT}/vendor/xingji/proprietary/face/1.0/default"
+            "${ANDROID_ROOT}/vendor/xingji/proprietary/face/aidl/default"
+            "${ANDROID_ROOT}/vendor/xingji/proprietary/face/libfacebase"
+            "${ANDROID_ROOT}/vendor/xingji/proprietary/face/libfaceservice"
+            "${ANDROID_ROOT}/vendor/xingji/proprietary/face/libfaceservice/vendor/jiigan"
+            "${ANDROID_ROOT}/vendor/xingji/proprietary/face/libfaceservice/vendor/sensetime"
+            "${ANDROID_ROOT}/vendor/xingji/proprietary/secstore/1.0/default"
+    )
+
+    # add aosp vendor header file
+    file(GLOB_RECURSE HEADERS_VENDOR
+            "${ANDROID_ROOT}/device/meizu/common/**/*.h"
+            "${ANDROID_ROOT}/device/qcom/pineapple-kernel/kernel-headers/**/*.h"
+            "${ANDROID_ROOT}/vendor/flyme/frameworks/av/include/**/*.h"
+            "${ANDROID_ROOT}/vendor/meizu/aac/interface/richtap/vibrator/1.0/**/*.h"
+            "${ANDROID_ROOT}/vendor/meizu/aac/interface/richtap/vibrator/aidl/**/*.h"
+            "${ANDROID_ROOT}/vendor/meizu/interfaces/hardware/aw_light/1.0/**/*.h"
+            "${ANDROID_ROOT}/vendor/meizu/interfaces/hardware/fbase_defrag/1.0/**/*.h"
+            "${ANDROID_ROOT}/vendor/meizu/interfaces/hardware/fido/1.0/**/*.h"
+            "${ANDROID_ROOT}/vendor/meizu/interfaces/hardware/fido/2.0/**/*.h"
+            "${ANDROID_ROOT}/vendor/meizu/interfaces/hardware/ifaa/1.0/**/*.h"
+            "${ANDROID_ROOT}/vendor/meizu/interfaces/hardware/meizu_charging/1.0/**/*.h"
+            "${ANDROID_ROOT}/vendor/meizu/interfaces/hardware/smart_scene/1.0/**/*.h"
+            "${ANDROID_ROOT}/vendor/meizu/interfaces/hardware/tiktap_hidl/1.0/**/*.h"
+            "${ANDROID_ROOT}/vendor/meizu/interfaces/sensor_aux/1.0/**/*.h"
+            "${ANDROID_ROOT}/vendor/meizu/proprietary/demo/**/*.h"
+            "${ANDROID_ROOT}/vendor/meizu/proprietary/ese-test-client/**/*.h"
+            "${ANDROID_ROOT}/vendor/meizu/proprietary/fbase_defrag/common_fragment/**/*.h"
+            "${ANDROID_ROOT}/vendor/meizu/proprietary/fbase_defrag/f2fs_fragment/**/*.h"
+            "${ANDROID_ROOT}/vendor/meizu/proprietary/fbase_defrag/fbase_defrag/**/*.h"
+            "${ANDROID_ROOT}/vendor/meizu/proprietary/fbase_defrag/fbase_defrag/1.0/default/**/*.h"
+            "${ANDROID_ROOT}/vendor/meizu/proprietary/fbase_defrag/fbase_defrag/1.0/helper/**/*.h"
+            "${ANDROID_ROOT}/vendor/meizu/proprietary/fbase_defrag/ufs-utils/**/*.h"
+            "${ANDROID_ROOT}/vendor/meizu/proprietary/fido/2.0/default/**/*.h"
+            "${ANDROID_ROOT}/vendor/meizu/proprietary/ifaa/1.0/default/**/*.h"
+            "${ANDROID_ROOT}/vendor/meizu/proprietary/ir/**/*.h"
+            "${ANDROID_ROOT}/vendor/meizu/proprietary/meizu_charging/**/*.h"
+            "${ANDROID_ROOT}/vendor/meizu/proprietary/meizu_charging/1.0/default/**/*.h"
+            "${ANDROID_ROOT}/vendor/meizu/proprietary/meizu_charging/1.0/helper/**/*.h"
+            "${ANDROID_ROOT}/vendor/meizu/proprietary/mzbp/common/**/*.h"
+            "${ANDROID_ROOT}/vendor/meizu/proprietary/mzbp/common/include/**/*.h"
+            "${ANDROID_ROOT}/vendor/meizu/proprietary/mzbp/kernel/export_include/**/*.h"
+            "${ANDROID_ROOT}/vendor/meizu/proprietary/mzbp/userspace/**/*.h"
+            "${ANDROID_ROOT}/vendor/meizu/proprietary/mzbp/userspace/include/**/*.h"
+            "${ANDROID_ROOT}/vendor/meizu/proprietary/qteedebug/**/*.h"
+            "${ANDROID_ROOT}/vendor/meizu/proprietary/rpmb/rpmbd/**/*.h"
+            "${ANDROID_ROOT}/vendor/meizu/proprietary/smart_scene/1.0/default/**/*.h"
+            "${ANDROID_ROOT}/vendor/meizu/proprietary/smart_scene/aidl/**/*.h"
+            "${ANDROID_ROOT}/vendor/meizu/proprietary/spu/client/**/*.h"
+            "${ANDROID_ROOT}/vendor/meizu/proprietary/tiktap_hidl/**/*.h"
+            "${ANDROID_ROOT}/vendor/qcom/opensource/commonsys-intf/display/gralloc/**/*.h"
+            "${ANDROID_ROOT}/vendor/qcom/opensource/commonsys-intf/display/include/**/*.h"
+            "${ANDROID_ROOT}/vendor/qcom/opensource/commonsys-intf/display/libqdmetadata/**/*.h"
+            "${ANDROID_ROOT}/vendor/qcom/opensource/commonsys-intf/display/services/**/*.h"
+            "${ANDROID_ROOT}/vendor/qcom/proprietary/commonsys/perf-core/mp-ctl-client/**/*.h"
+            "${ANDROID_ROOT}/vendor/qcom/proprietary/commonsys/securemsm/QSEEComAPI/**/*.h"
+            "${ANDROID_ROOT}/vendor/qcom/proprietary/securemsm/QSEEComAPI/**/*.h"
+            "${ANDROID_ROOT}/vendor/qcom/proprietary/securemsm/mink/inc/interface/**/*.h"
+            "${ANDROID_ROOT}/vendor/qcom/proprietary/securemsm/mink/inc/qtvm/**/*.h"
+            "${ANDROID_ROOT}/vendor/qcom/proprietary/securemsm/mink/inc/uid/**/*.h"
+            "${ANDROID_ROOT}/vendor/qcom/proprietary/securemsm/smcinvoke/inc/**/*.h"
+            "${ANDROID_ROOT}/vendor/qcom/proprietary/spu/sputils/inc/**/*.h"
+            "${ANDROID_ROOT}/vendor/xingji/hal/star_core/proto/**/*.h"
+            "${ANDROID_ROOT}/vendor/xingji/interfaces/hal/starCore/1.0/**/*.h"
+            "${ANDROID_ROOT}/vendor/xingji/interfaces/hal/starCore/1.1/**/*.h"
+            "${ANDROID_ROOT}/vendor/xingji/interfaces/hardware/biometrics/face/1.0/**/*.h"
+            "${ANDROID_ROOT}/vendor/xingji/interfaces/hardware/qsee/store/1.0/**/*.h"
+            "${ANDROID_ROOT}/vendor/xingji/proprietary/face/1.0/default/**/*.h"
+            "${ANDROID_ROOT}/vendor/xingji/proprietary/face/aidl/default/**/*.h"
+            "${ANDROID_ROOT}/vendor/xingji/proprietary/face/libfacebase/**/*.h"
+            "${ANDROID_ROOT}/vendor/xingji/proprietary/face/libfaceservice/**/*.h"
+            "${ANDROID_ROOT}/vendor/xingji/proprietary/face/libfaceservice/vendor/jiigan/**/*.h"
+            "${ANDROID_ROOT}/vendor/xingji/proprietary/face/libfaceservice/vendor/sensetime/**/*.h"
+            "${ANDROID_ROOT}/vendor/xingji/proprietary/secstore/1.0/default/**/*.h"
+            )
+    # append aosp vendor header
+    list(APPEND HEADERS ${HEADERS_VENDOR})
+endif ()
+
+
 # add aosp out
 if (${AOSP_OUT})
     message("enable aosp out")
@@ -6797,6 +7001,8 @@ if (${AOSP_OUT})
             ${ANDROID_ROOT}/out/soong/.intermediates/frameworks/hardware/interfaces/vr/composer/1.0/android.frameworks.vr.composer@1.0_genc++/gen/android/frameworks/vr/composer/1.0/*.cpp
             ${ANDROID_ROOT}/out/soong/.intermediates/frameworks/hardware/interfaces/vr/composer/2.0/android.frameworks.vr.composer@2.0_genc++/gen/android/frameworks/vr/composer/2.0/*.cpp
             ${ANDROID_ROOT}/out/soong/.intermediates/frameworks/native/cmds/dumpstate/libdumpstateaidl/android_arm64_armv8-a-branchprot_shared/gen/aidl/android/os/*.cpp
+            ${ANDROID_ROOT}/out/soong/.intermediates/frameworks/native/cmds/fbase_defrag/service/libfbase_defrag_binder/android_arm64_armv8-a-branchprot_static/gen/aidl/vendor/meizu/fbase_defrag/*.cpp
+            ${ANDROID_ROOT}/out/soong/.intermediates/frameworks/native/cmds/fbase_defrag/service/libfbase_defrag_service/android_arm64_armv8-a-branchprot_static/gen/aidl/vendor/meizu/fbase_defrag/*.cpp
             ${ANDROID_ROOT}/out/soong/.intermediates/frameworks/native/cmds/installd/installd/android_arm64_armv8-a-branchprot/gen/aidl/android/os/*.cpp
             ${ANDROID_ROOT}/out/soong/.intermediates/frameworks/native/cmds/installd/installd/android_arm64_armv8-a-branchprot/gen/aidl/android/os/storage/*.cpp
             ${ANDROID_ROOT}/out/soong/.intermediates/frameworks/native/cmds/installd/libinstalld/android_arm64_armv8-a-branchprot_static/gen/aidl/android/os/*.cpp
@@ -6848,6 +7054,7 @@ if (${AOSP_OUT})
             ${ANDROID_ROOT}/out/soong/.intermediates/frameworks/native/libs/binderthreadstate/binderthreadstateutilstest.aidl-ndk-source/gen/*.cpp
             ${ANDROID_ROOT}/out/soong/.intermediates/frameworks/native/libs/binderthreadstate/binderthreadstateutilstest.aidl-ndk_platform-source/gen/*.cpp
             ${ANDROID_ROOT}/out/soong/.intermediates/frameworks/native/libs/bufferqueueconverter/libbufferqueueconverter/android_arm64_armv8-a-branchprot_static/gen/aidl/android/gui/*.cpp
+            ${ANDROID_ROOT}/out/soong/.intermediates/frameworks/native/libs/em/libem/android_arm64_armv8-a-branchprot_static/gen/aidl/com/meizu/ems/*.cpp
             ${ANDROID_ROOT}/out/soong/.intermediates/frameworks/native/libs/gui/libgui/android_arm64_armv8-a-branchprot_shared/gen/aidl/android/os/*.cpp
             ${ANDROID_ROOT}/out/soong/.intermediates/frameworks/native/libs/gui/libgui/android_arm64_armv8-a-branchprot_shared/gen/aidl/android/view/*.cpp
             ${ANDROID_ROOT}/out/soong/.intermediates/frameworks/native/libs/gui/libgui_aidl_static/android_arm64_armv8-a-branchprot_static/gen/aidl/android/gui/*.cpp
@@ -7798,6 +8005,7 @@ if (${AOSP_OUT})
             ${ANDROID_ROOT}/out/soong/.intermediates/system/logging/logd/liblogd/android_arm64_armv8-a-branchprot_static/gen/aidl/android/os/logcat/*.cpp
             ${ANDROID_ROOT}/out/soong/.intermediates/system/logging/logd/liblogd_binder/android_arm64_armv8-a-branchprot_static/gen/aidl/android/os/*.cpp
             ${ANDROID_ROOT}/out/soong/.intermediates/system/logging/logd/logd/android_arm64_armv8-a-branchprot_cfi/gen/aidl/android/os/logcat/*.cpp
+            ${ANDROID_ROOT}/out/soong/.intermediates/system/logging/logkit/liblogreportaidl/android_arm64_armv8-a-branchprot_shared/gen/aidl/android/os/*.cpp
             ${ANDROID_ROOT}/out/soong/.intermediates/system/tools/aidl/aidl-test-fixedsizearray-cpp-analyzer-source/gen/android/aidl/fixedsizearray/*.cpp
             ${ANDROID_ROOT}/out/soong/.intermediates/system/tools/aidl/aidl-test-fixedsizearray-cpp-source/gen/android/aidl/fixedsizearray/*.cpp
             ${ANDROID_ROOT}/out/soong/.intermediates/system/tools/aidl/aidl-test-fixedsizearray-ndk-source/gen/android/aidl/fixedsizearray/*.cpp
@@ -8017,12 +8225,39 @@ if (${AOSP_OUT})
             ${ANDROID_ROOT}/out/soong/.intermediates/system/tools/hidl/test/vendor/1.1/hidl.tests.vendor@1.1_genc++/gen/hidl/tests/vendor/1.1/*.cpp
             ${ANDROID_ROOT}/out/soong/.intermediates/system/tools/hidl/test/vendor/android/1.0/hidl.tests.vendor.android@1.0_genc++/gen/hidl/tests/vendor/android/1.0/*.cpp
             ${ANDROID_ROOT}/out/soong/.intermediates/system/tools/sysprop/tests/libcom.android.sysprop.tests/android_arm64_armv8-a-branchprot_static/gen/sysprop/*.cpp
+            ${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/aac/interface/richtap/vibrator/1.0/vendor.aac.hardware.richtap.vibrator@1.0_genc++/gen/vendor/aac/hardware/richtap/vibrator/1.0/*.cpp
+            ${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/aac/interface/richtap/vibrator/aidl/vendor.aac.hardware.richtap.vibrator-V1-cpp-source/gen/vendor/aac/hardware/richtap/vibrator/*.cpp
+            ${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/aac/interface/richtap/vibrator/aidl/vendor.aac.hardware.richtap.vibrator-V1-ndk-source/gen/vendor/aac/hardware/richtap/vibrator/*.cpp
+            ${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/aac/interface/richtap/vibrator/aidl/vendor.aac.hardware.richtap.vibrator-V1-ndk_platform-source/gen/vendor/aac/hardware/richtap/vibrator/*.cpp
+            ${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/aac/interface/richtap/vibrator/aidl/vendor.aac.hardware.richtap.vibrator-V2-cpp-source/gen/vendor/aac/hardware/richtap/vibrator/*.cpp
+            ${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/aac/interface/richtap/vibrator/aidl/vendor.aac.hardware.richtap.vibrator-V2-ndk-source/gen/vendor/aac/hardware/richtap/vibrator/*.cpp
+            ${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/aac/interface/richtap/vibrator/aidl/vendor.aac.hardware.richtap.vibrator-V2-ndk_platform-source/gen/vendor/aac/hardware/richtap/vibrator/*.cpp
+            ${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/aac/interface/richtap/vibrator/aidl/vendor.aac.hardware.richtap.vibrator-cpp-analyzer-source/gen/vendor/aac/hardware/richtap/vibrator/*.cpp
+            ${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/hardware/aw_light/1.0/vendor.meizu.hardware.aw_light@1.0_genc++/gen/vendor/meizu/hardware/aw_light/1.0/*.cpp
+            ${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/hardware/fbase_defrag/1.0/vendor.meizu.hardware.fbase_defrag@1.0_genc++/gen/vendor/meizu/hardware/fbase_defrag/1.0/*.cpp
+            ${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/hardware/fido/1.0/vendor.meizu.hardware.fido@1.0_genc++/gen/vendor/meizu/hardware/fido/1.0/*.cpp
+            ${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/hardware/fido/2.0/vendor.meizu.hardware.fido@2.0_genc++/gen/vendor/meizu/hardware/fido/2.0/*.cpp
+            ${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/hardware/ifaa/1.0/vendor.meizu.hardware.ifaa@1.0_genc++/gen/vendor/meizu/hardware/ifaa/1.0/*.cpp
+            ${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/hardware/meizu_charging/1.0/vendor.meizu.hardware.meizu_charging@1.0_genc++/gen/vendor/meizu/hardware/meizu_charging/1.0/*.cpp
+            ${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/hardware/smart_scene/1.0/vendor.meizu.hardware.smart_scene@1.0_genc++/gen/vendor/meizu/hardware/smart_scene/1.0/*.cpp
+            ${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/hardware/smart_scene/aidl/vendor.meizu.hardware.smart_scene-V1-ndk-source/gen/vendor/meizu/hardware/smart_scene/*.cpp
+            ${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/hardware/smart_scene/aidl/vendor.meizu.hardware.smart_scene-V1-ndk_platform-source/gen/vendor/meizu/hardware/smart_scene/*.cpp
+            ${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/hardware/smart_scene/aidl/vendor.meizu.hardware.smart_scene-V2-ndk-source/gen/vendor/meizu/hardware/smart_scene/*.cpp
+            ${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/hardware/smart_scene/aidl/vendor.meizu.hardware.smart_scene-V2-ndk_platform-source/gen/vendor/meizu/hardware/smart_scene/*.cpp
+            ${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/hardware/tiktap_hidl/1.0/vendor.meizu.hardware.tiktap_hidl@1.0_genc++/gen/vendor/meizu/hardware/tiktap_hidl/1.0/*.cpp
+            ${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/sensor_aux/1.0/vendor.meizu.sensor_aux@1.0_genc++/gen/vendor/meizu/sensor_aux/1.0/*.cpp
+            ${ANDROID_ROOT}/out/soong/.intermediates/vendor/xingji/hal/star_core/proto/libcomm-protos/android_vendor.34_arm64_armv8-a-branchprot_kryo300_static/gen/proto/vendor/xingji/hal/star_core/proto/*.cc
+            ${ANDROID_ROOT}/out/soong/.intermediates/vendor/xingji/interfaces/hal/starCore/1.0/vendor.xingji.hal.starCore@1.0_genc++/gen/vendor/xingji/hal/starCore/1.0/*.cpp
+            ${ANDROID_ROOT}/out/soong/.intermediates/vendor/xingji/interfaces/hal/starCore/1.1/vendor.xingji.hal.starCore@1.1_genc++/gen/vendor/xingji/hal/starCore/1.1/*.cpp
+            ${ANDROID_ROOT}/out/soong/.intermediates/vendor/xingji/interfaces/hardware/biometrics/face/1.0/vendor.xingji.hardware.biometrics.face@1.0_genc++/gen/vendor/xingji/hardware/biometrics/face/1.0/*.cpp
+            ${ANDROID_ROOT}/out/soong/.intermediates/vendor/xingji/interfaces/hardware/qsee/store/1.0/vendor.xingji.hardware.qsee.store@1.0_genc++/gen/vendor/xingji/hardware/qsee/store/1.0/*.cpp
             )
     # append aosp out src
     list(APPEND SOURCE_FILES ${SOURCE_FILES_OUT})
 
     # add aosp out header dir
     include_directories(
+            "${ANDROID_ROOT}/out/soong/.intermediates/bionic/libc/libc/android_vendor.34_arm64_armv8-a-branchprot_kryo300_shared/gen/include"
             "${ANDROID_ROOT}/out/soong/.intermediates/bionic/libc/libc/android_vendor.34_arm64_armv8-a-branchprot_shared/gen/include"
             "${ANDROID_ROOT}/out/soong/.intermediates/external/libbpf/libbpf_headers/gen"
             "${ANDROID_ROOT}/out/soong/.intermediates/external/libchrome/libchrome-include/gen/gensrcs/external/libchrome"
@@ -8465,6 +8700,7 @@ if (${AOSP_OUT})
             "${ANDROID_ROOT}/out/soong/.intermediates/frameworks/native/cmds/installd/libinstalld/android_arm64_armv8-a-branchprot_static/gen/aidl"
             "${ANDROID_ROOT}/out/soong/.intermediates/frameworks/native/libs/binder/libactivitymanager_aidl/android_arm64_armv8-a-branchprot_static/gen/aidl"
             "${ANDROID_ROOT}/out/soong/.intermediates/frameworks/native/libs/binder/libactivitymanager_aidl/android_arm64_armv8-a-branchprot_static_fuzzer/gen/aidl"
+            "${ANDROID_ROOT}/out/soong/.intermediates/frameworks/native/libs/binder/libbinder/android_arm64_armv8-a-branchprot_kryo300_shared/gen/aidl"
             "${ANDROID_ROOT}/out/soong/.intermediates/frameworks/native/libs/binder/libbinder/android_arm64_armv8-a-branchprot_shared/gen/aidl"
             "${ANDROID_ROOT}/out/soong/.intermediates/frameworks/native/libs/binder/libbinder/android_arm64_armv8-a-branchprot_shared_fuzzer/gen/aidl"
             "${ANDROID_ROOT}/out/soong/.intermediates/frameworks/native/libs/binder/libbinder/android_recovery_arm64_armv8-a-branchprot_shared/gen/aidl"
@@ -9765,6 +10001,7 @@ if (${AOSP_OUT})
             "${ANDROID_ROOT}/out/soong/.intermediates/system/logging/logd/liblogd_binder/android_arm64_armv8-a-branchprot_static/gen/aidl"
             "${ANDROID_ROOT}/out/soong/.intermediates/system/logging/logd/liblogd_binder/android_arm64_armv8-a-branchprot_static_cfi/gen/aidl"
             "${ANDROID_ROOT}/out/soong/.intermediates/system/logging/logd/logd/android_arm64_armv8-a-branchprot_cfi/gen/aidl"
+            "${ANDROID_ROOT}/out/soong/.intermediates/system/logging/logkit/liblogreportaidl/android_arm64_armv8-a-branchprot_shared/gen/aidl"
             "${ANDROID_ROOT}/out/soong/.intermediates/system/security/keystore2/aidl/android.security.authorization-ndk-source/gen/include"
             "${ANDROID_ROOT}/out/soong/.intermediates/system/tools/aidl/aidl-test-fixedsizearray-cpp-analyzer-source/gen/include"
             "${ANDROID_ROOT}/out/soong/.intermediates/system/tools/aidl/aidl-test-fixedsizearray-cpp-source/gen/include"
@@ -9934,10 +10171,58 @@ if (${AOSP_OUT})
             "${ANDROID_ROOT}/out/soong/.intermediates/system/update_engine/update_metadata-protos/android_ramdisk_arm64_armv8-a-branchprot_static/gen/proto"
             "${ANDROID_ROOT}/out/soong/.intermediates/system/update_engine/update_metadata-protos/android_recovery_arm64_armv8-a-branchprot_static/gen/proto"
             "${ANDROID_ROOT}/out/soong/.intermediates/system/vold/libvold_binder/android_arm64_armv8-a-branchprot_static/gen/aidl"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/aac/interface/richtap/vibrator/1.0/vendor.aac.hardware.richtap.vibrator@1.0_genc++/gen"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/aac/interface/richtap/vibrator/1.0/vendor.aac.hardware.richtap.vibrator@1.0_genc++_headers/gen"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/aac/interface/richtap/vibrator/aidl/vendor.aac.hardware.richtap.vibrator-V1-cpp-source/gen/include"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/aac/interface/richtap/vibrator/aidl/vendor.aac.hardware.richtap.vibrator-V1-ndk-source/gen/include"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/aac/interface/richtap/vibrator/aidl/vendor.aac.hardware.richtap.vibrator-V1-ndk_platform-source/gen/include"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/aac/interface/richtap/vibrator/aidl/vendor.aac.hardware.richtap.vibrator-V2-cpp-source/gen/include"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/aac/interface/richtap/vibrator/aidl/vendor.aac.hardware.richtap.vibrator-V2-ndk-source/gen/include"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/aac/interface/richtap/vibrator/aidl/vendor.aac.hardware.richtap.vibrator-V2-ndk_platform-source/gen/include"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/aac/interface/richtap/vibrator/aidl/vendor.aac.hardware.richtap.vibrator-cpp-analyzer-source/gen/include"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/hardware/aw_light/1.0/vendor.meizu.hardware.aw_light@1.0_genc++/gen"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/hardware/aw_light/1.0/vendor.meizu.hardware.aw_light@1.0_genc++_headers/gen"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/hardware/fbase_defrag/1.0/vendor.meizu.hardware.fbase_defrag@1.0_genc++/gen"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/hardware/fbase_defrag/1.0/vendor.meizu.hardware.fbase_defrag@1.0_genc++_headers/gen"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/hardware/fido/1.0/vendor.meizu.hardware.fido@1.0_genc++/gen"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/hardware/fido/1.0/vendor.meizu.hardware.fido@1.0_genc++_headers/gen"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/hardware/fido/2.0/vendor.meizu.hardware.fido@2.0_genc++/gen"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/hardware/fido/2.0/vendor.meizu.hardware.fido@2.0_genc++_headers/gen"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/hardware/ifaa/1.0/vendor.meizu.hardware.ifaa@1.0_genc++/gen"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/hardware/ifaa/1.0/vendor.meizu.hardware.ifaa@1.0_genc++_headers/gen"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/hardware/meizu_charging/1.0/vendor.meizu.hardware.meizu_charging@1.0_genc++/gen"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/hardware/meizu_charging/1.0/vendor.meizu.hardware.meizu_charging@1.0_genc++_headers/gen"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/hardware/smart_scene/1.0/vendor.meizu.hardware.smart_scene@1.0_genc++/gen"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/hardware/smart_scene/1.0/vendor.meizu.hardware.smart_scene@1.0_genc++_headers/gen"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/hardware/smart_scene/aidl/vendor.meizu.hardware.smart_scene-V1-ndk-source/gen/include"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/hardware/smart_scene/aidl/vendor.meizu.hardware.smart_scene-V1-ndk_platform-source/gen/include"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/hardware/smart_scene/aidl/vendor.meizu.hardware.smart_scene-V2-ndk-source/gen/include"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/hardware/smart_scene/aidl/vendor.meizu.hardware.smart_scene-V2-ndk_platform-source/gen/include"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/hardware/tiktap_hidl/1.0/vendor.meizu.hardware.tiktap_hidl@1.0_genc++/gen"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/hardware/tiktap_hidl/1.0/vendor.meizu.hardware.tiktap_hidl@1.0_genc++_headers/gen"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/sensor_aux/1.0/vendor.meizu.sensor_aux@1.0_genc++/gen"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/sensor_aux/1.0/vendor.meizu.sensor_aux@1.0_genc++_headers/gen"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/qcom/opensource/commonsys-intf/display/aidl/composer3/vendor.qti.hardware.display.composer3-V1-ndk-source/gen/include"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/qcom/opensource/commonsys-intf/display/aidl/config/vendor.qti.hardware.display.config-V7-ndk-source/gen/include"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/qcom/opensource/interfaces/camera/device/1.0/vendor.qti.hardware.camera.device@1.0_genc++_headers/gen"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/qcom/opensource/interfaces/display/composer/3.0/vendor.qti.hardware.display.composer@3.0_genc++_headers/gen"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/qcom/opensource/interfaces/display/composer/3.1/vendor.qti.hardware.display.composer@3.1_genc++_headers/gen"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/qcom/proprietary/interfaces/spu/2.0/vendor.qti.spu@2.0_genc++_headers/gen"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/xingji/hal/star_core/proto/libcomm-protos/android_vendor.34_arm64_armv8-a-branchprot_kryo300_static/gen/proto"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/xingji/hal/star_core/proto/libcomm-protos/android_vendor.34_arm64_armv8-a-branchprot_kryo300_static/gen/proto/vendor/xingji/hal/star_core/proto"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/xingji/interfaces/hal/starCore/1.0/vendor.xingji.hal.starCore@1.0_genc++/gen"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/xingji/interfaces/hal/starCore/1.0/vendor.xingji.hal.starCore@1.0_genc++_headers/gen"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/xingji/interfaces/hal/starCore/1.1/vendor.xingji.hal.starCore@1.1_genc++/gen"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/xingji/interfaces/hal/starCore/1.1/vendor.xingji.hal.starCore@1.1_genc++_headers/gen"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/xingji/interfaces/hardware/biometrics/face/1.0/vendor.xingji.hardware.biometrics.face@1.0_genc++/gen"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/xingji/interfaces/hardware/biometrics/face/1.0/vendor.xingji.hardware.biometrics.face@1.0_genc++_headers/gen"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/xingji/interfaces/hardware/qsee/store/1.0/vendor.xingji.hardware.qsee.store@1.0_genc++/gen"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/xingji/interfaces/hardware/qsee/store/1.0/vendor.xingji.hardware.qsee.store@1.0_genc++_headers/gen"
     )
 
     # add aosp out header file
     file(GLOB_RECURSE HEADERS_OUT
+            "${ANDROID_ROOT}/out/soong/.intermediates/bionic/libc/libc/android_vendor.34_arm64_armv8-a-branchprot_kryo300_shared/gen/include/**/*.h"
             "${ANDROID_ROOT}/out/soong/.intermediates/bionic/libc/libc/android_vendor.34_arm64_armv8-a-branchprot_shared/gen/include/**/*.h"
             "${ANDROID_ROOT}/out/soong/.intermediates/external/libbpf/libbpf_headers/gen/**/*.h"
             "${ANDROID_ROOT}/out/soong/.intermediates/external/libchrome/libchrome-include/gen/gensrcs/external/libchrome/**/*.h"
@@ -10380,6 +10665,7 @@ if (${AOSP_OUT})
             "${ANDROID_ROOT}/out/soong/.intermediates/frameworks/native/cmds/installd/libinstalld/android_arm64_armv8-a-branchprot_static/gen/aidl/**/*.h"
             "${ANDROID_ROOT}/out/soong/.intermediates/frameworks/native/libs/binder/libactivitymanager_aidl/android_arm64_armv8-a-branchprot_static/gen/aidl/**/*.h"
             "${ANDROID_ROOT}/out/soong/.intermediates/frameworks/native/libs/binder/libactivitymanager_aidl/android_arm64_armv8-a-branchprot_static_fuzzer/gen/aidl/**/*.h"
+            "${ANDROID_ROOT}/out/soong/.intermediates/frameworks/native/libs/binder/libbinder/android_arm64_armv8-a-branchprot_kryo300_shared/gen/aidl/**/*.h"
             "${ANDROID_ROOT}/out/soong/.intermediates/frameworks/native/libs/binder/libbinder/android_arm64_armv8-a-branchprot_shared/gen/aidl/**/*.h"
             "${ANDROID_ROOT}/out/soong/.intermediates/frameworks/native/libs/binder/libbinder/android_arm64_armv8-a-branchprot_shared_fuzzer/gen/aidl/**/*.h"
             "${ANDROID_ROOT}/out/soong/.intermediates/frameworks/native/libs/binder/libbinder/android_recovery_arm64_armv8-a-branchprot_shared/gen/aidl/**/*.h"
@@ -11680,6 +11966,7 @@ if (${AOSP_OUT})
             "${ANDROID_ROOT}/out/soong/.intermediates/system/logging/logd/liblogd_binder/android_arm64_armv8-a-branchprot_static/gen/aidl/**/*.h"
             "${ANDROID_ROOT}/out/soong/.intermediates/system/logging/logd/liblogd_binder/android_arm64_armv8-a-branchprot_static_cfi/gen/aidl/**/*.h"
             "${ANDROID_ROOT}/out/soong/.intermediates/system/logging/logd/logd/android_arm64_armv8-a-branchprot_cfi/gen/aidl/**/*.h"
+            "${ANDROID_ROOT}/out/soong/.intermediates/system/logging/logkit/liblogreportaidl/android_arm64_armv8-a-branchprot_shared/gen/aidl/**/*.h"
             "${ANDROID_ROOT}/out/soong/.intermediates/system/security/keystore2/aidl/android.security.authorization-ndk-source/gen/include/**/*.h"
             "${ANDROID_ROOT}/out/soong/.intermediates/system/tools/aidl/aidl-test-fixedsizearray-cpp-analyzer-source/gen/include/**/*.h"
             "${ANDROID_ROOT}/out/soong/.intermediates/system/tools/aidl/aidl-test-fixedsizearray-cpp-source/gen/include/**/*.h"
@@ -11849,10 +12136,58 @@ if (${AOSP_OUT})
             "${ANDROID_ROOT}/out/soong/.intermediates/system/update_engine/update_metadata-protos/android_ramdisk_arm64_armv8-a-branchprot_static/gen/proto/**/*.h"
             "${ANDROID_ROOT}/out/soong/.intermediates/system/update_engine/update_metadata-protos/android_recovery_arm64_armv8-a-branchprot_static/gen/proto/**/*.h"
             "${ANDROID_ROOT}/out/soong/.intermediates/system/vold/libvold_binder/android_arm64_armv8-a-branchprot_static/gen/aidl/**/*.h"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/aac/interface/richtap/vibrator/1.0/vendor.aac.hardware.richtap.vibrator@1.0_genc++/gen/**/*.h"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/aac/interface/richtap/vibrator/1.0/vendor.aac.hardware.richtap.vibrator@1.0_genc++_headers/gen/**/*.h"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/aac/interface/richtap/vibrator/aidl/vendor.aac.hardware.richtap.vibrator-V1-cpp-source/gen/include/**/*.h"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/aac/interface/richtap/vibrator/aidl/vendor.aac.hardware.richtap.vibrator-V1-ndk-source/gen/include/**/*.h"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/aac/interface/richtap/vibrator/aidl/vendor.aac.hardware.richtap.vibrator-V1-ndk_platform-source/gen/include/**/*.h"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/aac/interface/richtap/vibrator/aidl/vendor.aac.hardware.richtap.vibrator-V2-cpp-source/gen/include/**/*.h"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/aac/interface/richtap/vibrator/aidl/vendor.aac.hardware.richtap.vibrator-V2-ndk-source/gen/include/**/*.h"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/aac/interface/richtap/vibrator/aidl/vendor.aac.hardware.richtap.vibrator-V2-ndk_platform-source/gen/include/**/*.h"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/aac/interface/richtap/vibrator/aidl/vendor.aac.hardware.richtap.vibrator-cpp-analyzer-source/gen/include/**/*.h"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/hardware/aw_light/1.0/vendor.meizu.hardware.aw_light@1.0_genc++/gen/**/*.h"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/hardware/aw_light/1.0/vendor.meizu.hardware.aw_light@1.0_genc++_headers/gen/**/*.h"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/hardware/fbase_defrag/1.0/vendor.meizu.hardware.fbase_defrag@1.0_genc++/gen/**/*.h"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/hardware/fbase_defrag/1.0/vendor.meizu.hardware.fbase_defrag@1.0_genc++_headers/gen/**/*.h"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/hardware/fido/1.0/vendor.meizu.hardware.fido@1.0_genc++/gen/**/*.h"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/hardware/fido/1.0/vendor.meizu.hardware.fido@1.0_genc++_headers/gen/**/*.h"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/hardware/fido/2.0/vendor.meizu.hardware.fido@2.0_genc++/gen/**/*.h"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/hardware/fido/2.0/vendor.meizu.hardware.fido@2.0_genc++_headers/gen/**/*.h"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/hardware/ifaa/1.0/vendor.meizu.hardware.ifaa@1.0_genc++/gen/**/*.h"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/hardware/ifaa/1.0/vendor.meizu.hardware.ifaa@1.0_genc++_headers/gen/**/*.h"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/hardware/meizu_charging/1.0/vendor.meizu.hardware.meizu_charging@1.0_genc++/gen/**/*.h"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/hardware/meizu_charging/1.0/vendor.meizu.hardware.meizu_charging@1.0_genc++_headers/gen/**/*.h"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/hardware/smart_scene/1.0/vendor.meizu.hardware.smart_scene@1.0_genc++/gen/**/*.h"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/hardware/smart_scene/1.0/vendor.meizu.hardware.smart_scene@1.0_genc++_headers/gen/**/*.h"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/hardware/smart_scene/aidl/vendor.meizu.hardware.smart_scene-V1-ndk-source/gen/include/**/*.h"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/hardware/smart_scene/aidl/vendor.meizu.hardware.smart_scene-V1-ndk_platform-source/gen/include/**/*.h"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/hardware/smart_scene/aidl/vendor.meizu.hardware.smart_scene-V2-ndk-source/gen/include/**/*.h"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/hardware/smart_scene/aidl/vendor.meizu.hardware.smart_scene-V2-ndk_platform-source/gen/include/**/*.h"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/hardware/tiktap_hidl/1.0/vendor.meizu.hardware.tiktap_hidl@1.0_genc++/gen/**/*.h"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/hardware/tiktap_hidl/1.0/vendor.meizu.hardware.tiktap_hidl@1.0_genc++_headers/gen/**/*.h"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/sensor_aux/1.0/vendor.meizu.sensor_aux@1.0_genc++/gen/**/*.h"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/meizu/interfaces/sensor_aux/1.0/vendor.meizu.sensor_aux@1.0_genc++_headers/gen/**/*.h"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/qcom/opensource/commonsys-intf/display/aidl/composer3/vendor.qti.hardware.display.composer3-V1-ndk-source/gen/include/**/*.h"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/qcom/opensource/commonsys-intf/display/aidl/config/vendor.qti.hardware.display.config-V7-ndk-source/gen/include/**/*.h"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/qcom/opensource/interfaces/camera/device/1.0/vendor.qti.hardware.camera.device@1.0_genc++_headers/gen/**/*.h"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/qcom/opensource/interfaces/display/composer/3.0/vendor.qti.hardware.display.composer@3.0_genc++_headers/gen/**/*.h"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/qcom/opensource/interfaces/display/composer/3.1/vendor.qti.hardware.display.composer@3.1_genc++_headers/gen/**/*.h"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/qcom/proprietary/interfaces/spu/2.0/vendor.qti.spu@2.0_genc++_headers/gen/**/*.h"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/xingji/hal/star_core/proto/libcomm-protos/android_vendor.34_arm64_armv8-a-branchprot_kryo300_static/gen/proto/**/*.h"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/xingji/hal/star_core/proto/libcomm-protos/android_vendor.34_arm64_armv8-a-branchprot_kryo300_static/gen/proto/vendor/xingji/hal/star_core/proto/**/*.h"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/xingji/interfaces/hal/starCore/1.0/vendor.xingji.hal.starCore@1.0_genc++/gen/**/*.h"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/xingji/interfaces/hal/starCore/1.0/vendor.xingji.hal.starCore@1.0_genc++_headers/gen/**/*.h"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/xingji/interfaces/hal/starCore/1.1/vendor.xingji.hal.starCore@1.1_genc++/gen/**/*.h"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/xingji/interfaces/hal/starCore/1.1/vendor.xingji.hal.starCore@1.1_genc++_headers/gen/**/*.h"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/xingji/interfaces/hardware/biometrics/face/1.0/vendor.xingji.hardware.biometrics.face@1.0_genc++/gen/**/*.h"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/xingji/interfaces/hardware/biometrics/face/1.0/vendor.xingji.hardware.biometrics.face@1.0_genc++_headers/gen/**/*.h"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/xingji/interfaces/hardware/qsee/store/1.0/vendor.xingji.hardware.qsee.store@1.0_genc++/gen/**/*.h"
+            "${ANDROID_ROOT}/out/soong/.intermediates/vendor/xingji/interfaces/hardware/qsee/store/1.0/vendor.xingji.hardware.qsee.store@1.0_genc++_headers/gen/**/*.h"
             )
     # append aosp out header
     list(APPEND HEADERS ${HEADERS_OUT})
 endif ()
+
 
 add_executable(
         aosp-native
