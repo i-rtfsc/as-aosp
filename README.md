@@ -445,6 +445,6 @@ as-aosp经历了一年多的更新，每次更新并没有一个明确的方向�
 此工程拆封成很多分支，默认是 aosp 分支。切分支有惊喜[狗头]。
 
 # 即时讨论
-![](./res-readme/wechat.jpg)
+![](./res-readme/wechat.png)
 
 可以通过 [issues](https://github.com/i-rtfsc/as-aosp/issues) 反馈问题，或者通过微信联系。
