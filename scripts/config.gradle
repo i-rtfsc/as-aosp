@@ -23,9 +23,6 @@ ext {
     allModules = [:]
     for (Project subproject : project.subprojects) {
         def project_name = subproject.getName().toString()
-        if ("test".equals(project_name)) {
-            continue
-        }
         allModules.put(project_name, ":" + project_name)
     }
 }
