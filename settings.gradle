@@ -24,12 +24,6 @@ include ':Wifi'
 
 /*************** aosp native ***************/
 include ':aosp-native'
-// include ':AndroidRuntime'
-// include ':AndroidServices'
-// include ':InputFlinger'
-// include ':SurfaceFlinger'
-// include ':NeuralNetworks'
-// include ':TensorFlow'
 /*************** aosp native ***************/
 
 

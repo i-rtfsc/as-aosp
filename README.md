@@ -1,10 +1,47 @@
-# as aosp
+<!-- TOC -->
+* [简介](#简介)
+  * [支持IDE](#支持ide)
+  * [对比 asfp 优缺点](#对比-asfp-优缺点)
+  * [跳转](#跳转)
+  * [提示、补全](#提示补全)
+  * [约定](#约定)
+* [配置介绍](#配置介绍)
+  * [settings.gradle](#settingsgradle)
+  * [根目录build.gradle](#根目录buildgradle)
+  * [config.gradle](#configgradle)
+  * [aosp.gradle](#aospgradle)
+  * [oppo.gradle](#oppogradle)
+  * [native](#native)
+  * [删除android.jar](#删除androidjar)
+  * [支持AIDL](#支持aidl)
+* [首次加载](#首次加载)
+* [编译](#编译)
+* [版本](#版本)
+  * [3.x.x](#3xx)
+  * [2.1.0](#210)
+  * [1.x.x](#1xx)
+* [后话](#后话)
+* [即时讨论](#即时讨论)
+<!-- TOC -->
 
-## 简介
+# 简介
 
-此as工程可以快速的导入aosp framework(包含java/native部分)、 aosp 系统app、 国内某些厂商扩展的fwk代码，比这个 https://www.jianshu.com/p/2ba5d6bd461e 方案还快，并且“联想”也很方便。
+此as工程可以快速的导入aosp framework(包含java/native部分)、 aosp 系统app、 国内某些厂商扩展的fwk代码；
 
-### 对比 asfp 优缺点
+比这个 https://www.jianshu.com/p/2ba5d6bd461e 方案还快，并且“联想”也很方便。
+
+
+## 支持IDE
+- Android Studio
+- IntelliJ IDEA
+- CLion
+
+> IDEA 只支持 java 模块，并且不需要执行 task deleteAndroidSdk。比使用 Android Studio 方便。
+>
+> CLion 只支持 native 模块，直接打开 aosp-native 后，需要改 aosp-native/CMakeLists.txt 里 set(ANDROID_ROOT ${BUILD_NATIVE_ROOT})
+
+
+## 对比 asfp 优缺点
 
 <table>
 
@@ -18,7 +55,7 @@
 
 <tbody><tr>
 
-<td align="center">author</td>
+<td align="center">Author</td>
 <td align="center">Solo</td>
 <td align="center">Google</td>
 </tr>
@@ -42,21 +79,33 @@
 </tr>
 
 <tr>
+<td align="center">IDEA 版本</td>
+<td align="center">任意版本（仅Java模块）</td>
+<td align="center">不支持IDEA</td>
+</tr>
+
+<tr>
+<td align="center">CLion 版本</td>
+<td align="center">任意版本（仅native模块）</td>
+<td align="center">不支持CLion</td>
+</tr>
+
+<tr>
 <td align="center">以下代码支持跳转、提示</td>
 <td align="center">java、kotlin、c、c++</td>
 <td align="center">java、kotlin、c、c++</td>
 </tr>
 
 <tr>
-<td align="center">是否需要编译</td>
+<td align="center">需要编译</td>
 <td align="center">否</td>
-<td align="center">需要全编</td>
+<td align="center">是</td>
 </tr>
 
 <tr>
-<td align="center">是否需要下载完整代码</td>
+<td align="center">需要完整代码</td>
 <td align="center">否</td>
-<td align="center">需要下载完整的aosp代码</td>
+<td align="center">是</td>
 </tr>
 
 <tr>
@@ -78,7 +127,7 @@
 
 > 关于 “首次加载耗时” 提到 “根目录只有部分模块代码” ，我试过两种方案：
 > 1. 软链接：比如完整的aosp代码是在/home/solo/workspace/code/aosp，我把需要加载的模块通过软链接的方式 ln 到 /home/solo/code/aosp。
->    可以参考工程里的 ln.sh 脚本文件（感谢 https://github.com/aqxuwenda 提供的脚本），SOURCE、DEST改成自己的源目录，目标目录即可；也可以在数组projects中添加自己需要的模块目录。
+>    可以参考工程里的 scripts/ln.sh 脚本文件（感谢 https://github.com/aqxuwenda 提供的脚本），SOURCE、DEST改成自己的源目录，目标目录即可；也可以在数组projects中添加自己需要的模块目录。
 >    ln.sh 脚本文件里只软链接了常用的一些模块，每个人可以根据自己的需求删改。
 > 2. 只下载需要模块。
 >
@@ -92,41 +141,34 @@
 
 下面以cpp代码为例，演示代码的跳转以及提示、补全。
 
-### 跳转
+## 跳转
 
 ![](./res-readme/code_jump.gif)
 
-### 提示、补全
+## 提示、补全
 
 ![](./res-readme/code_completion.gif)
 
-### 约定
+## 约定
 
 - aosp模块：大驼峰命名
 - aosp模块变种或厂商模块：小写命名（包含字符-）
 
 
-## 警告
+# 配置介绍
 
-关于此工程中包含miui、flyme、oppo、vivo等配置，只是一个空的gradle配置；该工程中不涉及到任何这几家公司的代码。
+## settings.gradle
 
-请勿小事化大！切勿胡说八道！
+settings.gradle 位于根目录下，用于项目的配置，常见的是配置子工程。一个子工程只有在 setting.gradle 中配置了，才能够被识别，构建的时候才会被包含进去。
 
+如果需要新增一个 aosp 的模块，需要在这里配置。
 
-
-## 配置介绍
-
-### settings.gradle
-
-settings.gradle位于根目录下，用于项目的配置，常见的是配置子工程。一个子工程只有在setting.gradle中配置了，才能够被识别，构建的时候才会被包含进去。
-如果需要新增一个aosp的模块，需要在这里配置。
-
-使用者可以根据自己的需求修改settings.gradle的子模块，比如Settings开发不需要native部分、SystemUI部分等，可以注释使其不被识别，加快加载as速度，降低内存。
+使用者可以根据自己的需求修改 settings.gradle 的子模块，比如 Settings 开发不需要 native 部分、SystemUI 部分等，可以注释使其不被识别，加快加载 as 速度，降低内存。
 
 
-### 根目录build.gradle
+## 根目录build.gradle
 
-根目录build.gradle文件配置了很多扩展的gradle脚本，可根据实际情况自行添加到对应的脚本或者新增脚本。
+根目录 build.gradle 文件配置了很多扩展的 gradle 脚本，可根据实际情况自行添加到对应的脚本或者新增脚本。
 ```bash
 apply from: 'scripts/config.gradle'
 apply from: 'scripts/aosp.gradle'
@@ -135,31 +177,32 @@ apply from: 'scripts/oppo.gradle'
 ```
 
 
-#### config.gradle
+## config.gradle
 
 config.gradle最重要的功能就是通过aospRoot配置Android源码的根目录。
 
 > aosp.gradle
+> 
 > car.gradle
-> ext.gradle
-> miui.gradle
-> flyme.gradle
-> oppo.gradle
-> vivo.gradle
-> 意思gradle脚本都是通过config.gradle的aospRoot获取到Android源码的根目录。
+> 
+> 其他gradle脚本
+> 
+> 都是通过 config.gradle 的 aospRoot 获取到 Android 源码的根目录。
 
-config.gradle脚本除了配置基本的android sdk；还有一个很重要的功能，就是获取所有的模块名称（也就是settings.gradle配置的子模块）。
+config.gradle 脚本除了配置基本的 android sdk；还有一个很重要的功能，就是获取所有的模块名称（也就是 settings.gradle 配置的子模块）。
 
-也就是说 allModules不需要手动维护，在settings.gradle里新增一个module，脚本会自动识别到project name并添加到allModules数组。
-这个allModules数组的作用是方便每个module快速的互相依赖，如：
+也就是说 allModules 不需要手动维护，在 settings.gradle 里新增一个 module，脚本会自动识别到 project name 并添加到 allModules 数组。
+这个allModules数组的作用是方便每个 module 快速的互相依赖，如：
+
 ```bash
 rootProject.ext.allModules.each { dependence -> compileOnly project(dependence.value) }
 ```
-以上写法会循环依赖，真正的app gradle工程不能这样做的。这里这样子做是因为我们只是为了方便as阅读代码或者改代码，真正编译的时候还是用ninja、make。
 
-#### aosp.gradle
+以上写法会循环依赖，真正的 app gradle 工程不能这样做的。这里这样子做是因为我们只是为了方便as阅读代码或者改代码，真正编译的时候还是用 ninja、make。
 
-- aospDir: 通过config.gradle的aospRoot获取到Android源码的根目录。也可以自己配置源码所在的目录，如: aospDir = "/home/solo/code/aosp"。
+## aosp.gradle
+
+- aospDir: 通过 config.gradle 的 aospRoot 获取到 Android 源码的根目录。也可以自己配置源码所在的目录，如: aospDir = "/home/solo/code/aosp"。
 - aosp: 一个大数组，维护很多模块需要的路径。
   - root: 等同于aospDir所设置的android源码根目录。
   - Framework: 配置framework.jar的源码路径
@@ -177,10 +220,9 @@ rootProject.ext.allModules.each { dependence -> compileOnly project(dependence.v
   - ExtServices: ExtServices.apk的源码路径
 
 
-> 以上的 Framework、Services、FrameworkRes、SystemUI、SystemUIPluginLib、Settings、SettingsLib、SettingsProvider、CarFramework、CarServices
-> 通过manifest、res、assets、jni、src来分别配置AndroidManifest.xml、资源文件目录、assets目录、jni代码目录、java\kt源码目录等。
+> 每个模块都是通过配置的 manifest、res、assets、jni、src、aidl 来分别配置 AndroidManifest.xml、资源文件目录、assets目录、jni代码目录、java\kt源码目录、aidl目录 等。
 >
-> 不需要的可以写空或者随便写一个不存在的文件、目录。
+> 不需要的可以写空。
 
 > 温馨提示
 >
@@ -189,62 +231,59 @@ rootProject.ext.allModules.each { dependence -> compileOnly project(dependence.v
 > 里面具体模块的源码路径基本上都添加了（但确实不是100%添加），如果因为使用aosp版本不一致或者别的原因可以根据自己需要再添加。
 
 
-#### oppo.gradle
+## oppo.gradle
 
 oppo代码所在的路径，主要是配置了 oppo-framework、oppo-services、oppo-framework-res。
 
 可以根据自己的需要修改oppoDir对应的目录即可。
 
 
-### native
+## native
 
 通过根目录下的settings.gradle可以看到有如下的配置：
 
 ```bash
 /*************** aosp native ***************/
 include ':aosp-native'
-//include ':AndroidRuntime'
-//include ':AndroidServices'
-//include ':InputFlinger'
-//include ':SurfaceFlinger'
-//include ':NeuralNetworks'
-//include ':TensorFlow'
 /*************** aosp native ***************/
 ```
+在 aosp-native 目录下包含了很多模块：
 
-- AndroidRuntime: 对应的是frameworks/base/core/jni/Android.bp写的libandroid_runtime。也就是frameworks base core jni。
-- AndroidServices: 对应的是 frameworks/base/libs/services、frameworks/base/services/core/jni、frameworks/base/services/incremental。也就是libservic、libservices.core、libservices.core-gnss、service.incremental的和。
-- InputFlinger: 对应的是frameworks/native/services/inputflinger。
-- SurfaceFlinger: 对应的是frameworks/native/services/surfaceflinger。
-- aosp-native: 是把以上四个模块的整合到一起了，这么做是因为都放在一个模块里跳转方便，占用的内存也最少。
-
-- NeuralNetworks: 封装tensorflow源码
-- TensorFlow: google的tensorflow源码
+- AndroidRuntime: 对应的是 frameworks/base/core/jni/Android.bp 写的 libandroid_runtime。也就是 frameworks base core jni。
+- AndroidServices: 对应的是 frameworks/base/libs/services、frameworks/base/services/core/jni、frameworks/base/services/incremental。也就是 libservic、libservices.core、libservices.core-gnss、service.incremental 的和。
+- InputFlinger: 对应的是 frameworks/native/services/inputflinger。
+- SurfaceFlinger: 对应的是 frameworks/native/services/surfaceflinger。
+- ...
 
 在每个cmake文件里都设置了这么一些变量，主要是用来控制是否加载相应的代码目录。
 
 这里基本上只是把常用到的都打开了，如果需要把全部打开，改成true即可。
 （如果都打开as占用内存会很大）
 ```bash
+set(AOSP_FWK_BASE true)
+set(AOSP_FWK_NATIVE true)
 set(AOSP_SYSTEM_COMMON true)
-set(AOSP_OUT false)
-set(AOSP_AV false)
+set(AOSP_FWK_AV false)
+set(AOSP_SYSTEM false)
 set(AOSP_ART false)
 set(AOSP_BIONIC false)
-set(AOSP_SYSTEM false)
 set(AOSP_EXTERNAL false)
 set(AOSP_PACKAGES false)
+set(AOSP_BOOTABLE false)
 set(AOSP_HARDWARE false)
+set(AOSP_VENDOR false)
+set(AOSP_OUT false)
+set(AOSP_OTHER false)
 ```
 
-### 删除android.jar
+## 删除android.jar
 
-根据以上步骤配置好后看，c/cpp代码可以正确跳转了；但java有的代码还是跳转到Android SDK的android.jar里。所以还需要多做一步额外的配置，如下图：
+根据以上步骤配置好后看，c/cpp 代码可以正确跳转了；但 java 有的代码还是跳转到 Android SDK 的 android.jar 里。所以还需要多做一步额外的配置，如下图：
 ![](./res-readme/gradle_impl.jpg)
 
 如果在 .idea/modules 文件夹下没看到“以模块为名词”文件夹，那需要如上图勾选"generate *.impl files for modules import from gradle"。
 
-看到.idea/modules文件夹下生成“以模块为名词”文件夹，接着sync，sync过程中gralde会执行deleteAndroidSdk 任务。这个task主要的作用就是去删除iml文件中的：
+看到 .idea/modules 文件夹下生成“以模块为名词”文件夹，接着 sync，sync 过程中 gralde 会执行 deleteAndroidSdk 任务。这个 task 主要的作用就是去删除iml文件中的：
 
 ```bash
 <arg>$USER_HOME$/Android/Sdk/platforms/android-34/android.jar</arg>
@@ -257,10 +296,11 @@ set(AOSP_HARDWARE false)
 <orderEntry type="jdk" jdkName="Android API 34, extension level 7 Platform" jdkType="Android SDK" />
 ```
 
-sync后确认iml文件中以上提的都已经执行好了，就可以重启AS；重启之后打开一个任意一个java代码都会看到：
+sync 后确认 iml 文件中以上提的都已经执行好了，就可以重启AS；重启之后打开一个任意一个 java 代码都会看到：
 
 ![](./res-readme/code_jump_source_code.gif)
-点KeyEvent已经能正确跳转到源码了，而不是跳转到Android SDK的android.jar里。
+
+点 KeyEvent 已经能正确跳转到源码了，而不是跳转到 Android SDK 的 android.jar 里。
 
 > 关于勾选"generate *.impl files for modules import from gradle"后，要不要去掉勾选的问题，可以视情况而定。
 >
@@ -269,7 +309,7 @@ sync后确认iml文件中以上提的都已经执行好了，就可以重启AS�
 > 如果配置目录新增了src或者配置了新的路径对的，建议更新iml并重新sync(确保删除Android SDK的配置)。
 
 
-### 支持AIDL
+## 支持AIDL
 
 在 scripts/config.gradle 里配置 build_aidl = true ，并 "Rebuild Project" 就可以生成java文件。
 
@@ -279,18 +319,19 @@ sync后确认iml文件中以上提的都已经执行好了，就可以重启AS�
 
 ```
 if (rootProject.ext.build_aidl.toBoolean()) {
-    println("don't implementation forEach when build aidl")
+    println("don't compileOnly forEach when build aidl")
 } else {
-    println(dependence.value)
-    implementation project(dependence.value)
+    compileOnly project(dependence.value)
 }
 ```
 
+> "Rebuild Project" 时编译 aidl 会有遇到报错的情况，所以这里支持 AIDL 只能看运气；如果你的 AIDL 能编译出来，那恭喜你，运气真好！
 
-## 首次加载
 
-如果设置的root目录包含整个aosp工程，首次打开会很慢。可以把.idea/misc.xml改成如下：
-打开AS会比较快，后续在sync project的时候会在gralde的excludeFolder认为在真正的module里把忽略的文件夹放到对应的iml配置里。
+# 首次加载
+
+如果设置的 root 目录包含整个 aosp 工程，首次打开会很慢。可以把 .idea/misc.xml 改成如下：
+打开 AS 会比较快，后续在 sync project 的时候会在 gralde 的 excludeFolder 认为在真正的 module 里把忽略的文件夹放到对应的 iml 配置里。
 若当前配置的忽略文件夹跟你需要有出入，可以在 scripts/exclude-folder.py 里自行修改。
 
 ```bash
@@ -334,18 +375,86 @@ if (rootProject.ext.build_aidl.toBoolean()) {
 </project>
 ```
 
-## 编译
+# 编译
 
 此工程无法编译framework.jar或者services.jar，请使用aosp推荐的编译方式。
 
 [global_scripts](https://github.com/i-rtfsc/global_scripts) 工程里的 [gs_android_build.sh](https://github.com/i-rtfsc/global_scripts/blob/main/plugins/android/build/gs_android_build.sh) 脚本实现了很多模块编译的快捷键。
 可以单独下载这个脚本并放到环境变量里，或者是用整个 [global_scripts](https://github.com/i-rtfsc/global_scripts) 实现插件化的方案【详情可以参考该工程的README】。
 
+# 版本
+as-aosp经历了一年多的更新，每次更新并没有一个明确的方向，所以也没有相应的版本号。
+最近打算大改cpp模块，大改cpp模块的版本为3.x.x
 
-## 后话
+## 3.x.x
 
-再次说明此工程包含的 miui、flyme、oppo、vivo 等配置 不涉及任何这几家公司的代码，所以并没有泄露任何公司的代码！
+- [x] 移除 BUILD_APPLICATION
+- [x] 移除根目录下的 native 模块
+- [x] 把所有 native 模块都放在 aosp-native ，并通过 add_subdirectory() 方式添加子模块
+- [ ] 解决 Java 模块 包含 JNI 时，JNI代码无法跳转问题
+- [ ] 提供 生成 cmakelist 脚本
+
+> 最初的 BUILD_APPLICATION 确实是用了编译 test app，但目前功能已经改版；不需要编译 test app 了，并且这个工程无法编译 aosp 模块，为了不引起歧义，故删除。
+
+
+## 2.1.0
+
+- java模块
+
+- [x] Framework: framework.jar
+- [x] Services: services.jar
+- [x] FrameworkRes: framework-res.apk
+- [x] SystemUI: SystemUI.apk
+- [x] SystemUIPluginLib: SystemUIPluginLib.jar
+- [x] Settings: Settings.apk
+- [x] SettingsLib: SettingsLib.aar
+- [x] SettingsProvider: SettingsProvider.apk
+- [x] CarFramework: CarFramework
+- [x] CarServices: CarServices.apk
+- [x] Connectivity: 包括Tethering、nearby、netd相关的源码
+- [x] Wifi: wifi相关的源码
+- [x] ExtServices: ExtServices.apk
+
+> 在 1.x.x 的基础上完善更多功能。
+
+- native模块
+
+- [x] AndroidRuntime: libandroid_runtime.so
+- [x] AndroidServices: libandroid_servers.so
+- [x] InputFlinger: inputflinger模块
+- [x] SurfaceFlinger: surfaceflinger模块
+- [x] NeuralNetworks: 封装tensorflow源码
+- [x] TensorFlow: google的tensorflow源码
+
+- aidl
+- [x] 支持 aidl 编译成 java
+
+## 1.x.x
+
+- [x] Framework: framework.jar
+- [x] Services: services.jar
+- [x] FrameworkRes: framework-res.apk
+- [x] SystemUI: SystemUI.apk
+- [x] SystemUIPluginLib: SystemUIPluginLib.jar
+- [x] Settings: Settings.apk
+- [x] SettingsLib: SettingsLib.aar
+- [x] SettingsProvider: SettingsProvider.apk
+- [x] CarFramework: CarFramework
+- [x] CarServices: CarServices.apk
+- [x] Connectivity: 包括Tethering、nearby、netd相关的源码
+- [x] Wifi: wifi相关的源码
+- [x] ExtServices: ExtServices.apk
+- [x] 多个手机厂商的 Framework 、Services、Ext-Framework 、Ext-Services 等
+
+# 后话
+
+此工程包含的 miui、flyme、oppo、vivo 等配置 不涉及任何这几家公司的代码，所以并没有泄露任何公司的代码！
 
 分享此工程的目的是为了android系统工程师能提高工作效率！请勿小事化大！
 
 此工程拆封成很多分支，默认是 aosp 分支。切分支有惊喜[狗头]。
+
+# 即时讨论
+![](./res-readme/wechat.png)
+
+可以通过 [issues](https://github.com/i-rtfsc/as-aosp/issues) 反馈问题，或者通过微信联系。
