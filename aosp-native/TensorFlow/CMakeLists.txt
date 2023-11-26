@@ -1,20 +1,23 @@
 cmake_minimum_required(VERSION 3.5)
 project(TensorFlow)
 
-# set(CMAKE_CXX_STANDARD 20)
-
-#set(ANDROID_ROOT "/home/solo/code/aosp")
+#set(CMAKE_CXX_STANDARD 20)
 set(ANDROID_ROOT ${BUILD_NATIVE_ROOT})
 
-
-set(AOSP_FWK false)
+set(AOSP_FWK_BASE true)
+set(AOSP_FWK_NATIVE true)
 set(AOSP_SYSTEM_COMMON true)
-set(AOSP_AV false)
-set(AOSP_BIONIC false)
+set(AOSP_FWK_AV false)
 set(AOSP_SYSTEM false)
+set(AOSP_ART false)
+set(AOSP_BIONIC false)
+set(AOSP_EXTERNAL false)
 set(AOSP_PACKAGES false)
+set(AOSP_BOOTABLE false)
 set(AOSP_HARDWARE false)
+set(AOSP_VENDOR false)
 set(AOSP_OUT false)
+set(AOSP_OTHER false)
 
 file(GLOB SOURCE_FILES
         ${ANDROID_ROOT}/external/tensorflow/tensorflow/c/*.cc
@@ -91,21 +94,6 @@ file(GLOB SOURCE_FILES
         )
 
 include_directories(
-        "${ANDROID_ROOT}/external/FP16"
-        "${ANDROID_ROOT}/external/FP16/include"
-        "${ANDROID_ROOT}/external/double-conversion"
-        "${ANDROID_ROOT}/external/eigen"
-        "${ANDROID_ROOT}/external/fft2d/src/fft2d"
-        "${ANDROID_ROOT}/external/flatbuffers/include"
-        "${ANDROID_ROOT}/external/fmtlib/include"
-        "${ANDROID_ROOT}/external/gemmlowp"
-        "${ANDROID_ROOT}/external/googletest/googlemock/include"
-        "${ANDROID_ROOT}/external/googletest/googletest/include"
-        "${ANDROID_ROOT}/external/libcxx/include"
-        "${ANDROID_ROOT}/external/libcxxabi/include"
-        "${ANDROID_ROOT}/external/libtextclassifier/native"
-        "${ANDROID_ROOT}/external/protobuf/src"
-        "${ANDROID_ROOT}/external/ruy"
         "${ANDROID_ROOT}/external/tensorflow"
         "${ANDROID_ROOT}/external/tensorflow/tensorflow/lite"
         "${ANDROID_ROOT}/external/tensorflow/tensorflow/lite/delegates"
@@ -114,25 +102,9 @@ include_directories(
         "${ANDROID_ROOT}/external/tensorflow/tensorflow/lite/kernels"
         "${ANDROID_ROOT}/external/tensorflow/tensorflow/lite/testing/nnapi_tflite_zip_tests"
         "${ANDROID_ROOT}/external/tensorflow/third_party/absl/abseil-cpp"
-        "${ANDROID_ROOT}/external/zlib"
 )
 
 file(GLOB_RECURSE HEADERS
-        "${ANDROID_ROOT}/external/FP16/**/*.h"
-        "${ANDROID_ROOT}/external/FP16/include/**/*.h"
-        "${ANDROID_ROOT}/external/double-conversion/**/*.h"
-        "${ANDROID_ROOT}/external/eigen/**/*.h"
-        "${ANDROID_ROOT}/external/fft2d/src/fft2d/**/*.h"
-        "${ANDROID_ROOT}/external/flatbuffers/include/**/*.h"
-        "${ANDROID_ROOT}/external/fmtlib/include/**/*.h"
-        "${ANDROID_ROOT}/external/gemmlowp/**/*.h"
-        "${ANDROID_ROOT}/external/googletest/googlemock/include/**/*.h"
-        "${ANDROID_ROOT}/external/googletest/googletest/include/**/*.h"
-        "${ANDROID_ROOT}/external/libcxx/include/**/*.h"
-        "${ANDROID_ROOT}/external/libcxxabi/include/**/*.h"
-        "${ANDROID_ROOT}/external/libtextclassifier/native/**/*.h"
-        "${ANDROID_ROOT}/external/protobuf/src/**/*.h"
-        "${ANDROID_ROOT}/external/ruy/**/*.h"
         "${ANDROID_ROOT}/external/tensorflow/**/*.h"
         "${ANDROID_ROOT}/external/tensorflow/tensorflow/lite/**/*.h"
         "${ANDROID_ROOT}/external/tensorflow/tensorflow/lite/delegates/**/*.h"
@@ -141,18 +113,33 @@ file(GLOB_RECURSE HEADERS
         "${ANDROID_ROOT}/external/tensorflow/tensorflow/lite/kernels/**/*.h"
         "${ANDROID_ROOT}/external/tensorflow/tensorflow/lite/testing/nnapi_tflite_zip_tests/**/*.h"
         "${ANDROID_ROOT}/external/tensorflow/third_party/absl/abseil-cpp/**/*.h"
-        "${ANDROID_ROOT}/external/zlib/**/*.h"
         )
 
 
-# add aosp framework
-if (${AOSP_FKW})
-    message("enable aosp framework")
+# add aosp fwk_base
+if (${AOSP_FWK_BASE})
+    message("${PROJECT_NAME}, enable aosp fwk_base")
 
-    # add aosp framework header dir
+    # add aosp fwk_base header dir
     include_directories(
-            "${ANDROID_ROOT}/build/soong/cc/libbuildversion/include"
             "${ANDROID_ROOT}/frameworks/base/native/android/include_platform"
+    )
+
+    # add aosp fwk_base header file
+    file(GLOB_RECURSE HEADERS_FWK_BASE
+            "${ANDROID_ROOT}/frameworks/base/native/android/include_platform/**/*.h"
+            )
+    # append aosp fwk_base header
+    list(APPEND HEADERS ${HEADERS_FWK_BASE})
+endif ()
+
+
+# add aosp fwk_native
+if (${AOSP_FWK_NATIVE})
+    message("${PROJECT_NAME}, enable aosp fwk_native")
+
+    # add aosp fwk_native header dir
+    include_directories(
             "${ANDROID_ROOT}/frameworks/native/cmds/lshal/libprocpartition/include"
             "${ANDROID_ROOT}/frameworks/native/include"
             "${ANDROID_ROOT}/frameworks/native/libs/arect/include"
@@ -162,10 +149,8 @@ if (${AOSP_FKW})
             "${ANDROID_ROOT}/frameworks/native/opengl/include"
     )
 
-    # add aosp framework header file
-    file(GLOB_RECURSE HEADERS_FKW
-            "${ANDROID_ROOT}/build/soong/cc/libbuildversion/include/**/*.h"
-            "${ANDROID_ROOT}/frameworks/base/native/android/include_platform/**/*.h"
+    # add aosp fwk_native header file
+    file(GLOB_RECURSE HEADERS_FWK_NATIVE
             "${ANDROID_ROOT}/frameworks/native/cmds/lshal/libprocpartition/include/**/*.h"
             "${ANDROID_ROOT}/frameworks/native/include/**/*.h"
             "${ANDROID_ROOT}/frameworks/native/libs/arect/include/**/*.h"
@@ -174,58 +159,74 @@ if (${AOSP_FKW})
             "${ANDROID_ROOT}/frameworks/native/libs/nativewindow/include/**/*.h"
             "${ANDROID_ROOT}/frameworks/native/opengl/include/**/*.h"
             )
-    # append aosp framework header
-    list(APPEND HEADERS ${HEADERS_FKW})
+    # append aosp fwk_native header
+    list(APPEND HEADERS ${HEADERS_FWK_NATIVE})
 endif ()
 
 
-# add aosp system common
+# add aosp system_common
 if (${AOSP_SYSTEM_COMMON})
-    message("enable aosp system common")
+    message("${PROJECT_NAME}, enable aosp system_common")
 
-    # add aosp system common header dir
+    # add aosp system_common header dir
     include_directories(
-            "${ANDROID_ROOT}/libnativehelper/include_jni"
             "${ANDROID_ROOT}/system/core/include"
             "${ANDROID_ROOT}/system/core/property_service/libpropertyinfoparser/include"
             "${ANDROID_ROOT}/system/libbase/include"
             "${ANDROID_ROOT}/system/logging/liblog/include"
     )
 
-    # add aosp system common header file
+    # add aosp system_common header file
     file(GLOB_RECURSE HEADERS_SYSTEM_COMMON
-            "${ANDROID_ROOT}/libnativehelper/include_jni/**/*.h"
             "${ANDROID_ROOT}/system/core/include/**/*.h"
             "${ANDROID_ROOT}/system/core/property_service/libpropertyinfoparser/include/**/*.h"
             "${ANDROID_ROOT}/system/libbase/include/**/*.h"
             "${ANDROID_ROOT}/system/logging/liblog/include/**/*.h"
             )
-    # append aosp system common header
+    # append aosp system_common header
     list(APPEND HEADERS ${HEADERS_SYSTEM_COMMON})
 endif ()
 
 
-# add aosp av
-if (${AOSP_AV})
-    message("enable aosp av")
+# add aosp fwk_av
+if (${AOSP_FWK_AV})
+    message("${PROJECT_NAME}, enable aosp fwk_av")
 
-    # add aosp av header dir
+    # add aosp fwk_av header dir
     include_directories(
             "${ANDROID_ROOT}/frameworks/av/include"
     )
 
-    # add aosp av header file
-    file(GLOB_RECURSE HEADERS_AV
+    # add aosp fwk_av header file
+    file(GLOB_RECURSE HEADERS_FWK_AV
             "${ANDROID_ROOT}/frameworks/av/include/**/*.h"
             )
-    # append aosp av header
-    list(APPEND HEADERS ${HEADERS_AV})
+    # append aosp fwk_av header
+    list(APPEND HEADERS ${HEADERS_FWK_AV})
+endif ()
+
+
+# add aosp system
+if (${AOSP_SYSTEM})
+    message("${PROJECT_NAME}, enable aosp system")
+
+    # add aosp system header dir
+    include_directories(
+            "${ANDROID_ROOT}/system/media/audio/include"
+    )
+
+    # add aosp system header file
+    file(GLOB_RECURSE HEADERS_SYSTEM
+            "${ANDROID_ROOT}/system/media/audio/include/**/*.h"
+            )
+    # append aosp system header
+    list(APPEND HEADERS ${HEADERS_SYSTEM})
 endif ()
 
 
 # add aosp bionic
 if (${AOSP_BIONIC})
-    message("enable aosp bionic")
+    message("${PROJECT_NAME}, enable aosp bionic")
 
     # add aosp bionic header dir
     include_directories(
@@ -253,27 +254,57 @@ if (${AOSP_BIONIC})
 endif ()
 
 
-# add aosp system
-if (${AOSP_SYSTEM})
-    message("enable aosp system")
+# add aosp external
+if (${AOSP_EXTERNAL})
+    message("${PROJECT_NAME}, enable aosp external")
 
-    # add aosp system header dir
+    # add aosp external header dir
     include_directories(
-            "${ANDROID_ROOT}/system/media/audio/include"
+            "${ANDROID_ROOT}/external/FP16"
+            "${ANDROID_ROOT}/external/FP16/include"
+            "${ANDROID_ROOT}/external/double-conversion"
+            "${ANDROID_ROOT}/external/eigen"
+            "${ANDROID_ROOT}/external/fft2d/src/fft2d"
+            "${ANDROID_ROOT}/external/flatbuffers/include"
+            "${ANDROID_ROOT}/external/fmtlib/include"
+            "${ANDROID_ROOT}/external/gemmlowp"
+            "${ANDROID_ROOT}/external/googletest/googlemock/include"
+            "${ANDROID_ROOT}/external/googletest/googletest/include"
+            "${ANDROID_ROOT}/external/libcxx/include"
+            "${ANDROID_ROOT}/external/libcxxabi/include"
+            "${ANDROID_ROOT}/external/libtextclassifier/native"
+            "${ANDROID_ROOT}/external/protobuf/src"
+            "${ANDROID_ROOT}/external/ruy"
+            "${ANDROID_ROOT}/external/zlib"
     )
 
-    # add aosp system header file
-    file(GLOB_RECURSE HEADERS_SYSTEM
-            "${ANDROID_ROOT}/system/media/audio/include/**/*.h"
+    # add aosp external header file
+    file(GLOB_RECURSE HEADERS_EXTERNAL
+            "${ANDROID_ROOT}/external/FP16/**/*.h"
+            "${ANDROID_ROOT}/external/FP16/include/**/*.h"
+            "${ANDROID_ROOT}/external/double-conversion/**/*.h"
+            "${ANDROID_ROOT}/external/eigen/**/*.h"
+            "${ANDROID_ROOT}/external/fft2d/src/fft2d/**/*.h"
+            "${ANDROID_ROOT}/external/flatbuffers/include/**/*.h"
+            "${ANDROID_ROOT}/external/fmtlib/include/**/*.h"
+            "${ANDROID_ROOT}/external/gemmlowp/**/*.h"
+            "${ANDROID_ROOT}/external/googletest/googlemock/include/**/*.h"
+            "${ANDROID_ROOT}/external/googletest/googletest/include/**/*.h"
+            "${ANDROID_ROOT}/external/libcxx/include/**/*.h"
+            "${ANDROID_ROOT}/external/libcxxabi/include/**/*.h"
+            "${ANDROID_ROOT}/external/libtextclassifier/native/**/*.h"
+            "${ANDROID_ROOT}/external/protobuf/src/**/*.h"
+            "${ANDROID_ROOT}/external/ruy/**/*.h"
+            "${ANDROID_ROOT}/external/zlib/**/*.h"
             )
-    # append aosp system header
-    list(APPEND HEADERS ${HEADERS_SYSTEM})
+    # append aosp external header
+    list(APPEND HEADERS ${HEADERS_EXTERNAL})
 endif ()
 
 
 # add aosp packages
 if (${AOSP_PACKAGES})
-    message("enable aosp packages")
+    message("${PROJECT_NAME}, enable aosp packages")
 
     # add aosp packages header dir
     include_directories(
@@ -291,7 +322,7 @@ endif ()
 
 # add aosp hardware
 if (${AOSP_HARDWARE})
-    message("enable aosp hardware")
+    message("${PROJECT_NAME}, enable aosp hardware")
 
     # add aosp hardware header dir
     include_directories(
@@ -313,7 +344,7 @@ endif ()
 
 # add aosp out
 if (${AOSP_OUT})
-    message("enable aosp out")
+    message("${PROJECT_NAME}, enable aosp out")
 
     # add aosp out src
     file(GLOB SOURCE_FILES_OUT

@@ -1,7 +1,6 @@
 def androidRoot = rootProject.ext.car.Services
 
 ext {
-    BUILD_APPLICATION = false
     BUILD_MANIFEST = androidRoot.manifest
     BUILD_RES = androidRoot.res
     BUILD_ASSETS = androidRoot.assets
