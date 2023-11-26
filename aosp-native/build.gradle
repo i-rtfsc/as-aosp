@@ -1,7 +1,6 @@
 def androidRoot = rootProject.ext.aosp
 
 ext {
-    BUILD_APPLICATION = false
     BUILD_MANIFEST = ""
     BUILD_RES = ""
     BUILD_ASSETS = ""

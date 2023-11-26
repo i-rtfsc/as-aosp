@@ -1,19 +1,23 @@
 cmake_minimum_required(VERSION 3.5)
-project(android-services)
+project(AndroidServices)
 
-# set(CMAKE_CXX_STANDARD 20)
-
-#set(ANDROID_ROOT "/home/solo/code/flyme")
+#set(CMAKE_CXX_STANDARD 20)
 set(ANDROID_ROOT ${BUILD_NATIVE_ROOT})
 
+set(AOSP_FWK_BASE true)
+set(AOSP_FWK_NATIVE true)
 set(AOSP_SYSTEM_COMMON true)
-set(AOSP_OUT false)
-set(AOSP_AV false)
-set(AOSP_BIONIC false)
+set(AOSP_FWK_AV false)
 set(AOSP_SYSTEM false)
+set(AOSP_ART false)
+set(AOSP_BIONIC false)
 set(AOSP_EXTERNAL false)
 set(AOSP_PACKAGES false)
+set(AOSP_BOOTABLE false)
 set(AOSP_HARDWARE false)
+set(AOSP_VENDOR false)
+set(AOSP_OUT false)
+set(AOSP_OTHER false)
 
 file(GLOB SOURCE_FILES
         ${ANDROID_ROOT}/frameworks/base/libs/services/src/content/*.cpp
@@ -29,116 +33,144 @@ file(GLOB SOURCE_FILES
         )
 
 include_directories(
-        "${ANDROID_ROOT}/frameworks/base/core/jni"
-        "${ANDROID_ROOT}/frameworks/base/core/jni/include"
-        "${ANDROID_ROOT}/frameworks/base/libs"
-        "${ANDROID_ROOT}/frameworks/base/libs/androidfw/include"
-        "${ANDROID_ROOT}/frameworks/base/libs/hwui/apex/include"
         "${ANDROID_ROOT}/frameworks/base/libs/services"
         "${ANDROID_ROOT}/frameworks/base/libs/services/include"
-        "${ANDROID_ROOT}/frameworks/base/native/android/include_platform"
         "${ANDROID_ROOT}/frameworks/base/services/core/jni"
         "${ANDROID_ROOT}/frameworks/base/services/core/jni/gnss"
         "${ANDROID_ROOT}/frameworks/base/services/incremental"
         "${ANDROID_ROOT}/frameworks/base/services/incremental/include"
-        "${ANDROID_ROOT}/frameworks/native/include"
-        "${ANDROID_ROOT}/frameworks/native/libs/arect/include"
-        "${ANDROID_ROOT}/frameworks/native/libs/binder/include"
-        "${ANDROID_ROOT}/frameworks/native/libs/binder/include_activitymanager"
-        "${ANDROID_ROOT}/frameworks/native/libs/binder/ndk/include_cpp"
-        "${ANDROID_ROOT}/frameworks/native/libs/binder/ndk/include_ndk"
-        "${ANDROID_ROOT}/frameworks/native/libs/binder/ndk/include_platform"
-        "${ANDROID_ROOT}/frameworks/native/libs/gralloc/types/include"
-        "${ANDROID_ROOT}/frameworks/native/libs/graphicsenv/include"
-        "${ANDROID_ROOT}/frameworks/native/libs/gui/include"
-        "${ANDROID_ROOT}/frameworks/native/libs/math/include"
-        "${ANDROID_ROOT}/frameworks/native/libs/nativebase/include"
-        "${ANDROID_ROOT}/frameworks/native/libs/nativewindow/include"
-        "${ANDROID_ROOT}/frameworks/native/libs/nativewindow/include-private"
-        "${ANDROID_ROOT}/frameworks/native/libs/permission/include"
-        "${ANDROID_ROOT}/frameworks/native/libs/sensor/include"
-        "${ANDROID_ROOT}/frameworks/native/libs/sensorprivacy/include"
-        "${ANDROID_ROOT}/frameworks/native/libs/ui/include"
-        "${ANDROID_ROOT}/frameworks/native/libs/ui/include_mock"
-        "${ANDROID_ROOT}/frameworks/native/libs/ui/include_private"
-        "${ANDROID_ROOT}/frameworks/native/libs/ui/include_types"
-        "${ANDROID_ROOT}/frameworks/native/opengl/include"
-        "${ANDROID_ROOT}/frameworks/native/opengl/libs/EGL/include"
-        "${ANDROID_ROOT}/frameworks/native/services"
-        "${ANDROID_ROOT}/frameworks/native/services/inputflinger"
-        "${ANDROID_ROOT}/frameworks/native/services/inputflinger/dispatcher/include"
-        "${ANDROID_ROOT}/frameworks/native/services/inputflinger/include"
-        "${ANDROID_ROOT}/frameworks/native/services/memtrackproxy/include"
-        "${ANDROID_ROOT}/frameworks/native/services/powermanager/include"
-        "${ANDROID_ROOT}/frameworks/native/services/schedulerservice/include"
-        "${ANDROID_ROOT}/frameworks/native/services/sensorservice/aidl/include"
-        "${ANDROID_ROOT}/frameworks/native/services/sensorservice/hidl/include"
-        "${ANDROID_ROOT}/frameworks/native/services/stats/include"
-        "${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/TimeStats/timestatsatomsproto/include"
-        "${ANDROID_ROOT}/frameworks/native/services/vibratorservice/include"
 )
 
 file(GLOB_RECURSE HEADERS
-        "${ANDROID_ROOT}/frameworks/base/core/jni/**/*.h"
-        "${ANDROID_ROOT}/frameworks/base/core/jni/include/**/*.h"
-        "${ANDROID_ROOT}/frameworks/base/libs/**/*.h"
-        "${ANDROID_ROOT}/frameworks/base/libs/androidfw/include/**/*.h"
-        "${ANDROID_ROOT}/frameworks/base/libs/hwui/apex/include/**/*.h"
         "${ANDROID_ROOT}/frameworks/base/libs/services/**/*.h"
         "${ANDROID_ROOT}/frameworks/base/libs/services/include/**/*.h"
-        "${ANDROID_ROOT}/frameworks/base/native/android/include_platform/**/*.h"
         "${ANDROID_ROOT}/frameworks/base/services/core/jni/**/*.h"
         "${ANDROID_ROOT}/frameworks/base/services/core/jni/gnss/**/*.h"
         "${ANDROID_ROOT}/frameworks/base/services/incremental/**/*.h"
         "${ANDROID_ROOT}/frameworks/base/services/incremental/include/**/*.h"
-        "${ANDROID_ROOT}/frameworks/native/include/**/*.h"
-        "${ANDROID_ROOT}/frameworks/native/libs/arect/include/**/*.h"
-        "${ANDROID_ROOT}/frameworks/native/libs/binder/include/**/*.h"
-        "${ANDROID_ROOT}/frameworks/native/libs/binder/include_activitymanager/**/*.h"
-        "${ANDROID_ROOT}/frameworks/native/libs/binder/ndk/include_cpp/**/*.h"
-        "${ANDROID_ROOT}/frameworks/native/libs/binder/ndk/include_ndk/**/*.h"
-        "${ANDROID_ROOT}/frameworks/native/libs/binder/ndk/include_platform/**/*.h"
-        "${ANDROID_ROOT}/frameworks/native/libs/gralloc/types/include/**/*.h"
-        "${ANDROID_ROOT}/frameworks/native/libs/graphicsenv/include/**/*.h"
-        "${ANDROID_ROOT}/frameworks/native/libs/gui/include/**/*.h"
-        "${ANDROID_ROOT}/frameworks/native/libs/math/include/**/*.h"
-        "${ANDROID_ROOT}/frameworks/native/libs/nativebase/include/**/*.h"
-        "${ANDROID_ROOT}/frameworks/native/libs/nativewindow/include-private/**/*.h"
-        "${ANDROID_ROOT}/frameworks/native/libs/nativewindow/include/**/*.h"
-        "${ANDROID_ROOT}/frameworks/native/libs/permission/include/**/*.h"
-        "${ANDROID_ROOT}/frameworks/native/libs/sensor/include/**/*.h"
-        "${ANDROID_ROOT}/frameworks/native/libs/sensorprivacy/include/**/*.h"
-        "${ANDROID_ROOT}/frameworks/native/libs/ui/include/**/*.h"
-        "${ANDROID_ROOT}/frameworks/native/libs/ui/include_mock/**/*.h"
-        "${ANDROID_ROOT}/frameworks/native/libs/ui/include_private/**/*.h"
-        "${ANDROID_ROOT}/frameworks/native/libs/ui/include_types/**/*.h"
-        "${ANDROID_ROOT}/frameworks/native/opengl/include/**/*.h"
-        "${ANDROID_ROOT}/frameworks/native/opengl/libs/EGL/include/**/*.h"
-        "${ANDROID_ROOT}/frameworks/native/services/**/*.h"
-        "${ANDROID_ROOT}/frameworks/native/services/inputflinger/**/*.h"
-        "${ANDROID_ROOT}/frameworks/native/services/inputflinger/dispatcher/include/**/*.h"
-        "${ANDROID_ROOT}/frameworks/native/services/inputflinger/include/**/*.h"
-        "${ANDROID_ROOT}/frameworks/native/services/memtrackproxy/include/**/*.h"
-        "${ANDROID_ROOT}/frameworks/native/services/powermanager/include/**/*.h"
-        "${ANDROID_ROOT}/frameworks/native/services/schedulerservice/include/**/*.h"
-        "${ANDROID_ROOT}/frameworks/native/services/sensorservice/aidl/include/**/*.h"
-        "${ANDROID_ROOT}/frameworks/native/services/sensorservice/hidl/include/**/*.h"
-        "${ANDROID_ROOT}/frameworks/native/services/stats/include/**/*.h"
-        "${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/TimeStats/timestatsatomsproto/include/**/*.h"
-        "${ANDROID_ROOT}/frameworks/native/services/vibratorservice/include/**/*.h"
         )
 
-# add aosp system common
-if (${AOSP_SYSTEM_COMMON})
-    message("enable aosp system common")
 
-    # add aosp system common header dir
+# add aosp fwk_base
+if (${AOSP_FWK_BASE})
+    message("${PROJECT_NAME}, enable aosp fwk_base")
+
+    # add aosp fwk_base header dir
     include_directories(
-            "${ANDROID_ROOT}/libnativehelper/header_only_include"
-            "${ANDROID_ROOT}/libnativehelper/include"
-            "${ANDROID_ROOT}/libnativehelper/include_jni"
-            "${ANDROID_ROOT}/libnativehelper/include_platform"
-            "${ANDROID_ROOT}/libnativehelper/include_platform_header_only"
+            "${ANDROID_ROOT}/frameworks/base/core/jni"
+            "${ANDROID_ROOT}/frameworks/base/core/jni/include"
+            "${ANDROID_ROOT}/frameworks/base/libs"
+            "${ANDROID_ROOT}/frameworks/base/libs/androidfw/include"
+            "${ANDROID_ROOT}/frameworks/base/libs/hwui/apex/include"
+            "${ANDROID_ROOT}/frameworks/base/native/android/include_platform"
+    )
+
+    # add aosp fwk_base header file
+    file(GLOB_RECURSE HEADERS_FWK_BASE
+            "${ANDROID_ROOT}/frameworks/base/core/jni/**/*.h"
+            "${ANDROID_ROOT}/frameworks/base/core/jni/include/**/*.h"
+            "${ANDROID_ROOT}/frameworks/base/libs/**/*.h"
+            "${ANDROID_ROOT}/frameworks/base/libs/androidfw/include/**/*.h"
+            "${ANDROID_ROOT}/frameworks/base/libs/hwui/apex/include/**/*.h"
+            "${ANDROID_ROOT}/frameworks/base/native/android/include_platform/**/*.h"
+            )
+    # append aosp fwk_base header
+    list(APPEND HEADERS ${HEADERS_FWK_BASE})
+endif ()
+
+
+# add aosp fwk_native
+if (${AOSP_FWK_NATIVE})
+    message("${PROJECT_NAME}, enable aosp fwk_native")
+
+    # add aosp fwk_native header dir
+    include_directories(
+            "${ANDROID_ROOT}/frameworks/native/include"
+            "${ANDROID_ROOT}/frameworks/native/libs/arect/include"
+            "${ANDROID_ROOT}/frameworks/native/libs/binder/include"
+            "${ANDROID_ROOT}/frameworks/native/libs/binder/include_activitymanager"
+            "${ANDROID_ROOT}/frameworks/native/libs/binder/ndk/include_cpp"
+            "${ANDROID_ROOT}/frameworks/native/libs/binder/ndk/include_ndk"
+            "${ANDROID_ROOT}/frameworks/native/libs/binder/ndk/include_platform"
+            "${ANDROID_ROOT}/frameworks/native/libs/gralloc/types/include"
+            "${ANDROID_ROOT}/frameworks/native/libs/graphicsenv/include"
+            "${ANDROID_ROOT}/frameworks/native/libs/gui/include"
+            "${ANDROID_ROOT}/frameworks/native/libs/math/include"
+            "${ANDROID_ROOT}/frameworks/native/libs/nativebase/include"
+            "${ANDROID_ROOT}/frameworks/native/libs/nativewindow/include"
+            "${ANDROID_ROOT}/frameworks/native/libs/nativewindow/include-private"
+            "${ANDROID_ROOT}/frameworks/native/libs/permission/include"
+            "${ANDROID_ROOT}/frameworks/native/libs/sensor/include"
+            "${ANDROID_ROOT}/frameworks/native/libs/sensorprivacy/include"
+            "${ANDROID_ROOT}/frameworks/native/libs/ui/include"
+            "${ANDROID_ROOT}/frameworks/native/libs/ui/include_mock"
+            "${ANDROID_ROOT}/frameworks/native/libs/ui/include_private"
+            "${ANDROID_ROOT}/frameworks/native/libs/ui/include_types"
+            "${ANDROID_ROOT}/frameworks/native/opengl/include"
+            "${ANDROID_ROOT}/frameworks/native/opengl/libs/EGL/include"
+            "${ANDROID_ROOT}/frameworks/native/services"
+            "${ANDROID_ROOT}/frameworks/native/services/inputflinger"
+            "${ANDROID_ROOT}/frameworks/native/services/inputflinger/dispatcher/include"
+            "${ANDROID_ROOT}/frameworks/native/services/inputflinger/include"
+            "${ANDROID_ROOT}/frameworks/native/services/memtrackproxy/include"
+            "${ANDROID_ROOT}/frameworks/native/services/powermanager/include"
+            "${ANDROID_ROOT}/frameworks/native/services/schedulerservice/include"
+            "${ANDROID_ROOT}/frameworks/native/services/sensorservice/aidl/include"
+            "${ANDROID_ROOT}/frameworks/native/services/sensorservice/hidl/include"
+            "${ANDROID_ROOT}/frameworks/native/services/stats/include"
+            "${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/TimeStats/timestatsatomsproto/include"
+            "${ANDROID_ROOT}/frameworks/native/services/vibratorservice/include"
+    )
+
+    # add aosp fwk_native header file
+    file(GLOB_RECURSE HEADERS_FWK_NATIVE
+            "${ANDROID_ROOT}/frameworks/native/include/**/*.h"
+            "${ANDROID_ROOT}/frameworks/native/libs/arect/include/**/*.h"
+            "${ANDROID_ROOT}/frameworks/native/libs/binder/include/**/*.h"
+            "${ANDROID_ROOT}/frameworks/native/libs/binder/include_activitymanager/**/*.h"
+            "${ANDROID_ROOT}/frameworks/native/libs/binder/ndk/include_cpp/**/*.h"
+            "${ANDROID_ROOT}/frameworks/native/libs/binder/ndk/include_ndk/**/*.h"
+            "${ANDROID_ROOT}/frameworks/native/libs/binder/ndk/include_platform/**/*.h"
+            "${ANDROID_ROOT}/frameworks/native/libs/gralloc/types/include/**/*.h"
+            "${ANDROID_ROOT}/frameworks/native/libs/graphicsenv/include/**/*.h"
+            "${ANDROID_ROOT}/frameworks/native/libs/gui/include/**/*.h"
+            "${ANDROID_ROOT}/frameworks/native/libs/math/include/**/*.h"
+            "${ANDROID_ROOT}/frameworks/native/libs/nativebase/include/**/*.h"
+            "${ANDROID_ROOT}/frameworks/native/libs/nativewindow/include-private/**/*.h"
+            "${ANDROID_ROOT}/frameworks/native/libs/nativewindow/include/**/*.h"
+            "${ANDROID_ROOT}/frameworks/native/libs/permission/include/**/*.h"
+            "${ANDROID_ROOT}/frameworks/native/libs/sensor/include/**/*.h"
+            "${ANDROID_ROOT}/frameworks/native/libs/sensorprivacy/include/**/*.h"
+            "${ANDROID_ROOT}/frameworks/native/libs/ui/include/**/*.h"
+            "${ANDROID_ROOT}/frameworks/native/libs/ui/include_mock/**/*.h"
+            "${ANDROID_ROOT}/frameworks/native/libs/ui/include_private/**/*.h"
+            "${ANDROID_ROOT}/frameworks/native/libs/ui/include_types/**/*.h"
+            "${ANDROID_ROOT}/frameworks/native/opengl/include/**/*.h"
+            "${ANDROID_ROOT}/frameworks/native/opengl/libs/EGL/include/**/*.h"
+            "${ANDROID_ROOT}/frameworks/native/services/**/*.h"
+            "${ANDROID_ROOT}/frameworks/native/services/inputflinger/**/*.h"
+            "${ANDROID_ROOT}/frameworks/native/services/inputflinger/dispatcher/include/**/*.h"
+            "${ANDROID_ROOT}/frameworks/native/services/inputflinger/include/**/*.h"
+            "${ANDROID_ROOT}/frameworks/native/services/memtrackproxy/include/**/*.h"
+            "${ANDROID_ROOT}/frameworks/native/services/powermanager/include/**/*.h"
+            "${ANDROID_ROOT}/frameworks/native/services/schedulerservice/include/**/*.h"
+            "${ANDROID_ROOT}/frameworks/native/services/sensorservice/aidl/include/**/*.h"
+            "${ANDROID_ROOT}/frameworks/native/services/sensorservice/hidl/include/**/*.h"
+            "${ANDROID_ROOT}/frameworks/native/services/stats/include/**/*.h"
+            "${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/TimeStats/timestatsatomsproto/include/**/*.h"
+            "${ANDROID_ROOT}/frameworks/native/services/vibratorservice/include/**/*.h"
+            )
+    # append aosp fwk_native header
+    list(APPEND HEADERS ${HEADERS_FWK_NATIVE})
+endif ()
+
+
+# add aosp system_common
+if (${AOSP_SYSTEM_COMMON})
+    message("${PROJECT_NAME}, enable aosp system_common")
+
+    # add aosp system_common header dir
+    include_directories(
             "${ANDROID_ROOT}/system/core/include"
             "${ANDROID_ROOT}/system/core/libappfuse/include"
             "${ANDROID_ROOT}/system/core/libcutils/include"
@@ -158,7 +190,7 @@ if (${AOSP_SYSTEM_COMMON})
             "${ANDROID_ROOT}/system/logging/liblog/include"
     )
 
-    # add aosp system common header file
+    # add aosp system_common header file
     file(GLOB_RECURSE HEADERS_SYSTEM_COMMON
             "${ANDROID_ROOT}/system/core/include/**/*.h"
             "${ANDROID_ROOT}/system/core/libappfuse/include/**/*.h"
@@ -178,13 +210,46 @@ if (${AOSP_SYSTEM_COMMON})
             "${ANDROID_ROOT}/system/libhwbinder/include/**/*.h"
             "${ANDROID_ROOT}/system/logging/liblog/include/**/*.h"
             )
-    # append aosp system common header
+    # append aosp system_common header
     list(APPEND HEADERS ${HEADERS_SYSTEM_COMMON})
 endif ()
 
+
+# add aosp fwk_av
+if (${AOSP_FWK_AV})
+    message("${PROJECT_NAME}, enable aosp fwk_av")
+
+    # add aosp fwk_av header dir
+    include_directories(
+            "${ANDROID_ROOT}/frameworks/av/include"
+            "${ANDROID_ROOT}/frameworks/av/media/audioaidlconversion/include"
+            "${ANDROID_ROOT}/frameworks/av/media/libaudioclient/include"
+            "${ANDROID_ROOT}/frameworks/av/media/libaudiofoundation/include"
+            "${ANDROID_ROOT}/frameworks/av/media/liberror/include"
+            "${ANDROID_ROOT}/frameworks/av/media/libmediahelper/include"
+            "${ANDROID_ROOT}/frameworks/av/media/libmediametrics/include"
+            "${ANDROID_ROOT}/frameworks/av/media/mtp"
+    )
+
+    # add aosp fwk_av header file
+    file(GLOB_RECURSE HEADERS_FWK_AV
+            "${ANDROID_ROOT}/frameworks/av/include/**/*.h"
+            "${ANDROID_ROOT}/frameworks/av/media/audioaidlconversion/include/**/*.h"
+            "${ANDROID_ROOT}/frameworks/av/media/libaudioclient/include/**/*.h"
+            "${ANDROID_ROOT}/frameworks/av/media/libaudiofoundation/include/**/*.h"
+            "${ANDROID_ROOT}/frameworks/av/media/liberror/include/**/*.h"
+            "${ANDROID_ROOT}/frameworks/av/media/libmediahelper/include/**/*.h"
+            "${ANDROID_ROOT}/frameworks/av/media/libmediametrics/include/**/*.h"
+            "${ANDROID_ROOT}/frameworks/av/media/mtp/**/*.h"
+            )
+    # append aosp fwk_av header
+    list(APPEND HEADERS ${HEADERS_FWK_AV})
+endif ()
+
+
 # add aosp system
 if (${AOSP_SYSTEM})
-    message("enable aosp system")
+    message("${PROJECT_NAME}, enable aosp system")
 
     # add aosp system header dir
     include_directories(
@@ -223,40 +288,181 @@ if (${AOSP_SYSTEM})
     list(APPEND HEADERS ${HEADERS_SYSTEM})
 endif ()
 
-# add aosp av
-if (${AOSP_AV})
-    message("enable aosp av")
 
-    # add aosp av header dir
+# add aosp bionic
+if (${AOSP_BIONIC})
+    message("${PROJECT_NAME}, enable aosp bionic")
+
+    # add aosp bionic header dir
     include_directories(
-            "${ANDROID_ROOT}/frameworks/av/include"
-            "${ANDROID_ROOT}/frameworks/av/media/audioaidlconversion/include"
-            "${ANDROID_ROOT}/frameworks/av/media/libaudioclient/include"
-            "${ANDROID_ROOT}/frameworks/av/media/libaudiofoundation/include"
-            "${ANDROID_ROOT}/frameworks/av/media/liberror/include"
-            "${ANDROID_ROOT}/frameworks/av/media/libmediahelper/include"
-            "${ANDROID_ROOT}/frameworks/av/media/libmediametrics/include"
-            "${ANDROID_ROOT}/frameworks/av/media/mtp"
+            "${ANDROID_ROOT}/bionic/libc/async_safe/include"
+            "${ANDROID_ROOT}/bionic/libc/include"
+            "${ANDROID_ROOT}/bionic/libc/kernel/android/scsi"
+            "${ANDROID_ROOT}/bionic/libc/kernel/android/uapi"
+            "${ANDROID_ROOT}/bionic/libc/kernel/uapi"
+            "${ANDROID_ROOT}/bionic/libc/kernel/uapi/asm-arm64"
+            "${ANDROID_ROOT}/bionic/libc/platform"
+            "${ANDROID_ROOT}/bionic/libc/system_properties/include"
     )
 
-    # add aosp av header file
-    file(GLOB_RECURSE HEADERS_AV
-            "${ANDROID_ROOT}/frameworks/av/include/**/*.h"
-            "${ANDROID_ROOT}/frameworks/av/media/audioaidlconversion/include/**/*.h"
-            "${ANDROID_ROOT}/frameworks/av/media/libaudioclient/include/**/*.h"
-            "${ANDROID_ROOT}/frameworks/av/media/libaudiofoundation/include/**/*.h"
-            "${ANDROID_ROOT}/frameworks/av/media/liberror/include/**/*.h"
-            "${ANDROID_ROOT}/frameworks/av/media/libmediahelper/include/**/*.h"
-            "${ANDROID_ROOT}/frameworks/av/media/libmediametrics/include/**/*.h"
-            "${ANDROID_ROOT}/frameworks/av/media/mtp/**/*.h"
+    # add aosp bionic header file
+    file(GLOB_RECURSE HEADERS_BIONIC
+            "${ANDROID_ROOT}/bionic/libc/async_safe/include/**/*.h"
+            "${ANDROID_ROOT}/bionic/libc/include/**/*.h"
+            "${ANDROID_ROOT}/bionic/libc/kernel/android/scsi/**/*.h"
+            "${ANDROID_ROOT}/bionic/libc/kernel/android/uapi/**/*.h"
+            "${ANDROID_ROOT}/bionic/libc/kernel/uapi/**/*.h"
+            "${ANDROID_ROOT}/bionic/libc/kernel/uapi/asm-arm64/**/*.h"
+            "${ANDROID_ROOT}/bionic/libc/platform/**/*.h"
+            "${ANDROID_ROOT}/bionic/libc/system_properties/include/**/*.h"
             )
-    # append aosp av header
-    list(APPEND HEADERS ${HEADERS_AV})
+    # append aosp bionic header
+    list(APPEND HEADERS ${HEADERS_BIONIC})
 endif ()
+
+
+# add aosp external
+if (${AOSP_EXTERNAL})
+    message("${PROJECT_NAME}, enable aosp external")
+
+    # add aosp external header dir
+    include_directories(
+            "${ANDROID_ROOT}/external/boringssl/src/include"
+            "${ANDROID_ROOT}/external/e2fsprogs/lib"
+            "${ANDROID_ROOT}/external/e2fsprogs/lib/uuid"
+            "${ANDROID_ROOT}/external/fmtlib/include"
+            "${ANDROID_ROOT}/external/googletest/googlemock/include"
+            "${ANDROID_ROOT}/external/googletest/googletest/include"
+            "${ANDROID_ROOT}/external/libcxx/include"
+            "${ANDROID_ROOT}/external/libcxxabi/include"
+            "${ANDROID_ROOT}/external/protobuf/src"
+            "${ANDROID_ROOT}/external/skia"
+            "${ANDROID_ROOT}/external/skia/android"
+            "${ANDROID_ROOT}/external/skia/client_utils/android"
+            "${ANDROID_ROOT}/external/skia/include/android"
+            "${ANDROID_ROOT}/external/skia/include/codec"
+            "${ANDROID_ROOT}/external/skia/include/config"
+            "${ANDROID_ROOT}/external/skia/include/core"
+            "${ANDROID_ROOT}/external/skia/include/docs"
+            "${ANDROID_ROOT}/external/skia/include/effects"
+            "${ANDROID_ROOT}/external/skia/include/encode"
+            "${ANDROID_ROOT}/external/skia/include/gpu"
+            "${ANDROID_ROOT}/external/skia/include/pathops"
+            "${ANDROID_ROOT}/external/skia/include/ports"
+            "${ANDROID_ROOT}/external/skia/include/svg"
+            "${ANDROID_ROOT}/external/skia/include/utils"
+            "${ANDROID_ROOT}/external/skia/include/utils/mac"
+            "${ANDROID_ROOT}/external/skia/modules/skottie/include"
+            "${ANDROID_ROOT}/external/skia/modules/skparagraph/include"
+            "${ANDROID_ROOT}/external/skia/modules/skshaper/include"
+            "${ANDROID_ROOT}/external/skia/modules/svg/include"
+            "${ANDROID_ROOT}/external/tinyalsa/include"
+            "${ANDROID_ROOT}/external/vulkan-headers/include"
+            "${ANDROID_ROOT}/external/zlib"
+    )
+
+    # add aosp external header file
+    file(GLOB_RECURSE HEADERS_EXTERNAL
+            "${ANDROID_ROOT}/external/boringssl/src/include/**/*.h"
+            "${ANDROID_ROOT}/external/e2fsprogs/lib/**/*.h"
+            "${ANDROID_ROOT}/external/e2fsprogs/lib/uuid/**/*.h"
+            "${ANDROID_ROOT}/external/fmtlib/include/**/*.h"
+            "${ANDROID_ROOT}/external/googletest/googlemock/include/**/*.h"
+            "${ANDROID_ROOT}/external/googletest/googletest/include/**/*.h"
+            "${ANDROID_ROOT}/external/libcxx/include/**/*.h"
+            "${ANDROID_ROOT}/external/libcxxabi/include/**/*.h"
+            "${ANDROID_ROOT}/external/protobuf/src/**/*.h"
+            "${ANDROID_ROOT}/external/skia/**/*.h"
+            "${ANDROID_ROOT}/external/skia/android/**/*.h"
+            "${ANDROID_ROOT}/external/skia/client_utils/android/**/*.h"
+            "${ANDROID_ROOT}/external/skia/include/android/**/*.h"
+            "${ANDROID_ROOT}/external/skia/include/codec/**/*.h"
+            "${ANDROID_ROOT}/external/skia/include/config/**/*.h"
+            "${ANDROID_ROOT}/external/skia/include/core/**/*.h"
+            "${ANDROID_ROOT}/external/skia/include/docs/**/*.h"
+            "${ANDROID_ROOT}/external/skia/include/effects/**/*.h"
+            "${ANDROID_ROOT}/external/skia/include/encode/**/*.h"
+            "${ANDROID_ROOT}/external/skia/include/gpu/**/*.h"
+            "${ANDROID_ROOT}/external/skia/include/pathops/**/*.h"
+            "${ANDROID_ROOT}/external/skia/include/ports/**/*.h"
+            "${ANDROID_ROOT}/external/skia/include/svg/**/*.h"
+            "${ANDROID_ROOT}/external/skia/include/utils/**/*.h"
+            "${ANDROID_ROOT}/external/skia/include/utils/mac/**/*.h"
+            "${ANDROID_ROOT}/external/skia/modules/skottie/include/**/*.h"
+            "${ANDROID_ROOT}/external/skia/modules/skparagraph/include/**/*.h"
+            "${ANDROID_ROOT}/external/skia/modules/skshaper/include/**/*.h"
+            "${ANDROID_ROOT}/external/skia/modules/svg/include/**/*.h"
+            "${ANDROID_ROOT}/external/tinyalsa/include/**/*.h"
+            "${ANDROID_ROOT}/external/vulkan-headers/include/**/*.h"
+            "${ANDROID_ROOT}/external/zlib/**/*.h"
+            )
+    # append aosp external header
+    list(APPEND HEADERS ${HEADERS_EXTERNAL})
+endif ()
+
+
+# add aosp packages
+if (${AOSP_PACKAGES})
+    message("${PROJECT_NAME}, enable aosp packages")
+
+    # add aosp packages header dir
+    include_directories(
+            "${ANDROID_ROOT}/packages/modules/Bluetooth/system/types"
+            "${ANDROID_ROOT}/packages/modules/StatsD/lib/libstatspull/include"
+            "${ANDROID_ROOT}/packages/modules/StatsD/lib/libstatssocket/include"
+            "${ANDROID_ROOT}/packages/modules/adb/pairing_connection/include"
+    )
+
+    # add aosp packages header file
+    file(GLOB_RECURSE HEADERS_PACKAGES
+            "${ANDROID_ROOT}/packages/modules/Bluetooth/system/types/**/*.h"
+            "${ANDROID_ROOT}/packages/modules/StatsD/lib/libstatspull/include/**/*.h"
+            "${ANDROID_ROOT}/packages/modules/StatsD/lib/libstatssocket/include/**/*.h"
+            "${ANDROID_ROOT}/packages/modules/adb/pairing_connection/include/**/*.h"
+            )
+    # append aosp packages header
+    list(APPEND HEADERS ${HEADERS_PACKAGES})
+endif ()
+
+
+# add aosp hardware
+if (${AOSP_HARDWARE})
+    message("${PROJECT_NAME}, enable aosp hardware")
+
+    # add aosp hardware header dir
+    include_directories(
+            "${ANDROID_ROOT}/hardware/interfaces/broadcastradio/common/utils1x/include"
+            "${ANDROID_ROOT}/hardware/interfaces/common/support/include"
+            "${ANDROID_ROOT}/hardware/libhardware/include"
+            "${ANDROID_ROOT}/hardware/libhardware_legacy/include"
+            "${ANDROID_ROOT}/hardware/ril/include"
+    )
+
+    # add aosp hardware header file
+    file(GLOB_RECURSE HEADERS_HARDWARE
+            "${ANDROID_ROOT}/hardware/interfaces/broadcastradio/common/utils1x/include/**/*.h"
+            "${ANDROID_ROOT}/hardware/interfaces/common/support/include/**/*.h"
+            "${ANDROID_ROOT}/hardware/libhardware/include/**/*.h"
+            "${ANDROID_ROOT}/hardware/libhardware_legacy/include/**/*.h"
+            "${ANDROID_ROOT}/hardware/ril/include/**/*.h"
+            )
+    # append aosp hardware header
+    list(APPEND HEADERS ${HEADERS_HARDWARE})
+endif ()
+
 
 # add aosp out
 if (${AOSP_OUT})
-    message("enable aosp out")
+    message("${PROJECT_NAME}, enable aosp out")
+
+    # add aosp out src
+    file(GLOB SOURCE_FILES_OUT
+            ${ANDROID_ROOT}/out/soong/.intermediates/frameworks/base/libs/services/libservices/android_arm64_armv8-a-branchprot_shared/gen/aidl/android/os/logcat/*.cpp
+            ${ANDROID_ROOT}/out/soong/.intermediates/frameworks/base/libs/services/libservices/android_arm64_armv8-a-branchprot_shared/gen/aidl/com/android/internal/os/*.cpp
+            ${ANDROID_ROOT}/out/soong/.intermediates/frameworks/base/services/incremental/service.incremental.proto/android_arm64_armv8-a-branchprot_static/gen/proto/frameworks/base/services/incremental/*.cc
+            )
+    # append aosp out src
+    list(APPEND SOURCE_FILES ${SOURCE_FILES_OUT})
 
     # add aosp out header dir
     include_directories(
@@ -481,171 +687,9 @@ if (${AOSP_OUT})
     list(APPEND HEADERS ${HEADERS_OUT})
 endif ()
 
-# add aosp external
-if (${AOSP_BIONIC})
-    message("enable aosp bionic")
-
-    # add aosp bionic header dir
-    include_directories(
-            "${ANDROID_ROOT}/bionic/libc/async_safe/include"
-            "${ANDROID_ROOT}/bionic/libc/include"
-            "${ANDROID_ROOT}/bionic/libc/kernel/android/scsi"
-            "${ANDROID_ROOT}/bionic/libc/kernel/android/uapi"
-            "${ANDROID_ROOT}/bionic/libc/kernel/uapi"
-            "${ANDROID_ROOT}/bionic/libc/kernel/uapi/asm-arm64"
-            "${ANDROID_ROOT}/bionic/libc/platform"
-            "${ANDROID_ROOT}/bionic/libc/system_properties/include"
-    )
-
-    # add aosp bionic header file
-    file(GLOB_RECURSE HEADERS_BIONIC
-            "${ANDROID_ROOT}/bionic/libc/async_safe/include/**/*.h"
-            "${ANDROID_ROOT}/bionic/libc/include/**/*.h"
-            "${ANDROID_ROOT}/bionic/libc/kernel/android/scsi/**/*.h"
-            "${ANDROID_ROOT}/bionic/libc/kernel/android/uapi/**/*.h"
-            "${ANDROID_ROOT}/bionic/libc/kernel/uapi/**/*.h"
-            "${ANDROID_ROOT}/bionic/libc/kernel/uapi/asm-arm64/**/*.h"
-            "${ANDROID_ROOT}/bionic/libc/platform/**/*.h"
-            "${ANDROID_ROOT}/bionic/libc/system_properties/include/**/*.h"
-            )
-    # append aosp bionic header
-    list(APPEND HEADERS ${HEADERS_BIONIC})
-endif ()
-
-# add aosp external
-if (${AOSP_EXTERNAL})
-    message("enable aosp external")
-
-    # add aosp external header dir
-    include_directories(
-            "${ANDROID_ROOT}/external/boringssl/src/include"
-            "${ANDROID_ROOT}/external/e2fsprogs/lib"
-            "${ANDROID_ROOT}/external/e2fsprogs/lib/uuid"
-            "${ANDROID_ROOT}/external/fmtlib/include"
-            "${ANDROID_ROOT}/external/googletest/googlemock/include"
-            "${ANDROID_ROOT}/external/googletest/googletest/include"
-            "${ANDROID_ROOT}/external/libcxx/include"
-            "${ANDROID_ROOT}/external/libcxxabi/include"
-            "${ANDROID_ROOT}/external/protobuf/src"
-            "${ANDROID_ROOT}/external/skia"
-            "${ANDROID_ROOT}/external/skia/android"
-            "${ANDROID_ROOT}/external/skia/client_utils/android"
-            "${ANDROID_ROOT}/external/skia/include/android"
-            "${ANDROID_ROOT}/external/skia/include/codec"
-            "${ANDROID_ROOT}/external/skia/include/config"
-            "${ANDROID_ROOT}/external/skia/include/core"
-            "${ANDROID_ROOT}/external/skia/include/docs"
-            "${ANDROID_ROOT}/external/skia/include/effects"
-            "${ANDROID_ROOT}/external/skia/include/encode"
-            "${ANDROID_ROOT}/external/skia/include/gpu"
-            "${ANDROID_ROOT}/external/skia/include/pathops"
-            "${ANDROID_ROOT}/external/skia/include/ports"
-            "${ANDROID_ROOT}/external/skia/include/svg"
-            "${ANDROID_ROOT}/external/skia/include/utils"
-            "${ANDROID_ROOT}/external/skia/include/utils/mac"
-            "${ANDROID_ROOT}/external/skia/modules/skottie/include"
-            "${ANDROID_ROOT}/external/skia/modules/skparagraph/include"
-            "${ANDROID_ROOT}/external/skia/modules/skshaper/include"
-            "${ANDROID_ROOT}/external/skia/modules/svg/include"
-            "${ANDROID_ROOT}/external/tinyalsa/include"
-            "${ANDROID_ROOT}/external/vulkan-headers/include"
-            "${ANDROID_ROOT}/external/zlib"
-    )
-
-    # add aosp external header file
-    file(GLOB_RECURSE HEADERS_EXTERNAL
-            "${ANDROID_ROOT}/external/boringssl/src/include/**/*.h"
-            "${ANDROID_ROOT}/external/e2fsprogs/lib/**/*.h"
-            "${ANDROID_ROOT}/external/e2fsprogs/lib/uuid/**/*.h"
-            "${ANDROID_ROOT}/external/fmtlib/include/**/*.h"
-            "${ANDROID_ROOT}/external/googletest/googlemock/include/**/*.h"
-            "${ANDROID_ROOT}/external/googletest/googletest/include/**/*.h"
-            "${ANDROID_ROOT}/external/libcxx/include/**/*.h"
-            "${ANDROID_ROOT}/external/libcxxabi/include/**/*.h"
-            "${ANDROID_ROOT}/external/protobuf/src/**/*.h"
-            "${ANDROID_ROOT}/external/skia/**/*.h"
-            "${ANDROID_ROOT}/external/skia/android/**/*.h"
-            "${ANDROID_ROOT}/external/skia/client_utils/android/**/*.h"
-            "${ANDROID_ROOT}/external/skia/include/android/**/*.h"
-            "${ANDROID_ROOT}/external/skia/include/codec/**/*.h"
-            "${ANDROID_ROOT}/external/skia/include/config/**/*.h"
-            "${ANDROID_ROOT}/external/skia/include/core/**/*.h"
-            "${ANDROID_ROOT}/external/skia/include/docs/**/*.h"
-            "${ANDROID_ROOT}/external/skia/include/effects/**/*.h"
-            "${ANDROID_ROOT}/external/skia/include/encode/**/*.h"
-            "${ANDROID_ROOT}/external/skia/include/gpu/**/*.h"
-            "${ANDROID_ROOT}/external/skia/include/pathops/**/*.h"
-            "${ANDROID_ROOT}/external/skia/include/ports/**/*.h"
-            "${ANDROID_ROOT}/external/skia/include/svg/**/*.h"
-            "${ANDROID_ROOT}/external/skia/include/utils/**/*.h"
-            "${ANDROID_ROOT}/external/skia/include/utils/mac/**/*.h"
-            "${ANDROID_ROOT}/external/skia/modules/skottie/include/**/*.h"
-            "${ANDROID_ROOT}/external/skia/modules/skparagraph/include/**/*.h"
-            "${ANDROID_ROOT}/external/skia/modules/skshaper/include/**/*.h"
-            "${ANDROID_ROOT}/external/skia/modules/svg/include/**/*.h"
-            "${ANDROID_ROOT}/external/tinyalsa/include/**/*.h"
-            "${ANDROID_ROOT}/external/vulkan-headers/include/**/*.h"
-            "${ANDROID_ROOT}/external/zlib/**/*.h"
-            )
-    # append aosp external header
-    list(APPEND HEADERS ${HEADERS_EXTERNAL})
-endif ()
-
-# add aosp packages
-if (${AOSP_PACKAGES})
-    message("enable aosp packages")
-
-    # add aosp packages header dir
-    include_directories(
-            "${ANDROID_ROOT}/packages/modules/Bluetooth/system/types"
-            "${ANDROID_ROOT}/packages/modules/StatsD/lib/libstatspull/include"
-            "${ANDROID_ROOT}/packages/modules/StatsD/lib/libstatssocket/include"
-            "${ANDROID_ROOT}/packages/modules/adb/pairing_connection/include"
-    )
-
-    # add aosp packages header file
-    file(GLOB_RECURSE HEADERS_PACKAGES
-            "${ANDROID_ROOT}/packages/modules/Bluetooth/system/types/**/*.h"
-            "${ANDROID_ROOT}/packages/modules/StatsD/lib/libstatspull/include/**/*.h"
-            "${ANDROID_ROOT}/packages/modules/StatsD/lib/libstatssocket/include/**/*.h"
-            "${ANDROID_ROOT}/packages/modules/adb/pairing_connection/include/**/*.h"
-            )
-    # append aosp packages header
-    list(APPEND HEADERS ${HEADERS_PACKAGES})
-endif ()
-
-# add aosp hardware
-if (${AOSP_HARDWARE})
-    message("enable aosp hardware")
-
-    # add aosp hardware header dir
-    include_directories(
-            "${ANDROID_ROOT}/hardware/interfaces/broadcastradio/common/utils1x/include"
-            "${ANDROID_ROOT}/hardware/interfaces/common/support/include"
-            "${ANDROID_ROOT}/hardware/libhardware/include"
-            "${ANDROID_ROOT}/hardware/libhardware_legacy/include"
-            "${ANDROID_ROOT}/hardware/ril/include"
-    )
-
-    # add aosp hardware header file
-    file(GLOB_RECURSE HEADERS_HARDWARE
-            "${ANDROID_ROOT}/hardware/interfaces/broadcastradio/common/utils1x/include/**/*.h"
-            "${ANDROID_ROOT}/hardware/interfaces/common/support/include/**/*.h"
-            "${ANDROID_ROOT}/hardware/libhardware/include/**/*.h"
-            "${ANDROID_ROOT}/hardware/libhardware_legacy/include/**/*.h"
-            "${ANDROID_ROOT}/hardware/ril/include/**/*.h"
-            "${ANDROID_ROOT}/libnativehelper/header_only_include/**/*.h"
-            "${ANDROID_ROOT}/libnativehelper/include/**/*.h"
-            "${ANDROID_ROOT}/libnativehelper/include_jni/**/*.h"
-            "${ANDROID_ROOT}/libnativehelper/include_platform/**/*.h"
-            "${ANDROID_ROOT}/libnativehelper/include_platform_header_only/**/*.h"
-            )
-    # append aosp hardware header
-    list(APPEND HEADERS ${HEADERS_HARDWARE})
-endif ()
 
 add_executable(
-        android-services
+        AndroidServices
         ${SOURCE_FILES}
         ${HEADERS}
 )
