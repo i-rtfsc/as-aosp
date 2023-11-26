@@ -10,6 +10,7 @@
   * [根目录build.gradle](#根目录buildgradle)
   * [config.gradle](#configgradle)
   * [aosp.gradle](#aospgradle)
+  * [miui.gradle](#miuigradle)
   * [native](#native)
   * [删除android.jar](#删除androidjar)
   * [支持AIDL](#支持aidl)
