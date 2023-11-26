@@ -23,6 +23,10 @@ misc.xml
 deploymentTargetDropDown.xml
 render.experimental.xml
 
+# CLion
+cmake-build-debug
+**/cmake-build-debug
+
 # Keystore files
 # *.jks
 # *.keystore
