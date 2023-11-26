@@ -1,8 +1,17 @@
 cmake_minimum_required(VERSION 3.5)
 project(InputFlinger)
 
-#set(CMAKE_CXX_STANDARD 20)
-set(ANDROID_ROOT ${BUILD_NATIVE_ROOT})
+# 判断主 CMakeLists.txt 是否已经设置正确的 ANDROID_ROOT 目录
+if(IS_DIRECTORY ${ANDROID_ROOT})
+    message(STATUS "${PROJECT_NAME}, has been set android root")
+else()
+    if(IS_DIRECTORY ${BUILD_NATIVE_ROOT})
+        message(WARNING "${PROJECT_NAME}, set ANDROID_ROOT via BUILD_NATIVE_ROOT=${BUILD_NATIVE_ROOT}")
+        set(ANDROID_ROOT ${BUILD_NATIVE_ROOT})
+    else()
+        message(FATAL_ERROR "${PROJECT_NAME}, ANDROID_ROOT was NULL")
+    endif()
+endif()
 
 set(AOSP_FWK_BASE true)
 set(AOSP_FWK_NATIVE true)
