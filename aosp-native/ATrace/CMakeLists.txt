@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(ExtServices)
+project(ATrace)
 
 #set(CMAKE_CXX_STANDARD 20)
 set(ANDROID_ROOT ${BUILD_NATIVE_ROOT})
@@ -20,44 +20,16 @@ set(AOSP_OUT false)
 set(AOSP_OTHER false)
 
 file(GLOB SOURCE_FILES
-        ${ANDROID_ROOT}/packages/modules/ExtServices/jni/*.cpp
-        ${ANDROID_ROOT}/packages/modules/ExtServices/native/*.cpp
-        ${ANDROID_ROOT}/packages/modules/ExtServices/native/pHash/*.cpp
-        ${ANDROID_ROOT}/packages/modules/ExtServices/native/pHash/fuzzer/*.cpp
-        ${ANDROID_ROOT}/packages/modules/ExtServices/native/tests/*.cpp
+        ${ANDROID_ROOT}/frameworks/native/cmds/atrace/*.cpp
         )
 
 include_directories(
-        "${ANDROID_ROOT}/packages/modules/ExtServices/jni"
-        "${ANDROID_ROOT}/packages/modules/ExtServices/native"
-        "${ANDROID_ROOT}/packages/modules/ExtServices/native/pHash/fuzzer"
-        "${ANDROID_ROOT}/packages/modules/ExtServices/native/tests"
+        "${ANDROID_ROOT}/frameworks/native/cmds/atrace"
 )
 
 file(GLOB_RECURSE HEADERS
-        "${ANDROID_ROOT}/packages/modules/ExtServices/jni/**/*.h"
-        "${ANDROID_ROOT}/packages/modules/ExtServices/native/**/*.h"
-        "${ANDROID_ROOT}/packages/modules/ExtServices/native/pHash/fuzzer/**/*.h"
-        "${ANDROID_ROOT}/packages/modules/ExtServices/native/tests/**/*.h"
+        "${ANDROID_ROOT}/frameworks/native/cmds/atrace/**/*.h"
         )
-
-
-# add aosp fwk_base
-if (${AOSP_FWK_BASE})
-    message("${PROJECT_NAME}, enable aosp fwk_base")
-
-    # add aosp fwk_base header dir
-    include_directories(
-            "${ANDROID_ROOT}/frameworks/base/native/android/include_platform"
-    )
-
-    # add aosp fwk_base header file
-    file(GLOB_RECURSE HEADERS_FWK_BASE
-            "${ANDROID_ROOT}/frameworks/base/native/android/include_platform/**/*.h"
-            )
-    # append aosp fwk_base header
-    list(APPEND HEADERS ${HEADERS_FWK_BASE})
-endif ()
 
 
 # add aosp fwk_native
@@ -67,20 +39,24 @@ if (${AOSP_FWK_NATIVE})
     # add aosp fwk_native header dir
     include_directories(
             "${ANDROID_ROOT}/frameworks/native/include"
-            "${ANDROID_ROOT}/frameworks/native/libs/arect/include"
-            "${ANDROID_ROOT}/frameworks/native/libs/nativebase/include"
-            "${ANDROID_ROOT}/frameworks/native/libs/nativewindow/include"
-            "${ANDROID_ROOT}/frameworks/native/libs/nativewindow/include-private"
+            "${ANDROID_ROOT}/frameworks/native/libs/binder/include"
+            "${ANDROID_ROOT}/frameworks/native/libs/binder/ndk/include_cpp"
+            "${ANDROID_ROOT}/frameworks/native/libs/vr/libpdx/private"
+            "${ANDROID_ROOT}/frameworks/native/libs/vr/libpdx_default_transport/private"
+            "${ANDROID_ROOT}/frameworks/native/libs/vr/libpdx_default_transport/private/uds"
+            "${ANDROID_ROOT}/frameworks/native/libs/vr/libpdx_uds/private"
             "${ANDROID_ROOT}/frameworks/native/opengl/include"
     )
 
     # add aosp fwk_native header file
     file(GLOB_RECURSE HEADERS_FWK_NATIVE
             "${ANDROID_ROOT}/frameworks/native/include/**/*.h"
-            "${ANDROID_ROOT}/frameworks/native/libs/arect/include/**/*.h"
-            "${ANDROID_ROOT}/frameworks/native/libs/nativebase/include/**/*.h"
-            "${ANDROID_ROOT}/frameworks/native/libs/nativewindow/include-private/**/*.h"
-            "${ANDROID_ROOT}/frameworks/native/libs/nativewindow/include/**/*.h"
+            "${ANDROID_ROOT}/frameworks/native/libs/binder/include/**/*.h"
+            "${ANDROID_ROOT}/frameworks/native/libs/binder/ndk/include_cpp/**/*.h"
+            "${ANDROID_ROOT}/frameworks/native/libs/vr/libpdx/private/**/*.h"
+            "${ANDROID_ROOT}/frameworks/native/libs/vr/libpdx_default_transport/private/**/*.h"
+            "${ANDROID_ROOT}/frameworks/native/libs/vr/libpdx_default_transport/private/uds/**/*.h"
+            "${ANDROID_ROOT}/frameworks/native/libs/vr/libpdx_uds/private/**/*.h"
             "${ANDROID_ROOT}/frameworks/native/opengl/include/**/*.h"
             )
     # append aosp fwk_native header
@@ -95,16 +71,32 @@ if (${AOSP_SYSTEM_COMMON})
     # add aosp system_common header dir
     include_directories(
             "${ANDROID_ROOT}/system/core/include"
+            "${ANDROID_ROOT}/system/core/libcutils/include"
+            "${ANDROID_ROOT}/system/core/libprocessgroup/include"
+            "${ANDROID_ROOT}/system/core/libsystem/include"
+            "${ANDROID_ROOT}/system/core/libutils/include"
             "${ANDROID_ROOT}/system/core/property_service/libpropertyinfoparser/include"
             "${ANDROID_ROOT}/system/libbase/include"
+            "${ANDROID_ROOT}/system/libfmq/base"
+            "${ANDROID_ROOT}/system/libhidl/base/include"
+            "${ANDROID_ROOT}/system/libhidl/transport/include"
+            "${ANDROID_ROOT}/system/libhwbinder/include"
             "${ANDROID_ROOT}/system/logging/liblog/include"
     )
 
     # add aosp system_common header file
     file(GLOB_RECURSE HEADERS_SYSTEM_COMMON
             "${ANDROID_ROOT}/system/core/include/**/*.h"
+            "${ANDROID_ROOT}/system/core/libcutils/include/**/*.h"
+            "${ANDROID_ROOT}/system/core/libprocessgroup/include/**/*.h"
+            "${ANDROID_ROOT}/system/core/libsystem/include/**/*.h"
+            "${ANDROID_ROOT}/system/core/libutils/include/**/*.h"
             "${ANDROID_ROOT}/system/core/property_service/libpropertyinfoparser/include/**/*.h"
             "${ANDROID_ROOT}/system/libbase/include/**/*.h"
+            "${ANDROID_ROOT}/system/libfmq/base/**/*.h"
+            "${ANDROID_ROOT}/system/libhidl/base/include/**/*.h"
+            "${ANDROID_ROOT}/system/libhidl/transport/include/**/*.h"
+            "${ANDROID_ROOT}/system/libhwbinder/include/**/*.h"
             "${ANDROID_ROOT}/system/logging/liblog/include/**/*.h"
             )
     # append aosp system_common header
@@ -184,22 +176,18 @@ if (${AOSP_EXTERNAL})
 
     # add aosp external header dir
     include_directories(
-            "${ANDROID_ROOT}/external/fft2d/src/fft2d"
             "${ANDROID_ROOT}/external/fmtlib/include"
-            "${ANDROID_ROOT}/external/googletest/googlemock/include"
-            "${ANDROID_ROOT}/external/googletest/googletest/include"
             "${ANDROID_ROOT}/external/libcxx/include"
             "${ANDROID_ROOT}/external/libcxxabi/include"
+            "${ANDROID_ROOT}/external/zlib"
     )
 
     # add aosp external header file
     file(GLOB_RECURSE HEADERS_EXTERNAL
-            "${ANDROID_ROOT}/external/fft2d/src/fft2d/**/*.h"
             "${ANDROID_ROOT}/external/fmtlib/include/**/*.h"
-            "${ANDROID_ROOT}/external/googletest/googlemock/include/**/*.h"
-            "${ANDROID_ROOT}/external/googletest/googletest/include/**/*.h"
             "${ANDROID_ROOT}/external/libcxx/include/**/*.h"
             "${ANDROID_ROOT}/external/libcxxabi/include/**/*.h"
+            "${ANDROID_ROOT}/external/zlib/**/*.h"
             )
     # append aosp external header
     list(APPEND HEADERS ${HEADERS_EXTERNAL})
@@ -228,8 +216,36 @@ if (${AOSP_HARDWARE})
 endif ()
 
 
+# add aosp out
+if (${AOSP_OUT})
+    message("${PROJECT_NAME}, enable aosp out")
+
+    # add aosp out header dir
+    include_directories(
+            "${ANDROID_ROOT}/out/soong/.intermediates/frameworks/native/libs/binder/libbinder/android_arm64_armv8-a-branchprot_shared/gen/aidl"
+            "${ANDROID_ROOT}/out/soong/.intermediates/hardware/interfaces/atrace/1.0/android.hardware.atrace@1.0_genc++_headers/gen"
+            "${ANDROID_ROOT}/out/soong/.intermediates/system/libhidl/transport/base/1.0/android.hidl.base@1.0_genc++_headers/gen"
+            "${ANDROID_ROOT}/out/soong/.intermediates/system/libhidl/transport/manager/1.0/android.hidl.manager@1.0_genc++_headers/gen"
+            "${ANDROID_ROOT}/out/soong/.intermediates/system/libhidl/transport/manager/1.1/android.hidl.manager@1.1_genc++_headers/gen"
+            "${ANDROID_ROOT}/out/soong/.intermediates/system/libhidl/transport/manager/1.2/android.hidl.manager@1.2_genc++_headers/gen"
+    )
+
+    # add aosp out header file
+    file(GLOB_RECURSE HEADERS_OUT
+            "${ANDROID_ROOT}/out/soong/.intermediates/frameworks/native/libs/binder/libbinder/android_arm64_armv8-a-branchprot_shared/gen/aidl/**/*.h"
+            "${ANDROID_ROOT}/out/soong/.intermediates/hardware/interfaces/atrace/1.0/android.hardware.atrace@1.0_genc++_headers/gen/**/*.h"
+            "${ANDROID_ROOT}/out/soong/.intermediates/system/libhidl/transport/base/1.0/android.hidl.base@1.0_genc++_headers/gen/**/*.h"
+            "${ANDROID_ROOT}/out/soong/.intermediates/system/libhidl/transport/manager/1.0/android.hidl.manager@1.0_genc++_headers/gen/**/*.h"
+            "${ANDROID_ROOT}/out/soong/.intermediates/system/libhidl/transport/manager/1.1/android.hidl.manager@1.1_genc++_headers/gen/**/*.h"
+            "${ANDROID_ROOT}/out/soong/.intermediates/system/libhidl/transport/manager/1.2/android.hidl.manager@1.2_genc++_headers/gen/**/*.h"
+            )
+    # append aosp out header
+    list(APPEND HEADERS ${HEADERS_OUT})
+endif ()
+
+
 add_executable(
-        ExtServices
+        ATrace
         ${SOURCE_FILES}
         ${HEADERS}
 )
