@@ -3,7 +3,7 @@ project(aosp-native)
 
 set(CMAKE_CXX_STANDARD 20)
 
-#set(ANDROID_ROOT "/home/solo/code/aosp")
+#set(ANDROID_ROOT "/home/solo/code/vivo")
 set(ANDROID_ROOT ${BUILD_NATIVE_ROOT})
 
 # ---------- AndroidRuntime ----------
