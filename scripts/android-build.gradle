@@ -1,10 +1,4 @@
-if (BUILD_APPLICATION.toBoolean()) {
-    //作为独立App应用运行
-    apply plugin: 'com.android.application'
-} else {
-    //作为组件运行
-    apply plugin: 'com.android.library'
-}
+apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-parcelize'
@@ -23,11 +17,6 @@ android {
     compileSdkVersion androidSdk.compileSdkVersion
     buildToolsVersion androidSdk.buildToolsVersion
     defaultConfig {
-        if (BUILD_APPLICATION.toBoolean()) {
-            applicationId androidSdk.applicationId
-            versionCode rootProject.ext.versionCode
-            versionName rootProject.ext.versionName
-        }
         minSdkVersion androidSdk.minSdkVersion
         targetSdkVersion androidSdk.targetSdkVersion
 
@@ -78,66 +67,6 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
-    }
-
-    if (BUILD_APPLICATION.toBoolean()) {
-        signingConfigs {
-            release {
-                storeFile file("${rootDir}/keystore/platform.jks")
-                storePassword 'android'
-                keyAlias 'platform'
-                keyPassword 'android'
-            }
-            debug {
-                storeFile file("${rootDir}/keystore/platform.jks")
-                storePassword 'android'
-                keyAlias 'platform'
-                keyPassword 'android'
-            }
-        }
-
-        buildTypes {
-            release {
-                zipAlignEnabled true
-                minifyEnabled false
-                proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), "${project.rootDir}/proguard-rules.pro"
-                if (BUILD_APPLICATION.toBoolean()) {
-                    signingConfig signingConfigs.release
-                }
-            }
-            debug {
-                zipAlignEnabled true
-                minifyEnabled false
-                proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), "${project.rootDir}/proguard-rules.pro"
-                if (BUILD_APPLICATION.toBoolean()) {
-                    signingConfig signingConfigs.debug
-                }
-            }
-        }
-    }
-
-    gradle.projectsEvaluated {
-        preBuild.dependsOn excludeFolder
-        preBuild.dependsOn deleteAndroidSdk
-
-        tasks.withType(JavaCompile) {
-            Set<File> fileSet = options.bootstrapClasspath.getFiles()
-            List<File> newFileList = new ArrayList<>();
-            newFileList.add(new File("${rootDir}/system_libs/framework-minus-apex.jar"))
-            newFileList.addAll(fileSet)
-            options.bootstrapClasspath = files(newFileList.toArray())
-        }
-
-    }
-
-    if (BUILD_APPLICATION.toBoolean()) {
-        applicationVariants.all { variant ->
-            variant.outputs.all { output ->
-                def apkName = "ExtFwk.apk"
-                outputFileName = new File("./../../../../build/", apkName)
-                //logger.log(LogLevel.WARN, "----------> output apk = ${outputFileName}")
-            }
-        }
     }
 
     buildFeatures {
@@ -200,10 +129,9 @@ dependencies {
                 println("Don't compileOnly myself, project = " + project.name)
             } else {
                 if (rootProject.ext.build_aidl.toBoolean()) {
-                    println("don't implementation forEach when build aidl")
+                    println("don't compileOnly forEach when build aidl")
                 } else {
-                    println(dependence.value)
-                    implementation project(dependence.value)
+                    compileOnly project(dependence.value)
                 }
             }
         }
