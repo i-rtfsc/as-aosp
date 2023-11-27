@@ -28,6 +28,10 @@ set(AOSP_VENDOR false)
 set(AOSP_OUT false)
 set(AOSP_OTHER false)
 
+# 设置 cflags
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DFLYME_GRAPHICS_EXTEND")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DFLYME_GRAPHICS_EXTEND")
+
 file(GLOB SOURCE_FILES
         ${ANDROID_ROOT}/frameworks/base/cmds/bootanimation/*.cpp
         )

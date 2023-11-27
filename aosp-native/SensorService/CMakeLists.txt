@@ -28,6 +28,12 @@ set(AOSP_VENDOR false)
 set(AOSP_OUT false)
 set(AOSP_OTHER false)
 
+# 设置 cflags
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DFLYME_GRAPHICS_EXTEND_LUMARGB")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DFLYME_SAMPLE_AREA_2481")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DFLYME_GRAPHICS_EXTEND_LUMARGB")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DFLYME_SAMPLE_AREA_2481")
+
 file(GLOB SOURCE_FILES
         ${ANDROID_ROOT}/frameworks/hardware/interfaces/sensorservice/1.0/vts/functional/*.cpp
         ${ANDROID_ROOT}/frameworks/hardware/interfaces/sensorservice/aidl/vts/*.cpp
