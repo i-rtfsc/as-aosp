@@ -24,7 +24,9 @@
 
 ## AndroidRuntime
 
-包含以下 Android.bp 等：
+最初 AndroidRuntime 只是想表达 libandroid_runtime.so 模块； 但在使用过程中发现如果只包含头文件，那么只能跳转到.h，不能跳转到.cpp。
+所以把 frameworks/base/core/jni/Android.bp 里 shared_libs 中的常用模块也添加进来。
+
 - frameworks/base/core/jni/Android.bp
 > libandroid_runtime.so -> cc_library_shared
 
@@ -54,6 +56,51 @@
 
 - frameworks/base/cmds/uinput/jni/Android.bp
 > libuinputcommand_jni.so -> cc_library_shared
+
+- frameworks/native/libs/battery/Android.bp
+> libbattery -> cc_library
+
+- frameworks/native/libs/binder/Android.bp
+> libbinder -> cc_library
+
+- frameworks/native/libs/ui/Android.bp
+> libui -> cc_library_shared
+
+- frameworks/native/libs/graphicsenv/Android.bp
+> libgraphicsenv -> cc_library_shared
+
+- frameworks/native/libs/gui/Android.bp
+> libgui -> cc_library_shared
+
+- frameworks/base/libs/hwui/Android.bp
+> libhwui -> cc_library
+
+- frameworks/native/libs/permission/Android.bp
+> libpermission -> cc_library
+
+- frameworks/native/libs/sensor/Android.bp
+> libsensor -> cc_library
+
+- frameworks/native/libs/input/Android.bp
+> libinput -> cc_library
+
+- frameworks/native/libs/nativedisplay/Android.bp
+> libnativedisplay -> cc_library_shared
+
+- frameworks/native/libs/nativewindow/Android.bp
+> libnativewindow -> cc_library
+
+- system/core/libcutils/Android.bp
+> libcutils -> cc_library
+
+- system/core/libutils/Android.bp
+> libutils -> cc_library
+
+
+以下两个模块未添加到 AndroidRuntime ，目前觉得加到 media 比较合适。
+后续打算新增 MediaServer 包含 video + audio(目前的当audio模块)
+> frameworks/av/media/libaudioclient/Android.bp
+> frameworks/av/media/libaudiofoundation/Android.bp
 
 
 ## AndroidServices
