@@ -108,6 +108,7 @@ file(GLOB SOURCE_FILES
         ${ANDROID_ROOT}/frameworks/native/libs/ui/tools/*.cpp
         ${ANDROID_ROOT}/system/core/libcutils/*.c
         ${ANDROID_ROOT}/system/core/libcutils/*.cpp
+        ${ANDROID_ROOT}/system/core/libsysutils/src/*.cpp
         ${ANDROID_ROOT}/system/core/libutils/*.cpp
         )
 
@@ -198,6 +199,8 @@ include_directories(
         "${ANDROID_ROOT}/system/core/libcutils"
         "${ANDROID_ROOT}/system/core/libcutils/include"
         "${ANDROID_ROOT}/system/core/libcutils/include_outside_system"
+        "${ANDROID_ROOT}/system/core/libsysutils"
+        "${ANDROID_ROOT}/system/core/libsysutils/include"
         "${ANDROID_ROOT}/system/core/libutils"
         "${ANDROID_ROOT}/system/core/libutils/include"
 )
@@ -289,6 +292,8 @@ file(GLOB_RECURSE HEADERS
         "${ANDROID_ROOT}/system/core/libcutils/**/*.h"
         "${ANDROID_ROOT}/system/core/libcutils/include/**/*.h"
         "${ANDROID_ROOT}/system/core/libcutils/include_outside_system/**/*.h"
+        "${ANDROID_ROOT}/system/core/libsysutils/**/*.h"
+        "${ANDROID_ROOT}/system/core/libsysutils/include/**/*.h"
         "${ANDROID_ROOT}/system/core/libutils/**/*.h"
         "${ANDROID_ROOT}/system/core/libutils/include/**/*.h"
         )
