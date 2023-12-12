@@ -415,6 +415,41 @@ ext {
                     ],
                     aidl    : [],
             ],
+
+            /*************** 配置原生 Permission 路径 ***************/
+            Permission       : [
+                    //"$aospDir/packages/modules/Permission/PermissionController/iconloaderlib/AndroidManifest.xml",
+                    //"$aospDir/packages/modules/Permission/SafetyCenter/Resources/AndroidManifest.xml",
+                    manifest: "$aospDir/packages/modules/Permission/PermissionController/AndroidManifest.xml",
+                    res     : [
+                            "$aospDir/packages/modules/Permission/PermissionController/res",
+                            "$aospDir/packages/modules/Permission/PermissionController/iconloaderlib/res",
+                            "$aospDir/packages/modules/Permission/SafetyCenter/Resources/res",
+                            "$aospDir/packages/modules/Permission/SafetyCenter/Resources/shared_res",
+                            "$aospDir/packages/modules/Permission/SafetyCenter/ResourcesLib/java/com/android/safetycenter/resources",
+                            "$aospDir/packages/modules/Permission/SafetyCenter/ConfigLintChecker/java/android/content/res",
+                    ],
+                    assets  : [],
+                    jni     : "$aospDir",
+                    src     : [
+                            "$aospDir/packages/modules/Permission/PermissionController/src",
+                            "$aospDir/packages/modules/Permission/PermissionController/role-controller/java",
+                            "$aospDir/packages/modules/Permission/PermissionController/iconloaderlib/src_full_lib",
+                            "$aospDir/packages/modules/Permission/PermissionController/iconloaderlib/src",
+                            "$aospDir/packages/modules/Permission/SafetyLabel/java",
+                            "$aospDir/packages/modules/Permission/service/java",
+                            "$aospDir/packages/modules/Permission/framework/java",
+                            "$aospDir/packages/modules/Permission/SafetyCenter/PendingIntents/java",
+                            "$aospDir/packages/modules/Permission/SafetyCenter/InternalData/java",
+                            "$aospDir/packages/modules/Permission/SafetyCenter/Annotations/java",
+                            "$aospDir/packages/modules/Permission/SafetyCenter/Config/java",
+                            "$aospDir/packages/modules/Permission/SafetyCenter/ResourcesLib/java",
+                            "$aospDir/packages/modules/Permission/SafetyCenter/ConfigLintChecker/java",
+                            "$aospDir/packages/modules/Permission/SafetyCenter/Persistence/java",
+                            "$aospDir/packages/modules/Permission/framework-s/java",
+                    ],
+                    aidl    : [],
+            ],
     ]
 
 }
