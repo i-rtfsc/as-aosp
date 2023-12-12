@@ -19,6 +19,7 @@ include ':SettingsProvider'
 //packages/modules相关
 include ':Connectivity'
 include ':Wifi'
+include ':Permission'
 // include ':ExtServices'
 /*************** aosp ***************/
 

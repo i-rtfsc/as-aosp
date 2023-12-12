@@ -182,6 +182,23 @@ ext {
                     ],
                     aidl    : [],
             ],
+
+            /*************** 配置原生 Permission 路径 ***************/
+            Permission       : [
+                    manifest: "$flymeDir/packages/modules/Permission/PermissionController/AndroidManifest.xml",
+                    res     : [
+                            "$flymeDir/packages/modules/Permission/PermissionController/res",
+                    ],
+                    assets  : [],
+                    jni     : "$flymeDir",
+                    src     : [
+                            "$flymeDir/packages/modules/Permission/PermissionController/src",
+                            "$flymeDir/packages/modules/Permission/service/java",
+                            "$flymeDir/packages/modules/Permission/framework/java",
+                            "$flymeDir/packages/modules/Permission/framework-s/java",
+                    ],
+                    aidl    : [],
+            ],
     ]
 
 }
