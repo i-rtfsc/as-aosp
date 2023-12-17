@@ -39,7 +39,6 @@ ext {
                             "$aospDir/frameworks/base/wifi/java/src",
                             "$aospDir/frameworks/base/packages/services/PacProcessor/src",
                             "$aospDir/frameworks/base/packages/services/Proxy/src",
-
                     ],
                     aidl    : [
                             "$aospDir/frameworks/av/camera/aidl",
@@ -98,6 +97,7 @@ ext {
                             "$aospDir/frameworks/base/services/voiceinteraction/java/",
                             "$aospDir/frameworks/base/services/wallpapereffectsgeneration/java/",
                             "$aospDir/frameworks/base/services/wifi/java/",
+                            "$aospDir/frameworks/base/tools/processors/immutability/src",
                     ],
                     aidl    : [],
             ],
@@ -285,6 +285,7 @@ ext {
                             "$aospDir/frameworks/base/packages/SettingsLib/UsageProgressBarPreference/src",
                             "$aospDir/frameworks/base/packages/SettingsLib/Utils/src",
                             "$aospDir/frameworks/base/packages/SettingsLib/search/src",
+                            "$aospDir/frameworks/base/packages/SettingsLib/src",
                     ],
                     aidl    : [],
             ],
