@@ -183,18 +183,36 @@ ext {
                     aidl    : [],
             ],
 
-            /*************** 配置原生 Permission 路径 ***************/
+            /*************** 配置 Permission 路径 ***************/
             Permission       : [
+                    // "$flymeDir/packages/modules/Permission/PermissionController/iconloaderlib/AndroidManifest.xml",
+                    // "$flymeDir/packages/modules/Permission/SafetyCenter/Resources/AndroidManifest.xml",
                     manifest: "$flymeDir/packages/modules/Permission/PermissionController/AndroidManifest.xml",
                     res     : [
                             "$flymeDir/packages/modules/Permission/PermissionController/res",
+                            "$flymeDir/packages/modules/Permission/PermissionController/iconloaderlib/res",
+                            "$flymeDir/packages/modules/Permission/SafetyCenter/Resources/res",
+                            "$flymeDir/packages/modules/Permission/SafetyCenter/Resources/shared_res",
+                            "$flymeDir/packages/modules/Permission/SafetyCenter/ResourcesLib/java/com/android/safetycenter/resources",
+                            "$flymeDir/packages/modules/Permission/SafetyCenter/ConfigLintChecker/java/android/content/res",
                     ],
                     assets  : [],
                     jni     : "$flymeDir",
                     src     : [
                             "$flymeDir/packages/modules/Permission/PermissionController/src",
+                            "$flymeDir/packages/modules/Permission/PermissionController/role-controller/java",
+                            "$flymeDir/packages/modules/Permission/PermissionController/iconloaderlib/src_full_lib",
+                            "$flymeDir/packages/modules/Permission/PermissionController/iconloaderlib/src",
+                            "$flymeDir/packages/modules/Permission/SafetyLabel/java",
                             "$flymeDir/packages/modules/Permission/service/java",
                             "$flymeDir/packages/modules/Permission/framework/java",
+                            "$flymeDir/packages/modules/Permission/SafetyCenter/PendingIntents/java",
+                            "$flymeDir/packages/modules/Permission/SafetyCenter/InternalData/java",
+                            "$flymeDir/packages/modules/Permission/SafetyCenter/Annotations/java",
+                            "$flymeDir/packages/modules/Permission/SafetyCenter/Config/java",
+                            "$flymeDir/packages/modules/Permission/SafetyCenter/ResourcesLib/java",
+                            "$flymeDir/packages/modules/Permission/SafetyCenter/ConfigLintChecker/java",
+                            "$flymeDir/packages/modules/Permission/SafetyCenter/Persistence/java",
                             "$flymeDir/packages/modules/Permission/framework-s/java",
                     ],
                     aidl    : [],
