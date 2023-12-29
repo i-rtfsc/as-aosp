@@ -79,25 +79,37 @@ android {
 task deleteAndroidSdk {
     def dir = "${rootDir}" + File.separator + ".idea" + File.separator + "modules" + File.separator + project.name + File.separator
 
-    def scriptFile = "${rootDir}" + File.separator + "scripts" + File.separator + "delete-sdk.py"
-    def cmd = "python " + scriptFile + " -d " + dir
-    println(cmd)
-    def script = cmd.execute()
-    script.waitFor()
+    // 新版本的 idea 生成的目录不再是 project.name [个人觉得是idea的bug], 所以只能从 modules 文件夹开始遍历。
+    // TODO 后续可能会优化
+    // 新版本的 as 甚至都不会生成 [project.name].main.iml
+    def folder = new File(dir)
+    if (!folder.exists()) {
+        dir = "${rootDir}" + File.separator + ".idea" + File.separator + "modules"
+    }
 
-    def files = fileTree(dir).filter { it.isFile() }.files.name
+    def files = fileTree(dir).filter { it.isFile() }.files.absoluteFile
     files.forEach { file ->
-        def imlFile = dir + file
-        println(imlFile)
-        try {
-            def parsedXml = (new XmlParser()).parse(imlFile)
-            def jdkNode = parsedXml.component[1].orderEntry.find { it.'@type' == 'jdk' }
-            def jdkName = jdkNode.attributes().get('jdkName')
-            parsedXml.component[1].remove(jdkNode)
-            new groovy.util.Node(parsedXml.component[1], 'orderEntry', ['type': 'jdk', 'jdkName': jdkName, 'jdkType': 'Android SDK'])
-            groovy.xml.XmlUtil.serialize(parsedXml, new FileOutputStream(imlFile))
-        } catch (Exception e) {
-            println("sort sdk node error, " + e)
+        def imlFile = file
+        def fileName = file.name
+        def projectDir = file.path
+        def projectFile = rootProject.name + "." + project.name + ".main.iml"
+        if (fileName.contains(projectFile)) {
+            def scriptFile = "${rootDir}" + File.separator + "scripts" + File.separator + "delete-sdk.py"
+            def cmd = "python " + scriptFile + " -d " + projectDir
+            println(cmd)
+            def script = cmd.execute()
+            script.waitFor()
+
+            try {
+                def parsedXml = (new XmlParser()).parse(imlFile)
+                def jdkNode = parsedXml.component[1].orderEntry.find { it.'@type' == 'jdk' }
+                def jdkName = jdkNode.attributes().get('jdkName')
+                parsedXml.component[1].remove(jdkNode)
+                new groovy.util.Node(parsedXml.component[1], 'orderEntry', ['type': 'jdk', 'jdkName': jdkName, 'jdkType': 'Android SDK'])
+                groovy.xml.XmlUtil.serialize(parsedXml, new FileOutputStream(imlFile))
+            } catch (Exception e) {
+                println("sort sdk node error, " + e)
+            }
         }
     }
 }
