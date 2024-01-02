@@ -37,10 +37,13 @@ def parseargs():
 
 
 def work(root_dir):
+    # Checks if path is a file
+    if os.path.isfile(root_dir):
+        root_dir = os.path.dirname(root_dir)
+
     for root, dirs, files in os.walk(root_dir):
         for file in files:
             path = os.path.join(root, file)
-
             new_text = ""
 
             with open(path, 'r') as f:
