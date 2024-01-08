@@ -39,3 +39,7 @@ add_subdirectory(SurfaceFlinger)
 #add_subdirectory(TensorFlow)
 #add_subdirectory(NeuralNetworks)
 
+##### auto motive 相关 #####
+# Vehicle
+#add_subdirectory(AutoMotiveVehicle)
+##### auto motive 相关 #####
