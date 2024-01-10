@@ -86,6 +86,8 @@ ext {
                             "$flymeDir/frameworks/libs/systemui/iconloaderlib/src_full_lib",
                             "$flymeDir/frameworks/libs/systemui/motiontoollib/src",
                             "$flymeDir/frameworks/libs/systemui/viewcapturelib/src",
+                            "$flymeDir/out/soong/.intermediates/packages/apps/SystemUI/SystemUI-tags/android_common/gen/logtags/packages/apps/SystemUI/src",
+
                     ],
                     aidl    : [],
             ],
