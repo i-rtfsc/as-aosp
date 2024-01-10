@@ -39,6 +39,10 @@ ext {
                             "$aospDir/frameworks/base/wifi/java/src",
                             "$aospDir/frameworks/base/packages/services/PacProcessor/src",
                             "$aospDir/frameworks/base/packages/services/Proxy/src",
+                            "$aospDir/out/soong/.intermediates/frameworks/base/framework-minus-apex/android_common/gen/logtags/frameworks/base/core/java",
+                            "$aospDir/out/soong/.intermediates/frameworks/base/api/api-stubs-docs-non-updatable/android_common/gen/logtags/frameworks/base/core/java",
+                            "$aospDir/out/soong/.intermediates/frameworks/base/api/module-lib-api-stubs-docs-non-updatable/android_common/gen/logtags/frameworks/base/core/java",
+                            "$aospDir/out/soong/.intermediates/frameworks/base/api/system-api-stubs-docs-non-updatable/android_common/gen/logtags/frameworks/base/core/java",
                     ],
                     aidl    : [
                             "$aospDir/frameworks/av/camera/aidl",
@@ -98,6 +102,8 @@ ext {
                             "$aospDir/frameworks/base/services/wallpapereffectsgeneration/java/",
                             "$aospDir/frameworks/base/services/wifi/java/",
                             "$aospDir/frameworks/base/tools/processors/immutability/src",
+                            "$aospDir/out/soong/.intermediates/frameworks/base/services/core/services.core.unboosted/android_common/gen/logtags/frameworks/base/services/core/java",
+                            "$aospDir/out/soong/.intermediates/frameworks/base/services/contentcapture/services.contentcapture/android_common/gen/logtags/frameworks/base/services/contentcapture/java",
                     ],
                     aidl    : [],
             ],
@@ -142,6 +148,7 @@ ext {
                             "$aospDir/frameworks/libs/systemui/iconloaderlib/src_full_lib",
                             "$aospDir/frameworks/libs/systemui/motiontoollib/src",
                             "$aospDir/frameworks/libs/systemui/viewcapturelib/src",
+                            "$aospDir/out/soong/.intermediates/frameworks/base/packages/SystemUI/SystemUI-tags/android_common/gen/logtags/frameworks/base/packages/SystemUI/src"
                     ],
                     aidl    : [
 //                            "$aospDir/frameworks/base/core/java",
@@ -172,6 +179,7 @@ ext {
                     jni     : [],
                     src     : [
                             "$aospDir/packages/apps/Settings/src",
+                            "$aospDir/out/soong/.intermediates/packages/apps/Settings/settings-logtags/android_common/gen/logtags/packages/apps/Settings/src",
                     ],
                     aidl    : [],
             ],
@@ -300,6 +308,7 @@ ext {
                     jni     : [],
                     src     : [
                             "$aospDir/frameworks/base/packages/SettingsProvider/src",
+                            "$aospDir/out/soong/.intermediates/frameworks/base/packages/SettingsProvider/SettingsProvider/android_common/gen/logtags/frameworks/base/packages/SettingsProvider/src",
                     ],
                     aidl    : [],
             ],
