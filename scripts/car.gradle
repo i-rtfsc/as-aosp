@@ -4,17 +4,17 @@ ext {
     aospDir = rootProject.ext.aospRoot
 
     car = [
-            root             : "$aospDir",
+            root     : "$aospDir",
 
             /*************** 配置原生 car-framework 路径 ***************/
-            Framework        : [
+            Framework: [
                     manifest: "$aospDir/packages/services/Car/car-lib/AndroidManifest.xml",
                     res     : [
                             "$aospDir/packages/services/Car/FrameworkPackageStubs/res/",
                             "$aospDir/packages/services/Car/car-admin-ui-lib/src/main/res",
                     ],
                     assets  : [],
-                    jni     : "$aospDir",
+                    jni     : "",
                     src     : [
                             "$aospDir/packages/services/Car/FrameworkPackageStubs/src",
                             "$aospDir/packages/services/Car/car-admin-ui-lib/src/main/java",
@@ -28,23 +28,57 @@ ext {
                             "$aospDir/out/soong/.intermediates/packages/services/Car/car-builtin-lib/android.car.builtin.stubs.source.module_lib/android_common/gen/logtags/packages/services/Car/car-builtin-lib/src",
                             "$aospDir/out/soong/.intermediates/packages/services/Car/car-builtin-lib/android.car.builtin.stubs.source/android_common/gen/logtags/packages/services/Car/car-builtin-lib/src",
                     ],
-                    aidl : [],
+                    aidl    : [],
             ],
 
             /*************** 配置原生 car-services 路径 ***************/
-            Services          : [
+            Services : [
                     manifest: "$aospDir/packages/services/Car/service/AndroidManifest.xml",
                     res     : [
                             "$aospDir/packages/services/Car/service/res",
                             "$aospDir/packages/services/Car/service-builtin/res",
                     ],
                     assets  : [],
-                    jni     : "$aospDir",
+                    jni     : "",
                     src     : [
                             "$aospDir/packages/services/Car/service/src",
                             "$aospDir/packages/services/Car/service-builtin/src",
                     ],
-                    aidl : [],
+                    aidl    : [],
+            ],
+
+            /*************** 配置原生 CarSystemUI 路径 ***************/
+            SystemUI : [
+                    manifest: "$aospDir/packages/apps/Car/SystemUI/AndroidManifest.xml",
+                    res     : [
+                            "$aospDir/packages/apps/Car/SystemUI/res-keyguard",
+                            "$aospDir/packages/apps/Car/SystemUI/res",
+                            "$aospDir/packages/apps/Car/SystemUI/samples/sample2/rro/res",
+                            "$aospDir/packages/apps/Car/SystemUI/samples/sample3/rro/res",
+                            "$aospDir/packages/apps/Car/SystemUI/samples/sample1/rro/res",
+                    ],
+                    assets  : [],
+                    jni     : "",
+                    src     : [
+                            "$aospDir/packages/apps/Car/SystemUI/src",
+
+                    ],
+                    aidl    : [],
+            ],
+
+            /*************** 配置原生 CarSettings 路径 ***************/
+            Settings : [
+                    manifest: "$aospDir/packages/apps/Car/Settings/AndroidManifest.xml",
+                    res     : [
+                            "$aospDir/packages/apps/Car/Settings/res",
+
+                    ],
+                    assets  : [],
+                    jni     : "",
+                    src     : [
+                            "$aospDir/packages/apps/Car/Settings/src",
+                    ],
+                    aidl    : [],
             ],
     ]
 
