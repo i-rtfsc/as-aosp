@@ -13,7 +13,7 @@ ext {
                     manifest: "",
                     res     : [],
                     assets  : [],
-                    jni     : "$flymeDir",
+                    jni     : "",
                     src     : [
                             "$flymeDir/frameworks/base/flyme-extras/core/java/",
                             "$flymeDir/frameworks/base/flyme-extras/media/java/",
@@ -35,7 +35,7 @@ ext {
                     manifest: "",
                     res     : [],
                     assets  : [],
-                    jni     : [],
+                    jni     : "",
                     src     : [
                             "$flymeDir/frameworks/base/flyme-extras/services/core/java/",
                             "$flymeVendorDir/frameworks/base/services/core/java/",
@@ -51,7 +51,7 @@ ext {
                             "$flymeDir/frameworks/base/core/res/flyme-res"
                     ],
                     assets  : [],
-                    jni     : [],
+                    jni     : "",
                     src     : [],
                     aidl    : [],
             ],
@@ -73,7 +73,7 @@ ext {
                     assets  : [
                             "$flymeDir/packages/apps/SystemUI/assets",
                     ],
-                    jni     : [],
+                    jni     : "",
                     src     : [
                             "$flymeDir/packages/apps/SystemUI/src",
                             "$flymeDir/packages/apps/SystemUI/src-release",
@@ -97,7 +97,7 @@ ext {
                     manifest: "$flymeDir/packages/apps/SystemUI/plugin/AndroidManifest.xml",
                     res     : [],
                     assets  : [],
-                    jni     : [],
+                    jni     : "",
                     src     : [
                             "$flymeDir/packages/apps/SystemUI/plugin_core/src",
                             "$flymeDir/packages/apps/SystemUI/plugin/src",
@@ -118,7 +118,7 @@ ext {
                     assets  : [
                             "$flymeDir/packages/apps/Settings/assets_flyme",
                     ],
-                    jni     : [],
+                    jni     : "",
                     src     : [
                             "$flymeDir/packages/apps/Settings/src",
                             "$flymeDir/packages/apps/Settings/src_flyme",
@@ -157,7 +157,7 @@ ext {
                     assets  : [
                             "$flymeDir/packages/apps/Launcher3/assets",
                     ],
-                    jni     : [],
+                    jni     : "",
                     src     : [
                             "$flymeDir/packages/apps/Launcher3/src_ui_overrides",
                             "$flymeDir/packages/apps/Launcher3/src_plugins",
@@ -199,7 +199,7 @@ ext {
                             "$flymeDir/packages/modules/Permission/SafetyCenter/ConfigLintChecker/java/android/content/res",
                     ],
                     assets  : [],
-                    jni     : "$flymeDir",
+                    jni     : "",
                     src     : [
                             "$flymeDir/packages/modules/Permission/PermissionController/src",
                             "$flymeDir/packages/modules/Permission/PermissionController/role-controller/java",
