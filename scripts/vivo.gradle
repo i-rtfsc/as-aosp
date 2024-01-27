@@ -13,7 +13,7 @@ ext {
                     manifest: "",
                     res     : [],
                     assets  : [],
-                    jni     : "$vivoDir",
+                    jni     : "",
                     src     : [
                             "$vivoVendorDir/frameworks/base/core/java/",
                     ],
@@ -33,7 +33,7 @@ ext {
                     manifest: "",
                     res     : [],
                     assets  : [],
-                    jni     : [],
+                    jni     : "",
                     src     : [
                             "$vivoVendorDir/frameworks/base/services/core/java/",
                             "$vivoVendorDir/frameworks/base/services/java/",
@@ -49,7 +49,7 @@ ext {
                             "$vivoVendorDir/frameworks/base/core/res/toggle-res",
                     ],
                     assets  : [],
-                    jni     : [],
+                    jni     : "",
                     src     : [],
                     aidl    : [],
             ],
