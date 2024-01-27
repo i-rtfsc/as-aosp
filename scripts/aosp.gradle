@@ -11,7 +11,7 @@ ext {
                     manifest: "",
                     res     : [],
                     assets  : [],
-                    jni     : "$aospDir",
+                    jni     : "",
                     src     : [
                             //通过 frameworks/base/Android.bp的filegroup framework-non-updatable-sources
                             //找到大部分java文件目录，但还不是全部
@@ -63,7 +63,7 @@ ext {
                     manifest: "",
                     res     : [],
                     assets  : [],
-                    jni     : [],
+                    jni     : "",
                     src     : [
                             //通过frameworks/base/services/Android.bp的filegroup services-non-updatable-sources
                             //找到大部分java文件目录，但还不是全部
@@ -118,7 +118,7 @@ ext {
                     assets  : [
                             "$aospDir/frameworks/base/core/res/assets",
                     ],
-                    jni     : [],
+                    jni     : "",
                     src     : [],
                     aidl    : [],
             ],
@@ -136,7 +136,7 @@ ext {
                             "$aospDir/frameworks/base/libs/WindowManager/Shell/res",
                     ],
                     assets  : [],
-                    jni     : [],
+                    jni     : "",
                     src     : [
                             "$aospDir/frameworks/base/packages/SystemUI/src",
                             "$aospDir/frameworks/base/packages/SystemUI/src-release",
@@ -160,7 +160,7 @@ ext {
                     manifest: "$aospDir/frameworks/base/packages/SystemUI/plugin/AndroidManifest.xml",
                     res     : [],
                     assets  : [],
-                    jni     : [],
+                    jni     : "",
                     src     : [
                             "$aospDir/frameworks/base/packages/SystemUI/plugin_core/src",
                             "$aospDir/frameworks/base/packages/SystemUI/plugin/src",
@@ -176,7 +176,7 @@ ext {
                             "$aospDir/packages/apps/Settings/res/",
                     ],
                     assets  : [],
-                    jni     : [],
+                    jni     : "",
                     src     : [
                             "$aospDir/packages/apps/Settings/src",
                             "$aospDir/out/soong/.intermediates/packages/apps/Settings/settings-logtags/android_common/gen/logtags/packages/apps/Settings/src",
@@ -258,7 +258,7 @@ ext {
                             "$aospDir/frameworks/base/packages/SettingsLib/search/res",
                     ],
                     assets  : [],
-                    jni     : [],
+                    jni     : "",
                     src     : [
                             "$aospDir/frameworks/base/packages/SettingsLib/ActionBarShadow/src",
                             "$aospDir/frameworks/base/packages/SettingsLib/ActionButtonsPreference/src",
@@ -305,7 +305,7 @@ ext {
                             "$aospDir/frameworks/base/packages/SettingsProvider/res/",
                     ],
                     assets  : [],
-                    jni     : [],
+                    jni     : "",
                     src     : [
                             "$aospDir/frameworks/base/packages/SettingsProvider/src",
                             "$aospDir/out/soong/.intermediates/frameworks/base/packages/SettingsProvider/SettingsProvider/android_common/gen/logtags/frameworks/base/packages/SettingsProvider/src",
@@ -318,7 +318,7 @@ ext {
                     manifest: "$aospDir/packages/services/Car/car-lib/AndroidManifest.xml",
                     res     : [],
                     assets  : [],
-                    jni     : "$aospDir",
+                    jni     : "",
                     src     : [
                             "$aospDir/packages/services/Car/car-lib/src",
                             "$aospDir/packages/services/Car/car-builtin-lib/src",
@@ -334,7 +334,7 @@ ext {
                             "$aospDir/packages/services/Car/service-builtin/res",
                     ],
                     assets  : [],
-                    jni     : "$aospDir",
+                    jni     : "",
                     src     : [
                             "$aospDir/packages/services/Car/service/src",
                             "$aospDir/packages/services/Car/service-builtin/src",
@@ -355,7 +355,7 @@ ext {
                             "$aospDir/packages/modules/Connectivity/nearby/halfsheet/res",
                     ],
                     assets  : [],
-                    jni     : "$aospDir",
+                    jni     : "",
                     src     : [
                             "$aospDir/packages/modules/Connectivity/common/src",
                             "$aospDir/packages/modules/Connectivity/framework/src",
@@ -398,7 +398,7 @@ ext {
                             "$aospDir/packages/modules/Wifi/WifiDialog/res",
                     ],
                     assets  : [],
-                    jni     : "$aospDir",
+                    jni     : "",
                     src     : [
                             "$aospDir/packages/modules/Wifi/OsuLogin/src",
                             "$aospDir/packages/modules/Wifi/framework/java",
@@ -419,7 +419,7 @@ ext {
                             "$aospDir/packages/modules/ExtServices/java/res",
                     ],
                     assets  : [],
-                    jni     : "$aospDir",
+                    jni     : "",
                     src     : [
                             "$aospDir/packages/modules/ExtServices/java/src",
                     ],
@@ -440,7 +440,7 @@ ext {
                             "$aospDir/packages/modules/Permission/SafetyCenter/ConfigLintChecker/java/android/content/res",
                     ],
                     assets  : [],
-                    jni     : "$aospDir",
+                    jni     : "",
                     src     : [
                             "$aospDir/packages/modules/Permission/PermissionController/src",
                             "$aospDir/packages/modules/Permission/PermissionController/role-controller/java",

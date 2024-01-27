@@ -31,6 +31,8 @@ include ':aosp-native'
 /*************** aaos ***************/
 include ':CarFramework'
 include ':CarServices'
+include ':CarSystemUI'
+include ':CarSettings'
 /*************** aaos ***************/
 
 
