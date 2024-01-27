@@ -6,14 +6,14 @@ ext {
     lineageVendorDir = "$lineageDir/lineage-sdk"
 
     lineage = [
-            root                : "$lineageDir",
+            root                   : "$lineageDir",
 
             /*************** 配置 lineage fwk 路径 ***************/
-            Framework           : [
+            Framework              : [
                     manifest: "",
                     res     : [],
                     assets  : [],
-                    jni     : "$lineageDir",
+                    jni     : "",
                     src     : [
                             "$lineageVendorDir/sdk/src/java/",
                     ],
@@ -29,11 +29,11 @@ ext {
             ],
 
             /*************** 配置 lineage services 路径 ***************/
-            Services            : [
+            Services               : [
                     manifest: "",
-                    res  : [],
+                    res     : [],
                     assets  : [],
-                    jni     : [],
+                    jni     : "",
                     src     : [
                             "$lineageVendorDir/lineage/lib/main/java/org/lineageos/platform/internal/",
 
@@ -43,26 +43,26 @@ ext {
             ],
 
             /*************** 配置 lineage framework-res 路径 ***************/
-            FrameworkRes        : [
+            FrameworkRes           : [
                     manifest: "$lineageVendorDir/lineage/res/AndroidManifest.xml",
                     res     : [
                             "$lineageVendorDir/lineage/res/res"
                     ],
                     assets  : [],
-                    jni     : [],
+                    jni     : "",
                     src     : [],
                     aidl    : [],
             ],
 
             /*************** 配置 LineagePreferenceLib 路径 ***************/
-            LineagePreferenceLib: [
-                    manifest               : "$lineageVendorDir/packages/LineagePreferenceLib/AndroidManifest.xml",
-                    res                    : [
+            LineagePreferenceLib   : [
+                    manifest: "$lineageVendorDir/packages/LineagePreferenceLib/AndroidManifest.xml",
+                    res     : [
                             "$lineageVendorDir/packages/LineagePreferenceLib/res",
                     ],
-                    assets                 : [],
-                    jni                    : [],
-                    src                    : [
+                    assets  : [],
+                    jni     : "",
+                    src     : [
                             "$lineageVendorDir/packages/LineagePreferenceLib/java",
                     ],
                     aidl    : [],
@@ -76,7 +76,7 @@ ext {
                             "$lineageVendorDir/packages/LineageSettingsProvider/res",
                     ],
                     assets  : [],
-                    jni     : [],
+                    jni     : "",
                     src     : [
                             "$lineageVendorDir/packages/LineageSettingsProvider/src",
                     ],
