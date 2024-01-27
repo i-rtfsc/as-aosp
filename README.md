@@ -17,7 +17,8 @@
 * [首次加载](#首次加载)
 * [编译](#编译)
 * [版本](#版本)
-  * [3.x.x](#3xx)
+  * [4.x.x](#4xx)
+  * [3.2.1](#321)
   * [2.1.0](#210)
   * [1.x.x](#1xx)
 * [后话](#后话)
@@ -26,9 +27,9 @@
 
 # 简介
 
-此as工程可以快速的导入aosp framework(包含java/native部分)、 aosp 系统app、 国内某些厂商扩展的fwk代码；
+此as工程可以快速的导入aosp framework(包含java/native)、 aosp 系统app、 国内某些厂商扩展的fwk代码；
 
-比这个 https://www.jianshu.com/p/2ba5d6bd461e 方案还快，并且“联想”也很方便。
+比 idegen(android.ipr和android.iml) 方案还快，并且“联想”也很方便。
 
 
 ## 支持IDE
@@ -127,7 +128,7 @@
 
 > 关于 “首次加载耗时” 提到 “根目录只有部分模块代码” ，我试过两种方案：
 > 1. 软链接：比如完整的aosp代码是在/home/solo/workspace/code/aosp，我把需要加载的模块通过软链接的方式 ln 到 /home/solo/code/aosp。
->    可以参考工程里的 scripts/ln.sh 脚本文件（感谢 https://github.com/aqxuwenda 提供的脚本），SOURCE、DEST改成自己的源目录，目标目录即可；也可以在数组projects中添加自己需要的模块目录。
+>    可以参考工程里的 scripts/ln.sh 脚本文件，SOURCE、DEST改成自己的源目录，目标目录即可；也可以在数组projects中添加自己需要的模块目录。
 >    ln.sh 脚本文件里只软链接了常用的一些模块，每个人可以根据自己的需求删改。
 > 2. 只下载需要模块。
 >
@@ -386,7 +387,19 @@ if (rootProject.ext.build_aidl.toBoolean()) {
 as-aosp经历了一年多的更新，每次更新并没有一个明确的方向，所以也没有相应的版本号。
 最近打算大改cpp模块，大改cpp模块的版本为3.x.x
 
-## 3.x.x
+## 4.x.x
+- [x] 新增 CarSystemUI
+- [x] 新增 CarSettings
+- [x] 解决 Java 模块下的 JNI 脚本
+
+> 4开头版本主要是提供车机的两个模块，供其他车机模块参考。
+>
+> 3.x 版本想要解决 【解决 Java 模块 包含 JNI 时，JNI代码无法跳转问题】，经过一段时间研究后，无法解决。
+> 后续打算大改版 native 模块，所以暂时不在 Java 模块下提供 JNI，而是打算刚才使用 native 都单独一个模块。
+> 基于这点，也没必要提供老版本的 【生成 cmakelist 脚本】
+
+
+## 3.2.1
 
 - [x] 移除 BUILD_APPLICATION
 - [x] 移除根目录下的 native 模块
