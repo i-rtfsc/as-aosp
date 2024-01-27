@@ -13,7 +13,7 @@ ext {
                     manifest: "",
                     res     : [],
                     assets  : [],
-                    jni     : "$miuiDir",
+                    jni     : "",
                     src     : [
                             "$miuiVendorDir/frameworks/base/core/java/",
                     ],
@@ -33,7 +33,7 @@ ext {
                     manifest: "",
                     res     : [],
                     assets  : [],
-                    jni     : [],
+                    jni     : "",
                     src     : [
                             "$miuiVendorDir/frameworks/base/services/core/java/",
                             "$miuiVendorDir/frameworks/base/services/java/",
@@ -56,7 +56,7 @@ ext {
                             "$miuiVendorDir/frameworks/base/core/res/toggle-res",
                     ],
                     assets  : [],
-                    jni     : [],
+                    jni     : "",
                     src     : [],
                     aidl    : [],
             ],
