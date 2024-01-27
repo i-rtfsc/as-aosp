@@ -1,4 +1,4 @@
-def androidRoot = rootProject.ext.aosp.ExtServices
+def androidRoot = rootProject.ext.car.SystemUI
 
 ext {
     BUILD_MANIFEST = androidRoot.manifest
