@@ -32,6 +32,8 @@ include ':Wifi'
 /*************** aaos ***************/
 include ':CarFramework'
 include ':CarServices'
+include ':CarSystemUI'
+include ':CarSettings'
 /*************** aaos ***************/
 
 
