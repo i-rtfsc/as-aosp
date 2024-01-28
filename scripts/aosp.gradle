@@ -313,35 +313,6 @@ ext {
                     aidl    : [],
             ],
 
-            /*************** 配置原生 car-framework 路径 ***************/
-            CarFramework     : [
-                    manifest: "$aospDir/packages/services/Car/car-lib/AndroidManifest.xml",
-                    res     : [],
-                    assets  : [],
-                    jni     : "",
-                    src     : [
-                            "$aospDir/packages/services/Car/car-lib/src",
-                            "$aospDir/packages/services/Car/car-builtin-lib/src",
-                    ],
-                    aidl    : [],
-            ],
-
-            /*************** 配置原生 car-services 路径 ***************/
-            CarServices      : [
-                    manifest: "$aospDir/packages/services/Car/service/AndroidManifest.xml",
-                    res     : [
-                            "$aospDir/packages/services/Car/service/res",
-                            "$aospDir/packages/services/Car/service-builtin/res",
-                    ],
-                    assets  : [],
-                    jni     : "",
-                    src     : [
-                            "$aospDir/packages/services/Car/service/src",
-                            "$aospDir/packages/services/Car/service-builtin/src",
-                    ],
-                    aidl    : [],
-            ],
-
             /*************** 配置原生 Connectivity 路径 ***************/
             Connectivity     : [
                     // "$aospDir/packages/modules/Connectivity/Tethering/AndroidManifest.xml",
