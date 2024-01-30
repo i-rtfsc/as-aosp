@@ -16,14 +16,15 @@ ext {
                     assets  : [],
                     jni     : "",
                     src     : [
-                            "$aospDir/packages/services/Car/FrameworkPackageStubs/src",
-                            "$aospDir/packages/services/Car/car-admin-ui-lib/src/main/java",
-                            "$aospDir/packages/services/Car/car-builtin-lib/src",
-                            "$aospDir/packages/services/Car/car-evs-helper-lib/src",
-                            "$aospDir/packages/services/Car/car-lib/src",
-                            "$aospDir/frameworks/opt/car/services/updatableServices/src",
-                            "$aospDir/frameworks/opt/car/services/builtInServices/src_imms",
-                            "$aospDir/frameworks/opt/car/services/builtInServices/src",
+                            "$aospDir/packages/services/Car/FrameworkPackageStubs/src",//CarFrameworkPackageStubs
+                            "$aospDir/packages/services/Car/car-admin-ui-lib/src/main/java",//car-admin-ui-lib
+                            "$aospDir/packages/services/Car/car-builtin-lib/src",//android.car.builtin
+                            "$aospDir/packages/services/Car/car-evs-helper-lib/src",//car-evs-helper-lib
+                            "$aospDir/packages/services/Car/car-helper-lib/src",//car-helper-lib
+                            "$aospDir/packages/services/Car/car-lib/src",//android.car-module
+                            "$aospDir/frameworks/opt/car/services/updatableServices/src",//car-frameworks-service-module
+                            "$aospDir/frameworks/opt/car/services/builtInServices/src_imms",//car-frameworks-service
+                            "$aospDir/frameworks/opt/car/services/builtInServices/src",//car-frameworks-service
                             "$aospDir/out/soong/.intermediates/packages/services/Car/car-builtin-lib/android.car.builtin.stubs.source.system/android_common/gen/logtags/packages/services/Car/car-builtin-lib/src",
                             "$aospDir/out/soong/.intermediates/packages/services/Car/car-builtin-lib/android.car.builtin.stubs.source.module_lib/android_common/gen/logtags/packages/services/Car/car-builtin-lib/src",
                             "$aospDir/out/soong/.intermediates/packages/services/Car/car-builtin-lib/android.car.builtin.stubs.source/android_common/gen/logtags/packages/services/Car/car-builtin-lib/src",
@@ -41,8 +42,8 @@ ext {
                     assets  : [],
                     jni     : "",
                     src     : [
-                            "$aospDir/packages/services/Car/service/src",
                             "$aospDir/packages/services/Car/service-builtin/src",
+                            "$aospDir/packages/services/Car/service/src",
                     ],
                     aidl    : [],
             ],
