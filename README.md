@@ -217,7 +217,6 @@ rootProject.ext.allModules.each { dependence -> compileOnly project(dependence.v
   - CarFramework: 配置CarFramework的源码路径
   - CarServices: 配置CarServices.apk的源码路径
   - Connectivity: 连接相关，包括Tethering、nearby、netd等等的源码路径
-  - Wifi: 配置wifi相关的源码路径
   - ExtServices: ExtServices.apk的源码路径
 
 
@@ -391,6 +390,8 @@ as-aosp经历了一年多的更新，每次更新并没有一个明确的方向�
 - [x] 新增 CarSystemUI
 - [x] 新增 CarSettings
 - [x] 移除 Java 模块下的 JNI 脚本
+- [x] 移除 Wifi
+- [x] framework 、services 包含 Wifi 相关（保持跟原生一致）
 
 > 4开头版本主要是提供车机的两个模块，供其他车机模块参考。
 >
