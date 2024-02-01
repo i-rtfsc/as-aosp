@@ -2,6 +2,7 @@
 apply from: 'scripts/config.gradle'
 apply from: 'scripts/aosp.gradle'
 apply from: 'scripts/car.gradle'
+apply from: 'scripts/cts.gradle'
 apply from: 'scripts/flyme.gradle'
 
 buildscript {

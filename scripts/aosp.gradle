@@ -150,33 +150,53 @@ ext {
 
             /*************** 配置 SystemUI 路径 ***************/
             SystemUI         : [
-                    //"$aospDir/frameworks/base/packages/SystemUI/animation/AndroidManifest.xml"
-                    //"$aospDir/frameworks/base/packages/SystemUI/shared/AndroidManifest.xml"
+                    //"$aospDir/frameworks/base/libs/WindowManager/Shell/AndroidManifest.xml",
+                    //"$aospDir/frameworks/base/packages/SystemUI/AndroidManifest.xml",
+                    //"$aospDir/frameworks/base/packages/SystemUI/accessibility/accessibilitymenu/AndroidManifest.xml",
+                    //"$aospDir/frameworks/base/packages/SystemUI/animation/AndroidManifest.xml",
+                    //"$aospDir/frameworks/base/packages/SystemUI/compose/features/AndroidManifest.xml",
+                    //"$aospDir/frameworks/base/packages/SystemUI/common/AndroidManifest.xml",
+                    //"$aospDir/frameworks/base/packages/SystemUI/compose/core/AndroidManifest.xml",
+                    //"$aospDir/frameworks/base/packages/SystemUI/compose/features/AndroidManifest.xml",
+                    //"$aospDir/frameworks/base/packages/SystemUI/customization/AndroidManifest.xml",
+                    //"$aospDir/frameworks/base/packages/SystemUI/log/AndroidManifest.xml",
+                    //"$aospDir/frameworks/base/packages/SystemUI/monet/AndroidManifest.xml",
+                    //"$aospDir/frameworks/base/packages/SystemUI/plugin_core/AndroidManifest.xml",
+                    //"$aospDir/frameworks/base/packages/SystemUI/shared/AndroidManifest.xml",
+                    //"$aospDir/frameworks/base/packages/SystemUI/unfold/AndroidManifest.xml",
+                    //"$aospDir/frameworks/libs/systemui/animationlib/AndroidManifest.xml",
+                    //"$aospDir/frameworks/libs/systemui/iconloaderlib/AndroidManifest.xml",
+                    //"$aospDir/frameworks/libs/systemui/motiontoollib/AndroidManifest.xml",
+                    //"$aospDir/frameworks/libs/systemui/viewcapturelib/AndroidManifest.xml",
                     manifest: "$aospDir/frameworks/base/packages/SystemUI/AndroidManifest.xml",
                     res     : [
                             "$aospDir/frameworks/base/libs/WindowManager/Shell/res",
                             "$aospDir/frameworks/base/packages/SystemUI/accessibility/accessibilitymenu/res",
                             "$aospDir/frameworks/base/packages/SystemUI/animation/res",
-                            "$aospDir/frameworks/base/packages/SystemUI/compose/features",
                             "$aospDir/frameworks/base/packages/SystemUI/customization/res",
                             "$aospDir/frameworks/base/packages/SystemUI/res",
                             "$aospDir/frameworks/base/packages/SystemUI/res-keyguard",
                             "$aospDir/frameworks/base/packages/SystemUI/res-product",
                             "$aospDir/frameworks/base/packages/SystemUI/shared/res",
-                            "$aospDir/frameworks/base/packages/SystemUI/src/com/android/systemui/media/controls/resume",
-                            "$aospDir/frameworks/base/packages/SystemUI/unfold/src/com/android/systemui/unfold/progress",
+                            "$aospDir/frameworks/libs/systemui/animationlib/res",
+                            "$aospDir/frameworks/libs/systemui/iconloaderlib/res",
                     ],
                     assets  : [],
                     jni     : "",
                     src     : [
                             "$aospDir/frameworks/base/libs/WindowManager/Shell/src",
+                            "$aospDir/frameworks/base/packages/SystemUI/accessibility/accessibilitymenu/src",
                             "$aospDir/frameworks/base/packages/SystemUI/animation/src",
                             "$aospDir/frameworks/base/packages/SystemUI/checks/src",
                             "$aospDir/frameworks/base/packages/SystemUI/common/src",
                             "$aospDir/frameworks/base/packages/SystemUI/compose/facade/disabled/src",
+                            "$aospDir/frameworks/base/packages/SystemUI/compose/facade/enabled/src",
+                            "$aospDir/frameworks/base/packages/SystemUI/compose/features/src",
                             "$aospDir/frameworks/base/packages/SystemUI/compose/features/src",
                             "$aospDir/frameworks/base/packages/SystemUI/customization/src",
                             "$aospDir/frameworks/base/packages/SystemUI/log/src",
+                            "$aospDir/frameworks/base/packages/SystemUI/monet/src",
+                            "$aospDir/frameworks/base/packages/SystemUI/multivalentTests/src",
                             "$aospDir/frameworks/base/packages/SystemUI/shared/src",
                             "$aospDir/frameworks/base/packages/SystemUI/src",
                             "$aospDir/frameworks/base/packages/SystemUI/src-release",
@@ -192,6 +212,7 @@ ext {
                             // go
                             "$aospDir/packages/apps/SystemUIGo/src",
 
+
                     ],
                     aidl    : [
 //                            "$aospDir/frameworks/base/core/java",
@@ -200,6 +221,8 @@ ext {
 
             /*************** 配置 SystemUIPluginLib 路径 ***************/
             SystemUIPluginLib: [
+                    //"$aospDir/frameworks/base/packages/SystemUI/plugin/AndroidManifest.xml",
+                    //"$aospDir/frameworks/base/packages/SystemUI/plugin/ExamplePlugin/AndroidManifest.xml",
                     manifest: "$aospDir/frameworks/base/packages/SystemUI/plugin/AndroidManifest.xml",
                     res     : [
                             "$aospDir/frameworks/base/packages/SystemUI/plugin/ExamplePlugin/res",
@@ -221,7 +244,6 @@ ext {
                             "$aospDir/packages/apps/Settings/res",
                             "$aospDir/packages/apps/Settings/res-export",
                             "$aospDir/packages/apps/Settings/res-product",
-                            "$aospDir/packages/apps/Settings/src/com/android/settings/gestures",
                     ],
                     assets  : [],
                     jni     : "",
@@ -289,7 +311,6 @@ ext {
                             "$aospDir/frameworks/base/packages/SettingsLib/LayoutPreference/res",
                             "$aospDir/frameworks/base/packages/SettingsLib/MainSwitchPreference/res",
                             "$aospDir/frameworks/base/packages/SettingsLib/ProfileSelector/res",
-                            "$aospDir/frameworks/base/packages/SettingsLib/ProgressBar",
                             "$aospDir/frameworks/base/packages/SettingsLib/ProgressBar/res",
                             "$aospDir/frameworks/base/packages/SettingsLib/RadioButtonPreference/res",
                             "$aospDir/frameworks/base/packages/SettingsLib/RestrictedLockUtils/res",
@@ -301,15 +322,12 @@ ext {
                             "$aospDir/frameworks/base/packages/SettingsLib/Spa/gallery/res",
                             "$aospDir/frameworks/base/packages/SettingsLib/Spa/screenshot/res",
                             "$aospDir/frameworks/base/packages/SettingsLib/Spa/spa/res",
-                            "$aospDir/frameworks/base/packages/SettingsLib/Spa/spa/src/com/android/settingslib/spa/slice/presenter",
                             "$aospDir/frameworks/base/packages/SettingsLib/SpaPrivileged/res",
                             "$aospDir/frameworks/base/packages/SettingsLib/TopIntroPreference/res",
                             "$aospDir/frameworks/base/packages/SettingsLib/TwoTargetPreference/res",
-                            "$aospDir/frameworks/base/packages/SettingsLib/UsageProgressBarPreference",
                             "$aospDir/frameworks/base/packages/SettingsLib/UsageProgressBarPreference/res",
                             "$aospDir/frameworks/base/packages/SettingsLib/Utils/res",
                             "$aospDir/frameworks/base/packages/SettingsLib/res",
-                            "$aospDir/frameworks/base/packages/SettingsLib/search/resources",
                     ],
                     assets  : [],
                     jni     : "",

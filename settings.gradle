@@ -36,10 +36,16 @@ include ':CarSettings'
 /*************** aaos ***************/
 
 
+/*************** cts ***************/
+//include ':junit'
+//include ':CtsWindowManagerDeviceTestCases'
+//include ':CtsInputTestCases'
+/*************** cts ***************/
+
+
 /*************** flyme ***************/
 include ':flyme-framework'
 include ':flyme-services'
 include ':flyme-framework-res'
 include ':flyme-launcher'
 /*************** flyme ***************/
-
