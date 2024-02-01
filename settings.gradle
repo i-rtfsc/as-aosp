@@ -35,9 +35,15 @@ include ':CarSettings'
 /*************** aaos ***************/
 
 
+/*************** cts ***************/
+//include ':junit'
+//include ':CtsWindowManagerDeviceTestCases'
+//include ':CtsInputTestCases'
+/*************** cts ***************/
+
+
 /*************** oppo ***************/
 include ':oppo-framework'
 include ':oppo-services'
 include ':oppo-framework-res'
 /*************** oppo ***************/
-
