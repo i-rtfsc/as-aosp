@@ -36,11 +36,17 @@ include ':CarSettings'
 /*************** aaos ***************/
 
 
+/*************** cts ***************/
+//include ':junit'
+//include ':CtsWindowManagerDeviceTestCases'
+//include ':CtsInputTestCases'
+/*************** cts ***************/
+
+
 /*************** lineage ***************/
 include ':lineage-framework'
 include ':lineage-services'
 include ':lineage-framework-res'
-
 include ':lineage-preference-lib'
 include ':lineage-settings-provider'
 /*************** lineage ***************/
