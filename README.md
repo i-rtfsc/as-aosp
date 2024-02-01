@@ -10,6 +10,7 @@
   * [根目录build.gradle](#根目录buildgradle)
   * [config.gradle](#configgradle)
   * [aosp.gradle](#aospgradle)
+  * [cts.gradle](#ctsgradle)
   * [miui.gradle](#miuigradle)
   * [native](#native)
   * [删除android.jar](#删除androidjar)
@@ -185,7 +186,9 @@ config.gradle最重要的功能就是通过aospRoot配置Android源码的根目�
 > aosp.gradle
 > 
 > car.gradle
-> 
+>
+> cts.gradle
+>
 > 其他gradle脚本
 > 
 > 都是通过 config.gradle 的 aospRoot 获取到 Android 源码的根目录。
@@ -229,6 +232,11 @@ rootProject.ext.allModules.each { dependence -> compileOnly project(dependence.v
 > 在这个文件中只需要把 aospDir 设置成自己android源码的根目录就可以。
 >
 > 里面具体模块的源码路径基本上都添加了（但确实不是100%添加），如果因为使用aosp版本不一致或者别的原因可以根据自己需要再添加。
+
+
+## cts.gradle
+
+主要是配置了一些CTS模块，目前只配置了 CtsWindowManagerDeviceTestCases 、CtsInputTestCases 。
 
 
 ## miui.gradle
@@ -392,6 +400,8 @@ as-aosp经历了一年多的更新，每次更新并没有一个明确的方向�
 - [x] 移除 Java 模块下的 JNI 脚本
 - [x] 移除 Wifi
 - [x] framework 、services 包含 Wifi 相关（保持跟原生一致）
+- [x] CtsWindowManagerDeviceTestCases
+- [x] CtsInputTestCases
 
 > 4开头版本主要是提供车机的两个模块，供其他车机模块参考。
 >

@@ -36,6 +36,13 @@ include ':CarSettings'
 /*************** aaos ***************/
 
 
+/*************** cts ***************/
+//include ':junit'
+//include ':CtsWindowManagerDeviceTestCases'
+//include ':CtsInputTestCases'
+/*************** cts ***************/
+
+
 /*************** miui ***************/
 include ':miui-framework'
 include ':miui-services'

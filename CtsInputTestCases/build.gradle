@@ -1,0 +1,12 @@
+def androidRoot = rootProject.ext.cts.CtsInputTestCases
+
+ext {
+    BUILD_MANIFEST = androidRoot.manifest
+    BUILD_RES = androidRoot.res
+    BUILD_ASSETS = androidRoot.assets
+    BUILD_SRC = androidRoot.src
+    BUILD_AIDL = [androidRoot.src + androidRoot.aidl]
+    BUILD_NATIVE_ROOT = ""
+}
+
+apply from: "${rootDir}/scripts/android-build.gradle"
