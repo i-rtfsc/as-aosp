@@ -36,9 +36,15 @@ include ':CarSettings'
 /*************** aaos ***************/
 
 
+/*************** cts ***************/
+//include ':junit'
+//include ':CtsWindowManagerDeviceTestCases'
+//include ':CtsInputTestCases'
+/*************** cts ***************/
+
+
 /*************** vivo ***************/
 include ':vivo-framework'
 include ':vivo-services'
 include ':vivo-framework-res'
 /*************** vivo ***************/
-
