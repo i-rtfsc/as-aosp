@@ -34,3 +34,10 @@ include ':CarServices'
 include ':CarSystemUI'
 include ':CarSettings'
 /*************** aaos ***************/
+
+
+/*************** cts ***************/
+//include ':junit'
+//include ':CtsWindowManagerDeviceTestCases'
+//include ':CtsInputTestCases'
+/*************** cts ***************/
