@@ -60,6 +60,11 @@ project(':CtsInputTestCases').projectDir = "$rootDir/cts/CtsInputTestCases" as F
 
 /*************** miui ***************/
 include ':miui-framework'
+project(':miui-framework').projectDir = "$rootDir/miui/miui-framework" as File
+
 include ':miui-services'
+project(':miui-services').projectDir = "$rootDir/miui/miui-services" as File
+
 include ':miui-framework-res'
+project(':miui-framework-res').projectDir = "$rootDir/miui/miui-framework-res" as File
 /*************** miui ***************/
