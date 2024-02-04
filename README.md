@@ -1,4 +1,3 @@
-
 <!-- TOC -->
 * [简介](#简介)
   * [支持IDE](#支持ide)
@@ -18,13 +17,15 @@
 * [首次加载](#首次加载)
 * [编译](#编译)
 * [版本](#版本)
-  * [4.x.x](#4xx)
+  * [5.x.x](#5xx)
+  * [4.0.0](#400)
   * [3.2.1](#321)
   * [2.1.0](#210)
   * [1.x.x](#1xx)
 * [后话](#后话)
 * [即时讨论](#即时讨论)
 <!-- TOC -->
+
 # 简介
 
 此as工程可以快速的导入aosp framework(包含java/native)、 aosp 系统app、 国内某些厂商扩展的fwk代码；
@@ -381,10 +382,18 @@ if (rootProject.ext.build_aidl.toBoolean()) {
 可以单独下载这个脚本并放到环境变量里，或者是用整个 [global_scripts](https://github.com/i-rtfsc/global_scripts) 实现插件化的方案【详情可以参考该工程的README】。
 
 # 版本
-as-aosp经历了一年多的更新，每次更新并没有一个明确的方向，所以也没有相应的版本号。
-最近打算大改cpp模块，大改cpp模块的版本为3.x.x
+as-aosp经历了两年多的更新，每次更新都是根据自己的需求。
+5.x.x 打算再次对 c/c++ 模块进行大改，自己本地验证大改后 vs 也能丝滑使用。
 
-## 4.x.x
+## 5.x.x
+- car
+- [x] car 相关模块都放到 car 文件夹下
+
+- aosp-cmake
+- [ ] 根据 Android.bp/Android.mk 生成 CMakeLists.txt
+
+
+## 4.0.0
 - [x] 新增 CarSystemUI
 - [x] 新增 CarSettings
 - [x] 移除 Java 模块下的 JNI 脚本
