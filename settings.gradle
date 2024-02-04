@@ -60,6 +60,11 @@ project(':CtsInputTestCases').projectDir = "$rootDir/cts/CtsInputTestCases" as F
 
 /*************** vivo ***************/
 include ':vivo-framework'
+project(':vivo-framework').projectDir = "$rootDir/vivo/vivo-framework" as File
+
 include ':vivo-services'
+project(':vivo-services').projectDir = "$rootDir/vivo/vivo-services" as File
+
 include ':vivo-framework-res'
+project(':vivo-framework-res').projectDir = "$rootDir/vivo/vivo-framework-res" as File
 /*************** vivo ***************/
