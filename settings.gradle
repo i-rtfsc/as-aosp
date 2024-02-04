@@ -59,6 +59,11 @@ project(':CtsInputTestCases').projectDir = "$rootDir/cts/CtsInputTestCases" as F
 
 /*************** oppo ***************/
 include ':oppo-framework'
+project(':oppo-framework').projectDir = "$rootDir/oppo/oppo-framework" as File
+
 include ':oppo-services'
+project(':oppo-services').projectDir = "$rootDir/oppo/oppo-services" as File
+
 include ':oppo-framework-res'
+project(':oppo-framework-res').projectDir = "$rootDir/oppo/oppo-framework-res" as File
 /*************** oppo ***************/
