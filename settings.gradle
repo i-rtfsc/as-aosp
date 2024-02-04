@@ -46,14 +46,14 @@ project(':CarFramework').projectDir = "$rootDir/car/CarFramework" as File
 
 
 /*************** cts ***************/
-include ':junit'
-project(':junit').projectDir = "$rootDir/cts/junit" as File
-
-include ':CtsWindowManagerDeviceTestCases'
-project(':CtsWindowManagerDeviceTestCases').projectDir = "$rootDir/cts/CtsWindowManagerDeviceTestCases" as File
-
-include ':CtsInputTestCases'
-project(':CtsInputTestCases').projectDir = "$rootDir/cts/CtsInputTestCases" as File
+//include ':junit'
+//project(':junit').projectDir = "$rootDir/cts/junit" as File
+//
+//include ':CtsWindowManagerDeviceTestCases'
+//project(':CtsWindowManagerDeviceTestCases').projectDir = "$rootDir/cts/CtsWindowManagerDeviceTestCases" as File
+//
+//include ':CtsInputTestCases'
+//project(':CtsInputTestCases').projectDir = "$rootDir/cts/CtsInputTestCases" as File
 /*************** cts ***************/
 
 
