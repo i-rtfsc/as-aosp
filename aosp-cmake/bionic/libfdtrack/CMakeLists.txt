@@ -65,6 +65,7 @@ else ()
             libc++demangle
             libclang_rt.builtins
             libclang_rt.ubsan_minimal
+            libdexfile_support
             libdl
             liblog
             liblzma

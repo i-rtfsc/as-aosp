@@ -58,6 +58,7 @@ else ()
     target_compile_options(librenderengine_mocks PRIVATE
             -Wall
             -Werror
+            -DFLYME_GRAPHICS_EXTEND
     )
 
     target_link_libraries(librenderengine_mocks
@@ -80,6 +81,7 @@ else ()
             libm
             libnativewindow
             libprocessgroup
+            libruntime_log
             libshaders
             libsync
             libtonemap
@@ -114,6 +116,7 @@ set(FILES
         ${ANDROID_ROOT}/frameworks/native/libs/renderengine/skia/AutoBackendTexture.cpp
         ${ANDROID_ROOT}/frameworks/native/libs/renderengine/skia/Cache.cpp
         ${ANDROID_ROOT}/frameworks/native/libs/renderengine/skia/ColorSpaces.cpp
+        ${ANDROID_ROOT}/frameworks/native/libs/renderengine/skia/SmoothCornerPathGenerator.cpp
         ${ANDROID_ROOT}/frameworks/native/libs/renderengine/skia/SkiaRenderEngine.cpp
         ${ANDROID_ROOT}/frameworks/native/libs/renderengine/skia/SkiaGLRenderEngine.cpp
         ${ANDROID_ROOT}/frameworks/native/libs/renderengine/skia/SkiaVkRenderEngine.cpp
@@ -149,6 +152,7 @@ else ()
     target_compile_options(librenderengine PRIVATE
             -Wall
             -Werror
+            -DFLYME_GRAPHICS_EXTEND
             -Werror=format
             -Wno-unused-parameter
     )
@@ -174,9 +178,11 @@ else ()
             libperfetto_client_experimental
             libpng
             libprocessgroup
+            libruntime_log
             libshaders
             libskia_renderengine
             libsync
+            libtiff
             libtonemap
             libtonemap_headers
             libui

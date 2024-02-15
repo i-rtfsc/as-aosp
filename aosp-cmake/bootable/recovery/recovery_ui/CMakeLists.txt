@@ -72,7 +72,6 @@ else ()
             libc++_static
             libc++demangle
             libclang_rt.builtins
-            libclang_rt.ubsan_minimal
             libcrypto
             libdl
             libhidlbase

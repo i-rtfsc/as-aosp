@@ -566,6 +566,7 @@ set(FILES
         ${ANDROID_ROOT}/external/skia/src/codec/SkJpegXmp.cpp
         ${ANDROID_ROOT}/external/skia/src/codec/SkRawCodec.cpp
         ${ANDROID_ROOT}/external/skia/src/encode/SkJpegGainmapEncoder.cpp
+        ${ANDROID_ROOT}/external/skia/src/codec/SkTiffCodec.cpp
         ${ANDROID_ROOT}/external/skia/src/gpu/AtlasTypes.cpp
         ${ANDROID_ROOT}/external/skia/src/gpu/Blend.cpp
         ${ANDROID_ROOT}/external/skia/src/gpu/RectanizerPow2.cpp
@@ -892,6 +893,7 @@ else ()
             ${ANDROID_ROOT}/external/skia/third_party/vulkanmemoryallocator
             ${ANDROID_ROOT}/external/skia/vma_android/include
             ${ANDROID_ROOT}/external/skia/modules/skcms
+            ${ANDROID_ROOT}/external/skia/third_party/libtiff
     )
 
     # Add c/c++ flags
@@ -899,6 +901,7 @@ else ()
             -Werror
             -Wno-unused-parameter
             -Wno-unused-variable
+            -DFLYME_GRAPHICS_EXTEND
     )
 
     target_link_libraries(libskia
@@ -923,6 +926,7 @@ else ()
             libpiex
             libpng
             libsfntly
+            libtiff
             libvulkan
             libwebp-decode
             libwebp-encode
@@ -3504,6 +3508,7 @@ else ()
             ${ANDROID_ROOT}/external/skia/third_party/vulkanmemoryallocator
             ${ANDROID_ROOT}/external/skia/vma_android/include
             ${ANDROID_ROOT}/external/skia/modules/skcms
+            ${ANDROID_ROOT}/external/skia/third_party/libtiff
     )
 
     # Add c/c++ flags
@@ -3511,6 +3516,7 @@ else ()
             -Werror
             -Wno-unused-parameter
             -Wno-unused-variable
+            -DFLYME_GRAPHICS_EXTEND
     )
 
     target_link_libraries(libskia_renderengine
@@ -3528,6 +3534,7 @@ else ()
             libnativewindow
             libperfetto_client_experimental
             libpng
+            libtiff
             libvulkan
             libz
     )

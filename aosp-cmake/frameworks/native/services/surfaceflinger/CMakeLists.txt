@@ -55,6 +55,7 @@ else ()
     # Add c/c++ flags
     target_compile_options(libSurfaceFlingerProp PRIVATE
             -Werror
+            -DFLYME_GRAPHICS_EXTEND
     )
 
     target_link_libraries(libSurfaceFlingerProp
@@ -79,6 +80,9 @@ endif ()
 
 #################### surfaceflinger ####################
 set(FILES
+        ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/FlymeExtension/FlymeSurfaceFlingerExtension.cpp
+        ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/FlymeExtension/DynamicTeFpsMonitor.cpp
+        ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/FlymeExtension/FlymeRefreshRateSelectorExtension.cpp
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/BackgroundExecutor.cpp
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/Client.cpp
         ${ANDROID_ROOT}/frameworks/native/services/surfaceflinger/ClientCache.cpp
@@ -184,6 +188,10 @@ else ()
             -Wno-unused-parameter
             -Wno-unused-parameter
             -DQTI_COMPOSER3_EXTENSIONS
+            -DFLYME_GRAPHICS_EXTEND
+            -DFLYME_GRAPHICS_EXTEND_LUMARGB
+            -DFLYME_SUPPORT_LTPO_V2
+            -DFLYME_COLOR_MANAGEMENT
             -Wall
             -Werror
             -Wextra
@@ -215,6 +223,7 @@ else ()
             libGLESv1_CM
             libGLESv2
             libSurfaceFlingerProp
+            libactivitymanager_aidl
             libaidlcommonsupport
             libarect
             libbase
@@ -230,6 +239,7 @@ else ()
             libdisplayconfig.system.qti
             libdisplayservicehidl
             libdl
+            libem
             libfmq
             libframetimeline
             libgui
@@ -245,14 +255,17 @@ else ()
             libpowermanager
             libprocessgroup
             libprotobuf-cpp-lite
+            libqti-perfd-client_system
             libqticompositionengineextension
             libqtisurfaceflingerextension
             librenderengine
+            libruntime_log
             libscheduler
             libserviceutils
             libshaders
             libskia_renderengine
             libsync
+            libtiff
             libtimestats
             libtonemap
             libui
@@ -260,6 +273,7 @@ else ()
             libvulkan
             libz
             server_configurable_flags
+            vendor.meizu.sensor_aux-1.0
             vendor.qti.hardware.display.composer3-V1-ndk
             vendor.qti.hardware.display.composer-3.0
             vendor.qti.hardware.display.composer-3.1

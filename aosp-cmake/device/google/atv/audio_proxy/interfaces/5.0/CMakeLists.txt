@@ -59,6 +59,7 @@ else ()
             -Wall
             -Werror
             -Wextra-semi
+            -D__ANDROID_DEBUGGABLE__
     )
 
     target_link_libraries(device.google.atv.audio_proxy-5.0

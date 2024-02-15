@@ -1338,6 +1338,7 @@ else ()
 
     # Add c/c++ flags
     target_compile_options(libc_pthread PRIVATE
+            -DFLYME_SUPPORT_VIP_RESET_AFFINITY
             -Wall
             -Wextra
             -Werror=pointer-to-int-cast

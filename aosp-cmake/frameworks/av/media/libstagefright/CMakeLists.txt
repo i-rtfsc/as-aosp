@@ -78,6 +78,8 @@ set(FILES
         ${ANDROID_ROOT}/frameworks/av/media/libstagefright/VideoRenderQualityTracker.cpp
         ${ANDROID_ROOT}/frameworks/av/media/libstagefright/VideoFrameSchedulerBase.cpp
         ${ANDROID_ROOT}/frameworks/av/media/libstagefright/VideoFrameScheduler.cpp
+        ${ANDROID_ROOT}/frameworks/av/media/libstagefright/FFMPEGSoftCodec.cpp
+        ${ANDROID_ROOT}/frameworks/av/media/libstagefright/MP3Writer.cpp
 )
 set(SOURCE_FILES "")
 foreach (file ${FILES})

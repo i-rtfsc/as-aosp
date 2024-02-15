@@ -66,6 +66,7 @@ else ()
             -Wall
             -Werror
             -Wextra
+            -DNN_DEBUGGABLE
     )
 
     target_link_libraries(neuralnetworks_utils_hal_1_0

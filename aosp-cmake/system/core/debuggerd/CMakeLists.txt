@@ -70,6 +70,8 @@ else ()
             -Wno-unused-argument
             -Wno-unused-function
             -DANDROID_DEBUGGABLE=0
+            -UANDROID_DEBUGGABLE
+            -DANDROID_DEBUGGABLE=1
     )
 
     target_link_libraries(libdebuggerd
@@ -130,6 +132,8 @@ else ()
             -Wno-unused-argument
             -Wno-unused-function
             -DANDROID_DEBUGGABLE=0
+            -UANDROID_DEBUGGABLE
+            -DANDROID_DEBUGGABLE=1
     )
 
     target_link_libraries(debuggerd
@@ -181,6 +185,8 @@ else ()
             -Wno-unused-argument
             -Wno-unused-function
             -DANDROID_DEBUGGABLE=0
+            -UANDROID_DEBUGGABLE
+            -DANDROID_DEBUGGABLE=1
     )
 
     target_link_libraries(libdebuggerd_handler
@@ -229,6 +235,8 @@ else ()
             -Wno-unused-argument
             -Wno-unused-function
             -DANDROID_DEBUGGABLE=0
+            -UANDROID_DEBUGGABLE
+            -DANDROID_DEBUGGABLE=1
     )
 
     target_link_libraries(libdebuggerd_client
@@ -281,6 +289,8 @@ else ()
             -Wno-unused-argument
             -Wno-unused-function
             -DANDROID_DEBUGGABLE=0
+            -UANDROID_DEBUGGABLE
+            -DANDROID_DEBUGGABLE=1
     )
 
     target_link_libraries(tombstoned
@@ -334,6 +344,8 @@ else ()
             -Wno-unused-argument
             -Wno-unused-function
             -DANDROID_DEBUGGABLE=0
+            -UANDROID_DEBUGGABLE
+            -DANDROID_DEBUGGABLE=1
     )
 
     target_link_libraries(tombstoned.microdroid
@@ -387,6 +399,8 @@ else ()
             -Wno-unused-argument
             -Wno-unused-function
             -DANDROID_DEBUGGABLE=0
+            -UANDROID_DEBUGGABLE
+            -DANDROID_DEBUGGABLE=1
     )
 
     target_link_libraries(libtombstoned_client
@@ -439,6 +453,8 @@ else ()
             -Wno-unused-argument
             -Wno-unused-function
             -DANDROID_DEBUGGABLE=0
+            -UANDROID_DEBUGGABLE
+            -DANDROID_DEBUGGABLE=1
     )
 
     target_link_libraries(libdebuggerd_handler_fallback
@@ -496,6 +512,8 @@ else ()
             -Wno-unused-argument
             -Wno-unused-function
             -DANDROID_DEBUGGABLE=0
+            -UANDROID_DEBUGGABLE
+            -DANDROID_DEBUGGABLE=1
     )
 
     target_link_libraries(libdebuggerd_handler_core
@@ -550,6 +568,8 @@ else ()
             -Wno-unused-argument
             -Wno-unused-function
             -DANDROID_DEBUGGABLE=0
+            -UANDROID_DEBUGGABLE
+            -DANDROID_DEBUGGABLE=1
     )
 
     target_link_libraries(pbtombstone
@@ -603,6 +623,8 @@ else ()
             -Wno-unused-argument
             -Wno-unused-function
             -DANDROID_DEBUGGABLE=0
+            -UANDROID_DEBUGGABLE
+            -DANDROID_DEBUGGABLE=1
     )
 
     target_link_libraries(libtombstoned_client_static

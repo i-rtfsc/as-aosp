@@ -58,6 +58,8 @@ set(FILES
         ${ANDROID_ROOT}/frameworks/av/services/audioflinger/Threads.cpp
         ${ANDROID_ROOT}/frameworks/av/services/audioflinger/Tracks.cpp
         ${ANDROID_ROOT}/frameworks/av/services/audioflinger/TypedLogger.cpp
+        ${ANDROID_ROOT}/frameworks/av/services/audioflinger/RecordLoopbackThread.cpp
+        ${ANDROID_ROOT}/frameworks/av/services/audioflinger/EffectVolumeCompensator.cpp
 )
 set(SOURCE_FILES "")
 foreach (file ${FILES})
@@ -86,6 +88,12 @@ else ()
             -Wextra
             -Werror
             -Wall
+            -DDEBUG_AUDIO_PCM
+            -DFLYME_MUTE_STRATEGY
+            -DFLYME_RING_CURVE_VOLUME_FTR
+            -DFLYME_APP_MUTE_FTR
+            -DFLYME_MULTI_APP_VOLUME_FTR
+            -DFLYME_KARAOKE_FTR
     )
 
     target_link_libraries(libaudioflinger
@@ -100,6 +108,7 @@ else ()
             libaudioclient
             libaudioclient_aidl_conversion
             libaudioclient_headers
+            libaudioext
             libaudioflinger_timing
             libaudiofoundation
             libaudiohal

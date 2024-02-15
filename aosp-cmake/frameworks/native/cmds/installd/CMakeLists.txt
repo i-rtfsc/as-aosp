@@ -88,11 +88,21 @@ set(FILES
         ${ANDROID_ROOT}/frameworks/native/cmds/installd/run_dex2oat.cpp
         ${ANDROID_ROOT}/frameworks/native/cmds/installd/unique_file.cpp
         ${ANDROID_ROOT}/frameworks/native/cmds/installd/utils.cpp
+        ${ANDROID_ROOT}/frameworks/native/cmds/installd/slice.cpp
+        ${ANDROID_ROOT}/frameworks/native/cmds/installd/SliceLogger.cpp
         ${ANDROID_ROOT}/frameworks/native/cmds/installd/utils_default.cpp
         ${ANDROID_ROOT}/frameworks/native/cmds/installd/view_compiler.cpp
+        ${ANDROID_ROOT}/frameworks/native/cmds/installd/MzFileDedup.cpp
+        ${ANDROID_ROOT}/frameworks/native/cmds/installd/MzSoDedupSqliteManager.cpp
+        ${ANDROID_ROOT}/frameworks/native/cmds/installd/MzUtils.cpp
+        ${ANDROID_ROOT}/frameworks/native/cmds/installd/MzAppCompress.cpp
+        ${ANDROID_ROOT}/frameworks/native/cmds/installd/MzAppCompressSqliteManager.cpp
+        ${ANDROID_ROOT}/frameworks/native/cmds/installd/MzCowHelper.cpp
+        ${ANDROID_ROOT}/frameworks/native/cmds/installd/mzcow.c
+        ${ANDROID_ROOT}/frameworks/native/cmds/installd/android/os/IInstalld.cpp
+        ${ANDROID_ROOT}/frameworks/native/cmds/installd/android/os/IMzSpaceOptListener.cpp
         ${OUT_INTERMEDIATES_ROOT}/frameworks/native/cmds/installd/libinstalld/android_${OUT_ARCH_CPU}_static/gen/aidl/android/os/CreateAppDataArgs.cpp
         ${OUT_INTERMEDIATES_ROOT}/frameworks/native/cmds/installd/libinstalld/android_${OUT_ARCH_CPU}_static/gen/aidl/android/os/CreateAppDataResult.cpp
-        ${OUT_INTERMEDIATES_ROOT}/frameworks/native/cmds/installd/libinstalld/android_${OUT_ARCH_CPU}_static/gen/aidl/android/os/IInstalld.cpp
         ${OUT_INTERMEDIATES_ROOT}/frameworks/native/cmds/installd/libinstalld/android_${OUT_ARCH_CPU}_static/gen/aidl/android/os/ReconcileSdkDataArgs.cpp
         ${OUT_INTERMEDIATES_ROOT}/frameworks/native/cmds/installd/libinstalld/android_${OUT_ARCH_CPU}_static/gen/aidl/android/os/storage/CrateMetadata.cpp
 )
@@ -138,6 +148,8 @@ else ()
             libm
             libprocessgroup
             libselinux
+            libsqlite
+            libssl
             libutils
             libziparchive
             server_configurable_flags
@@ -160,14 +172,25 @@ set(FILES
         ${ANDROID_ROOT}/frameworks/native/cmds/installd/run_dex2oat.cpp
         ${ANDROID_ROOT}/frameworks/native/cmds/installd/unique_file.cpp
         ${ANDROID_ROOT}/frameworks/native/cmds/installd/utils.cpp
+        ${ANDROID_ROOT}/frameworks/native/cmds/installd/slice.cpp
+        ${ANDROID_ROOT}/frameworks/native/cmds/installd/SliceLogger.cpp
         ${ANDROID_ROOT}/frameworks/native/cmds/installd/utils_default.cpp
         ${ANDROID_ROOT}/frameworks/native/cmds/installd/view_compiler.cpp
+        ${ANDROID_ROOT}/frameworks/native/cmds/installd/MzFileDedup.cpp
+        ${ANDROID_ROOT}/frameworks/native/cmds/installd/MzSoDedupSqliteManager.cpp
+        ${ANDROID_ROOT}/frameworks/native/cmds/installd/MzUtils.cpp
+        ${ANDROID_ROOT}/frameworks/native/cmds/installd/MzAppCompress.cpp
+        ${ANDROID_ROOT}/frameworks/native/cmds/installd/MzAppCompressSqliteManager.cpp
+        ${ANDROID_ROOT}/frameworks/native/cmds/installd/MzCowHelper.cpp
+        ${ANDROID_ROOT}/frameworks/native/cmds/installd/mzcow.c
+        ${ANDROID_ROOT}/frameworks/native/cmds/installd/android/os/IInstalld.cpp
+        ${ANDROID_ROOT}/frameworks/native/cmds/installd/android/os/IMzSpaceOptListener.cpp
         ${OUT_INTERMEDIATES_ROOT}/frameworks/native/cmds/installd/installd/android_${OUT_ARCH_CPU}/gen/aidl/android/os/CreateAppDataArgs.cpp
         ${OUT_INTERMEDIATES_ROOT}/frameworks/native/cmds/installd/installd/android_${OUT_ARCH_CPU}/gen/aidl/android/os/CreateAppDataResult.cpp
-        ${OUT_INTERMEDIATES_ROOT}/frameworks/native/cmds/installd/installd/android_${OUT_ARCH_CPU}/gen/aidl/android/os/IInstalld.cpp
         ${OUT_INTERMEDIATES_ROOT}/frameworks/native/cmds/installd/installd/android_${OUT_ARCH_CPU}/gen/aidl/android/os/ReconcileSdkDataArgs.cpp
         ${OUT_INTERMEDIATES_ROOT}/frameworks/native/cmds/installd/installd/android_${OUT_ARCH_CPU}/gen/aidl/android/os/storage/CrateMetadata.cpp
         ${ANDROID_ROOT}/frameworks/native/cmds/installd/installd.cpp
+        ${ANDROID_ROOT}/frameworks/native/cmds/installd/roothandler.cpp
 )
 set(SOURCE_FILES "")
 foreach (file ${FILES})
@@ -196,22 +219,30 @@ else ()
 
     target_link_libraries(installd
             libasync_safe
+            libavb_user
             libbase
             libbinder
             libc
             libc++
             libc++demangle
+            libc++fs
             libclang_rt.builtins
+            libclang_rt.ubsan_minimal
             libcrypto
             libcutils
             libdiskusage
             libdl
             libext2_uuid
+            libfbase_defrag
+            libfbase_defrag_service
+            libfs_mgr
             liblog
             liblogwrap
             libm
             libprocessgroup
             libselinux
+            libsqlite
+            libssl
             libutils
             libziparchive
             server_configurable_flags
@@ -230,6 +261,8 @@ set(FILES
         ${ANDROID_ROOT}/frameworks/native/cmds/installd/run_dex2oat.cpp
         ${ANDROID_ROOT}/frameworks/native/cmds/installd/unique_file.cpp
         ${ANDROID_ROOT}/frameworks/native/cmds/installd/utils.cpp
+        ${ANDROID_ROOT}/frameworks/native/cmds/installd/slice.cpp
+        ${ANDROID_ROOT}/frameworks/native/cmds/installd/SliceLogger.cpp
         ${ANDROID_ROOT}/frameworks/native/cmds/installd/utils_default.cpp
         ${ANDROID_ROOT}/frameworks/native/cmds/installd/view_compiler.cpp
 )

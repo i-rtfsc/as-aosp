@@ -121,6 +121,7 @@ else ()
             libc++demangle
             libclang_rt.builtins
             libclang_rt.ubsan_minimal
+            libcryptfs_hw
             libcrypto
             libcrypto_utils
             libcutils
@@ -232,6 +233,7 @@ set(FILES
         ${ANDROID_ROOT}/system/vold/fs/Ext4.cpp
         ${ANDROID_ROOT}/system/vold/fs/F2fs.cpp
         ${ANDROID_ROOT}/system/vold/fs/Vfat.cpp
+        ${ANDROID_ROOT}/system/vold/fs/Ntfs.cpp
         ${ANDROID_ROOT}/system/vold/model/Disk.cpp
         ${ANDROID_ROOT}/system/vold/model/EmulatedVolume.cpp
         ${ANDROID_ROOT}/system/vold/model/ObbVolume.cpp
@@ -288,6 +290,8 @@ else ()
             libclang_rt.builtins
             libclang_rt.ubsan_minimal
             libcom.android.sysprop.apex
+            libcryptfs_hw
+            libcryptfs_hw_headers
             libcrypto
             libcrypto_utils
             libcutils

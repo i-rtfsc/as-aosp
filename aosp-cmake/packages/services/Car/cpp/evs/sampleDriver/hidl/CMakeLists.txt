@@ -116,6 +116,7 @@ else ()
     target_compile_options(android.hardware.automotive.evs-1.1-sample PRIVATE
             -Wall
             -Werror
+            -DEVS_DEBUG
     )
 
     target_link_libraries(android.hardware.automotive.evs-1.1-sample

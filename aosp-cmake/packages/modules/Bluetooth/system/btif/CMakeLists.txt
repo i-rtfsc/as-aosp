@@ -95,6 +95,7 @@ else ()
             -Wextra
             -Wno-unused-parameter
             -DLOG_NDEBUG=1
+            -DBLUEDROID_DEBUG
     )
 
     target_link_libraries(libbtif-core
@@ -208,6 +209,7 @@ else ()
             -Wextra
             -Wno-unused-parameter
             -DLOG_NDEBUG=1
+            -DBLUEDROID_DEBUG
     )
 
     target_link_libraries(libbtif

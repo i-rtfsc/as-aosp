@@ -76,6 +76,7 @@ else ()
             libdl
             liblog
             libm
+            libmath_common_fft
             libnativehelper
             libutils
     )

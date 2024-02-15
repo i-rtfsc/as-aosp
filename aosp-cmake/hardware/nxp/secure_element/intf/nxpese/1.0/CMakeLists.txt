@@ -58,6 +58,7 @@ else ()
             -Wall
             -Werror
             -Wextra-semi
+            -D__ANDROID_DEBUGGABLE__
     )
 
     target_link_libraries(vendor.nxp.nxpese-1.0

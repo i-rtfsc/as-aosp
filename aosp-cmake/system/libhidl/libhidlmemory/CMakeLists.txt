@@ -58,6 +58,7 @@ else ()
             -Wall
             -Werror
             -Wextra-semi
+            -DLIBHIDL_TARGET_DEBUGGABLE
     )
 
     target_link_libraries(libhidlmemory

@@ -309,6 +309,7 @@ endif ()
 
 #################### libgui ####################
 set(FILES
+        ${ANDROID_ROOT}/frameworks/native/libs/gui/flyme/FlymeBufferQueueTracker.cpp
         ${OUT_INTERMEDIATES_ROOT}/frameworks/native/libs/gui/libgui/android_${OUT_ARCH_CPU}_shared/gen/aidl/android/os/PersistableBundle.cpp
         ${OUT_INTERMEDIATES_ROOT}/frameworks/native/libs/gui/libgui/android_${OUT_ARCH_CPU}_shared/gen/aidl/android/view/LayerMetadataKey.cpp
         ${OUT_INTERMEDIATES_ROOT}/frameworks/native/libs/gui/libgui/android_${OUT_ARCH_CPU}_shared/gen/aidl/android/view/Surface.cpp
@@ -385,6 +386,7 @@ else ()
 
     target_include_directories(libgui
             PUBLIC
+            ${ANDROID_ROOT}/frameworks/native/libs/gui/flyme
             ${ANDROID_ROOT}/frameworks/native/libs/gui/include
             ${ANDROID_ROOT}/frameworks/native/libs/gui
             ${OUT_INTERMEDIATES_ROOT}/frameworks/native/libs/gui/libgui/android_${OUT_ARCH_CPU}_shared/gen/aidl
@@ -397,6 +399,8 @@ else ()
 
     # Add c/c++ flags
     target_compile_options(libgui PRIVATE
+            -DFLYME_GRAPHICS_EXTEND
+            -DFLYME_SUPPORT_LTPO_V2
             -DQTI_DISPLAY_EXTENSION
             -Wall
             -Werror

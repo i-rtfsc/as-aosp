@@ -53,10 +53,12 @@ else ()
 
     # Add c/c++ flags
     target_compile_options(libinputreporter PRIVATE
+            -DFLYME_PRODUCT_2481
             -Wall
             -Wextra
             -Werror
             -Wno-unused-parameter
+            -DFLYME_INPUT_EXTEND
     )
 
     target_link_libraries(libinputreporter
@@ -69,6 +71,8 @@ else ()
             libinputreporter_headers
             liblog
             libm
+            libpackagelistparser
+            libruntime_log
             libutils
     )
 endif ()

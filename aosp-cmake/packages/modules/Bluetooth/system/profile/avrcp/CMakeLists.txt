@@ -59,6 +59,7 @@ else ()
             -Wextra
             -Wno-unused-parameter
             -DLOG_NDEBUG=1
+            -DBLUEDROID_DEBUG
     )
 
     target_link_libraries(avrcp-target-service
@@ -120,6 +121,7 @@ else ()
             -Wextra
             -Wno-unused-parameter
             -DLOG_NDEBUG=1
+            -DBLUEDROID_DEBUG
     )
 
     target_link_libraries(avrcp_device_fuzz

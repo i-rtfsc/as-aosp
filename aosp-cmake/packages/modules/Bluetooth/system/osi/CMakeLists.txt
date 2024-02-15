@@ -58,6 +58,7 @@ else ()
             -Wextra
             -Wno-unused-parameter
             -DLOG_NDEBUG=1
+            -DBLUEDROID_DEBUG
     )
 
     target_link_libraries(libosi-AllocationTestHarness
@@ -115,6 +116,7 @@ else ()
             -Wextra
             -Wno-unused-parameter
             -DLOG_NDEBUG=1
+            -DBLUEDROID_DEBUG
     )
 
     target_link_libraries(libosi-AlarmTestHarness
@@ -196,6 +198,7 @@ else ()
             -Wextra
             -Wno-unused-parameter
             -DLOG_NDEBUG=1
+            -DBLUEDROID_DEBUG
     )
 
     target_link_libraries(libosi

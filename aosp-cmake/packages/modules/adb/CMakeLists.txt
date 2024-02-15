@@ -90,6 +90,7 @@ else ()
             libclang_rt.builtins
             libcrypto_static
             libcrypto_utils
+            libcutils
             libcutils_sockets
             libdiagnose_usb
             liblog

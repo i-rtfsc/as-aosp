@@ -1492,6 +1492,7 @@ set(FILES
         ${ANDROID_ROOT}/packages/modules/DnsResolver/gethnamaddr.cpp
         ${ANDROID_ROOT}/packages/modules/DnsResolver/sethostent.cpp
         ${ANDROID_ROOT}/packages/modules/DnsResolver/res_cache.cpp
+        ${ANDROID_ROOT}/packages/modules/DnsResolver/resolv_filter.cpp
         ${ANDROID_ROOT}/packages/modules/DnsResolver/res_comp.cpp
         ${ANDROID_ROOT}/packages/modules/DnsResolver/res_debug.cpp
         ${ANDROID_ROOT}/packages/modules/DnsResolver/res_mkquery.cpp
@@ -1570,6 +1571,7 @@ else ()
             libstatslog_resolv
             libstatspush_compat
             libsysutils
+            libutils
             netd_event_listener_interface-lateststable-ndk
             server_configurable_flags
             stats_proto

@@ -72,6 +72,51 @@ else ()
 endif ()
 #################### oemnetd_aidl_interface-ndk ####################
 
+#################### oemnetd_aidl_interface-module-cpp ####################
+set(FILES
+        ${OUT_INTERMEDIATES_ROOT}/system/netd/server/oemnetd_aidl_interface-module-cpp-source/gen/com/android/internal/net/IOemNetd.cpp
+        ${OUT_INTERMEDIATES_ROOT}/system/netd/server/oemnetd_aidl_interface-module-cpp-source/gen/com/android/internal/net/IOemNetdUnsolicitedEventListener.cpp
+)
+set(SOURCE_FILES "")
+foreach (file ${FILES})
+    if (EXISTS ${file})
+        list(APPEND SOURCE_FILES ${file})
+    endif ()
+endforeach ()
+
+if (NOT SOURCE_FILES)
+    message(WARNING "${PROJECT_NAME}, source files not exist")
+else ()
+    add_library(oemnetd_aidl_interface-module-cpp SHARED ${SOURCE_FILES})
+
+    target_include_directories(oemnetd_aidl_interface-module-cpp
+            PUBLIC
+            ${OUT_INTERMEDIATES_ROOT}/system/netd/server/oemnetd_aidl_interface-module-cpp-source/gen/include
+    )
+
+    # Add c/c++ flags
+    target_compile_options(oemnetd_aidl_interface-module-cpp PRIVATE
+            -Wextra
+            -Wall
+            -Werror
+            -Wextra-semi
+    )
+
+    target_link_libraries(oemnetd_aidl_interface-module-cpp
+            libbinder
+            libc
+            libc++
+            libc++_static
+            libc++demangle
+            libclang_rt.builtins
+            libcutils
+            libdl
+            libm
+            libutils
+    )
+endif ()
+#################### oemnetd_aidl_interface-module-cpp ####################
+
 #################### oemnetd_aidl_interface-cpp ####################
 set(FILES
         ${OUT_INTERMEDIATES_ROOT}/system/netd/server/oemnetd_aidl_interface-cpp-source/gen/com/android/internal/net/IOemNetd.cpp
@@ -193,6 +238,7 @@ set(FILES
         ${ANDROID_ROOT}/system/netd/server/UnreachableNetwork.cpp
         ${ANDROID_ROOT}/system/netd/server/VirtualNetwork.cpp
         ${ANDROID_ROOT}/system/netd/server/oem_iptables_hook.cpp
+        ${ANDROID_ROOT}/system/netd/server/pkt_monitor.cpp
         ${ANDROID_ROOT}/system/netd/server/Controllers.cpp
         ${ANDROID_ROOT}/system/netd/server/aidl-fuzzers/NetdHwAidlServiceFuzzer.cpp
 )
@@ -231,6 +277,9 @@ else ()
             libbinder
             libbinder_ndk
             libbinder_random_parcel
+            libbpf_android
+            libbpf_bcc
+            libbpf_minimal
             libc
             libc++
             libc++demangle
@@ -244,6 +293,7 @@ else ()
             liblog
             libm
             libmdnssd
+            libnetd_client
             libnetd_resolv
             libnetd_server
             libnetd_updatable
@@ -262,6 +312,48 @@ else ()
     )
 endif ()
 #################### netd_hw_service_fuzzer ####################
+
+#################### oemnetd_aidl_interface-module-ndk ####################
+set(FILES
+        ${OUT_INTERMEDIATES_ROOT}/system/netd/server/oemnetd_aidl_interface-module-ndk-source/gen/com/android/internal/net/IOemNetd.cpp
+        ${OUT_INTERMEDIATES_ROOT}/system/netd/server/oemnetd_aidl_interface-module-ndk-source/gen/com/android/internal/net/IOemNetdUnsolicitedEventListener.cpp
+)
+set(SOURCE_FILES "")
+foreach (file ${FILES})
+    if (EXISTS ${file})
+        list(APPEND SOURCE_FILES ${file})
+    endif ()
+endforeach ()
+
+if (NOT SOURCE_FILES)
+    message(WARNING "${PROJECT_NAME}, source files not exist")
+else ()
+    add_library(oemnetd_aidl_interface-module-ndk SHARED ${SOURCE_FILES})
+
+    target_include_directories(oemnetd_aidl_interface-module-ndk
+            PUBLIC
+            ${OUT_INTERMEDIATES_ROOT}/system/netd/server/oemnetd_aidl_interface-module-ndk-source/gen/include
+    )
+
+    # Add c/c++ flags
+    target_compile_options(oemnetd_aidl_interface-module-ndk PRIVATE
+            -Wextra
+            -Wall
+            -Werror
+            -Wextra-semi
+    )
+
+    target_link_libraries(oemnetd_aidl_interface-module-ndk
+            libbinder_ndk
+            libc
+            libc++
+            libc++demangle
+            libclang_rt.builtins
+            libdl
+            libm
+    )
+endif ()
+#################### oemnetd_aidl_interface-module-ndk ####################
 
 #################### netd_native_service_fuzzer ####################
 set(FILES
@@ -286,6 +378,7 @@ set(FILES
         ${ANDROID_ROOT}/system/netd/server/UnreachableNetwork.cpp
         ${ANDROID_ROOT}/system/netd/server/VirtualNetwork.cpp
         ${ANDROID_ROOT}/system/netd/server/oem_iptables_hook.cpp
+        ${ANDROID_ROOT}/system/netd/server/pkt_monitor.cpp
         ${ANDROID_ROOT}/system/netd/server/Controllers.cpp
         ${ANDROID_ROOT}/system/netd/server/aidl-fuzzers/NetdNativeServiceFuzzer.cpp
 )
@@ -324,6 +417,9 @@ else ()
             libbinder
             libbinder_ndk
             libbinder_random_parcel
+            libbpf_android
+            libbpf_bcc
+            libbpf_minimal
             libc
             libc++
             libc++demangle
@@ -337,6 +433,7 @@ else ()
             liblog
             libm
             libmdnssd
+            libnetd_client
             libnetd_resolv
             libnetd_server
             libnetd_updatable
@@ -355,6 +452,49 @@ else ()
     )
 endif ()
 #################### netd_native_service_fuzzer ####################
+
+#################### oemnetd_aidl_interface-module-ndk_platform ####################
+set(FILES
+        ${OUT_INTERMEDIATES_ROOT}/system/netd/server/oemnetd_aidl_interface-module-ndk_platform-source/gen/com/android/internal/net/IOemNetd.cpp
+        ${OUT_INTERMEDIATES_ROOT}/system/netd/server/oemnetd_aidl_interface-module-ndk_platform-source/gen/com/android/internal/net/IOemNetdUnsolicitedEventListener.cpp
+)
+set(SOURCE_FILES "")
+foreach (file ${FILES})
+    if (EXISTS ${file})
+        list(APPEND SOURCE_FILES ${file})
+    endif ()
+endforeach ()
+
+if (NOT SOURCE_FILES)
+    message(WARNING "${PROJECT_NAME}, source files not exist")
+else ()
+    add_library(oemnetd_aidl_interface-module-ndk_platform SHARED ${SOURCE_FILES})
+
+    target_include_directories(oemnetd_aidl_interface-module-ndk_platform
+            PUBLIC
+            ${OUT_INTERMEDIATES_ROOT}/system/netd/server/oemnetd_aidl_interface-module-ndk_platform-source/gen/include
+    )
+
+    # Add c/c++ flags
+    target_compile_options(oemnetd_aidl_interface-module-ndk_platform PRIVATE
+            -Wextra
+            -Wall
+            -Werror
+            -Wextra-semi
+    )
+
+    target_link_libraries(oemnetd_aidl_interface-module-ndk_platform
+            libbinder_ndk
+            libc
+            libc++
+            libc++_static
+            libc++demangle
+            libclang_rt.builtins
+            libdl
+            libm
+    )
+endif ()
+#################### oemnetd_aidl_interface-module-ndk_platform ####################
 
 #################### oemnetd_aidl_interface-ndk_platform ####################
 set(FILES
@@ -469,6 +609,7 @@ set(FILES
         ${ANDROID_ROOT}/system/netd/server/UnreachableNetwork.cpp
         ${ANDROID_ROOT}/system/netd/server/VirtualNetwork.cpp
         ${ANDROID_ROOT}/system/netd/server/oem_iptables_hook.cpp
+        ${ANDROID_ROOT}/system/netd/server/pkt_monitor.cpp
         ${ANDROID_ROOT}/system/netd/server/Controllers.cpp
         ${ANDROID_ROOT}/system/netd/server/aidl-fuzzers/MDnsServiceFuzzer.cpp
 )
@@ -507,6 +648,9 @@ else ()
             libbinder
             libbinder_ndk
             libbinder_random_parcel
+            libbpf_android
+            libbpf_bcc
+            libbpf_minimal
             libc
             libc++
             libc++demangle
@@ -520,6 +664,7 @@ else ()
             liblog
             libm
             libmdnssd
+            libnetd_client
             libnetd_resolv
             libnetd_server
             libnetd_updatable
@@ -597,6 +742,7 @@ else ()
             libdl
             libip_checksum
             libm
+            libnetd_resolv
             libnetdutils
             libnetutils
             libpcap
@@ -608,6 +754,53 @@ else ()
     )
 endif ()
 #################### libnetd_server ####################
+
+#################### oemnetd_aidl_interface-module-cpp-analyzer ####################
+set(FILES
+        ${OUT_INTERMEDIATES_ROOT}/system/netd/server/oemnetd_aidl_interface-module-cpp-analyzer-source/gen/com/android/internal/net/IOemNetd.cpp
+        ${OUT_INTERMEDIATES_ROOT}/system/netd/server/oemnetd_aidl_interface-module-cpp-analyzer-source/gen/com/android/internal/net/IOemNetdUnsolicitedEventListener.cpp
+)
+set(SOURCE_FILES "")
+foreach (file ${FILES})
+    if (EXISTS ${file})
+        list(APPEND SOURCE_FILES ${file})
+    endif ()
+endforeach ()
+
+if (NOT SOURCE_FILES)
+    message(WARNING "${PROJECT_NAME}, source files not exist")
+else ()
+    add_executable(oemnetd_aidl_interface-module-cpp-analyzer ${SOURCE_FILES})
+
+    target_include_directories(oemnetd_aidl_interface-module-cpp-analyzer
+            PUBLIC
+            ${ANDROID_ROOT}/system/netd/server
+            ${OUT_INTERMEDIATES_ROOT}/system/netd/server/oemnetd_aidl_interface-module-cpp-source/gen/include
+            ${OUT_INTERMEDIATES_ROOT}/system/netd/server/oemnetd_aidl_interface-module-cpp-analyzer-source/gen/include
+    )
+
+    # Add c/c++ flags
+    target_compile_options(oemnetd_aidl_interface-module-cpp-analyzer PRIVATE
+            -Wextra
+            -Wall
+            -Werror
+            -Wextra-semi
+    )
+
+    target_link_libraries(oemnetd_aidl_interface-module-cpp-analyzer
+            aidl-analyzer-main
+            libbinder
+            libc
+            libc++
+            libc++demangle
+            libclang_rt.builtins
+            libdl
+            libm
+            libutils
+            oemnetd_aidl_interface-module-cpp
+    )
+endif ()
+#################### oemnetd_aidl_interface-module-cpp-analyzer ####################
 
 #################### netd ####################
 set(FILES
@@ -632,6 +825,7 @@ set(FILES
         ${ANDROID_ROOT}/system/netd/server/UnreachableNetwork.cpp
         ${ANDROID_ROOT}/system/netd/server/VirtualNetwork.cpp
         ${ANDROID_ROOT}/system/netd/server/oem_iptables_hook.cpp
+        ${ANDROID_ROOT}/system/netd/server/pkt_monitor.cpp
         ${ANDROID_ROOT}/system/netd/server/main.cpp
 )
 set(SOURCE_FILES "")
@@ -668,6 +862,9 @@ else ()
             libbase
             libbinder
             libbinder_ndk
+            libbpf_android
+            libbpf_bcc
+            libbpf_minimal
             libc
             libc++
             libc++demangle
@@ -679,6 +876,7 @@ else ()
             liblog
             libm
             libmdnssd
+            libnetd_client
             libnetd_resolv
             libnetd_server
             libnetd_updatable

@@ -82,6 +82,7 @@ else ()
             libpng
             libsfntly
             libskia
+            libtiff
             libvulkan
             libwebp-decode
             libwebp-encode

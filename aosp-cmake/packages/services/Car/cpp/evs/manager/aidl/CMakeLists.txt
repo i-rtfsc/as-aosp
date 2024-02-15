@@ -59,6 +59,7 @@ else ()
     target_compile_options(evsmanagerd PRIVATE
             -Wall
             -Werror
+            -DEVS_DEBUG
     )
 
     target_link_libraries(evsmanagerd
@@ -137,6 +138,7 @@ else ()
     target_compile_options(libevsmanagerd PRIVATE
             -Wall
             -Werror
+            -DEVS_DEBUG
     )
 
     target_link_libraries(libevsmanagerd
@@ -215,6 +217,7 @@ else ()
     target_compile_options(evs_enumerator_fuzzer PRIVATE
             -Wall
             -Werror
+            -DEVS_DEBUG
     )
 
     target_link_libraries(evs_enumerator_fuzzer

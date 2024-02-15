@@ -145,7 +145,6 @@ else ()
             PUBLIC
             ${ANDROID_ROOT}/system/core/healthd
             ${OUT_INTERMEDIATES_ROOT}/system/core/healthd/libcharger_sysprop/android_${OUT_ARCH_CPU}_static/gen/sysprop/include
-            ${ANDROID_ROOT}/system/core/healthd/minui/include
     )
 
     # Add c/c++ flags
@@ -163,7 +162,7 @@ else ()
             libclang_rt.builtins
             libdl
             libm
-            libminui_healthd
+            libminui
     )
 endif ()
 #################### libhealthd_draw ####################
@@ -496,7 +495,6 @@ else ()
             ${ANDROID_ROOT}/system/core/healthd/include_charger
             ${ANDROID_ROOT}/system/core/healthd
             ${OUT_INTERMEDIATES_ROOT}/system/core/healthd/libcharger_sysprop/android_${OUT_ARCH_CPU}_static/gen/sysprop/include
-            ${ANDROID_ROOT}/system/core/healthd/minui/include
     )
 
     # Add c/c++ flags
@@ -516,14 +514,12 @@ else ()
             libclang_rt.ubsan_minimal
             libcutils
             libdl
-            libhealth2impl
             libhealthd_draw
             libhealthd_headers
             libhealthloop
             liblog
             libm
             libminui
-            libminui_healthd
             libpng
             libsuspend
             libutils

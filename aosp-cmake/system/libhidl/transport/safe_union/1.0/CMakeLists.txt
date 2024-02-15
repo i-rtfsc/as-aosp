@@ -58,6 +58,7 @@ else ()
             -Wall
             -Werror
             -Wextra-semi
+            -D__ANDROID_DEBUGGABLE__
     )
 
     target_link_libraries(android.hidl.safe_union-1.0

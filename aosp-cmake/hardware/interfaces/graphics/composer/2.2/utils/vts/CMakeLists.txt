@@ -92,6 +92,7 @@ else ()
             librenderengine
             libshaders
             libskia_renderengine
+            libtiff
             libtonemap
             libui
             libvulkan

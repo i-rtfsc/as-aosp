@@ -71,6 +71,7 @@ else ()
             -Wall
             -Werror
             -Wextra
+            -DNN_DEBUGGABLE
     )
 
     target_link_libraries(libneuralnetworks_cl
@@ -146,6 +147,7 @@ else ()
             -Wall
             -Werror
             -Wextra
+            -DNN_DEBUGGABLE
     )
 
     target_link_libraries(libneuralnetworks_v2_static_experimental
@@ -242,6 +244,7 @@ else ()
             -Wall
             -Werror
             -Wextra
+            -DNN_DEBUGGABLE
     )
 
     target_link_libraries(libneuralnetworks_static
@@ -338,6 +341,7 @@ else ()
             -Wall
             -Werror
             -Wextra
+            -DNN_DEBUGGABLE
     )
 
     target_link_libraries(libneuralnetworks
@@ -433,6 +437,7 @@ else ()
             -Wall
             -Werror
             -Wextra
+            -DNN_DEBUGGABLE
     )
 
     target_link_libraries(libneuralnetworks_static_experimental

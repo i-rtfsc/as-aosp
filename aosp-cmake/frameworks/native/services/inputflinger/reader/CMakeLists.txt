@@ -89,10 +89,12 @@ else ()
 
     # Add c/c++ flags
     target_compile_options(libinputreader PRIVATE
+            -DFLYME_PRODUCT_2481
             -Wall
             -Wextra
             -Werror
             -Wno-unused-parameter
+            -DFLYME_INPUT_EXTEND
     )
 
     target_link_libraries(libinputreader
@@ -118,6 +120,8 @@ else ()
             libjsoncpp
             liblog
             libm
+            libpackagelistparser
+            libruntime_log
             libstatslog
             libui-types
             libutils
@@ -183,10 +187,12 @@ else ()
 
     # Add c/c++ flags
     target_compile_options(libinputreader_static PRIVATE
+            -DFLYME_PRODUCT_2481
             -Wall
             -Wextra
             -Werror
             -Wno-unused-parameter
+            -DFLYME_INPUT_EXTEND
     )
 
     target_link_libraries(libinputreader_static
@@ -211,6 +217,8 @@ else ()
             libjsoncpp
             liblog
             libm
+            libpackagelistparser
+            libruntime_log
             libstatslog
             libui-types
             libutils

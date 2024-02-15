@@ -126,6 +126,7 @@ set(FILES
         ${ANDROID_ROOT}/frameworks/base/core/jni/android_util_CharsetUtils.cpp
         ${ANDROID_ROOT}/frameworks/base/core/jni/android_util_MemoryIntArray.cpp
         ${ANDROID_ROOT}/frameworks/base/core/jni/android_util_Process.cpp
+        ${ANDROID_ROOT}/frameworks/base/core/jni/android_util_VipProcess.cpp
         ${ANDROID_ROOT}/frameworks/base/core/jni/android_media_audio_common_AidlConversion.cpp
         ${ANDROID_ROOT}/frameworks/base/core/jni/android_media_AudioDeviceAttributes.cpp
         ${ANDROID_ROOT}/frameworks/base/core/jni/android_media_AudioEffectDescriptor.cpp
@@ -219,9 +220,13 @@ else ()
 
     # Add c/c++ flags
     target_compile_options(libandroid_runtime PRIVATE
+            -DFLYME_GRAPHICS_EXTEND
+            -DFLYME_REFLECT_CHECK
             -Wno-unused-parameter
             -Wall
             -Werror
+            -DFLYME_GRAPHICS_EXTEND
+            -DFLYME_REFLECT_CHECK
     )
 
     target_link_libraries(libandroid_runtime

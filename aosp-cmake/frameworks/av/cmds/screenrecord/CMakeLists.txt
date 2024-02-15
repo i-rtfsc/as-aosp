@@ -58,6 +58,7 @@ else ()
 
     # Add c/c++ flags
     target_compile_options(screenrecord PRIVATE
+            -DFLYME_COLOR_MANAGEMENT
             -Werror
             -Wall
     )

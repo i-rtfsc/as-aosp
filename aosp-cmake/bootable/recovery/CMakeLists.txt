@@ -14,7 +14,7 @@
 
 cmake_minimum_required(VERSION 3.5)
 
-project(recovery-refresh)
+project(recovery_service)
 
 # Check if the major CMakeLists.txt file has correctly set
 # the ANDROID_ROOT directory.
@@ -97,6 +97,7 @@ else ()
             ${ANDROID_ROOT}/bootable/recovery/recovery_utils/include
             ${ANDROID_ROOT}/bootable/recovery/otautil/include
             ${ANDROID_ROOT}/bootable/recovery/minui/include
+            ${ANDROID_ROOT}/bootable/recovery/mingui/include
             ${ANDROID_ROOT}/bootable/recovery/bootloader_message/include
             ${ANDROID_ROOT}/bootable/recovery/fuse_sideload/include
     )
@@ -111,7 +112,6 @@ else ()
             android.hardware.boot-V1-ndk
             android.hardware.boot-1.0
             android.hardware.boot-1.1
-            android.hardware.boot-1.2
             android.hardware.health-V2-ndk
             android.hardware.health-translate-ndk
             android.hardware.health-2.0
@@ -167,6 +167,48 @@ else ()
     )
 endif ()
 #################### recovery ####################
+
+#################### liblock_passwd ####################
+set(FILES
+        ${ANDROID_ROOT}/bootable/recovery/lock_passwd.cpp
+        ${ANDROID_ROOT}/bootable/recovery/sha1.cpp
+        ${ANDROID_ROOT}/bootable/recovery/private_opt.cpp
+)
+set(SOURCE_FILES "")
+foreach (file ${FILES})
+    if (EXISTS ${file})
+        list(APPEND SOURCE_FILES ${file})
+    endif ()
+endforeach ()
+
+if (NOT SOURCE_FILES)
+    message(WARNING "${PROJECT_NAME}, source files not exist")
+else ()
+    add_library(liblock_passwd SHARED ${SOURCE_FILES})
+
+    target_include_directories(liblock_passwd
+            PUBLIC
+            ${ANDROID_ROOT}/bootable/recovery
+    )
+
+    # Add c/c++ flags
+    target_compile_options(liblock_passwd PRIVATE
+            -Wall
+            -Werror
+    )
+
+    target_link_libraries(liblock_passwd
+            libbase
+            libc
+            libc++_static
+            libc++demangle
+            libclang_rt.builtins
+            libcrypto
+            libdl
+            libm
+    )
+endif ()
+#################### liblock_passwd ####################
 
 #################### recovery-refresh ####################
 set(FILES
@@ -232,6 +274,7 @@ else ()
             ${ANDROID_ROOT}/bootable/recovery
             ${ANDROID_ROOT}/bootable/recovery/recovery_ui/include
             ${ANDROID_ROOT}/bootable/recovery/minui/include
+            ${ANDROID_ROOT}/bootable/recovery/mingui/include
             ${ANDROID_ROOT}/bootable/recovery/bootloader_message/include
     )
 
@@ -248,10 +291,8 @@ else ()
             libc++_static
             libc++demangle
             libclang_rt.builtins
-            libclang_rt.ubsan_minimal
             libcutils
             libdl
-            liblock_passwd
             liblog
             libm
             libminigui
@@ -286,6 +327,7 @@ else ()
             ${ANDROID_ROOT}/bootable/recovery/minui/include
             ${ANDROID_ROOT}/bootable/recovery/recovery_utils/include
             ${ANDROID_ROOT}/bootable/recovery/otautil/include
+            ${ANDROID_ROOT}/bootable/recovery/mingui/include
             ${ANDROID_ROOT}/bootable/recovery/bootloader_message/include
     )
 
@@ -299,7 +341,6 @@ else ()
             android.hardware.boot-V1-ndk
             android.hardware.boot-1.0
             android.hardware.boot-1.1
-            android.hardware.boot-1.2
             libbase
             libboot_control_client
             libbootloader_message
@@ -334,3 +375,46 @@ else ()
     )
 endif ()
 #################### librecovery ####################
+
+#################### recovery_service ####################
+set(FILES
+        ${ANDROID_ROOT}/bootable/recovery/recovery_service.cpp
+        ${ANDROID_ROOT}/bootable/recovery/private_opt.cpp
+)
+set(SOURCE_FILES "")
+foreach (file ${FILES})
+    if (EXISTS ${file})
+        list(APPEND SOURCE_FILES ${file})
+    endif ()
+endforeach ()
+
+if (NOT SOURCE_FILES)
+    message(WARNING "${PROJECT_NAME}, source files not exist")
+else ()
+    add_executable(recovery_service ${SOURCE_FILES})
+
+    target_include_directories(recovery_service
+            PUBLIC
+            ${ANDROID_ROOT}/bootable/recovery
+    )
+
+    # Add c/c++ flags
+    target_compile_options(recovery_service PRIVATE
+            -Wall
+            -Werror
+    )
+
+    target_link_libraries(recovery_service
+            libbase
+            libc
+            libc++
+            libc++demangle
+            libclang_rt.builtins
+            libclang_rt.ubsan_minimal
+            libcutils
+            libdl
+            liblog
+            libm
+    )
+endif ()
+#################### recovery_service ####################

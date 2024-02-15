@@ -131,6 +131,7 @@ else ()
             -Wall
             -Werror
             -Wextra
+            -DNN_DEBUGGABLE
     )
 
     target_link_libraries(neuralnetworks_types
@@ -251,6 +252,7 @@ else ()
             -Wall
             -Werror
             -Wextra
+            -DNN_DEBUGGABLE
     )
 
     target_link_libraries(neuralnetworks_types_cl
@@ -368,6 +370,7 @@ else ()
             -Wall
             -Werror
             -Wextra
+            -DNN_DEBUGGABLE
     )
 
     target_link_libraries(neuralnetworks_types_experimental

@@ -87,6 +87,8 @@ else ()
             -Wall
             -Werror
             -Wextra-semi
+            -D__ANDROID_DEBUGGABLE__
+            -DLIBHIDL_TARGET_DEBUGGABLE
     )
 
     target_link_libraries(libhidlbase

@@ -64,12 +64,15 @@ else ()
     target_link_libraries(libnetd_client
             dnsproxyd_protocol_headers
             libbase_headers
+            libbinder
             libc
             libc++
             libc++_static
             libc++demangle
             libclang_rt.builtins
+            libcutils
             libdl
+            liblog
             libm
             libnetd_client_headers
     )

@@ -66,6 +66,8 @@ else ()
 
     # Add c/c++ flags
     target_compile_options(libqtisurfaceflingerextension PRIVATE
+            -DFLYME_GRAPHICS_EXTEND
+            -DFLYME_SUPPORT_LTPO_V2
             -Wall
             -Werror
             -Wextra
@@ -114,6 +116,7 @@ else ()
             libcutils
             libdisplayconfig.system.qti
             libdl
+            libem
             libfmq
             libframetimeline
             libgui
@@ -130,12 +133,14 @@ else ()
             libprocessgroup
             libprotobuf-cpp-lite
             librenderengine
+            libruntime_log
             libscheduler
             libserviceutils
             libshaders
             libskia_renderengine
             libsurfaceflinger_headers
             libsync
+            libtiff
             libtimestats
             libtonemap
             libui

@@ -70,10 +70,12 @@ else ()
 
     # Add c/c++ flags
     target_compile_options(libinputdispatcher PRIVATE
+            -DFLYME_PRODUCT_2481
             -Wall
             -Wextra
             -Werror
             -Wno-unused-parameter
+            -DFLYME_INPUT_EXTEND
     )
 
     target_link_libraries(libinputdispatcher
@@ -96,7 +98,9 @@ else ()
             libkll
             liblog
             libm
+            libpackagelistparser
             libprotobuf-cpp-lite
+            libruntime_log
             libstatslog
             libstatspull
             libstatssocket

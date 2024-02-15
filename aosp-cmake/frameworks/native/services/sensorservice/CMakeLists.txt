@@ -73,6 +73,8 @@ else ()
 
     # Add c/c++ flags
     target_compile_options(libsensorservice PRIVATE
+            -DFLYME_GRAPHICS_EXTEND_LUMARGB
+            -DFLYME_SAMPLE_AREA_2481
             -Wall
             -Werror
             -Wextra
@@ -104,6 +106,7 @@ else ()
             libcutils
             libdl
             libfmq
+            libgui
             libhardware
             libhardware_legacy
             libhidlbase
@@ -113,8 +116,10 @@ else ()
             libprotoutil
             libsensor
             libsensorprivacy
+            libui
             libutils
             packagemanager_aidl-cpp
+            vendor.meizu.sensor_aux-1.0
     )
 endif ()
 #################### libsensorservice ####################

@@ -54,6 +54,8 @@ else ()
 
     # Add c/c++ flags
     target_compile_options(libqticompositionengineextension PRIVATE
+            -DFLYME_GRAPHICS_EXTEND
+            -DFLYME_COLOR_MANAGEMENT
             -Wall
             -Werror
             -Wextra
@@ -103,8 +105,10 @@ else ()
             libprocessgroup
             libprotobuf-cpp-lite
             librenderengine
+            libruntime_log
             libskia_renderengine
             libsurfaceflinger_headers
+            libtiff
             libtimestats
             libtonemap
             libui

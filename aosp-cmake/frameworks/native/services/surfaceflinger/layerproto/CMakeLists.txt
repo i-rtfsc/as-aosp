@@ -59,6 +59,11 @@ else ()
             ${OUT_INTERMEDIATES_ROOT}/frameworks/native/services/surfaceflinger/layerproto/liblayers_proto/android_${OUT_ARCH_CPU}_static/gen/proto
     )
 
+    # Add c/c++ flags
+    target_compile_options(liblayers_proto PRIVATE
+            -DFLYME_GRAPHICS_EXTEND
+    )
+
     target_link_libraries(liblayers_proto
             android.hardware.graphics.common-1.1
             libbase

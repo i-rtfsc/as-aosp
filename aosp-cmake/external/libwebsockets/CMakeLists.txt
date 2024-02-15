@@ -165,6 +165,7 @@ else ()
     target_compile_options(libwebsockets PRIVATE
             -Werror
             -Wno-unused-parameter
+            -UNDEBUG
     )
 
     target_link_libraries(libwebsockets

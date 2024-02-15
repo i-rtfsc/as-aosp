@@ -373,6 +373,7 @@ else ()
             -Wall
             -Werror
             -Wextra
+            -DFLYME_REFLECT_CHECK
     )
 
     target_link_libraries(libart
@@ -715,6 +716,7 @@ else ()
             -Wextra
             -DVIXL_DEBUG
             -UNDEBUG
+            -DFLYME_REFLECT_CHECK
     )
 
     target_link_libraries(libartd
@@ -1055,6 +1057,7 @@ else ()
             -Wall
             -Werror
             -Wextra
+            -DFLYME_REFLECT_CHECK
     )
 
     target_link_libraries(libart-broken

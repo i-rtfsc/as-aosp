@@ -56,6 +56,7 @@ else ()
             -Wall
             -Werror
             -Wextra
+            -DNN_DEBUGGABLE
     )
 
     target_link_libraries(android.hardware.neuralnetworks-1.3-service-sample-limited
@@ -122,6 +123,7 @@ else ()
             -Werror
             -Wextra
             -Wno-unused-parameter
+            -DNN_DEBUGGABLE
     )
 
     target_link_libraries(android.hardware.neuralnetworks-1.3-service-sample-float-xnnpack
@@ -187,6 +189,7 @@ else ()
             -Wall
             -Werror
             -Wextra
+            -DNN_DEBUGGABLE
     )
 
     target_link_libraries(android.hardware.neuralnetworks-1.3-service-sample-all
@@ -249,6 +252,7 @@ else ()
             -Wall
             -Werror
             -Wextra
+            -DNN_DEBUGGABLE
     )
 
     target_link_libraries(libSampleDriver

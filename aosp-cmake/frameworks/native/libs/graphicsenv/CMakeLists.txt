@@ -58,6 +58,7 @@ else ()
     target_compile_options(libgraphicsenv PRIVATE
             -Wall
             -Werror
+            -DANDROID_DEBUGGABLE
     )
 
     target_link_libraries(libgraphicsenv

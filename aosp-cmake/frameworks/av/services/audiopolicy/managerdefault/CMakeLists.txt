@@ -63,6 +63,7 @@ else ()
             audioclient-types-aidl-cpp
             framework-permission-aidl-cpp
             libaudioclient_aidl_conversion
+            libaudioext
             libaudiofoundation
             libaudiopolicy
             libaudiopolicycommon

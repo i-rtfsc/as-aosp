@@ -71,6 +71,8 @@ else ()
             -Wall
             -Wextra
             -Werror
+            -UNDEBUG
+            -DLOG_NDEBUG=1
     )
 
     target_link_libraries(libimg_utils

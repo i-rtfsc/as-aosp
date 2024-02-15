@@ -60,6 +60,7 @@ else ()
             -Wall
             -Werror
             -Wextra-semi
+            -D__ANDROID_DEBUGGABLE__
     )
 
     target_link_libraries(com.dsi.ant-1.0

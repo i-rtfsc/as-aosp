@@ -59,6 +59,7 @@ else ()
             -Wextra
             -Wall
             -Werror
+            -DNN_DEBUGGABLE
     )
 
     target_link_libraries(libneuralnetworks_packageinfo

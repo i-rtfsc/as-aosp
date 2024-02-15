@@ -39,6 +39,7 @@ set(FILES
         ${ANDROID_ROOT}/frameworks/av/media/libmediaplayerservice/MediaRecorderClient.cpp
         ${ANDROID_ROOT}/frameworks/av/media/libmediaplayerservice/MetadataRetrieverClient.cpp
         ${ANDROID_ROOT}/frameworks/av/media/libmediaplayerservice/StagefrightMetadataRetriever.cpp
+        ${ANDROID_ROOT}/frameworks/av/media/libmediaplayerservice/MediaVirtualCameraClient.cpp
         ${ANDROID_ROOT}/frameworks/av/media/libmediaplayerservice/StagefrightRecorder.cpp
         ${ANDROID_ROOT}/frameworks/av/media/libmediaplayerservice/TestPlayerStub.cpp
         ${ANDROID_ROOT}/frameworks/av/media/libmediaplayerservice/mpctl/PerfBoost.cpp
@@ -106,6 +107,7 @@ else ()
             libmediautils
             libmediautils_headers
             libmemunreachable
+            libmztimedtext
             libnetd_client
             libplayerservice_datasource
             libpowermanager
@@ -120,6 +122,7 @@ else ()
             libstagefright_timedtext
             libstagefright_webm_headers
             libutils
+            libyuv
             media_plugin_headers
             packagemanager_aidl-cpp
     )

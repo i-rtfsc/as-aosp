@@ -143,6 +143,7 @@ else ()
 
     target_include_directories(init_first_stage
             PUBLIC
+            ${ANDROID_ROOT}/system/core/init/root_feature/user
             ${ANDROID_ROOT}/system/core/init
     )
 
@@ -244,6 +245,7 @@ set(FILES
         ${ANDROID_ROOT}/system/core/init/uevent_listener.cpp
         ${ANDROID_ROOT}/system/core/init/ueventd.cpp
         ${ANDROID_ROOT}/system/core/init/ueventd_parser.cpp
+        ${ANDROID_ROOT}/system/core/init/init_meizu.cpp
         ${ANDROID_ROOT}/system/core/init/private_opt.cpp
         ${OUT_INTERMEDIATES_ROOT}/system/apex/apexd/apex-info-list/gen/cpp/com_android_apex.cpp
         ${OUT_INTERMEDIATES_ROOT}/system/apex/apexd/apex-info-list/gen/cpp/com_android_apex_enums.cpp

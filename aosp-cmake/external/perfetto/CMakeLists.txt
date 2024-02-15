@@ -547,6 +547,7 @@ else ()
     target_compile_options(libperfetto PRIVATE
             -Werror
             -Wno-unused-parameter
+            -DPERFETTO_BUILD_WITH_ANDROID_USERDEBUG
     )
 
     target_link_libraries(libperfetto
@@ -590,6 +591,7 @@ else ()
     target_compile_options(traced_probes PRIVATE
             -Werror
             -Wno-unused-parameter
+            -DPERFETTO_BUILD_WITH_ANDROID_USERDEBUG
     )
 
     target_link_libraries(traced_probes
@@ -794,6 +796,7 @@ else ()
     target_compile_options(libperfetto_client_example PRIVATE
             -Werror
             -Wno-unused-parameter
+            -DPERFETTO_BUILD_WITH_ANDROID_USERDEBUG
     )
 
     target_link_libraries(libperfetto_client_example
@@ -1475,6 +1478,7 @@ else ()
     target_compile_options(perfetto_cts_jni_deps PRIVATE
             -Werror
             -Wno-unused-parameter
+            -DPERFETTO_BUILD_WITH_ANDROID_USERDEBUG
     )
 
     target_link_libraries(perfetto_cts_jni_deps
@@ -1950,6 +1954,7 @@ else ()
     target_compile_options(perfetto PRIVATE
             -Werror
             -Wno-unused-parameter
+            -DPERFETTO_BUILD_WITH_ANDROID_USERDEBUG
     )
 
     target_link_libraries(perfetto
@@ -2032,6 +2037,7 @@ else ()
             -Werror
             -Wno-unused-parameter
             -Werror=global-constructors
+            -DPERFETTO_BUILD_WITH_ANDROID_USERDEBUG
     )
 
     target_link_libraries(heapprofd_client_api
@@ -2519,6 +2525,7 @@ else ()
     target_compile_options(heapprofd_standalone_client PRIVATE
             -Werror
             -Wno-unused-parameter
+            -DPERFETTO_BUILD_WITH_ANDROID_USERDEBUG
     )
 
     target_link_libraries(heapprofd_standalone_client
@@ -2569,6 +2576,7 @@ else ()
     target_compile_options(traced PRIVATE
             -Werror
             -Wno-unused-parameter
+            -DPERFETTO_BUILD_WITH_ANDROID_USERDEBUG
     )
 
     target_link_libraries(traced
@@ -2612,6 +2620,7 @@ else ()
     target_compile_options(perfetto_src_trace_processor_demangle PRIVATE
             -Werror
             -Wno-unused-parameter
+            -DPERFETTO_BUILD_WITH_ANDROID_USERDEBUG
     )
 
     target_link_libraries(perfetto_src_trace_processor_demangle
@@ -2898,6 +2907,7 @@ else ()
     target_compile_options(perfetto_trace_protos PRIVATE
             -Werror
             -Wno-unused-parameter
+            -DPERFETTO_BUILD_WITH_ANDROID_USERDEBUG
     )
 
     target_link_libraries(perfetto_trace_protos
@@ -3379,6 +3389,7 @@ else ()
     target_compile_options(heapprofd PRIVATE
             -Werror
             -Wno-unused-parameter
+            -DPERFETTO_BUILD_WITH_ANDROID_USERDEBUG
     )
 
     target_link_libraries(heapprofd
@@ -3432,6 +3443,7 @@ else ()
     target_compile_options(libperfetto_android_internal PRIVATE
             -Werror
             -Wno-unused-parameter
+            -DPERFETTO_BUILD_WITH_ANDROID_USERDEBUG
     )
 
     target_link_libraries(libperfetto_android_internal
@@ -4135,6 +4147,7 @@ else ()
     target_compile_options(perfetto_cts_deps PRIVATE
             -Werror
             -Wno-unused-parameter
+            -DPERFETTO_BUILD_WITH_ANDROID_USERDEBUG
     )
 
     target_link_libraries(perfetto_cts_deps
@@ -4816,6 +4829,7 @@ else ()
     target_compile_options(perfetto_vts_deps PRIVATE
             -Werror
             -Wno-unused-parameter
+            -DPERFETTO_BUILD_WITH_ANDROID_USERDEBUG
     )
 
     target_link_libraries(perfetto_vts_deps
@@ -5372,6 +5386,7 @@ else ()
     target_compile_options(trace_processor_shell PRIVATE
             -Werror
             -Wno-unused-parameter
+            -DPERFETTO_BUILD_WITH_ANDROID_USERDEBUG
     )
 
     target_link_libraries(trace_processor_shell
@@ -5454,6 +5469,7 @@ else ()
     target_compile_options(heapprofd_client PRIVATE
             -Werror
             -Wno-unused-parameter
+            -DPERFETTO_BUILD_WITH_ANDROID_USERDEBUG
     )
 
     target_link_libraries(heapprofd_client
@@ -5925,6 +5941,7 @@ else ()
     target_compile_options(trigger_perfetto PRIVATE
             -Werror
             -Wno-unused-parameter
+            -DPERFETTO_BUILD_WITH_ANDROID_USERDEBUG
     )
 
     target_link_libraries(trigger_perfetto
@@ -6414,6 +6431,7 @@ else ()
     target_compile_options(traced_perf PRIVATE
             -Werror
             -Wno-unused-parameter
+            -DPERFETTO_BUILD_WITH_ANDROID_USERDEBUG
     )
 
     target_link_libraries(traced_perf
@@ -6917,6 +6935,7 @@ else ()
     target_compile_options(libperfetto_client_experimental PRIVATE
             -Werror
             -Wno-unused-parameter
+            -DPERFETTO_BUILD_WITH_ANDROID_USERDEBUG
     )
 
     target_link_libraries(libperfetto_client_experimental
@@ -6959,6 +6978,7 @@ else ()
     target_compile_options(heapprofd_api_noop PRIVATE
             -Werror
             -Wno-unused-parameter
+            -DPERFETTO_BUILD_WITH_ANDROID_USERDEBUG
     )
 
     target_link_libraries(heapprofd_api_noop

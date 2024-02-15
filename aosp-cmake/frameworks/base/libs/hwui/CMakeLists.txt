@@ -83,6 +83,13 @@ set(FILES
         ${ANDROID_ROOT}/frameworks/base/libs/hwui/SkiaInterpolator.cpp
         ${ANDROID_ROOT}/frameworks/base/libs/hwui/Tonemapper.cpp
         ${ANDROID_ROOT}/frameworks/base/libs/hwui/VectorDrawable.cpp
+        ${ANDROID_ROOT}/frameworks/base/libs/hwui/flyme/BitmapAllocationTracker.cpp
+        ${ANDROID_ROOT}/frameworks/base/libs/hwui/flyme/BitmapDumper.cpp
+        ${ANDROID_ROOT}/frameworks/base/libs/hwui/flyme/GraphicBufferDumper.cpp
+        ${ANDROID_ROOT}/frameworks/base/libs/hwui/flyme/TextureDumperSkiaGL.cpp
+        ${ANDROID_ROOT}/frameworks/base/libs/hwui/flyme/Utils.cpp
+        ${ANDROID_ROOT}/frameworks/base/libs/hwui/flyme/flyme_draw_functor.cpp
+        ${ANDROID_ROOT}/frameworks/base/libs/hwui/flyme/FlymeBlurImageFilter.cpp
         ${ANDROID_ROOT}/frameworks/base/libs/hwui/hwui/AnimatedImageThread.cpp
         ${ANDROID_ROOT}/frameworks/base/libs/hwui/pipeline/skia/ATraceMemoryDump.cpp
         ${ANDROID_ROOT}/frameworks/base/libs/hwui/pipeline/skia/GLFunctorDrawable.cpp
@@ -156,6 +163,7 @@ else ()
             -Wall
             -Wno-unused-parameter
             -Werror
+            -DFLYME_GRAPHICS_EXTEND
     )
 
     target_link_libraries(libhwui_static
@@ -180,8 +188,10 @@ else ()
             libcutils
             libdl
             libdng_sdk
+            libem
             libexpat
             libft2
+            libgui
             libharfbuzz_ng
             libheif
             libjpeg
@@ -202,6 +212,7 @@ else ()
             libstatspull_lazy
             libstatssocket_lazy
             libsync
+            libtiff
             libtonemap
             libtonemap_headers
             libui
@@ -342,6 +353,13 @@ set(FILES
         ${ANDROID_ROOT}/frameworks/base/libs/hwui/apex/android_bitmap.cpp
         ${ANDROID_ROOT}/frameworks/base/libs/hwui/apex/android_canvas.cpp
         ${ANDROID_ROOT}/frameworks/base/libs/hwui/apex/jni_runtime.cpp
+        ${ANDROID_ROOT}/frameworks/base/libs/hwui/flyme/BitmapAllocationTracker.cpp
+        ${ANDROID_ROOT}/frameworks/base/libs/hwui/flyme/BitmapDumper.cpp
+        ${ANDROID_ROOT}/frameworks/base/libs/hwui/flyme/GraphicBufferDumper.cpp
+        ${ANDROID_ROOT}/frameworks/base/libs/hwui/flyme/TextureDumperSkiaGL.cpp
+        ${ANDROID_ROOT}/frameworks/base/libs/hwui/flyme/Utils.cpp
+        ${ANDROID_ROOT}/frameworks/base/libs/hwui/flyme/flyme_draw_functor.cpp
+        ${ANDROID_ROOT}/frameworks/base/libs/hwui/flyme/FlymeBlurImageFilter.cpp
         ${ANDROID_ROOT}/frameworks/base/libs/hwui/hwui/AnimatedImageThread.cpp
         ${ANDROID_ROOT}/frameworks/base/libs/hwui/pipeline/skia/ATraceMemoryDump.cpp
         ${ANDROID_ROOT}/frameworks/base/libs/hwui/pipeline/skia/GLFunctorDrawable.cpp
@@ -423,6 +441,7 @@ else ()
             -Wall
             -Wno-unused-parameter
             -Werror
+            -DFLYME_GRAPHICS_EXTEND
     )
 
     target_link_libraries(libhwui
@@ -452,9 +471,11 @@ else ()
             libcutils
             libdl
             libdng_sdk
+            libem
             libexpat
             libft2
             libgif
+            libgui
             libharfbuzz_ng
             libheif
             libimage_io
@@ -480,6 +501,7 @@ else ()
             libstatspull_lazy
             libstatssocket_lazy
             libsync
+            libtiff
             libtonemap
             libtonemap_headers
             libui

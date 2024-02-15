@@ -56,6 +56,7 @@ else ()
             -Wall
             -Werror
             -Wextra
+            -DNN_DEBUGGABLE
     )
 
     target_link_libraries(android.hardware.neuralnetworks-shim-service-sample

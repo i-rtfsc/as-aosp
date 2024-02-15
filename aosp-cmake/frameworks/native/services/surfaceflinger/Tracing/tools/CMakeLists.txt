@@ -207,6 +207,7 @@ else ()
             libsurfaceflinger_headers
             libsurfaceflinger_mocks_headers
             libsync
+            libtiff
             libtimestats
             libtimestats_atoms_proto
             libtimestats_proto

@@ -70,6 +70,8 @@ else ()
             -Werror
             -Wextra
             -DANDROID_DEBUGGABLE=0
+            -UANDROID_DEBUGGABLE
+            -DANDROID_DEBUGGABLE=1
     )
 
     target_link_libraries(liblog_for_runtime_apex
@@ -127,6 +129,8 @@ else ()
             -Werror
             -Wextra
             -DANDROID_DEBUGGABLE=0
+            -UANDROID_DEBUGGABLE
+            -DANDROID_DEBUGGABLE=1
     )
 
     target_link_libraries(liblog

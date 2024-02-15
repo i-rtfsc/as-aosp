@@ -58,6 +58,7 @@ else ()
             -Werror
             -Wall
             -Wno-unused-parameter
+            -DCARTELEMETRYD_DEBUG=true
     )
 
     target_link_libraries(android.automotive.telemetryd-1.0
@@ -111,6 +112,7 @@ else ()
             -Werror
             -Wall
             -Wno-unused-parameter
+            -DCARTELEMETRYD_DEBUG=true
     )
 
     target_link_libraries(android.automotive.telemetryd-1.0-impl

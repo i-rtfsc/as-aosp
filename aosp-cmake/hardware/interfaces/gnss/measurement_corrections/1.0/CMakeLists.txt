@@ -60,6 +60,7 @@ else ()
             -Wall
             -Werror
             -Wextra-semi
+            -D__ANDROID_DEBUGGABLE__
     )
 
     target_link_libraries(android.hardware.gnss.measurement_corrections-1.0

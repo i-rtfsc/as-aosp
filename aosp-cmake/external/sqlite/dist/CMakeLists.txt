@@ -105,6 +105,7 @@ else ()
             libc++_static
             libc++demangle
             libclang_rt.builtins
+            libcutils
             libdl
             libicui18n
             libicuuc

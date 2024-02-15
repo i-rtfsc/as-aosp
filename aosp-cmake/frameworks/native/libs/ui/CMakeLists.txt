@@ -129,6 +129,7 @@ else ()
             -Werror
             -Wall
             -Werror
+            -DFLYME_GRAPHICS_EXTEND
     )
 
     target_link_libraries(libui

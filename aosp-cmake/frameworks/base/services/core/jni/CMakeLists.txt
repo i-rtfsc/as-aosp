@@ -80,12 +80,16 @@ set(FILES
         ${ANDROID_ROOT}/frameworks/base/services/core/jni/com_android_server_PersistentDataBlockService.cpp
         ${ANDROID_ROOT}/frameworks/base/services/core/jni/com_android_server_am_LowMemDetector.cpp
         ${ANDROID_ROOT}/frameworks/base/services/core/jni/com_android_server_pm_PackageManagerShellCommandDataLoader.cpp
+        ${ANDROID_ROOT}/frameworks/base/services/core/jni/com_android_server_TiktapService.cpp
         ${ANDROID_ROOT}/frameworks/base/services/core/jni/com_android_server_sensor_SensorService.cpp
         ${ANDROID_ROOT}/frameworks/base/services/core/jni/com_android_server_wm_TaskFpsCallbackController.cpp
         ${ANDROID_ROOT}/frameworks/base/services/core/jni/com_android_server_activityTriggerService.cpp
+        ${ANDROID_ROOT}/frameworks/base/services/core/jni/com_android_server_SmartSceneManagerService.cpp
         ${ANDROID_ROOT}/frameworks/base/services/core/jni/onload.cpp
         ${ANDROID_ROOT}/frameworks/base/services/core/jni/com_android_server_am_CachedAppOptimizer.cpp
         ${ANDROID_ROOT}/frameworks/base/services/core/jni/com_android_server_app_GameManagerService.cpp
+        ${ANDROID_ROOT}/frameworks/base/services/core/jni/com_android_server_DeviceStateService.cpp
+        ${ANDROID_ROOT}/frameworks/base/services/core/jni/com_android_server_DeviceControl.cpp
 )
 set(SOURCE_FILES "")
 foreach (file ${FILES})
@@ -106,6 +110,8 @@ else ()
 
     # Add c/c++ flags
     target_compile_options(libservices.core PRIVATE
+            -DFLYME_GRAPHICS_EXTEND
+            -DFLYME_SUPPORT_LTPO_V2
             -Wall
             -Werror
             -Wno-unused-parameter
@@ -155,6 +161,8 @@ else ()
             android.hardware.vibrator-1.2
             android.hardware.vibrator-1.3
             android.hardware.vr-1.0
+            android.hidl.allocator-1.0
+            android.hidl.memory-1.0
             android.hidl.token-1.0-utils
             android.media.audio.common.types-V1-ndk
             android.system.suspend-V1-ndk
@@ -192,6 +200,7 @@ else ()
             libhardware
             libhardware_legacy
             libhidlbase
+            libhidlmemory
             libhwui
             libincfs
             libinput
@@ -226,6 +235,7 @@ else ()
             libvibratorservice
             server_configurable_flags
             service.incremental
+            vendor.meizu.hardware.tiktap_hidl-1.0
     )
 endif ()
 #################### libservices.core ####################

@@ -56,6 +56,7 @@ else ()
             -Wall
             -Werror
             -Wextra
+            -DNN_DEBUGGABLE
     )
 
     target_link_libraries(android.hardware.neuralnetworks-service-sample-limited
@@ -118,6 +119,7 @@ else ()
             -Wall
             -Werror
             -Wextra
+            -DNN_DEBUGGABLE
     )
 
     target_link_libraries(libSampleDriverAidl
@@ -185,6 +187,7 @@ else ()
             -Wall
             -Werror
             -Wextra
+            -DNN_DEBUGGABLE
     )
 
     target_link_libraries(android.hardware.neuralnetworks-service-sample-all

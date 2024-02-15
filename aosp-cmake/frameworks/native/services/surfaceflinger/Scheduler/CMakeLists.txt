@@ -58,6 +58,7 @@ else ()
             -Wall
             -Werror
             -Wextra
+            -DFLYME_GRAPHICS_EXTEND
     )
 
     target_link_libraries(libscheduler
@@ -70,6 +71,7 @@ else ()
             libdl
             liblog
             libm
+            libruntime_log
             libui
             libutils
     )

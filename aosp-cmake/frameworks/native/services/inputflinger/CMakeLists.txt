@@ -58,10 +58,12 @@ else ()
 
     # Add c/c++ flags
     target_compile_options(libinputflinger_base PRIVATE
+            -DFLYME_PRODUCT_2481
             -Wall
             -Wextra
             -Werror
             -Wno-unused-parameter
+            -DFLYME_INPUT_EXTEND
     )
 
     target_link_libraries(libinputflinger_base
@@ -78,6 +80,8 @@ else ()
             libinputflinger_headers
             liblog
             libm
+            libpackagelistparser
+            libruntime_log
             libui-types
             libutils
     )
@@ -119,10 +123,12 @@ else ()
 
     # Add c/c++ flags
     target_compile_options(libinputflinger PRIVATE
+            -DFLYME_PRODUCT_2481
             -Wall
             -Wextra
             -Werror
             -Wno-unused-parameter
+            -DFLYME_INPUT_EXTEND
     )
 
     target_link_libraries(libinputflinger
@@ -150,8 +156,10 @@ else ()
             libkll
             liblog
             libm
+            libpackagelistparser
             libpalmrejection
             libprotobuf-cpp-lite
+            libruntime_log
             libstatslog
             libstatspull
             libstatssocket

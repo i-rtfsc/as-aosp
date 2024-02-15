@@ -39,6 +39,7 @@ set(FILES
         ${ANDROID_ROOT}/packages/providers/MediaProvider/jni/MediaProviderWrapper.cpp
         ${ANDROID_ROOT}/packages/providers/MediaProvider/jni/ReaddirHelper.cpp
         ${ANDROID_ROOT}/packages/providers/MediaProvider/jni/RedactionInfo.cpp
+        ${ANDROID_ROOT}/packages/providers/MediaProvider/jni/mzcow.c
         ${ANDROID_ROOT}/packages/providers/MediaProvider/jni/node.cpp
 )
 set(SOURCE_FILES "")

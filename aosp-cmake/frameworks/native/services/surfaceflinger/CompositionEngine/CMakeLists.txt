@@ -77,6 +77,8 @@ else ()
             -Wno-unused-parameter
             -Wno-unused-parameter
             -DQTI_COMPOSER3_EXTENSIONS
+            -DFLYME_GRAPHICS_EXTEND
+            -DFLYME_COLOR_MANAGEMENT
             -Wall
             -Werror
             -Wextra
@@ -129,8 +131,10 @@ else ()
             libprotobuf-cpp-lite
             libqticompositionengineextension
             librenderengine
+            libruntime_log
             libskia_renderengine
             libsurfaceflinger_headers
+            libtiff
             libtimestats
             libtonemap
             libui
@@ -177,6 +181,8 @@ else ()
 
     # Add c/c++ flags
     target_compile_options(libcompositionengine_mocks PRIVATE
+            -DFLYME_GRAPHICS_EXTEND
+            -DFLYME_COLOR_MANAGEMENT
             -Wall
             -Werror
             -Wextra
@@ -229,8 +235,10 @@ else ()
             libprotobuf-cpp-lite
             libqticompositionengineextension
             librenderengine
+            libruntime_log
             libskia_renderengine
             libsurfaceflinger_headers
+            libtiff
             libtimestats
             libtonemap
             libui

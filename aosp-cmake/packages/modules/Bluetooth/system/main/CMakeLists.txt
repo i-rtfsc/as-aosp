@@ -51,6 +51,7 @@ set(FILES
         ${ANDROID_ROOT}/packages/modules/Bluetooth/system/main/shim/metrics_api.cc
         ${ANDROID_ROOT}/packages/modules/Bluetooth/system/main/shim/shim.cc
         ${ANDROID_ROOT}/packages/modules/Bluetooth/system/main/shim/stack.cc
+        ${ANDROID_ROOT}/packages/modules/Bluetooth/system/main/shim/utils.cc
         ${ANDROID_ROOT}/packages/modules/Bluetooth/system/main/bte_conf.cc
         ${ANDROID_ROOT}/packages/modules/Bluetooth/system/main/bte_init_cpp_logging.cc
         ${ANDROID_ROOT}/packages/modules/Bluetooth/system/main/bte_logmsg.cc
@@ -81,6 +82,7 @@ else ()
             -Wextra
             -Wno-unused-parameter
             -DLOG_NDEBUG=1
+            -DBLUEDROID_DEBUG
     )
 
     target_link_libraries(libbte

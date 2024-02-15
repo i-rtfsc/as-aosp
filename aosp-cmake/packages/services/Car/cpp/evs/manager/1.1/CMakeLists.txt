@@ -66,6 +66,7 @@ else ()
     target_compile_options(libevsmanager_static PRIVATE
             -Wall
             -Werror
+            -DEVS_DEBUG
     )
 
     target_link_libraries(libevsmanager_static
@@ -128,6 +129,7 @@ else ()
     target_compile_options(android.automotive.evs.manager-1.1 PRIVATE
             -Wall
             -Werror
+            -DEVS_DEBUG
     )
 
     target_link_libraries(android.automotive.evs.manager-1.1

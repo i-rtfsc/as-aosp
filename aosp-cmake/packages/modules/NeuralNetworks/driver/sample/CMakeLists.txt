@@ -107,6 +107,7 @@ else ()
             -Wall
             -Werror
             -Wextra
+            -DNN_DEBUGGABLE
     )
 
     target_link_libraries(neuralnetworks_canonical_sample_driver
@@ -198,6 +199,7 @@ else ()
             -Wall
             -Werror
             -Wextra
+            -DNN_DEBUGGABLE
     )
 
     target_link_libraries(android.hardware.neuralnetworks-service.example_fuzzer

@@ -36,7 +36,6 @@ set(FILES
         ${OUT_INTERMEDIATES_ROOT}/packages/modules/Uwb/androidx_backend/androidx.core.uwb.backend.aidl_interface-V1-ndk_platform-source/gen/androidx/core/uwb/backend/IUwb.cpp
         ${OUT_INTERMEDIATES_ROOT}/packages/modules/Uwb/androidx_backend/androidx.core.uwb.backend.aidl_interface-V1-ndk_platform-source/gen/androidx/core/uwb/backend/IUwbClient.cpp
         ${OUT_INTERMEDIATES_ROOT}/packages/modules/Uwb/androidx_backend/androidx.core.uwb.backend.aidl_interface-V1-ndk_platform-source/gen/androidx/core/uwb/backend/RangingCapabilities.cpp
-        ${OUT_INTERMEDIATES_ROOT}/packages/modules/Uwb/androidx_backend/androidx.core.uwb.backend.aidl_interface-V1-ndk_platform-source/gen/androidx/core/uwb/backend/RangingControleeParameters.cpp
         ${OUT_INTERMEDIATES_ROOT}/packages/modules/Uwb/androidx_backend/androidx.core.uwb.backend.aidl_interface-V1-ndk_platform-source/gen/androidx/core/uwb/backend/RangingMeasurement.cpp
         ${OUT_INTERMEDIATES_ROOT}/packages/modules/Uwb/androidx_backend/androidx.core.uwb.backend.aidl_interface-V1-ndk_platform-source/gen/androidx/core/uwb/backend/RangingParameters.cpp
         ${OUT_INTERMEDIATES_ROOT}/packages/modules/Uwb/androidx_backend/androidx.core.uwb.backend.aidl_interface-V1-ndk_platform-source/gen/androidx/core/uwb/backend/RangingPosition.cpp
@@ -88,7 +87,6 @@ set(FILES
         ${OUT_INTERMEDIATES_ROOT}/packages/modules/Uwb/androidx_backend/androidx.core.uwb.backend.aidl_interface-cpp-analyzer-source/gen/androidx/core/uwb/backend/IUwb.cpp
         ${OUT_INTERMEDIATES_ROOT}/packages/modules/Uwb/androidx_backend/androidx.core.uwb.backend.aidl_interface-cpp-analyzer-source/gen/androidx/core/uwb/backend/IUwbClient.cpp
         ${OUT_INTERMEDIATES_ROOT}/packages/modules/Uwb/androidx_backend/androidx.core.uwb.backend.aidl_interface-cpp-analyzer-source/gen/androidx/core/uwb/backend/RangingCapabilities.cpp
-        ${OUT_INTERMEDIATES_ROOT}/packages/modules/Uwb/androidx_backend/androidx.core.uwb.backend.aidl_interface-cpp-analyzer-source/gen/androidx/core/uwb/backend/RangingControleeParameters.cpp
         ${OUT_INTERMEDIATES_ROOT}/packages/modules/Uwb/androidx_backend/androidx.core.uwb.backend.aidl_interface-cpp-analyzer-source/gen/androidx/core/uwb/backend/RangingMeasurement.cpp
         ${OUT_INTERMEDIATES_ROOT}/packages/modules/Uwb/androidx_backend/androidx.core.uwb.backend.aidl_interface-cpp-analyzer-source/gen/androidx/core/uwb/backend/RangingParameters.cpp
         ${OUT_INTERMEDIATES_ROOT}/packages/modules/Uwb/androidx_backend/androidx.core.uwb.backend.aidl_interface-cpp-analyzer-source/gen/androidx/core/uwb/backend/RangingPosition.cpp
@@ -144,7 +142,6 @@ set(FILES
         ${OUT_INTERMEDIATES_ROOT}/packages/modules/Uwb/androidx_backend/androidx.core.uwb.backend.aidl_interface-V1-ndk-source/gen/androidx/core/uwb/backend/IUwb.cpp
         ${OUT_INTERMEDIATES_ROOT}/packages/modules/Uwb/androidx_backend/androidx.core.uwb.backend.aidl_interface-V1-ndk-source/gen/androidx/core/uwb/backend/IUwbClient.cpp
         ${OUT_INTERMEDIATES_ROOT}/packages/modules/Uwb/androidx_backend/androidx.core.uwb.backend.aidl_interface-V1-ndk-source/gen/androidx/core/uwb/backend/RangingCapabilities.cpp
-        ${OUT_INTERMEDIATES_ROOT}/packages/modules/Uwb/androidx_backend/androidx.core.uwb.backend.aidl_interface-V1-ndk-source/gen/androidx/core/uwb/backend/RangingControleeParameters.cpp
         ${OUT_INTERMEDIATES_ROOT}/packages/modules/Uwb/androidx_backend/androidx.core.uwb.backend.aidl_interface-V1-ndk-source/gen/androidx/core/uwb/backend/RangingMeasurement.cpp
         ${OUT_INTERMEDIATES_ROOT}/packages/modules/Uwb/androidx_backend/androidx.core.uwb.backend.aidl_interface-V1-ndk-source/gen/androidx/core/uwb/backend/RangingParameters.cpp
         ${OUT_INTERMEDIATES_ROOT}/packages/modules/Uwb/androidx_backend/androidx.core.uwb.backend.aidl_interface-V1-ndk-source/gen/androidx/core/uwb/backend/RangingPosition.cpp
@@ -195,7 +192,6 @@ set(FILES
         ${OUT_INTERMEDIATES_ROOT}/packages/modules/Uwb/androidx_backend/androidx.core.uwb.backend.aidl_interface-V1-cpp-source/gen/androidx/core/uwb/backend/IUwb.cpp
         ${OUT_INTERMEDIATES_ROOT}/packages/modules/Uwb/androidx_backend/androidx.core.uwb.backend.aidl_interface-V1-cpp-source/gen/androidx/core/uwb/backend/IUwbClient.cpp
         ${OUT_INTERMEDIATES_ROOT}/packages/modules/Uwb/androidx_backend/androidx.core.uwb.backend.aidl_interface-V1-cpp-source/gen/androidx/core/uwb/backend/RangingCapabilities.cpp
-        ${OUT_INTERMEDIATES_ROOT}/packages/modules/Uwb/androidx_backend/androidx.core.uwb.backend.aidl_interface-V1-cpp-source/gen/androidx/core/uwb/backend/RangingControleeParameters.cpp
         ${OUT_INTERMEDIATES_ROOT}/packages/modules/Uwb/androidx_backend/androidx.core.uwb.backend.aidl_interface-V1-cpp-source/gen/androidx/core/uwb/backend/RangingMeasurement.cpp
         ${OUT_INTERMEDIATES_ROOT}/packages/modules/Uwb/androidx_backend/androidx.core.uwb.backend.aidl_interface-V1-cpp-source/gen/androidx/core/uwb/backend/RangingParameters.cpp
         ${OUT_INTERMEDIATES_ROOT}/packages/modules/Uwb/androidx_backend/androidx.core.uwb.backend.aidl_interface-V1-cpp-source/gen/androidx/core/uwb/backend/RangingPosition.cpp

@@ -184,6 +184,133 @@ else ()
 endif ()
 #################### libmedia_jni ####################
 
+#################### libmediacamera_jni ####################
+set(FILES
+        ${ANDROID_ROOT}/frameworks/base/media/jni/android_media_MediaVirtualCamera.cpp
+)
+set(SOURCE_FILES "")
+foreach (file ${FILES})
+    if (EXISTS ${file})
+        list(APPEND SOURCE_FILES ${file})
+    endif ()
+endforeach ()
+
+if (NOT SOURCE_FILES)
+    message(WARNING "${PROJECT_NAME}, source files not exist")
+else ()
+    add_library(libmediacamera_jni SHARED ${SOURCE_FILES})
+
+    target_include_directories(libmediacamera_jni
+            PUBLIC
+            ${ANDROID_ROOT}/frameworks/base/media/jni
+    )
+
+    # Add c/c++ flags
+    target_compile_options(libmediacamera_jni PRIVATE
+            -Wall
+            -Werror
+    )
+
+    target_link_libraries(libmediacamera_jni
+            android.hardware.cas.native-1.0
+            android.hardware.cas-1.0
+            android.hardware.drm-1.3
+            android.hidl.memory-1.0
+            android.hidl.token-1.0-utils
+            libandroid_runtime
+            libandroidfw
+            libaudioclient
+            libbase
+            libbinder
+            libc
+            libc++
+            libc++demangle
+            libcamera_client
+            libclang_rt.builtins
+            libclang_rt.ubsan_minimal
+            libcodec2
+            libcodec2_internal
+            libcodec2_vndk
+            libcutils
+            libdl
+            libgrallocusage
+            libgui
+            libhardware_headers
+            libhidlallocatorutils
+            libhidlbase
+            libhwui
+            liblog
+            libm
+            libmedia
+            libmedia_codeclist
+            libmedia_jni_utils
+            libmedia_midiiowrapper
+            libmedia_omx
+            libmediadrm
+            libmediadrm_headers
+            libmediadrmmetrics_consumer
+            libmediametrics
+            libmtp
+            libnativehelper
+            libnativewindow
+            libpiex
+            libprocessgroup
+            libsonivox
+            libstagefright
+            libstagefright_foundation
+            libui
+            libutils
+    )
+endif ()
+#################### libmediacamera_jni ####################
+
+#################### libXjsdVirtualAudio ####################
+set(FILES
+        ${ANDROID_ROOT}/frameworks/base/media/jni/VirtualAudio.cpp
+)
+set(SOURCE_FILES "")
+foreach (file ${FILES})
+    if (EXISTS ${file})
+        list(APPEND SOURCE_FILES ${file})
+    endif ()
+endforeach ()
+
+if (NOT SOURCE_FILES)
+    message(WARNING "${PROJECT_NAME}, source files not exist")
+else ()
+    add_library(libXjsdVirtualAudio SHARED ${SOURCE_FILES})
+
+    target_include_directories(libXjsdVirtualAudio
+            PUBLIC
+            ${ANDROID_ROOT}/frameworks/base/media/jni
+    )
+
+    # Add c/c++ flags
+    target_compile_options(libXjsdVirtualAudio PRIVATE
+            -Wall
+            -Werror
+            -Wextra
+            -Wno-unused-parameter
+    )
+
+    target_link_libraries(libXjsdVirtualAudio
+            libaudioclient
+            libaudiohal
+            libbinder
+            libc
+            libc++
+            libc++demangle
+            libclang_rt.builtins
+            libdl
+            libhidlbase
+            liblog
+            libm
+            libmedia
+            libutils
+    )
+endif ()
+#################### libXjsdVirtualAudio ####################
+
 #################### libmedia_tv_tuner ####################
 set(FILES
         ${ANDROID_ROOT}/frameworks/base/media/jni/android_media_tv_Tuner.cpp

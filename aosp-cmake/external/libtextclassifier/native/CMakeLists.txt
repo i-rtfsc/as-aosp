@@ -83,6 +83,7 @@ else ()
     target_compile_options(libtextclassifier_bert_tokenizer PRIVATE
             -Werror
             -Wno-unused-parameter
+            -DTC3_DEBUG_LOGGING=1
     )
 
     target_link_libraries(libtextclassifier_bert_tokenizer
@@ -375,6 +376,7 @@ else ()
             -Werror
             -Wno-unused-function
             -Wno-unused-parameter
+            -DTC3_DEBUG_LOGGING=1
     )
 
     target_link_libraries(libtextclassifier

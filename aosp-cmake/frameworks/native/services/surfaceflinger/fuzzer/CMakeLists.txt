@@ -186,6 +186,7 @@ else ()
             libcutils
             libdisplayconfig.system.qti
             libdl
+            libem
             libfmq
             libframetimeline
             libgmock
@@ -221,6 +222,7 @@ else ()
             libstatssocket
             libsurfaceflinger_headers
             libsync
+            libtiff
             libtimestats
             libtimestats_proto
             libtonemap
@@ -396,6 +398,7 @@ else ()
             libcutils
             libdisplayconfig.system.qti
             libdl
+            libem
             libfmq
             libframetimeline
             libgmock
@@ -432,6 +435,7 @@ else ()
             libstatssocket
             libsurfaceflinger_headers
             libsync
+            libtiff
             libtimestats
             libtimestats_proto
             libtonemap
@@ -607,6 +611,7 @@ else ()
             libcutils
             libdisplayconfig.system.qti
             libdl
+            libem
             libfmq
             libframetimeline
             libgmock
@@ -642,6 +647,7 @@ else ()
             libstatssocket
             libsurfaceflinger_headers
             libsync
+            libtiff
             libtimestats
             libtimestats_proto
             libtonemap
@@ -817,6 +823,7 @@ else ()
             libcutils
             libdisplayconfig.system.qti
             libdl
+            libem
             libfmq
             libframetimeline
             libgmock
@@ -852,6 +859,7 @@ else ()
             libstatssocket
             libsurfaceflinger_headers
             libsync
+            libtiff
             libtimestats
             libtimestats_proto
             libtonemap
@@ -1028,6 +1036,7 @@ else ()
             libcutils
             libdisplayconfig.system.qti
             libdl
+            libem
             libfmq
             libframetimeline
             libgmock
@@ -1063,6 +1072,7 @@ else ()
             libstatssocket
             libsurfaceflinger_headers
             libsync
+            libtiff
             libtimestats
             libtimestats_proto
             libtonemap

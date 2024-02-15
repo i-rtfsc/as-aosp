@@ -57,6 +57,7 @@ else ()
             -Wall
             -Werror
             -Wno-unused-variable
+            -DFLYME_EXTEND
     )
 
     target_link_libraries(libdumpstateutil
@@ -104,6 +105,7 @@ else ()
             -Wall
             -Werror
             -Wno-unused-variable
+            -DFLYME_EXTEND
     )
 
     target_link_libraries(dumpstate
@@ -169,6 +171,7 @@ else ()
             -Wall
             -Werror
             -Wno-unused-variable
+            -DFLYME_EXTEND
     )
 
     target_link_libraries(libdumpstateaidl

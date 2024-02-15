@@ -55,6 +55,7 @@ else ()
 
     # Add c/c++ flags
     target_compile_options(bootanimation PRIVATE
+            -DFLYME_GRAPHICS_EXTEND
             -Wall
             -Werror
     )
@@ -102,6 +103,7 @@ else ()
 
     # Add c/c++ flags
     target_compile_options(libbootanimation PRIVATE
+            -DFLYME_GRAPHICS_EXTEND
             -Wall
             -Werror
     )

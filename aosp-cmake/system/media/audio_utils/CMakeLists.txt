@@ -219,6 +219,51 @@ else ()
 endif ()
 #################### libsndfile ####################
 
+#################### libaudioext ####################
+set(FILES
+        ${ANDROID_ROOT}/system/media/audio_utils/AudioDumpUtil.cpp
+        ${ANDROID_ROOT}/system/media/audio_utils/readproc.cpp
+        ${ANDROID_ROOT}/system/media/audio_utils/AudioDeadTrackCheck.cpp
+)
+set(SOURCE_FILES "")
+foreach (file ${FILES})
+    if (EXISTS ${file})
+        list(APPEND SOURCE_FILES ${file})
+    endif ()
+endforeach ()
+
+if (NOT SOURCE_FILES)
+    message(WARNING "${PROJECT_NAME}, source files not exist")
+else ()
+    add_library(libaudioext SHARED ${SOURCE_FILES})
+
+    target_include_directories(libaudioext
+            PUBLIC
+            ${ANDROID_ROOT}/system/media/audio_utils/include
+            ${ANDROID_ROOT}/system/media/audio_utils
+    )
+
+    # Add c/c++ flags
+    target_compile_options(libaudioext PRIVATE
+            -Werror
+            -Wall
+    )
+
+    target_link_libraries(libaudioext
+            libaudioutils
+            libc
+            libc++
+            libc++demangle
+            libclang_rt.builtins
+            libcutils
+            libdl
+            liblog
+            libm
+            libutils
+    )
+endif ()
+#################### libaudioext ####################
+
 #################### libaudioutils ####################
 set(FILES
         ${ANDROID_ROOT}/system/media/audio_utils/Balance.cpp

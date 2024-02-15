@@ -60,6 +60,7 @@ else ()
             -Wall
             -Werror
             -Wextra-semi
+            -D__ANDROID_DEBUGGABLE__
     )
 
     target_link_libraries(android.frameworks.cameraservice.device-2.0

@@ -543,6 +543,7 @@ else ()
             libaudio_aidl_conversion_common_cpp
             libaudioclient_aidl_conversion
             libaudioclient_headers
+            libaudioext
             libaudiofoundation
             libaudiomanager
             libaudiopolicy

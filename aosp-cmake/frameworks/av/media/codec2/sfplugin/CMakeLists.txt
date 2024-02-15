@@ -98,6 +98,7 @@ else ()
             libmedia_omx
             libmediadrm_headers
             libmediametrics_headers
+            libmediautils
             libsfplugin_ccodec_utils
             libstagefright_bufferqueue_helper
             libstagefright_codecbase

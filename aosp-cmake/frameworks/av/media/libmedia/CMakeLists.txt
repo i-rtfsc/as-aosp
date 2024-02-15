@@ -200,6 +200,8 @@ set(FILES
         ${ANDROID_ROOT}/frameworks/av/media/libmedia/mediarecorder.cpp
         ${ANDROID_ROOT}/frameworks/av/media/libmedia/IMediaMetadataRetriever.cpp
         ${ANDROID_ROOT}/frameworks/av/media/libmedia/mediametadataretriever.cpp
+        ${ANDROID_ROOT}/frameworks/av/media/libmedia/MediaVirtualCamera.cpp
+        ${ANDROID_ROOT}/frameworks/av/media/libmedia/IMediaVirtualCamera.cpp
         ${ANDROID_ROOT}/frameworks/av/media/libmedia/MediaScanner.cpp
         ${ANDROID_ROOT}/frameworks/av/media/libmedia/MediaScannerClient.cpp
         ${ANDROID_ROOT}/frameworks/av/media/libmedia/CharacterEncodingDetector.cpp
