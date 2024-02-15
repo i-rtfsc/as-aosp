@@ -1,0 +1,204 @@
+# Copyright (c) 2024 anqi.huang@outlook.com
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use self file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+cmake_minimum_required(VERSION 3.5)
+
+project(android.hardware.identity-service.example)
+
+# Check if the major CMakeLists.txt file has correctly set
+# the ANDROID_ROOT directory.
+if (IS_DIRECTORY ${ANDROID_ROOT})
+    message(STATUS "${PROJECT_NAME}, has been set android root")
+else ()
+    if (IS_DIRECTORY ${BUILD_NATIVE_ROOT})
+        message(WARNING "${PROJECT_NAME}, set ANDROID_ROOT via BUILD_NATIVE_ROOT=${BUILD_NATIVE_ROOT}")
+        set(ANDROID_ROOT ${BUILD_NATIVE_ROOT})
+        set(OUT_INTERMEDIATES_ROOT ${ANDROID_ROOT}/out/soong/.intermediates)
+    else ()
+        message(FATAL_ERROR "${PROJECT_NAME}, ANDROID_ROOT was NULL")
+    endif ()
+endif ()
+
+#################### android.hardware.identity-libeic-hal-common ####################
+set(FILES
+        ${ANDROID_ROOT}/hardware/interfaces/identity/aidl/default/common/IdentityCredential.cpp
+        ${ANDROID_ROOT}/hardware/interfaces/identity/aidl/default/common/IdentityCredentialStore.cpp
+        ${ANDROID_ROOT}/hardware/interfaces/identity/aidl/default/common/PresentationSession.cpp
+        ${ANDROID_ROOT}/hardware/interfaces/identity/aidl/default/common/WritableIdentityCredential.cpp
+)
+set(SOURCE_FILES "")
+foreach (file ${FILES})
+    if (EXISTS ${file})
+        list(APPEND SOURCE_FILES ${file})
+    endif ()
+endforeach ()
+
+if (NOT SOURCE_FILES)
+    message(WARNING "${PROJECT_NAME}, source files not exist")
+else ()
+    add_library(android.hardware.identity-libeic-hal-common SHARED ${SOURCE_FILES})
+
+    target_include_directories(android.hardware.identity-libeic-hal-common
+            PUBLIC
+            ${ANDROID_ROOT}/hardware/interfaces/identity/aidl/default/common
+            ${ANDROID_ROOT}/hardware/interfaces/identity/aidl/default
+    )
+
+    # Add c/c++ flags
+    target_compile_options(android.hardware.identity-libeic-hal-common PRIVATE
+            -Werror
+            -Wall
+            -Wextra
+    )
+
+    target_link_libraries(android.hardware.identity-libeic-hal-common
+            android.hardware.identity-V5-ndk
+            android.hardware.identity-support-lib
+            android.hardware.keymaster-V3-ndk
+            android.hardware.security.keymint-V3-ndk
+            android.hardware.security.rkp-V3-ndk
+            libbase
+            libbinder_ndk
+            libc
+            libc++_static
+            libc++demangle
+            libclang_rt.builtins
+            libclang_rt.ubsan_minimal
+            libcppbor_external
+            libcppcose_rkp
+            libcrypto
+            libdl
+            libkeymaster_messages
+            libkeymaster_portable
+            liblog
+            libm
+            libpuresoftkeymasterdevice
+            libsoft_attestation_cert
+            libutils
+    )
+endif ()
+#################### android.hardware.identity-libeic-hal-common ####################
+
+#################### android.hardware.identity-service.example ####################
+set(FILES
+        ${ANDROID_ROOT}/hardware/interfaces/identity/aidl/default/service.cpp
+        ${ANDROID_ROOT}/hardware/interfaces/identity/aidl/default/FakeSecureHardwareProxy.cpp
+)
+set(SOURCE_FILES "")
+foreach (file ${FILES})
+    if (EXISTS ${file})
+        list(APPEND SOURCE_FILES ${file})
+    endif ()
+endforeach ()
+
+if (NOT SOURCE_FILES)
+    message(WARNING "${PROJECT_NAME}, source files not exist")
+else ()
+    add_executable(android.hardware.identity-service.example ${SOURCE_FILES})
+
+    target_include_directories(android.hardware.identity-service.example
+            PUBLIC
+            ${ANDROID_ROOT}/hardware/interfaces/identity/aidl/default
+            ${ANDROID_ROOT}/hardware/interfaces/identity/aidl/default/common
+            ${ANDROID_ROOT}/hardware/interfaces/identity/aidl/default/libeic
+    )
+
+    # Add c/c++ flags
+    target_compile_options(android.hardware.identity-service.example PRIVATE
+            -Werror
+            -Wall
+            -Wextra
+    )
+
+    target_link_libraries(android.hardware.identity-service.example
+            android.hardware.identity-V5-ndk
+            android.hardware.identity-libeic-hal-common
+            android.hardware.identity-libeic-library
+            android.hardware.identity-support-lib
+            android.hardware.keymaster-V3-ndk
+            android.hardware.security.keymint-V3-ndk
+            android.hardware.security.rkp-V3-ndk
+            libbase
+            libbinder_ndk
+            libc++
+            libc++demangle
+            libc
+            libclang_rt.builtins
+            libclang_rt.ubsan_minimal
+            libcppbor_external
+            libcppcose_rkp
+            libcrypto
+            libdl
+            libkeymaster_messages
+            libkeymaster_portable
+            liblog
+            libm
+            libpuresoftkeymasterdevice
+            libsoft_attestation_cert
+            libutils
+            libc
+            libdl
+            libm
+    )
+endif ()
+#################### android.hardware.identity-service.example ####################
+
+#################### android.hardware.identity-libeic-library ####################
+set(FILES
+        ${ANDROID_ROOT}/hardware/interfaces/identity/aidl/default/libeic/EicCbor.c
+        ${ANDROID_ROOT}/hardware/interfaces/identity/aidl/default/libeic/EicSession.c
+        ${ANDROID_ROOT}/hardware/interfaces/identity/aidl/default/libeic/EicPresentation.c
+        ${ANDROID_ROOT}/hardware/interfaces/identity/aidl/default/libeic/EicProvisioning.c
+        ${ANDROID_ROOT}/hardware/interfaces/identity/aidl/default/EicOpsImpl.cc
+)
+set(SOURCE_FILES "")
+foreach (file ${FILES})
+    if (EXISTS ${file})
+        list(APPEND SOURCE_FILES ${file})
+    endif ()
+endforeach ()
+
+if (NOT SOURCE_FILES)
+    message(WARNING "${PROJECT_NAME}, source files not exist")
+else ()
+    add_library(android.hardware.identity-libeic-library SHARED ${SOURCE_FILES})
+
+    target_include_directories(android.hardware.identity-libeic-library
+            PUBLIC
+            ${ANDROID_ROOT}/hardware/interfaces/identity/aidl/default/libeic
+            ${ANDROID_ROOT}/hardware/interfaces/identity/aidl/default
+    )
+
+    # Add c/c++ flags
+    target_compile_options(android.hardware.identity-libeic-library PRIVATE
+            -Werror
+            -Wall
+            -Wextra
+            -DEIC_DEBUG
+    )
+
+    target_link_libraries(android.hardware.identity-libeic-library
+            android.hardware.identity-support-lib
+            libbase
+            libc
+            libc++_static
+            libc++demangle
+            libclang_rt.builtins
+            libclang_rt.ubsan_minimal
+            libcrypto
+            libdl
+            libm
+    )
+endif ()
+#################### android.hardware.identity-libeic-library ####################
