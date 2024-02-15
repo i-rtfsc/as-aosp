@@ -24,7 +24,11 @@ include ':Connectivity'
 
 
 /*************** aosp native ***************/
+<<<<<<< HEAD
  include ':aosp-native'
+=======
+//include ':aosp-cmake'
+>>>>>>> d0fbaed (Add cmake module)
 /*************** aosp native ***************/
 
 

@@ -1,0 +1,12 @@
+def androidRoot = rootProject.ext.aosp
+
+ext {
+    BUILD_MANIFEST = ""
+    BUILD_RES = ""
+    BUILD_ASSETS = ""
+    BUILD_SRC = ""
+    BUILD_AIDL = ""
+    BUILD_NATIVE_ROOT = androidRoot.root
+}
+
+apply from: "${rootDir}/scripts/android-build.gradle"
