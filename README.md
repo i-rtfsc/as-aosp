@@ -266,7 +266,7 @@ lineage代码所在的路径，主要是配置了 lineage-framework、lineage-se
   主 cmake 文件，可以配置打开或者关闭不需要的模块。
   - BUILD_NATIVE_ROOT
     BUILD_NATIVE_ROOT 是 build.gralde 配置的源码目录，cmake 会判断 BUILD_NATIVE_ROOT 的路径是否存来而设置 ANDROID_ROOT 
-    否则 ANDROID_ROOT=~/code/aosp  
+    否则 ANDROID_ROOT=~/code/lineage
   - ANDROID_TARGET_ARCH
     也就是 TARGET_ARCH
   - ANDROID_ARCH_VARIANT
