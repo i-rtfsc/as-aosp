@@ -14,7 +14,6 @@
   * [native](#native)
   * [删除android.jar](#删除androidjar)
   * [支持AIDL](#支持aidl)
-* [首次加载](#首次加载)
 * [编译](#编译)
 * [版本](#版本)
   * [5.x.x](#5xx)
@@ -239,41 +238,38 @@ rootProject.ext.allModules.each { dependence -> compileOnly project(dependence.v
 
 ## native
 
-通过根目录下的settings.gradle可以看到有如下的配置：
+通过根目录下的 settings.gradle 可以看到有如下的配置：
 
 ```bash
 /*************** aosp native ***************/
-include ':aosp-native'
+//include ':aosp-cmake'
 /*************** aosp native ***************/
 ```
-在 aosp-native 目录下包含了很多模块：
+**默认关闭native模块**
 
-- AndroidRuntime: 对应的是 frameworks/base/core/jni/Android.bp 写的 libandroid_runtime。也就是 frameworks base core jni。
-- AndroidServices: 对应的是 frameworks/base/libs/services、frameworks/base/services/core/jni、frameworks/base/services/incremental。也就是 libservic、libservices.core、libservices.core-gnss、service.incremental 的和。
-- InputFlinger: 对应的是 frameworks/native/services/inputflinger。
-- SurfaceFlinger: 对应的是 frameworks/native/services/surfaceflinger。
-- ...
+在 aosp-cmake 目录下包含了所有的native模块，下面对 aosp-cmake 根目录下的两个文件稍作解释：
 
-在每个cmake文件里都设置了这么一些变量，主要是用来控制是否加载相应的代码目录。
+- projects.json
+  所有的模块名字，以及此模块对应的 CMakeLists.txt 目录。
 
-这里基本上只是把常用到的都打开了，如果需要把全部打开，改成true即可。
-（如果都打开as占用内存会很大）
-```bash
-set(AOSP_FWK_BASE true)
-set(AOSP_FWK_NATIVE true)
-set(AOSP_SYSTEM_COMMON true)
-set(AOSP_FWK_AV false)
-set(AOSP_SYSTEM false)
-set(AOSP_ART false)
-set(AOSP_BIONIC false)
-set(AOSP_EXTERNAL false)
-set(AOSP_PACKAGES false)
-set(AOSP_BOOTABLE false)
-set(AOSP_HARDWARE false)
-set(AOSP_VENDOR false)
-set(AOSP_OUT false)
-set(AOSP_OTHER false)
-```
+- CMakeLists.txt
+  主 cmake 文件，可以配置打开或者关闭不需要的模块。
+  - BUILD_NATIVE_ROOT
+    BUILD_NATIVE_ROOT 是 build.gralde 配置的源码目录，cmake 会判断 BUILD_NATIVE_ROOT 的路径是否存来而设置 ANDROID_ROOT 
+    否则 ANDROID_ROOT=~/code/aosp  
+  - ANDROID_TARGET_ARCH
+    也就是 TARGET_ARCH
+  - ANDROID_ARCH_VARIANT
+    也就是 TARGET_ARCH_VARIANT
+  - ANDROID_CPU_VARIANT
+    也就是 ArchType
+  - OUT_ARCH_CPU
+    也就是 {TARGET_ARCH}_{TARGET_ARCH_VARIANT}_{ANDROID_CPU_VARIANT}
+    设置这几个配置是为了 CMakeLists.txt 里有一些源码是从 out 里获取，如：
+    ${OUT_INTERMEDIATES_ROOT}/frameworks/native/services/surfaceflinger/sysprop/libSurfaceFlingerProperties/android_${OUT_ARCH_CPU}_static/gen/sysprop/SurfaceFlingerProperties.sysprop.cpp
+  - add_subdirectory
+    可根据自己下需求打开或者关闭相应的模块
+
 
 ## 删除android.jar
 
@@ -327,52 +323,6 @@ if (rootProject.ext.build_aidl.toBoolean()) {
 > "Rebuild Project" 时编译 aidl 会有遇到报错的情况，所以这里支持 AIDL 只能看运气；如果你的 AIDL 能编译出来，那恭喜你，运气真好！
 
 
-# 首次加载
-
-如果设置的 root 目录包含整个 aosp 工程，首次打开会很慢。可以把 .idea/misc.xml 改成如下：
-打开 AS 会比较快，后续在 sync project 的时候会在 gralde 的 excludeFolder 认为在真正的 module 里把忽略的文件夹放到对应的 iml 配置里。
-若当前配置的忽略文件夹跟你需要有出入，可以在 scripts/exclude-folder.py 里自行修改。
-
-```bash
-<project version="4">
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_17" default="true" project-jdk-name="jbr-17" project-jdk-type="JavaSDK">
-    <output url="file://$PROJECT_DIR$/build/classes" />
-    <content url="file://$MODULE_DIR$">
-      <excludeFolder url="file://$MODULE_DIR$/art" />
-      <excludeFolder url="file://$MODULE_DIR$/bionic" />
-      <excludeFolder url="file://$MODULE_DIR$/bootable" />
-      <excludeFolder url="file://$MODULE_DIR$/build" />
-      <excludeFolder url="file://$MODULE_DIR$/cts" />
-      <excludeFolder url="file://$MODULE_DIR$/dalvik" />
-      <excludeFolder url="file://$MODULE_DIR$/developers" />
-      <excludeFolder url="file://$MODULE_DIR$/development" />
-      <excludeFolder url="file://$MODULE_DIR$/device" />
-      <excludeFolder url="file://$MODULE_DIR$/disregard" />
-      <excludeFolder url="file://$MODULE_DIR$/external" />
-      <excludeFolder url="file://$MODULE_DIR$/hardware" />
-      <excludeFolder url="file://$MODULE_DIR$/kernel" />
-      <excludeFolder url="file://$MODULE_DIR$/libcore" />
-      <excludeFolder url="file://$MODULE_DIR$/libnativehelper" />
-      <excludeFolder url="file://$MODULE_DIR$/out" />
-      <excludeFolder url="file://$MODULE_DIR$/packages" />
-      <excludeFolder url="file://$MODULE_DIR$/pdk" />
-      <excludeFolder url="file://$MODULE_DIR$/platform" />
-      <excludeFolder url="file://$MODULE_DIR$/platform_testing" />
-      <excludeFolder url="file://$MODULE_DIR$/prebuilts" />
-      <excludeFolder url="file://$MODULE_DIR$/.repo" />
-      <excludeFolder url="file://$MODULE_DIR$/sdk" />
-      <excludeFolder url="file://$MODULE_DIR$/system" />
-      <excludeFolder url="file://$MODULE_DIR$/test" />
-      <excludeFolder url="file://$MODULE_DIR$/toolchain" />
-      <excludeFolder url="file://$MODULE_DIR$/tools" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor" />
-    </content>
-  </component>
-  <component name="ProjectType">
-    <option name="id" value="Android" />
-  </component>
-</project>
-```
 
 # 编译
 
@@ -390,7 +340,7 @@ as-aosp经历了两年多的更新，每次更新都是根据自己的需求。
 - [x] car 相关模块都放到 car 文件夹下
 
 - aosp-cmake
-- [ ] 根据 Android.bp/Android.mk 生成 CMakeLists.txt
+- [x] 根据 Android.bp/Android.mk 生成 CMakeLists.txt
 
 
 ## 4.0.0

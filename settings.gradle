@@ -24,7 +24,7 @@ include ':Connectivity'
 
 
 /*************** aosp native ***************/
-include ':aosp-native'
+//include ':aosp-cmake'
 /*************** aosp native ***************/
 
 
