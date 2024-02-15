@@ -27,7 +27,7 @@ if (IS_DIRECTORY ${BUILD_NATIVE_ROOT})
     set(ANDROID_ROOT ${BUILD_NATIVE_ROOT})
 else ()
     # set ANDROID_ROOT
-    set(ANDROID_ROOT "$ENV{HOME}/code/aosp")
+    set(ANDROID_ROOT "$ENV{HOME}/code/oppo")
     message(STATUS "${PROJECT_NAME}, ANDROID_ROOT=${ANDROID_ROOT}")
 endif ()
 
