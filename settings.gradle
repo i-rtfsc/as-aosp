@@ -1,19 +1,11 @@
 rootProject.name = "lineage"
 
-apply from: 'scripts/settings-aosp.gradle'
-//apply from: 'scripts/settings-aosp-cmake.gradle'
-apply from: 'scripts/settings-aosp-system-server.gradle'
-apply from: 'scripts/settings-car.gradle'
-//apply from: 'scripts/settings-cts.gradle'
+apply from: "${rootDir}/scripts/func.gradle"
 
-//lineage
-apply from: 'scripts/settings-lineage.gradle'
-
-// 检查目录 ext 是否存在 settings-ext.gradle
-// 如果存在则加载
-// .gitignore 忽略目录 ext ，方便其他用户自定义此工程的同时也能随时同步最新代码
-File f = new File('ext/settings-ext.gradle');
-if (f.exists() && f.isFile()) {
-    apply from: 'ext/settings-ext.gradle'
-    logger.warn("apply {}", 'ext/settings-ext.gradle')
-}
+applyConfig('scripts/settings-aosp.gradle')
+//applyConfig('scripts/settings-aosp-cmake.gradle')
+applyConfig('scripts/settings-aosp-system-server.gradle')
+applyConfig('scripts/settings-car.gradle')
+//applyConfig('scripts/settings-cts.gradle')
+applyConfig('scripts/settings-lineage.gradle')
+applyConfig('ext/settings-ext.gradle')
