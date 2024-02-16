@@ -1,0 +1,10 @@
+/*************** aosp system-server & framework-res ***************/
+include ':Framework'
+project(':Framework').projectDir = "$rootDir/aosp-system-server/Framework" as File
+
+include ':Services'
+project(':Services').projectDir = "$rootDir/aosp-system-server/Services" as File
+
+include ':FrameworkRes'
+project(':FrameworkRes').projectDir = "$rootDir/aosp-system-server/FrameworkRes" as File
+/*************** aosp system-server & framework-res ***************/

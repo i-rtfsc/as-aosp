@@ -1,0 +1,31 @@
+/*************** aosp ***************/
+//SystemUI相关
+include ':SystemUI'
+project(':SystemUI').projectDir = "$rootDir/aosp-modules/SystemUI" as File
+
+include ':SystemUIPluginLib'
+project(':SystemUIPluginLib').projectDir = "$rootDir/aosp-modules/SystemUIPluginLib" as File
+
+
+//Settings相关
+include ':Settings'
+project(':Settings').projectDir = "$rootDir/aosp-modules/Settings" as File
+
+include ':SettingsLib'
+project(':SettingsLib').projectDir = "$rootDir/aosp-modules/SettingsLib" as File
+
+
+//SettingsProvider相关
+include ':SettingsProvider'
+project(':SettingsProvider').projectDir = "$rootDir/aosp-modules/SettingsProvider" as File
+
+//packages/modules相关
+include ':Connectivity'
+project(':Connectivity').projectDir = "$rootDir/aosp-modules/Connectivity" as File
+
+//include ':Permission'
+//project(':Permission').projectDir = "$rootDir/aosp-modules/Permission" as File
+
+//include ':ExtServices'
+//project(':ExtServices').projectDir = "$rootDir/aosp-modules/ExtServices" as File
+/*************** aosp ***************/
