@@ -1,0 +1,16 @@
+/*************** aaos ***************/
+include ':CarFramework'
+project(':CarFramework').projectDir = "$rootDir/car/CarFramework" as File
+
+include ':CarServices'
+project(':CarServices').projectDir = "$rootDir/car/CarServices" as File
+
+include ':CarSystemUI'
+project(':CarSystemUI').projectDir = "$rootDir/car/CarSystemUI" as File
+
+include ':CarSettings'
+project(':CarSettings').projectDir = "$rootDir/car/CarSettings" as File
+
+include ':CarFramework'
+project(':CarFramework').projectDir = "$rootDir/car/CarFramework" as File
+/*************** aaos ***************/
