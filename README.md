@@ -15,6 +15,11 @@
   * [native](#native)
   * [删除android.jar](#删除androidjar)
   * [支持AIDL](#支持aidl)
+* [ext](#ext)
+  * [ext.properties](#extproperties)
+  * [ExtCarFramework](#extcarframework)
+  * [ext.gradle](#extgradle)
+  * [settings-ext.gradle](#settings-extgradle)
 * [编译](#编译)
 * [版本](#版本)
   * [5.x.x](#5xx)
@@ -175,13 +180,29 @@ settings.gradle 位于根目录下，用于项目的配置，常见的是配置�
 apply from: 'scripts/config.gradle'
 apply from: 'scripts/aosp.gradle'
 apply from: 'scripts/car.gradle'
+apply from: 'scripts/cts.gradle'
 apply from: 'scripts/vivo.gradle'
+
+// 检查目录 ext 是否存在 ext.gradle
+// 如果存在则加载
+// .gitignore 忽略目录 ext ，方便其他用户自定义此工程的同时也能随时同步最新代码
+File f = new File('ext/ext.gradle');
+if (f.exists() && f.isFile()) {
+    apply from: 'ext/ext.gradle'
+    logger.warn("apply {}", 'ext/ext.gradle')
+}
 ```
 
 
 ## config.gradle
 
 config.gradle最重要的功能就是通过aospRoot配置Android源码的根目录。
+而配置 aospRoot 的规则如下：
+- 工程根目录下存在 ext/ext.properties
+  - 配置 EXT_AOSP_ROOT，aospRoot 从 ext/ext.properties 配置里获取
+  - 未配置 EXT_AOSP_ROOT，aospRoot 从 scripts/config.gradle 里设置
+- 工程根目录下不存在 ext/ext.properties，继续从 local.properties 查询，规则如上。
+
 
 > aosp.gradle
 > 
@@ -332,7 +353,49 @@ if (rootProject.ext.build_aidl.toBoolean()) {
 
 > "Rebuild Project" 时编译 aidl 会有遇到报错的情况，所以这里支持 AIDL 只能看运气；如果你的 AIDL 能编译出来，那恭喜你，运气真好！
 
+# ext
+有些朋友反应在工程本地修改部分配置后，还希望能随时同步最新的代码。比如之前在 scripts/config.gradle 配置 aospRoot ，就需求 checkout、pull 再重新配置 aospRoot 
+所以这次改版就可以从 ext/ext.properties 里的 EXT_AOSP_ROOT 读取源码配置的路径。
 
+而 .gitignore 忽略目录 ext 就可以达到这个目的，这里给出一个 ext 的配置例子：
+
+```bash
+$ tree ext                                                                                                                                                                                                  git:(aosp*)
+ext
+├── ExtCarFramework
+│   └── build.gradle
+├── ext.gradle
+├── ext.properties
+└── settings-ext.gradle
+```
+## ext.properties
+
+文件内容如下：
+
+```
+EXT_AOSP_ROOT=/Users/solo/code/aosp
+```
+
+这样就可以配置 Android 源码所在的路径。
+
+## ExtCarFramework
+
+ExtCarFramework 文件夹及其目录下的 build.gradle 文件，就是对于的一个模块。
+
+## ext.gradle
+
+ext.gradle 主要的目的是为了配置模块的路径，可以参考 scripts/aosp.gradle 
+
+## settings-ext.gradle
+
+settings-ext.gradle 主要的目的是为了加载模块，可以参考 scripts/settings-aosp.gradle
+
+如：
+
+```
+include ':ExtCarFramework'
+project(':ExtCarFramework').projectDir = "$rootDir/ext/ExtCarFramework" as File
+```
 
 # 编译
 
@@ -351,6 +414,26 @@ as-aosp经历了两年多的更新，每次更新都是根据自己的需求。
 
 - aosp-cmake
 - [x] 根据 Android.bp/Android.mk 生成 CMakeLists.txt
+
+- ext
+  git 忽略 ext ，方便同步代码的同时也方便个人定制化
+
+- 文件夹结构调整
+
+  - system server 及 framework-res
+- [x] aosp-system-server/Framework
+- [x] aosp-system-server/Services
+- [x] aosp-system-server/FrameworkRes
+
+  - aosp 其他模块
+- [x] aosp-modules/Connectivity
+- [x] aosp-modules/ExtServices
+- [x] aosp-modules/Permission
+- [x] aosp-modules/Settings
+- [x] aosp-modules/SettingsLib
+- [x] aosp-modules/SettingsProvider
+- [x] aosp-modules/SystemUI
+- [x] aosp-modules/SystemUIPluginLib
 
 
 ## 4.0.0
