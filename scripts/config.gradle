@@ -34,7 +34,7 @@ ext {
     allModules = [:]
     for (Project subproject : project.subprojects) {
         def project_name = subproject.getName().toString()
-        logger.info(project_name)
+        logger.debug(project_name)
         allModules.put(project_name, ":" + project_name)
     }
 }

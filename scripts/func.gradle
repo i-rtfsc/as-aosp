@@ -1,0 +1,16 @@
+ext.applyConfig = { file ->
+    def asbPath = "${rootDir}/" + file
+    logger.debug(asbPath)
+    File f = new File(asbPath)
+    if (f.exists() && f.isFile()) {
+        apply from: asbPath
+    }
+}
+
+ext.isNotNull = { value ->
+    if (!(value == null || value.isEmpty())) {
+        return true
+    } else {
+        return false
+    }
+}
