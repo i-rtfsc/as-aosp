@@ -1,0 +1,13 @@
+/*************** flyme ***************/
+include ':flyme-framework'
+project(':flyme-framework').projectDir = "$rootDir/flyme/flyme-framework" as File
+
+include ':flyme-services'
+project(':flyme-services').projectDir = "$rootDir/flyme/flyme-services" as File
+
+include ':flyme-framework-res'
+project(':flyme-framework-res').projectDir = "$rootDir/flyme/flyme-framework-res" as File
+
+include ':flyme-launcher'
+project(':flyme-launcher').projectDir = "$rootDir/flyme/flyme-launcher" as File
+/*************** flyme ***************/
