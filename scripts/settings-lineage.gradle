@@ -1,0 +1,16 @@
+/*************** lineage ***************/
+include ':lineage-framework'
+project(':lineage-framework').projectDir = "$rootDir/lineage/lineage-framework" as File
+
+include ':lineage-services'
+project(':lineage-services').projectDir = "$rootDir/lineage/lineage-services" as File
+
+include ':lineage-framework-res'
+project(':lineage-framework-res').projectDir = "$rootDir/lineage/lineage-framework-res" as File
+
+include ':lineage-preference-lib'
+project(':lineage-preference-lib').projectDir = "$rootDir/lineage/lineage-preference-lib" as File
+
+include ':lineage-settings-provider'
+project(':lineage-settings-provider').projectDir = "$rootDir/lineage/lineage-settings-provider" as File
+/*************** lineage ***************/

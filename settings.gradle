@@ -1,80 +1,19 @@
 rootProject.name = "lineage"
 
-/*************** aosp ***************/
-include ':Framework'
-include ':Services'
-include ':FrameworkRes'
+apply from: 'scripts/settings-aosp.gradle'
+//apply from: 'scripts/settings-aosp-cmake.gradle'
+apply from: 'scripts/settings-aosp-system-server.gradle'
+apply from: 'scripts/settings-car.gradle'
+//apply from: 'scripts/settings-cts.gradle'
 
-//SystemUI相关
-include ':SystemUI'
-include ':SystemUIPluginLib'
+//lineage
+apply from: 'scripts/settings-lineage.gradle'
 
-//Settings相关
-include ':Settings'
-include ':SettingsLib'
-
-//SettingsProvider相关
-include ':SettingsProvider'
-
-//packages/modules相关
-include ':Connectivity'
-// include ':Permission'
-// include ':ExtServices'
-/*************** aosp ***************/
-
-
-/*************** aosp native ***************/
-<<<<<<< HEAD
- include ':aosp-native'
-=======
-//include ':aosp-cmake'
->>>>>>> d0fbaed (Add cmake module)
-/*************** aosp native ***************/
-
-
-/*************** aaos ***************/
-include ':CarFramework'
-project(':CarFramework').projectDir = "$rootDir/car/CarFramework" as File
-
-include ':CarServices'
-project(':CarServices').projectDir = "$rootDir/car/CarServices" as File
-
-include ':CarSystemUI'
-project(':CarSystemUI').projectDir = "$rootDir/car/CarSystemUI" as File
-
-include ':CarSettings'
-project(':CarSettings').projectDir = "$rootDir/car/CarSettings" as File
-
-include ':CarFramework'
-project(':CarFramework').projectDir = "$rootDir/car/CarFramework" as File
-/*************** aaos ***************/
-
-
-/*************** cts ***************/
-//include ':junit'
-//project(':junit').projectDir = "$rootDir/cts/junit" as File
-//
-//include ':CtsWindowManagerDeviceTestCases'
-//project(':CtsWindowManagerDeviceTestCases').projectDir = "$rootDir/cts/CtsWindowManagerDeviceTestCases" as File
-//
-//include ':CtsInputTestCases'
-//project(':CtsInputTestCases').projectDir = "$rootDir/cts/CtsInputTestCases" as File
-/*************** cts ***************/
-
-
-/*************** lineage ***************/
-include ':lineage-framework'
-project(':lineage-framework').projectDir = "$rootDir/lineage/lineage-framework" as File
-
-include ':lineage-services'
-project(':lineage-services').projectDir = "$rootDir/lineage/lineage-services" as File
-
-include ':lineage-framework-res'
-project(':lineage-framework-res').projectDir = "$rootDir/lineage/lineage-framework-res" as File
-
-include ':lineage-preference-lib'
-project(':lineage-preference-lib').projectDir = "$rootDir/lineage/lineage-preference-lib" as File
-
-include ':lineage-settings-provider'
-project(':lineage-settings-provider').projectDir = "$rootDir/lineage/lineage-settings-provider" as File
-/*************** lineage ***************/
+// 检查目录 ext 是否存在 settings-ext.gradle
+// 如果存在则加载
+// .gitignore 忽略目录 ext ，方便其他用户自定义此工程的同时也能随时同步最新代码
+File f = new File('ext/settings-ext.gradle');
+if (f.exists() && f.isFile()) {
+    apply from: 'ext/settings-ext.gradle'
+    logger.warn("apply {}", 'ext/settings-ext.gradle')
+}
