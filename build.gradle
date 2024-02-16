@@ -1,17 +1,10 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
-apply from: 'scripts/config.gradle'
-apply from: 'scripts/aosp.gradle'
-apply from: 'scripts/car.gradle'
-apply from: 'scripts/cts.gradle'
-
-// 检查目录 ext 是否存在 ext.gradle
-// 如果存在则加载
-// .gitignore 忽略目录 ext ，方便其他用户自定义此工程的同时也能随时同步最新代码
-File f = new File('ext/ext.gradle');
-if (f.exists() && f.isFile()) {
-    apply from: 'ext/ext.gradle'
-    logger.warn("apply {}", 'ext/ext.gradle')
-}
+apply from: "${rootDir}/scripts/func.gradle"
+applyConfig('scripts/config.gradle')
+applyConfig('scripts/aosp.gradle')
+applyConfig('scripts/car.gradle')
+applyConfig('scripts/cts.gradle')
+applyConfig('ext/ext.gradle')
 
 buildscript {
     repositories {
