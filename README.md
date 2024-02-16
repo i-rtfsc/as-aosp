@@ -406,24 +406,18 @@ as-aosp经历了两年多的更新，每次更新都是根据自己的需求。
 - [x] 根据 Android.bp/Android.mk 生成 CMakeLists.txt
 
 - ext
+
   git 忽略 ext ，方便同步代码的同时也方便个人定制化
 
 - 文件夹结构调整
 
-  - system server 及 framework-res
-- [x] aosp-system-server/Framework
-- [x] aosp-system-server/Services
-- [x] aosp-system-server/FrameworkRes
+  - aosp-system-server
 
-  - aosp 其他模块
-- [x] aosp-modules/Connectivity
-- [x] aosp-modules/ExtServices
-- [x] aosp-modules/Permission
-- [x] aosp-modules/Settings
-- [x] aosp-modules/SettingsLib
-- [x] aosp-modules/SettingsProvider
-- [x] aosp-modules/SystemUI
-- [x] aosp-modules/SystemUIPluginLib
+  system server 及 framework-res
+
+  - aosp-modules
+
+  aosp 其他模块
 
 
 ## 4.0.0

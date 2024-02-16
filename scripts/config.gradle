@@ -1,7 +1,7 @@
 ext {
     Properties properties = getExtProperties()
     try {
-        // 检查 local.properties 是否存在 EXT_AOSP_ROOT
+        // 检查 ext/ext.properties or local.properties 是否存在 EXT_AOSP_ROOT
         // 方便其他用户自定义此工程的同时也能随时同步最新代码
         ext_aosp_root = properties.getProperty('EXT_AOSP_ROOT')
         aospRoot = ext_aosp_root
@@ -16,7 +16,6 @@ ext {
     } finally {
         logger.warn("aospRoot = " + aospRoot)
     }
-
 
     // aidl 文件生成 java 文件
     // 可以先设置成 true ，接着 "Rebuild Project" 生成java文件后再设置成 false ，保证正常跳转
@@ -52,4 +51,3 @@ def getExtProperties() {
 
     return properties
 }
-
