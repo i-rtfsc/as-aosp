@@ -5,6 +5,15 @@ apply from: 'scripts/car.gradle'
 apply from: 'scripts/cts.gradle'
 apply from: 'scripts/miui.gradle'
 
+// 检查目录 ext 是否存在 ext.gradle
+// 如果存在则加载
+// .gitignore 忽略目录 ext ，方便其他用户自定义此工程的同时也能随时同步最新代码
+File f = new File('ext/ext.gradle');
+if (f.exists() && f.isFile()) {
+    apply from: 'ext/ext.gradle'
+    logger.warn("apply {}", 'ext/ext.gradle')
+}
+
 buildscript {
     repositories {
         google()
@@ -46,9 +55,3 @@ allprojects {
         }
     }
 }
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
-}
-
-defaultTasks 'clean', 'assembleRelease'
