@@ -14,3 +14,46 @@ ext.isNotNull = { value ->
         return false
     }
 }
+
+ext.getModules = { subprojects ->
+    def allModules = [:]
+    for (Project subproject : subprojects) {
+        def project_name = subproject.getName().toString()
+        logger.debug(project_name)
+        allModules.put(project_name, ":" + project_name)
+    }
+
+    return allModules
+}
+
+ext.getExtProperties = {
+    Properties properties = new Properties()
+    try {
+        // 检查 ext/scripts/ext.properties 是否存在
+        properties.load(project.rootProject.file('ext/scripts/ext.properties').newDataInputStream())
+    } catch (Exception e) {
+        logger.warn("has not ext/scripts/ext.properties, " + e)
+        properties.load(project.rootProject.file('local.properties').newDataInputStream())
+    }
+
+    return properties
+}
+
+ext.getRoot = { properties ->
+    // 检查 ext/scripts/ext.properties or local.properties 是否存在 EXT_AOSP_ROOT
+    // 方便其他用户自定义此工程的同时也能随时同步最新代码
+    def aospRoot = properties.getProperty('EXT_AOSP_ROOT')
+    if (isNotNull(aospRoot)) {
+        logger.warn("set aosp root from ext/scripts/ext.properties or local.properties")
+    } else {
+        logger.warn("has not set ext aosp root")
+        //设置源码所在的目录
+        aospRoot = "/home/solo/code/flyme"
+        if (org.gradle.internal.os.OperatingSystem.current().isMacOsX()) {
+            aospRoot = "/Users/solo/code/flyme"
+        }
+    }
+    logger.warn("aospRoot = " + aospRoot)
+
+    return aospRoot
+}
