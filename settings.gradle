@@ -2,6 +2,7 @@ rootProject.name = "oppo"
 
 apply from: "${rootDir}/scripts/func.gradle"
 
+//配置文件存在，则加载；文件中配置具体的模块
 applyConfig('scripts/settings-aosp.gradle')
 //applyConfig('scripts/settings-aosp-cmake.gradle')
 applyConfig('scripts/settings-aosp-system-server.gradle')

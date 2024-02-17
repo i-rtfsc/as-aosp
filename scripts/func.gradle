@@ -1,6 +1,6 @@
 ext.applyConfig = { file ->
     def asbPath = "${rootDir}/" + file
-    logger.debug(asbPath)
+    logger.warn(asbPath)
     File f = new File(asbPath)
     if (f.exists() && f.isFile()) {
         apply from: asbPath

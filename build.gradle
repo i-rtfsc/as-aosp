@@ -1,11 +1,11 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
 apply from: "${rootDir}/scripts/func.gradle"
-applyConfig('scripts/config.gradle')
-applyConfig('scripts/aosp.gradle')
-applyConfig('scripts/car.gradle')
-applyConfig('scripts/cts.gradle')
-applyConfig('scripts/oppo.gradle')
-applyConfig('ext/ext.gradle')
+//配置文件存在，则加载
+applyConfig('scripts/configs.gradle')
+applyConfig('scripts/configs-aosp.gradle')
+applyConfig('scripts/configs-car.gradle')
+applyConfig('scripts/configs-cts.gradle')
+applyConfig('scripts/configs-oppo.gradle')
+applyConfig('ext/configs-ext.gradle')
 
 buildscript {
     repositories {

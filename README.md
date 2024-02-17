@@ -8,17 +8,17 @@
 * [配置介绍](#配置介绍)
   * [settings.gradle](#settingsgradle)
   * [根目录build.gradle](#根目录buildgradle)
-  * [config.gradle](#configgradle)
-  * [aosp.gradle](#aospgradle)
-  * [cts.gradle](#ctsgradle)
-  * [oppo.gradle](#oppogradle)
+  * [configs.gradle](#configsgradle)
+  * [configs-aosp.gradle](#configs-aospgradle)
+  * [configs-cts.gradle](#configs-ctsgradle)
+  * [configs-oppo.gradle](#configs-oppogradle)
   * [native](#native)
   * [删除android.jar](#删除androidjar)
   * [支持AIDL](#支持aidl)
 * [ext](#ext)
   * [ext.properties](#extproperties)
   * [ExtCarFramework](#extcarframework)
-  * [ext.gradle](#extgradle)
+  * [configs-ext.gradle](#configs-extgradle)
   * [settings-ext.gradle](#settings-extgradle)
 * [编译](#编译)
 * [版本](#版本)
@@ -134,8 +134,8 @@
 
 > 关于 “首次加载耗时” 提到 “根目录只有部分模块代码” ，我试过两种方案：
 > 1. 软链接：比如完整的aosp代码是在/home/solo/workspace/code/aosp，我把需要加载的模块通过软链接的方式 ln 到 /home/solo/code/aosp。
->    可以参考工程里的 scripts/ln.sh 脚本文件，SOURCE、DEST改成自己的源目录，目标目录即可；也可以在数组projects中添加自己需要的模块目录。
->    ln.sh 脚本文件里只软链接了常用的一些模块，每个人可以根据自己的需求删改。
+     >    可以参考工程里的 scripts/ln.sh 脚本文件，SOURCE、DEST改成自己的源目录，目标目录即可；也可以在数组projects中添加自己需要的模块目录。
+     >    ln.sh 脚本文件里只软链接了常用的一些模块，每个人可以根据自己的需求删改。
 > 2. 只下载需要模块。
 >
 > “支持平台” 提到as-asop支持win，经过朋友的测试，是没任何问题的，但有一点需要注意：
@@ -166,7 +166,22 @@
 
 ## settings.gradle
 
-settings.gradle 位于根目录下，用于项目的配置，常见的是配置子工程。一个子工程只有在 setting.gradle 中配置了，才能够被识别，构建的时候才会被包含进去。
+settings.gradle 位于根目录下，用于项目的配置。
+
+```bash
+rootProject.name = "flyme"
+
+apply from: "${rootDir}/scripts/func.gradle"
+
+//配置文件存在，则加载；文件中配置具体的模块
+applyConfig('scripts/settings-aosp.gradle')
+//applyConfig('scripts/settings-aosp-cmake.gradle')
+applyConfig('scripts/settings-aosp-system-server.gradle')
+applyConfig('scripts/settings-car.gradle')
+//applyConfig('scripts/settings-cts.gradle')
+applyConfig('scripts/settings-configs-flyme.gradle')
+applyConfig('ext/settings-ext.gradle')
+```
 
 如果需要新增一个 aosp 的模块，需要在这里配置。
 
@@ -177,44 +192,46 @@ settings.gradle 位于根目录下，用于项目的配置，常见的是配置�
 
 根目录 build.gradle 文件配置了很多扩展的 gradle 脚本，可根据实际情况自行添加到对应的脚本或者新增脚本。
 ```bash
-apply from: 'scripts/config.gradle'
-apply from: 'scripts/aosp.gradle'
-apply from: 'scripts/car.gradle'
-apply from: 'scripts/cts.gradle'
-apply from: 'scripts/oppo.gradle'
-
-// 检查目录 ext 是否存在 ext.gradle
-// 如果存在则加载
-// .gitignore 忽略目录 ext ，方便其他用户自定义此工程的同时也能随时同步最新代码
-File f = new File('ext/ext.gradle');
-if (f.exists() && f.isFile()) {
-    apply from: 'ext/ext.gradle'
-    logger.warn("apply {}", 'ext/ext.gradle')
-}
+apply from: "${rootDir}/scripts/func.gradle"
+//配置文件存在，则加载
+applyConfig('scripts/configs.gradle')
+applyConfig('scripts/configs-aosp.gradle')
+applyConfig('scripts/configs-car.gradle')
+applyConfig('scripts/configs-cts.gradle')
+applyConfig('scripts/configs-flyme.gradle')
+applyConfig('ext/configs-ext.gradle')
 ```
 
 
-## config.gradle
+## configs.gradle
 
-config.gradle最重要的功能就是通过aospRoot配置Android源码的根目录。
+configs.gradle 最重要的功能就是通过 aospRoot 配置 Android 源码的根目录。
 而配置 aospRoot 的规则如下：
+
 - 工程根目录下存在 ext/ext.properties
-  - 配置 EXT_AOSP_ROOT，aospRoot 从 ext/ext.properties 配置里获取
-  - 未配置 EXT_AOSP_ROOT，aospRoot 从 scripts/config.gradle 里设置
+
+  - 配置 EXT_AOSP_ROOT
+
+  aospRoot 从 ext/ext.properties 配置里获取
+
+  - 未配置 EXT_AOSP_ROOT
+
+  aospRoot 从 scripts/configs.gradle 里设置
+
 - 工程根目录下不存在 ext/ext.properties，继续从 local.properties 查询，规则如上。
 
 
-> aosp.gradle
-> 
-> car.gradle
+> configs-aosp.gradle
 >
-> cts.gradle
+> configs-car.gradle
+>
+> configs-cts.gradle
 >
 > 其他gradle脚本
-> 
-> 都是通过 config.gradle 的 aospRoot 获取到 Android 源码的根目录。
+>
+> 都是通过 configs.gradle 的 aospRoot 获取到 Android 源码的根目录。
 
-config.gradle 脚本除了配置基本的 android sdk；还有一个很重要的功能，就是获取所有的模块名称（也就是 settings.gradle 配置的子模块）。
+configs.gradle 脚本除了配置基本的 android sdk；还有一个很重要的功能，就是获取所有的模块名称（也就是 settings.gradle 配置的子模块）。
 
 也就是说 allModules 不需要手动维护，在 settings.gradle 里新增一个 module，脚本会自动识别到 project name 并添加到 allModules 数组。
 这个allModules数组的作用是方便每个 module 快速的互相依赖，如：
@@ -225,9 +242,9 @@ rootProject.ext.allModules.each { dependence -> compileOnly project(dependence.v
 
 以上写法会循环依赖，真正的 app gradle 工程不能这样做的。这里这样子做是因为我们只是为了方便as阅读代码或者改代码，真正编译的时候还是用 ninja、make。
 
-## aosp.gradle
+## configs-aosp.gradle
 
-- aospDir: 通过 config.gradle 的 aospRoot 获取到 Android 源码的根目录。也可以自己配置源码所在的目录，如: aospDir = "/home/solo/code/aosp"。
+- aospDir: 通过 configs.gradle 的 aospRoot 获取到 Android 源码的根目录。也可以自己配置源码所在的目录，如: aospDir = "/home/solo/code/aosp"。
 - aosp: 一个大数组，维护很多模块需要的路径。
   - root: 等同于aospDir所设置的android源码根目录。
   - Framework: 配置framework.jar的源码路径
@@ -254,13 +271,12 @@ rootProject.ext.allModules.each { dependence -> compileOnly project(dependence.v
 >
 > 里面具体模块的源码路径基本上都添加了（但确实不是100%添加），如果因为使用aosp版本不一致或者别的原因可以根据自己需要再添加。
 
-
-## cts.gradle
+## configs-cts.gradle
 
 主要是配置了一些CTS模块，目前只配置了 CtsWindowManagerDeviceTestCases 、CtsInputTestCases 。
 
 
-## oppo.gradle
+## configs-oppo.gradle
 
 oppo代码所在的路径，主要是配置了 oppo-framework、oppo-services、oppo-framework-res。
 
@@ -272,10 +288,17 @@ oppo代码所在的路径，主要是配置了 oppo-framework、oppo-services、
 通过根目录下的 settings.gradle 可以看到有如下的配置：
 
 ```bash
+//applyConfig('scripts/settings-aosp-cmake.gradle')
+```
+
+scripts/settings-aosp-cmake.gradle 配置如：
+
+```bash
 /*************** aosp native ***************/
-//include ':aosp-cmake'
+include ':aosp-cmake'
 /*************** aosp native ***************/
 ```
+
 **默认关闭native模块**
 
 在 aosp-cmake 目录下包含了所有的native模块，下面对 aosp-cmake 根目录下的两个文件稍作解释：
@@ -286,19 +309,32 @@ oppo代码所在的路径，主要是配置了 oppo-framework、oppo-services、
 - CMakeLists.txt
   主 cmake 文件，可以配置打开或者关闭不需要的模块。
   - BUILD_NATIVE_ROOT
-    BUILD_NATIVE_ROOT 是 build.gralde 配置的源码目录，cmake 会判断 BUILD_NATIVE_ROOT 的路径是否存来而设置 ANDROID_ROOT 
+
+    BUILD_NATIVE_ROOT 是 build.gralde 配置的源码目录，cmake 会判断 BUILD_NATIVE_ROOT 的路径是否存来而设置 ANDROID_ROOT
     否则 ANDROID_ROOT=~/code/oppo
+
   - ANDROID_TARGET_ARCH
+
     也就是 TARGET_ARCH
+
   - ANDROID_ARCH_VARIANT
+
     也就是 TARGET_ARCH_VARIANT
+
   - ANDROID_CPU_VARIANT
+
     也就是 ArchType
+
   - OUT_ARCH_CPU
+
     也就是 {TARGET_ARCH}_{TARGET_ARCH_VARIANT}_{ANDROID_CPU_VARIANT}
+
     设置这几个配置是为了 CMakeLists.txt 里有一些源码是从 out 里获取，如：
+
     ${OUT_INTERMEDIATES_ROOT}/frameworks/native/services/surfaceflinger/sysprop/libSurfaceFlingerProperties/android_${OUT_ARCH_CPU}_static/gen/sysprop/SurfaceFlingerProperties.sysprop.cpp
+
   - add_subdirectory
+
     可根据自己下需求打开或者关闭相应的模块
 
 
@@ -337,7 +373,7 @@ sync 后确认 iml 文件中以上提的都已经执行好了，就可以重启A
 
 ## 支持AIDL
 
-在 scripts/config.gradle 里配置 build_aidl = true ，并 "Rebuild Project" 就可以生成java文件。
+在 scripts/configs.gradle 里配置 build_aidl = true ，并 "Rebuild Project" 就可以生成java文件。
 
 生成 java 文件后改成 false ，确保模块直接能正常跳转。
 
@@ -354,7 +390,7 @@ if (rootProject.ext.build_aidl.toBoolean()) {
 > "Rebuild Project" 时编译 aidl 会有遇到报错的情况，所以这里支持 AIDL 只能看运气；如果你的 AIDL 能编译出来，那恭喜你，运气真好！
 
 # ext
-有些朋友反应在工程本地修改部分配置后，还希望能随时同步最新的代码。比如之前在 scripts/config.gradle 配置 aospRoot ，就需求 checkout、pull 再重新配置 aospRoot 
+有些朋友反应在工程本地修改部分配置后，还希望能随时同步最新的代码。比如之前在 scripts/configs.gradle 配置 aospRoot ，就需求 checkout、pull 再重新配置 aospRoot
 所以这次改版就可以从 ext/ext.properties 里的 EXT_AOSP_ROOT 读取源码配置的路径。
 
 而 .gitignore 忽略目录 ext 就可以达到这个目的，这里给出一个 ext 的配置例子：
@@ -364,7 +400,7 @@ $ tree ext                                                                      
 ext
 ├── ExtCarFramework
 │   └── build.gradle
-├── ext.gradle
+├── configs-ext.gradle
 ├── ext.properties
 └── settings-ext.gradle
 ```
@@ -373,7 +409,7 @@ ext
 文件内容如下：
 
 ```
-EXT_AOSP_ROOT=/Users/solo/code/aosp
+EXT_AOSP_ROOT=/Users/solo/code/oppo
 ```
 
 这样就可以配置 Android 源码所在的路径。
@@ -382,9 +418,9 @@ EXT_AOSP_ROOT=/Users/solo/code/aosp
 
 ExtCarFramework 文件夹及其目录下的 build.gradle 文件，就是对于的一个模块。
 
-## ext.gradle
+## configs-ext.gradle
 
-ext.gradle 主要的目的是为了配置模块的路径，可以参考 scripts/aosp.gradle 
+configs-ext.gradle 主要的目的是为了配置模块的路径，可以参考 scripts/configs-aosp.gradle
 
 ## settings-ext.gradle
 
@@ -410,30 +446,33 @@ as-aosp经历了两年多的更新，每次更新都是根据自己的需求。
 
 ## 5.x.x
 - car
+
 - [x] car 相关模块都放到 car 文件夹下
 
+
 - aosp-cmake
+
 - [x] 根据 Android.bp/Android.mk 生成 CMakeLists.txt
 
+
 - ext
+
   git 忽略 ext ，方便同步代码的同时也方便个人定制化
+
 
 - 文件夹结构调整
 
-  - system server 及 framework-res
-- [x] aosp-system-server/Framework
-- [x] aosp-system-server/Services
-- [x] aosp-system-server/FrameworkRes
+  - aosp-modules
 
-  - aosp 其他模块
-- [x] aosp-modules/Connectivity
-- [x] aosp-modules/ExtServices
-- [x] aosp-modules/Permission
-- [x] aosp-modules/Settings
-- [x] aosp-modules/SettingsLib
-- [x] aosp-modules/SettingsProvider
-- [x] aosp-modules/SystemUI
-- [x] aosp-modules/SystemUIPluginLib
+  system server、framework-res、aosp 其他模块
+
+  - aosp-car
+
+  aosp car 模块
+
+  - aosp-cts
+
+  aosp cts 模块
 
 
 ## 4.0.0
