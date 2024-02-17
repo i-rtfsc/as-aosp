@@ -1,11 +1,11 @@
 apply from: "${rootDir}/scripts/func.gradle"
 //配置文件存在，则加载
-applyConfig('scripts/configs.gradle')
-applyConfig('scripts/configs-aosp.gradle')
-applyConfig('scripts/configs-car.gradle')
-applyConfig('scripts/configs-cts.gradle')
-applyConfig('scripts/configs-flyme.gradle')
-applyConfig('ext/configs-ext.gradle')
+applyConfig('scripts/core.gradle')
+applyConfig('scripts/configs/aosp.gradle')
+applyConfig('scripts/configs/car.gradle')
+applyConfig('scripts/configs/cts.gradle')
+applyConfig('scripts/configs/flyme.gradle')
+applyConfig('ext/scripts/configs/ext.gradle')
 
 buildscript {
     repositories {
