@@ -4,22 +4,21 @@
   * [对比 asfp 优缺点](#对比-asfp-优缺点)
   * [跳转](#跳转)
   * [提示、补全](#提示补全)
-  * [约定](#约定)
 * [配置介绍](#配置介绍)
   * [settings.gradle](#settingsgradle)
   * [根目录build.gradle](#根目录buildgradle)
-  * [configs.gradle](#configsgradle)
-  * [configs-aosp.gradle](#configs-aospgradle)
-  * [configs-cts.gradle](#configs-ctsgradle)
-  * [configs-vivo.gradle](#configs-vivogradle)
+  * [core.gradle](#coregradle)
+  * [configs/aosp.gradle](#configsaospgradle)
+  * [configs/cts.gradle](#configsctsgradle)
+  * [configs/vivo.gradle](#configsvivogradle)
   * [native](#native)
   * [删除android.jar](#删除androidjar)
   * [支持AIDL](#支持aidl)
 * [ext](#ext)
   * [ext.properties](#extproperties)
   * [ExtCarFramework](#extcarframework)
-  * [configs-ext.gradle](#configs-extgradle)
-  * [settings-ext.gradle](#settings-extgradle)
+  * [configs/ext.gradle](#configsextgradle)
+  * [settings/ext.gradle](#settingsextgradle)
 * [编译](#编译)
 * [版本](#版本)
   * [5.x.x](#5xx)
@@ -156,11 +155,6 @@
 
 ![](./res-readme/code_completion.gif)
 
-## 约定
-
-- aosp模块：大驼峰命名
-- aosp模块变种或厂商模块：小写命名（包含字符-）
-
 
 # 配置介绍
 
@@ -169,18 +163,21 @@
 settings.gradle 位于根目录下，用于项目的配置。
 
 ```bash
+
 rootProject.name = "vivo"
 
 apply from: "${rootDir}/scripts/func.gradle"
 
 //配置文件存在，则加载；文件中配置具体的模块
-applyConfig('scripts/settings-aosp.gradle')
-//applyConfig('scripts/settings-aosp-cmake.gradle')
-applyConfig('scripts/settings-aosp-system-server.gradle')
-applyConfig('scripts/settings-car.gradle')
-//applyConfig('scripts/settings-cts.gradle')
-applyConfig('scripts/settings-vivo.gradle')
-applyConfig('ext/settings-ext.gradle')
+applyConfig('scripts/settings/aosp.gradle')
+//applyConfig('scripts/settings/aosp-cmake.gradle')
+applyConfig('scripts/settings/aosp-system-server.gradle')
+applyConfig('scripts/settings/car.gradle')
+//applyConfig('scripts/settings/cts.gradle')
+applyConfig('scripts/settings/vivo.gradle')
+applyConfig('ext/scripts/settings/ext.gradle')
+
+
 ```
 
 如果需要新增一个 aosp 的模块，需要在这里配置。
@@ -191,47 +188,52 @@ applyConfig('ext/settings-ext.gradle')
 ## 根目录build.gradle
 
 根目录 build.gradle 文件配置了很多扩展的 gradle 脚本，可根据实际情况自行添加到对应的脚本或者新增脚本。
+
 ```bash
+
 apply from: "${rootDir}/scripts/func.gradle"
 //配置文件存在，则加载
-applyConfig('scripts/configs.gradle')
-applyConfig('scripts/configs-aosp.gradle')
-applyConfig('scripts/configs-car.gradle')
-applyConfig('scripts/configs-cts.gradle')
-applyConfig('scripts/configs-vivo.gradle')
-applyConfig('ext/configs-ext.gradle')
+applyConfig('scripts/core.gradle')
+applyConfig('scripts/configs/aosp.gradle')
+applyConfig('scripts/configs/car.gradle')
+applyConfig('scripts/configs/cts.gradle')
+applyConfig('scripts/configs/vivo.gradle')
+applyConfig('ext/scripts/configs/ext.gradle')
+
 ```
 
 
-## configs.gradle
+## core.gradle
 
-configs.gradle 最重要的功能就是通过 aospRoot 配置 Android 源码的根目录。
+core.gradle 最重要的功能就是通过 aospRoot 配置 Android 源码的根目录。
 而配置 aospRoot 的规则如下：
 
-- 工程根目录下存在 ext/ext.properties
+- 工程根目录下存在 ext/scripts/ext.properties
 
   - 配置 EXT_AOSP_ROOT
 
-  aospRoot 从 ext/ext.properties 配置里获取
+  aospRoot 从 ext/scripts/ext.properties 配置里获取
 
   - 未配置 EXT_AOSP_ROOT
 
-  aospRoot 从 scripts/configs.gradle 里设置
+  aospRoot 从 scripts/core.gradle 里设置
 
 - 工程根目录下不存在 ext/ext.properties，继续从 local.properties 查询，规则如上。
 
 
-> configs-aosp.gradle
+> configs/aosp.gradle
 >
-> configs-car.gradle
+> configs/car.gradle
 >
-> configs-cts.gradle
+> configs/cts.gradle
+>
+> configs/vivo.gradle
 >
 > 其他gradle脚本
 >
-> 都是通过 configs.gradle 的 aospRoot 获取到 Android 源码的根目录。
+> 都是通过 core.gradle 的 aospRoot 获取到 Android 源码的根目录。
 
-configs.gradle 脚本除了配置基本的 android sdk；还有一个很重要的功能，就是获取所有的模块名称（也就是 settings.gradle 配置的子模块）。
+core.gradle 脚本除了配置基本的 android sdk；还有一个很重要的功能，就是获取所有的模块名称（也就是 settings.gradle 配置的子模块）。
 
 也就是说 allModules 不需要手动维护，在 settings.gradle 里新增一个 module，脚本会自动识别到 project name 并添加到 allModules 数组。
 这个allModules数组的作用是方便每个 module 快速的互相依赖，如：
@@ -242,9 +244,9 @@ rootProject.ext.allModules.each { dependence -> compileOnly project(dependence.v
 
 以上写法会循环依赖，真正的 app gradle 工程不能这样做的。这里这样子做是因为我们只是为了方便as阅读代码或者改代码，真正编译的时候还是用 ninja、make。
 
-## configs-aosp.gradle
+## configs/aosp.gradle
 
-- aospDir: 通过 configs.gradle 的 aospRoot 获取到 Android 源码的根目录。也可以自己配置源码所在的目录，如: aospDir = "/home/solo/code/aosp"。
+- aospDir: 通过 config.gradle 的 aospRoot 获取到 Android 源码的根目录。也可以自己配置源码所在的目录，如: aospDir = "/home/solo/code/vivo"。
 - aosp: 一个大数组，维护很多模块需要的路径。
   - root: 等同于aospDir所设置的android源码根目录。
   - Framework: 配置framework.jar的源码路径
@@ -271,16 +273,16 @@ rootProject.ext.allModules.each { dependence -> compileOnly project(dependence.v
 >
 > 里面具体模块的源码路径基本上都添加了（但确实不是100%添加），如果因为使用aosp版本不一致或者别的原因可以根据自己需要再添加。
 
-## configs-cts.gradle
+## configs/cts.gradle
 
 主要是配置了一些CTS模块，目前只配置了 CtsWindowManagerDeviceTestCases 、CtsInputTestCases 。
 
 
-## configs-vivo.gradle
+## configs/vivo.gradle
 
-vivo代码所在的路径，主要是配置了 vivo-framework、vivo-services、vivo-framework-res。
+vivo 代码所在的路径，主要是配置了 vivo-framework、vivo-services、vivo-framework-res 等。
 
-可以根据自己的需要修改vivoDir对应的目录即可。
+可以根据自己的需要修改 vivoDir 对应的目录即可。
 
 
 ## native
@@ -288,10 +290,10 @@ vivo代码所在的路径，主要是配置了 vivo-framework、vivo-services、
 通过根目录下的 settings.gradle 可以看到有如下的配置：
 
 ```bash
-//applyConfig('scripts/settings-aosp-cmake.gradle')
+//applyConfig('scripts/settings/aosp-cmake.gradle')
 ```
 
-scripts/settings-aosp-cmake.gradle 配置如：
+scripts/settings/aosp-cmake.gradle 配置如：
 
 ```bash
 /*************** aosp native ***************/
@@ -373,7 +375,7 @@ sync 后确认 iml 文件中以上提的都已经执行好了，就可以重启A
 
 ## 支持AIDL
 
-在 scripts/configs.gradle 里配置 build_aidl = true ，并 "Rebuild Project" 就可以生成java文件。
+在 scripts/core.gradle 里配置 build_aidl = true ，并 "Rebuild Project" 就可以生成java文件。
 
 生成 java 文件后改成 false ，确保模块直接能正常跳转。
 
@@ -390,8 +392,8 @@ if (rootProject.ext.build_aidl.toBoolean()) {
 > "Rebuild Project" 时编译 aidl 会有遇到报错的情况，所以这里支持 AIDL 只能看运气；如果你的 AIDL 能编译出来，那恭喜你，运气真好！
 
 # ext
-有些朋友反应在工程本地修改部分配置后，还希望能随时同步最新的代码。比如之前在 scripts/configs.gradle 配置 aospRoot ，就需求 checkout、pull 再重新配置 aospRoot
-所以这次改版就可以从 ext/ext.properties 里的 EXT_AOSP_ROOT 读取源码配置的路径。
+有些朋友反应在工程本地修改部分配置后，还希望能随时同步最新的代码。比如之前在 scripts/core.gradle 配置 aospRoot ，就需求 checkout、pull 再重新配置 aospRoot
+所以这次改版就可以从 ext/scripts/ext.properties 里的 EXT_AOSP_ROOT 读取源码配置的路径。
 
 而 .gitignore 忽略目录 ext 就可以达到这个目的，这里给出一个 ext 的配置例子：
 
@@ -400,9 +402,12 @@ $ tree ext                                                                      
 ext
 ├── ExtCarFramework
 │   └── build.gradle
-├── configs-ext.gradle
-├── ext.properties
-└── settings-ext.gradle
+└── scripts
+    ├── configs
+    │   └── ext.gradle
+    ├── ext.properties
+    └── settings
+        └── ext.gradle
 ```
 ## ext.properties
 
@@ -418,13 +423,13 @@ EXT_AOSP_ROOT=/Users/solo/code/vivo
 
 ExtCarFramework 文件夹及其目录下的 build.gradle 文件，就是对于的一个模块。
 
-## configs-ext.gradle
+## configs/ext.gradle
 
-configs-ext.gradle 主要的目的是为了配置模块的路径，可以参考 scripts/configs-aosp.gradle
+scripts/configs/ext.gradle 主要的目的是为了配置模块的路径，可以参考 scripts/configs/aosp.gradle
 
-## settings-ext.gradle
+## settings/ext.gradle
 
-settings-ext.gradle 主要的目的是为了加载模块，可以参考 scripts/settings-aosp.gradle
+scripts/settings/ext.gradle 主要的目的是为了加载模块，可以参考 scripts/settings/aosp.gradle
 
 如：
 
