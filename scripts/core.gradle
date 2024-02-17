@@ -42,10 +42,10 @@ ext {
 def getExtProperties() {
     Properties properties = new Properties()
     try {
-        // 检查 ext/ext.properties 是否存在
-        properties.load(project.rootProject.file('ext/ext.properties').newDataInputStream())
+        // 检查 ext/scripts/ext.properties 是否存在
+        properties.load(project.rootProject.file('ext/scripts/ext.properties').newDataInputStream())
     } catch (Exception e) {
-        logger.warn("has not ext/ext.properties, " + e)
+        logger.warn("has not ext/scripts/ext.properties, " + e)
         properties.load(project.rootProject.file('local.properties').newDataInputStream())
     }
 
