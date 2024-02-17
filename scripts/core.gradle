@@ -1,21 +1,7 @@
 ext {
     Properties properties = getExtProperties()
-    try {
-        // 检查 ext/ext.properties or local.properties 是否存在 EXT_AOSP_ROOT
-        // 方便其他用户自定义此工程的同时也能随时同步最新代码
-        ext_aosp_root = properties.getProperty('EXT_AOSP_ROOT')
-        aospRoot = ext_aosp_root
-        logger.warn("set aosp root from ext/ext.properties or local.properties")
-    } catch (Exception e) {
-        logger.warn("has not set ext aosp root , " + e)
-        //设置源码所在的目录
-        aospRoot = "/home/solo/code/vivo"
-        if (org.gradle.internal.os.OperatingSystem.current().isMacOsX()) {
-            aospRoot = "/Users/solo/code/vivo"
-        }
-    } finally {
-        logger.warn("aospRoot = " + aospRoot)
-    }
+    //aosp 源码路径
+    aospRoot = getRoot(properties)
 
     // aidl 文件生成 java 文件
     // 可以先设置成 true ，接着 "Rebuild Project" 生成java文件后再设置成 false ，保证正常跳转
@@ -31,23 +17,5 @@ ext {
     ]
 
     //获取所有的模块
-    allModules = [:]
-    for (Project subproject : project.subprojects) {
-        def project_name = subproject.getName().toString()
-        logger.debug(project_name)
-        allModules.put(project_name, ":" + project_name)
-    }
-}
-
-def getExtProperties() {
-    Properties properties = new Properties()
-    try {
-        // 检查 ext/scripts/ext.properties 是否存在
-        properties.load(project.rootProject.file('ext/scripts/ext.properties').newDataInputStream())
-    } catch (Exception e) {
-        logger.warn("has not ext/scripts/ext.properties, " + e)
-        properties.load(project.rootProject.file('local.properties').newDataInputStream())
-    }
-
-    return properties
+    allModules = getModules(project.subprojects)
 }
