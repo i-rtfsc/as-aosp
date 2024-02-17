@@ -1,10 +1,10 @@
 /*************** cts ***************/
 include ':junit'
-project(':junit').projectDir = "$rootDir/cts/junit" as File
+project(':junit').projectDir = "$rootDir/aosp-cts/junit" as File
 
 include ':CtsWindowManagerDeviceTestCases'
-project(':CtsWindowManagerDeviceTestCases').projectDir = "$rootDir/cts/CtsWindowManagerDeviceTestCases" as File
+project(':CtsWindowManagerDeviceTestCases').projectDir = "$rootDir/aosp-cts/CtsWindowManagerDeviceTestCases" as File
 
 include ':CtsInputTestCases'
-project(':CtsInputTestCases').projectDir = "$rootDir/cts/CtsInputTestCases" as File
+project(':CtsInputTestCases').projectDir = "$rootDir/aosp-cts/CtsInputTestCases" as File
 /*************** cts ***************/
