@@ -3,9 +3,9 @@ rootProject.name = "aosp"
 apply from: "${rootDir}/scripts/func.gradle"
 
 //配置文件存在，则加载；文件中配置具体的模块
-applyConfig('scripts/settings-aosp.gradle')
-//applyConfig('scripts/settings-aosp-cmake.gradle')
-applyConfig('scripts/settings-aosp-system-server.gradle')
-applyConfig('scripts/settings-car.gradle')
-//applyConfig('scripts/settings-cts.gradle')
-applyConfig('ext/settings-ext.gradle')
+applyConfig('scripts/settings/aosp.gradle')
+//applyConfig('scripts/settings/aosp-cmake.gradle')
+applyConfig('scripts/settings/aosp-system-server.gradle')
+applyConfig('scripts/settings/car.gradle')
+//applyConfig('scripts/settings/cts.gradle')
+applyConfig('ext/scripts/settings/ext.gradle')
