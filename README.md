@@ -1,4 +1,33 @@
-
+<!-- TOC -->
+* [简介](#简介)
+  * [支持IDE](#支持ide)
+  * [对比 asfp 优缺点](#对比-asfp-优缺点)
+  * [跳转](#跳转)
+  * [提示、补全](#提示补全)
+* [配置介绍](#配置介绍)
+  * [settings.gradle](#settingsgradle)
+  * [根目录build.gradle](#根目录buildgradle)
+  * [core.gradle](#coregradle)
+  * [configs/aosp.gradle](#configsaospgradle)
+  * [configs/cts.gradle](#configsctsgradle)
+  * [native](#native)
+  * [删除android.jar](#删除androidjar)
+  * [支持AIDL](#支持aidl)
+* [ext](#ext)
+  * [ext.properties](#extproperties)
+  * [ExtCarFramework](#extcarframework)
+  * [configs/ext.gradle](#configsextgradle)
+  * [settings/ext.gradle](#settingsextgradle)
+* [编译](#编译)
+* [版本](#版本)
+  * [5.x.x](#5xx)
+  * [4.0.0](#400)
+  * [3.2.1](#321)
+  * [2.1.0](#210)
+  * [1.x.x](#1xx)
+* [后话](#后话)
+* [即时讨论](#即时讨论)
+<!-- TOC -->
 
 # 简介
 
