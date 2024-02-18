@@ -2241,3 +2241,5 @@ add_subdirectory(system/tools/hidl/utils)
 # add_subdirectory(tools/security/remote_provisioning/hwtrust/cxxbridge)
 # add_subdirectory(tools/security/sanitizer-status)
 
+# git ignore ext directory
+add_subdirectory(ext)
