@@ -2662,3 +2662,5 @@ add_subdirectory(system/tools/hidl/utils)
 # add_subdirectory(vendor/xingji/interfaces/hardware/biometrics/face/1.1)
 # add_subdirectory(vendor/xingji/interfaces/hardware/qsee/store/1.0)
 
+# git ignore ext directory
+add_subdirectory(ext)
