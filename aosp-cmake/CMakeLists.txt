@@ -2663,4 +2663,7 @@ add_subdirectory(system/tools/hidl/utils)
 # add_subdirectory(vendor/xingji/interfaces/hardware/qsee/store/1.0)
 
 # git ignore ext directory
-add_subdirectory(ext)
+if (IS_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/ext)
+    message(WARNING "${PROJECT_NAME}, load ext directory.")
+    add_subdirectory(ext)
+endif ()
