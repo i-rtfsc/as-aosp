@@ -2242,4 +2242,7 @@ add_subdirectory(system/tools/hidl/utils)
 # add_subdirectory(tools/security/sanitizer-status)
 
 # git ignore ext directory
-add_subdirectory(ext)
+if (IS_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/ext)
+    message(WARNING "${PROJECT_NAME}, load ext directory.")
+    add_subdirectory(ext)
+endif ()
