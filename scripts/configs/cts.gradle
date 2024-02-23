@@ -151,6 +151,25 @@ ext {
                     ],
                     aidl    : [],
             ],
+
+            /*************** 配置 CtsDevicePolicyTestCases 路径 ***************/
+            CtsDevicePolicyTestCases              : [
+                    //"$aospDir/cts/tests/devicepolicy/AndroidManifest.xml",
+                    //"$aospDir/cts/tests/devicepolicy/telephony/AndroidManifest.xml",
+                    manifest: "$aospDir/cts/tests/devicepolicy/AndroidManifest.xml",
+                    res     : [
+                            "$aospDir/cts/tests/devicepolicy/res",
+                    ],
+                    assets  : [],
+                    jni     : "",
+                    src     : [
+                            "$aospDir/cts/tests/devicepolicy/src",
+                            "$aospDir/cts/tests/devicepolicy/telephony/src",
+                    ],
+                    aidl    : [],
+            ],
+
+
     ]
 
 }
