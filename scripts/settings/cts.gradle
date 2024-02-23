@@ -7,4 +7,7 @@ project(':CtsWindowManagerDeviceTestCases').projectDir = "$rootDir/aosp-cts/CtsW
 
 include ':CtsInputTestCases'
 project(':CtsInputTestCases').projectDir = "$rootDir/aosp-cts/CtsInputTestCases" as File
+
+include ':CtsDevicePolicyTestCases'
+project(':CtsDevicePolicyTestCases').projectDir = "$rootDir/aosp-cts/CtsDevicePolicyTestCases" as File
 /*************** cts ***************/
