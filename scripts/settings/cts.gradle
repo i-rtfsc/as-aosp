@@ -2,6 +2,9 @@
 include ':junit'
 project(':junit').projectDir = "$rootDir/aosp-cts/junit" as File
 
+include ':tradefed'
+project(':tradefed').projectDir = "$rootDir/aosp-cts/tradefed" as File
+
 include ':CtsWindowManagerDeviceTestCases'
 project(':CtsWindowManagerDeviceTestCases').projectDir = "$rootDir/aosp-cts/CtsWindowManagerDeviceTestCases" as File
 
@@ -10,4 +13,7 @@ project(':CtsInputTestCases').projectDir = "$rootDir/aosp-cts/CtsInputTestCases"
 
 include ':CtsDevicePolicyTestCases'
 project(':CtsDevicePolicyTestCases').projectDir = "$rootDir/aosp-cts/CtsDevicePolicyTestCases" as File
+
+include ':CtsDevicePolicyManagerTestCases'
+project(':CtsDevicePolicyManagerTestCases').projectDir = "$rootDir/aosp-cts/CtsDevicePolicyManagerTestCases" as File
 /*************** cts ***************/
