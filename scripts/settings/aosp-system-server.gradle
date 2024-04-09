@@ -8,3 +8,8 @@ project(':Services').projectDir = "$rootDir/aosp-modules/Services" as File
 include ':FrameworkRes'
 project(':FrameworkRes').projectDir = "$rootDir/aosp-modules/FrameworkRes" as File
 /*************** aosp system-server & framework-res ***************/
+
+/*************** aosp ART module ***************/
+include ':ART'
+project(':ART').projectDir = "$rootDir/aosp-modules/ART" as File
+/*************** aosp ART module ***************/

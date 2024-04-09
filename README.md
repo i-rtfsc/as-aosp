@@ -438,6 +438,11 @@ as-aosp经历了两年多的更新，每次更新都是根据自己的需求。
 5.x.x 打算再次对 c/c++ 模块进行大改，自己本地验证大改后 vs 也能丝滑使用。
 
 ## 5.x.x
+
+- art
+
+public SDK API provided by the ART module
+
 - car
 
 - [x] car 相关模块都放到 car 文件夹下
