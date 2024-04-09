@@ -148,6 +148,24 @@ ext {
                     aidl    : [],
             ],
 
+            /*************** 配置原生 ART 路径 ***************/
+            ART              : [
+                    manifest: "",
+                    res     : [],
+                    assets  : [],
+                    jni     : "",
+                    src     : [
+                            "$aospDir/libcore/dalvik/src/main/java",
+                            "$aospDir/libcore/json/src/main/java",
+                            "$aospDir/libcore/libart/src/main/java",
+                            "$aospDir/libcore/luni/src/main/java",
+                            "$aospDir/libcore/ojluni/src/main/java",
+                            "$aospDir/libcore/ojluni/src/lambda/java",
+                            "$aospDir/libcore/xml/src/main/java",
+                    ],
+                    aidl    : [],
+            ],
+
             /*************** 配置 SystemUI 路径 ***************/
             SystemUI         : [
                     //"$aospDir/frameworks/base/libs/WindowManager/Shell/AndroidManifest.xml",
