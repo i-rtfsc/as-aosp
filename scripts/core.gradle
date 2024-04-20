@@ -8,6 +8,9 @@ ext {
     // 因为设置成 true 后，模块为了能正常编译出 java 文件，不能循环模块依赖
     build_aidl = false
 
+    // 设置模块存放 aosp 编译出来的 scr jars 目录
+    aosp_srcjars_dir = "build/aosp_srcjars"
+
     //android开发版本配置
     androidSdk = [
             buildToolsVersion: "34.0.0",
