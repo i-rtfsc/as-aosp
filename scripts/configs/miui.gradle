@@ -17,6 +17,7 @@ ext {
                     src     : [
                             "$miuiVendorDir/frameworks/base/core/java/",
                     ],
+                    srcjars : [],
                     aidl    : [
                             //"$miuiDir/frameworks/base/core/java",
                             //"$miuiDir/hardware/interfaces/biometrics/fingerprint/aidl/aidl_api/android.hardware.biometrics.fingerprint/current",
@@ -38,6 +39,7 @@ ext {
                             "$miuiVendorDir/frameworks/base/services/core/java/",
                             "$miuiVendorDir/frameworks/base/services/java/",
                     ],
+                    srcjars : [],
                     aidl    : [],
             ],
 
@@ -58,6 +60,7 @@ ext {
                     assets  : [],
                     jni     : "",
                     src     : [],
+                    srcjars : [],
                     aidl    : [],
             ],
 
