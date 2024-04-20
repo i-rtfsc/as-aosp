@@ -17,6 +17,7 @@ ext {
                     src     : [
                             "$lineageVendorDir/sdk/src/java/",
                     ],
+                    srcjars : [],
                     aidl    : [
                             //"$lineageDir/frameworks/base/core/java",
                             //"$lineageDir/hardware/interfaces/biometrics/fingerprint/aidl/aidl_api/android.hardware.biometrics.fingerprint/current",
@@ -39,6 +40,7 @@ ext {
 
                             "$lineageVendorDir/frameworks/base/services/java/",
                     ],
+                    srcjars : [],
                     aidl    : [],
             ],
 
@@ -51,6 +53,7 @@ ext {
                     assets  : [],
                     jni     : "",
                     src     : [],
+                    srcjars : [],
                     aidl    : [],
             ],
 
@@ -65,6 +68,7 @@ ext {
                     src     : [
                             "$lineageVendorDir/packages/LineagePreferenceLib/java",
                     ],
+                    srcjars : [],
                     aidl    : [],
 
             ],
@@ -80,6 +84,7 @@ ext {
                     src     : [
                             "$lineageVendorDir/packages/LineageSettingsProvider/src",
                     ],
+                    srcjars : [],
                     aidl    : [],
             ],
     ]

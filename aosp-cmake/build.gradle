@@ -5,6 +5,7 @@ ext {
     BUILD_RES = ""
     BUILD_ASSETS = ""
     BUILD_SRC = ""
+    BUILD_SRC_JARS = ""
     BUILD_AIDL = ""
     BUILD_NATIVE_ROOT = androidRoot.root
 }
