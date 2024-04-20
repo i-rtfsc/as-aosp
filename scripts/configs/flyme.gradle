@@ -19,6 +19,9 @@ ext {
                             "$flymeDir/frameworks/base/flyme-extras/media/java/",
                             "$flymeVendorDir/frameworks/base/core/java/",
                     ],
+                    srcjars : [
+                            "$flymeDir/out/soong/.intermediates/vendor/flyme/frameworks/base/framework-flyme/**/*.srcjar",
+                    ],
                     aidl    : [
                             //"$flymeDir/frameworks/base/core/java",
                             //"$flymeDir/hardware/interfaces/biometrics/fingerprint/aidl/aidl_api/android.hardware.biometrics.fingerprint/current",
@@ -41,6 +44,9 @@ ext {
                             "$flymeVendorDir/frameworks/base/services/core/java/",
                             "$flymeVendorDir/frameworks/base/services/java/",
                     ],
+                    srcjars : [
+                            "$flymeDir/out/soong/.intermediates/vendor/flyme/frameworks/base/services/service-flyme.stubs.source/**/*.srcjar"
+                    ],
                     aidl    : [],
             ],
 
@@ -53,6 +59,7 @@ ext {
                     assets  : [],
                     jni     : "",
                     src     : [],
+                    srcjars : [],
                     aidl    : [],
             ],
 
@@ -89,6 +96,10 @@ ext {
                             "$flymeDir/out/soong/.intermediates/packages/apps/SystemUI/SystemUI-tags/android_common/gen/logtags/packages/apps/SystemUI/src",
 
                     ],
+                    srcjars : [
+                            "$flymeDir/out/soong/.intermediates/packages/apps/SystemUI/**/*.srcjar",
+                            "$flymeDir/out/soong/.intermediates/packages/apps/SystemUIGo/**/*.srcjar",
+                    ],
                     aidl    : [],
             ],
 
@@ -104,6 +115,8 @@ ext {
                             "$flymeDir/packages/apps/SystemUI/plugin/bcsmartspace/src",
                             "$flymeDir/packages/apps/SystemUI/plugin_flyme/src",
                     ],
+                    srcjars : [],
+                    aidl    : [],
             ],
 
             /*************** 配置 Settings 路径 ***************/
@@ -122,6 +135,9 @@ ext {
                     src     : [
                             "$flymeDir/packages/apps/Settings/src",
                             "$flymeDir/packages/apps/Settings/src_flyme",
+                    ],
+                    srcjars : [
+                            "$flymeDir/out/soong/.intermediates/packages/apps/Settings/**/*.srcjar",
                     ],
                     aidl    : [],
             ],
@@ -182,6 +198,7 @@ ext {
                             "$flymeDir/packages/apps/Launcher3/popupContainer/src/main/java",
                             "$flymeDir/packages/apps/Launcher3/popupContainer/src/androidTest/java",
                     ],
+                    srcjars : [],
                     aidl    : [],
             ],
 
@@ -217,6 +234,7 @@ ext {
                             "$flymeDir/packages/modules/Permission/SafetyCenter/Persistence/java",
                             "$flymeDir/packages/modules/Permission/framework-s/java",
                     ],
+                    srcjars : [],
                     aidl    : [],
             ],
     ]

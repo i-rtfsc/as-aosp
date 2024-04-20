@@ -39,7 +39,7 @@ android {
             }
 
             if (isNotNull(BUILD_SRC)) {
-                java.srcDirs = [BUILD_SRC]
+                java.srcDirs = [BUILD_SRC, rootProject.ext.aosp_srcjars_dir]
             }
 
             if (rootProject.ext.build_aidl.toBoolean() && isNotNull(BUILD_AIDL)) {
@@ -68,7 +68,7 @@ android {
     }
 }
 
-task deleteAndroidSdk {
+tasks.register('deleteAndroidSdk') {
     def dir = "${rootDir}" + File.separator + ".idea" + File.separator + "modules" + File.separator + project.name + File.separator
 
     // 新版本的 idea 生成的目录不再是 project.name [个人觉得是idea的bug], 所以只能从 modules 文件夹开始遍历。
@@ -86,9 +86,9 @@ task deleteAndroidSdk {
         def projectDir = file.path
         def projectFile = rootProject.name + "." + project.name + ".main.iml"
         if (fileName.contains(projectFile)) {
-            def scriptFile = "${rootDir}" + File.separator + "scripts" + File.separator + "delete-sdk.py"
+            def scriptFile = "${rootDir}" + File.separator + "scripts" + File.separator + "py" + File.separator + "delete-sdk.py"
             def cmd = "python " + scriptFile + " -d " + projectDir
-            logger.debug(cmd)
+            logger.warn("task deleteAndroidSdk, cmd = " + cmd)
             def script = cmd.execute()
             script.waitFor()
 
@@ -106,20 +106,33 @@ task deleteAndroidSdk {
     }
 }
 
+tasks.register('copyAospScrjar') {
+    def src_jars = "\"" + BUILD_SRC_JARS.join('#') + "\""// 将列表转换为以#号隔开的字符串
+    def project_src_jars_dir = project.projectDir.toString() + File.separator + rootProject.ext.aosp_srcjars_dir
+    def scriptFile = "${rootDir}" + File.separator + "scripts" + File.separator + "py" + File.separator + "copyAospScrjar.py"
+    def cmd = "python " + scriptFile + " -m " + project_src_jars_dir + " -s " + src_jars
+    logger.warn("task copyAospScrjar, cmd = " + cmd)
+    def process = cmd.execute()
+    process.waitFor()
+}
+
 dependencies {
     if (isNotNull(BUILD_NATIVE_ROOT)) {
         logger.warn("Native [" + project.getName() + "] don't dependence other project")
     } else {
         rootProject.ext.allModules.each { dependence ->
             if (dependence.key == project.name) {
-                logger.debug("Don't compileOnly myself, project = " + project.name)
+                logger.warn("Don't compileOnly myself, project = " + project.name)
             } else {
                 if (rootProject.ext.build_aidl.toBoolean()) {
-                    logger.debug("don't compileOnly forEach when build aidl")
+                    logger.warn("don't compileOnly forEach when build aidl")
                 } else {
                     compileOnly project(dependence.value)
                 }
             }
         }
     }
+    // execute task
+    copyAospScrjar
+    deleteAndroidSdk
 }

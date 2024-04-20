@@ -59,6 +59,15 @@ ext {
                             "$aospDir/out/soong/.intermediates/system/security/keystore2/aidl/android.security.metrics-java-source/gen",
                             "$aospDir/out/soong/.intermediates/system/update_engine/stable/libupdate_engine_stable-V2-java-source/gen",
                     ],
+                    srcjars : [
+                            "$aospDir/out/soong/.intermediates/frameworks/base/*-java/android_common/gen/*.srcjar",
+                            "$aospDir/out/soong/.intermediates/frameworks/base/core/res/framework-res/android_common/gen/android/*.srcjar",
+                            "$aospDir/out/soong/.intermediates/frameworks/base/framework-javastream-protos/**/*.srcjar",
+                            "$aospDir/out/soong/.intermediates/frameworks/base/framework-minus-apex/**/*.srcjar",
+                            "$aospDir/out/soong/.intermediates/frameworks/av/media/aconfig/aconfig_mediacodec_flags_java_lib/android_common/gen/*.srcjar",
+                            "$aospDir/out/soong/.intermediates/hardware/interfaces/audio/7.0/config/audio_policy_configuration_V7_0/gen/java/*.srcjar",
+                            "$aospDir/out/soong/.intermediates/system/apex/apexd/apex-info-list/gen/java/*.srcjar",
+                    ],
                     aidl    : [
                             "$aospDir/frameworks/av/camera/aidl",
                             "$aospDir/frameworks/base/media/java/android/media/tv/tunerresourcemanager/aidl",
@@ -130,6 +139,11 @@ ext {
                             "$aospDir/out/soong/.intermediates/packages/modules/Wifi/service/statslog-wifi-java-gen/gen",
 
                     ],
+                    srcjars : [
+                            "$aospDir/out/soong/.intermediates/frameworks/base/services/**/*.srcjar",
+                            "$aospDir/out/soong/.intermediates/packages/modules/AdServices/adservices/**/*.srcjar",
+                            "$aospDir/out/soong/.intermediates/packages/modules/Wifi/service/**/*.srcjar",
+                    ],
                     aidl    : [],
             ],
 
@@ -145,6 +159,7 @@ ext {
                     ],
                     jni     : "",
                     src     : [],
+                    srcjars : [],
                     aidl    : [],
             ],
 
@@ -162,6 +177,10 @@ ext {
                             "$aospDir/libcore/ojluni/src/main/java",
                             "$aospDir/libcore/ojluni/src/lambda/java",
                             "$aospDir/libcore/xml/src/main/java",
+                    ],
+                    srcjars : [
+                            "$aospDir/out/soong/.intermediates/libcore/**/*.srcjar",
+                            "$aospDir/out/soong/.intermediates/external/icu/android_icu4j/i18n.module.intra.core.api.stubs.source/android_common/everything/*.srcjar",
                     ],
                     aidl    : [],
             ],
@@ -232,6 +251,11 @@ ext {
 
 
                     ],
+                    srcjars : [
+                            "$aospDir/out/soong/.intermediates/frameworks/base/packages/SystemUI/**/*.srcjar",
+                            "$aospDir/out/soong/.intermediates/packages/apps/SystemUIGo/**/*.srcjar",
+
+                    ],
                     aidl    : [
 //                            "$aospDir/frameworks/base/core/java",
                     ],
@@ -252,6 +276,7 @@ ext {
                             "$aospDir/frameworks/base/packages/SystemUI/plugin/src",
                             "$aospDir/frameworks/base/packages/SystemUI/plugin_core/src",
                     ],
+                    srcjars : [],
                     aidl    : [],
             ],
 
@@ -267,6 +292,9 @@ ext {
                     jni     : "",
                     src     : [
                             "$aospDir/packages/apps/Settings/src",
+                    ],
+                    srcjars : [
+                            "$aospDir/out/soong/.intermediates/packages/apps/Settings/**/*.srcjar",
                     ],
                     aidl    : [],
             ],
@@ -391,6 +419,9 @@ ext {
                             "$aospDir/frameworks/base/packages/SettingsLib/search/stub-src",
                             "$aospDir/frameworks/base/packages/SettingsLib/src",
                     ],
+                    srcjars : [
+                            "$aospDir/out/soong/.intermediates/frameworks/base/packages/SettingsLib/**/*.srcjar",
+                    ],
                     aidl    : [],
             ],
 
@@ -406,6 +437,7 @@ ext {
                             "$aospDir/frameworks/base/packages/SettingsProvider/src",
                             "$aospDir/out/soong/.intermediates/frameworks/base/packages/SettingsProvider/SettingsProvider/android_common/gen",
                     ],
+                    srcjars : [],
                     aidl    : [],
             ],
 
@@ -446,6 +478,7 @@ ext {
                             "$aospDir/packages/modules/Connectivity/thread/framework/java",
                             "$aospDir/packages/modules/Connectivity/thread/service/java",
                     ],
+                    srcjars : [],
                     aidl    : [
 //                            "$aospDir/packages/modules/Connectivity/framework/aidl-export",
 //                            "$aospDir/frameworks/base/core/java",
@@ -464,6 +497,9 @@ ext {
                     jni     : "",
                     src     : [
                             "$aospDir/packages/modules/ExtServices/java/src",
+                    ],
+                    srcjars : [
+                            "$aospDir/out/soong/.intermediates/packages/modules/ExtServices/**/*.srcjar",
                     ],
                     aidl    : [],
             ],
@@ -499,6 +535,7 @@ ext {
                             "$aospDir/packages/modules/Permission/framework/java",
                             "$aospDir/packages/modules/Permission/service/java",
                     ],
+                    srcjars : [],
                     aidl    : [],
             ],
     ]
