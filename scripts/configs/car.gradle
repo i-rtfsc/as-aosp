@@ -29,6 +29,8 @@ ext {
                             "$aospDir/out/soong/.intermediates/packages/services/Car/car-builtin-lib/android.car.builtin.stubs.source.module_lib/android_common/gen/logtags/packages/services/Car/car-builtin-lib/src",
                             "$aospDir/out/soong/.intermediates/packages/services/Car/car-builtin-lib/android.car.builtin.stubs.source/android_common/gen/logtags/packages/services/Car/car-builtin-lib/src",
                     ],
+                    //TODO
+                    srcjars : [],
                     aidl    : [],
             ],
 
@@ -45,6 +47,8 @@ ext {
                             "$aospDir/packages/services/Car/service-builtin/src",
                             "$aospDir/packages/services/Car/service/src",
                     ],
+                    //TODO
+                    srcjars : [],
                     aidl    : [],
             ],
 
@@ -64,6 +68,8 @@ ext {
                             "$aospDir/packages/apps/Car/SystemUI/src",
 
                     ],
+                    //TODO
+                    srcjars : [],
                     aidl    : [],
             ],
 
@@ -79,6 +85,8 @@ ext {
                     src     : [
                             "$aospDir/packages/apps/Car/Settings/src",
                     ],
+                    //TODO
+                    srcjars : [],
                     aidl    : [],
             ],
     ]
