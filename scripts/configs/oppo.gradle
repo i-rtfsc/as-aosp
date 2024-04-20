@@ -17,6 +17,7 @@ ext {
                     src     : [
                             "$oppoVendorDir/frameworks/base/core/java/",
                     ],
+                    srcjars : [],
                     aidl    : [
                             //"$oppoDir/frameworks/base/core/java",
                             //"$oppoDir/hardware/interfaces/biometrics/fingerprint/aidl/aidl_api/android.hardware.biometrics.fingerprint/current",
@@ -38,6 +39,8 @@ ext {
                             "$oppoVendorDir/frameworks/base/services/core/java/",
                             "$oppoVendorDir/frameworks/base/services/java/",
                     ],
+                    srcjars : [],
+                    aidl    : [],
             ],
 
             /*************** 配置 oppo framework-res 路径 ***************/
@@ -50,6 +53,8 @@ ext {
                     assets  : [],
                     jni     : "",
                     src     : [],
+                    srcjars : [],
+                    aidl    : [],
             ],
 
     ]

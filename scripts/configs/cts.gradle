@@ -17,6 +17,7 @@ ext {
                             "$aospDir/external/junit/src/main",
                             "$aospDir/external/junit/src/main/java",
                     ],
+                    srcjars : [],
                     aidl    : [],
             ],
 
@@ -64,6 +65,7 @@ ext {
                             "$aospDir/tools/tradefederation/core/util_apps/WifiUtil/src",
 
                     ],
+                    srcjars : [],
                     aidl    : [],
             ],
 
@@ -177,6 +179,7 @@ ext {
                             "$aospDir/cts/tests/framework/base/windowmanager/translucentapp/src",
                             "$aospDir/cts/tests/framework/base/windowmanager/translucentappsdk26/src",
                     ],
+                    srcjars : [],
                     aidl    : [],
             ],
 
@@ -196,6 +199,7 @@ ext {
                             "$aospDir/cts/tests/input/InputInjectionApp/src",
                             "$aospDir/cts/tests/input/src",
                     ],
+                    srcjars : [],
                     aidl    : [],
             ],
 
@@ -213,6 +217,7 @@ ext {
                             "$aospDir/cts/tests/devicepolicy/src",
                             "$aospDir/cts/tests/devicepolicy/telephony/src",
                     ],
+                    srcjars : [],
                     aidl    : [],
             ],
 
@@ -350,6 +355,7 @@ ext {
                             "$aospDir/cts/hostsidetests/devicepolicy/app/common/src",
                             "$aospDir/cts/hostsidetests/devicepolicy/src",
                     ],
+                    srcjars : [],
                     aidl    : [],
             ],
 
