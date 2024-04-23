@@ -68,44 +68,6 @@ android {
     }
 }
 
-tasks.register('deleteAndroidSdk') {
-    def dir = "${rootDir}" + File.separator + ".idea" + File.separator + "modules" + File.separator + project.name + File.separator
-
-    // 新版本的 idea 生成的目录不再是 project.name [个人觉得是idea的bug], 所以只能从 modules 文件夹开始遍历。
-    // TODO 后续可能会优化
-    // 新版本的 as 甚至都不会生成 [project.name].main.iml
-    def folder = new File(dir)
-    if (!folder.exists()) {
-        dir = "${rootDir}" + File.separator + ".idea" + File.separator + "modules"
-    }
-
-    def files = fileTree(dir).filter { it.isFile() }.files.absoluteFile
-    files.forEach { file ->
-        def imlFile = file
-        def fileName = file.name
-        def projectDir = file.path
-        def projectFile = rootProject.name + "." + project.name + ".main.iml"
-        if (fileName.contains(projectFile)) {
-            def scriptFile = "${rootDir}" + File.separator + "scripts" + File.separator + "py" + File.separator + "delete-sdk.py"
-            def cmd = "python " + scriptFile + " -d " + projectDir
-            logger.warn("task deleteAndroidSdk, cmd = " + cmd)
-            def script = cmd.execute()
-            script.waitFor()
-
-            try {
-                def parsedXml = (new XmlParser()).parse(imlFile)
-                def jdkNode = parsedXml.component[1].orderEntry.find { it.'@type' == 'jdk' }
-                def jdkName = jdkNode.attributes().get('jdkName')
-                parsedXml.component[1].remove(jdkNode)
-                new groovy.util.Node(parsedXml.component[1], 'orderEntry', ['type': 'jdk', 'jdkName': jdkName, 'jdkType': 'Android SDK'])
-                groovy.xml.XmlUtil.serialize(parsedXml, new FileOutputStream(imlFile))
-            } catch (Exception e) {
-                logger.warn("sort sdk node error, " + e)
-            }
-        }
-    }
-}
-
 tasks.register('copyAospScrjar') {
     def src_jars = "\"" + BUILD_SRC_JARS.join('#') + "\""// 将列表转换为以#号隔开的字符串
     def project_src_jars_dir = project.projectDir.toString() + File.separator + rootProject.ext.aosp_srcjars_dir
@@ -134,5 +96,45 @@ dependencies {
     }
     // execute task
     copyAospScrjar
-    deleteAndroidSdk
 }
+
+task deleteAndroidSdk {
+    doLast {
+        def platformVersion = android.compileSdkVersion
+        def androidJarPath = "${android.sdkDirectory}/platforms/${platformVersion}/android.jar"
+        def androidJarPathBackup = "${android.sdkDirectory}/platforms/${platformVersion}/android.jar.backup"
+
+        // 获取 android.jar 的 File 对象
+        def androidJarFile = file(androidJarPath)
+
+        // 检查 android.jar 是否存在
+        if (androidJarFile.exists()) {
+            // 将 android.jar 重命名为 android.jar.backup
+            androidJarFile.renameTo(androidJarPathBackup)
+            println("Task deleteAndroidSdk: ${androidJarPath} renamed to ${androidJarPathBackup}")
+        } else {
+            println("Task deleteAndroidSdk: ${androidJarPath} not found")
+        }
+    }
+}
+
+task restoreAndroidSdk {
+    doLast {
+        def platformVersion = android.compileSdkVersion
+        def androidJarPath = "${android.sdkDirectory}/platforms/${platformVersion}/android.jar"
+        def androidJarPathBackup = "${android.sdkDirectory}/platforms/${platformVersion}/android.jar.backup"
+
+        // 获取 android.jar 的 File 对象
+        def androidJarBackupFile = file(androidJarPathBackup)
+
+        // 检查 android.jar.backup 是否存在
+        if (androidJarBackupFile.exists()) {
+            // 将 android.jar.backup 重命名为 android.jar
+            androidJarBackupFile.renameTo(androidJarPath)
+            logger.warn("task restoreAndroidSdk project = " + project.name + ", " + androidJarPathBackup + ", renamed to " + androidJarPath)
+        } else {
+            logger.warn("task restoreAndroidSdk project = " + project.name + ", " + androidJarPathBackup + " not found")
+        }
+    }
+}
+
