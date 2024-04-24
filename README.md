@@ -50,7 +50,7 @@
 > CLion 只支持 native 模块，直接打开 aosp-native 后，需要改 aosp-native/CMakeLists.txt 里 set(ANDROID_ROOT ${BUILD_NATIVE_ROOT})
 
 
-### 对比 asfp 优缺点
+## 对比 asfp 优缺点
 
 <table>
 
@@ -184,9 +184,9 @@ as-aosp经历了两年多的更新，每次更新都是根据自己的需求。
 
 适配新版 android studio，实现自动删除恢复 android.jar ，丝滑调整源码。
 
-#### art
+#### PlatformBase
 
-public SDK API provided by the ART module
+不特指aosp中的哪个模块，而是android 平台一些基础的代码都放在这个模块里。
 
 ####  car
 
