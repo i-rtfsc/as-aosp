@@ -3,8 +3,11 @@ ext {
     //这里也可以改成自己定义的路径
     aospDir = rootProject.ext.aospRoot
 
+    aospOutRoot = rootProject.ext.aospOutRoot
+
     cts = [
-            root                           : "$aospDir",
+            rootDir                        : "$aospDir",
+            rootOutDir                     : "$aospOutRoot",
 
             /*************** 配置 junit 路径 ***************/
             junit                          : [

@@ -7,7 +7,8 @@ ext {
     BUILD_SRC = ""
     BUILD_SRC_JARS = ""
     BUILD_AIDL = ""
-    BUILD_NATIVE_ROOT = androidRoot.root
+    BUILD_NATIVE_ROOT = androidRoot.rootDir
+    BUILD_NATIVE_OUT_ROOT = androidRoot.rootOutDir
 }
 
 apply from: "${rootDir}/scripts/android-build.gradle"
