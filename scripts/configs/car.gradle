@@ -3,11 +3,14 @@ ext {
     //这里也可以改成自己定义的路径
     aospDir = rootProject.ext.aospRoot
 
+    aospOutRoot = rootProject.ext.aospOutRoot
+
     car = [
-            root     : "$aospDir",
+            rootDir   : "$aospDir",
+            rootOutDir: "$aospOutRoot",
 
             /*************** 配置原生 car-framework 路径 ***************/
-            Framework: [
+            Framework : [
                     manifest: "$aospDir/packages/services/Car/car-lib/AndroidManifest.xml",
                     res     : [
                             "$aospDir/packages/services/Car/FrameworkPackageStubs/res/",
@@ -25,9 +28,9 @@ ext {
                             "$aospDir/frameworks/opt/car/services/updatableServices/src",//car-frameworks-service-module
                             "$aospDir/frameworks/opt/car/services/builtInServices/src_imms",//car-frameworks-service
                             "$aospDir/frameworks/opt/car/services/builtInServices/src",//car-frameworks-service
-                            "$aospDir/out/soong/.intermediates/packages/services/Car/car-builtin-lib/android.car.builtin.stubs.source.system/android_common/gen/logtags/packages/services/Car/car-builtin-lib/src",
-                            "$aospDir/out/soong/.intermediates/packages/services/Car/car-builtin-lib/android.car.builtin.stubs.source.module_lib/android_common/gen/logtags/packages/services/Car/car-builtin-lib/src",
-                            "$aospDir/out/soong/.intermediates/packages/services/Car/car-builtin-lib/android.car.builtin.stubs.source/android_common/gen/logtags/packages/services/Car/car-builtin-lib/src",
+                            "$aospOutRoot/out/soong/.intermediates/packages/services/Car/car-builtin-lib/android.car.builtin.stubs.source.system/android_common/gen/logtags/packages/services/Car/car-builtin-lib/src",
+                            "$aospOutRoot/out/soong/.intermediates/packages/services/Car/car-builtin-lib/android.car.builtin.stubs.source.module_lib/android_common/gen/logtags/packages/services/Car/car-builtin-lib/src",
+                            "$aospOutRoot/out/soong/.intermediates/packages/services/Car/car-builtin-lib/android.car.builtin.stubs.source/android_common/gen/logtags/packages/services/Car/car-builtin-lib/src",
                     ],
                     //TODO
                     srcjars : [],
@@ -35,7 +38,7 @@ ext {
             ],
 
             /*************** 配置原生 car-services 路径 ***************/
-            Services : [
+            Services  : [
                     manifest: "$aospDir/packages/services/Car/service/AndroidManifest.xml",
                     res     : [
                             "$aospDir/packages/services/Car/service/res",
@@ -53,7 +56,7 @@ ext {
             ],
 
             /*************** 配置原生 CarSystemUI 路径 ***************/
-            SystemUI : [
+            SystemUI  : [
                     manifest: "$aospDir/packages/apps/Car/SystemUI/AndroidManifest.xml",
                     res     : [
                             "$aospDir/packages/apps/Car/SystemUI/res-keyguard",
@@ -74,7 +77,7 @@ ext {
             ],
 
             /*************** 配置原生 CarSettings 路径 ***************/
-            Settings : [
+            Settings  : [
                     manifest: "$aospDir/packages/apps/Car/Settings/AndroidManifest.xml",
                     res     : [
                             "$aospDir/packages/apps/Car/Settings/res",

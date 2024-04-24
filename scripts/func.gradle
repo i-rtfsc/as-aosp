@@ -57,3 +57,19 @@ ext.getRoot = { properties ->
 
     return aospRoot
 }
+
+ext.getOutRoot = { properties, root_dir ->
+    // 检查 ext/scripts/ext.properties or local.properties 是否存在 EXT_AOSP_OUT_ROOT
+    // 方便其他用户自定义此工程的同时也能随时同步最新代码
+    def aospOutRoot = properties.getProperty('EXT_AOSP_OUT_ROOT')
+    if (isNotNull(aospOutRoot)) {
+        logger.warn("set aosp out root from ext/scripts/ext.properties or local.properties")
+    } else {
+        logger.warn("has not set ext aosp out root")
+        // 未设置额外的 out 目录，则默认是在源码根目录下
+        aospOutRoot = root_dir
+    }
+    logger.warn("aospOutRoot = " + aospOutRoot)
+
+    return aospOutRoot
+}
