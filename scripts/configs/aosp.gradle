@@ -165,8 +165,8 @@ ext {
                     aidl    : [],
             ],
 
-            /*************** 配置原生 ART 路径 ***************/
-            ART              : [
+            /*************** 配置 android 平台一些基础的代码 路径 ***************/
+            PlatformBase     : [
                     manifest: "",
                     res     : [],
                     assets  : [],
@@ -179,6 +179,7 @@ ext {
                             "$aospDir/libcore/ojluni/src/main/java",
                             "$aospDir/libcore/ojluni/src/lambda/java",
                             "$aospDir/libcore/xml/src/main/java",
+                            "$aospDir/tools/platform-compat/java",
                     ],
                     srcjars : [
                             "$aospOutRoot/out/soong/.intermediates/libcore/**/*.srcjar",
