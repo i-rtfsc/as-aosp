@@ -14,11 +14,14 @@ android {
         minSdkVersion androidSdk.minSdkVersion
         targetSdkVersion androidSdk.targetSdkVersion
 
-        if (isNotNull(BUILD_NATIVE_ROOT)) {
+        if (project.hasProperty('BUILD_NATIVE_ROOT') && isNotNull(BUILD_NATIVE_ROOT)) {
             logger.warn(project.getName() + " config c/cpp code, root dir = " + BUILD_NATIVE_ROOT)
             externalNativeBuild {
                 cmake {
                     arguments "-DBUILD_NATIVE_ROOT=" + BUILD_NATIVE_ROOT
+                    if (project.hasProperty('BUILD_NATIVE_OUT_ROOT') && isNotNull(BUILD_NATIVE_OUT_ROOT)) {
+                        arguments "-DBUILD_NATIVE_OUT_ROOT=" + BUILD_NATIVE_OUT_ROOT
+                    }
                 }
             }
         }
@@ -26,29 +29,26 @@ android {
 
     sourceSets {
         main {
-            if (isNotNull(BUILD_MANIFEST)) {
-                manifest.srcFile BUILD_MANIFEST
-            }
-
-            if (isNotNull(BUILD_ASSETS)) {
+            if (project.hasProperty('BUILD_ASSETS') && isNotNull(BUILD_ASSETS)) {
                 assets.srcDirs = [BUILD_ASSETS]
             }
 
-            if (isNotNull(BUILD_RES)) {
+            if (project.hasProperty('BUILD_RES') && isNotNull(BUILD_RES)) {
                 res.srcDirs = [BUILD_RES]
             }
 
-            if (isNotNull(BUILD_SRC)) {
+            if (project.hasProperty('BUILD_SRC') && isNotNull(BUILD_SRC)) {
                 java.srcDirs = [BUILD_SRC, rootProject.ext.aosp_srcjars_dir]
             }
 
-            if (rootProject.ext.build_aidl.toBoolean() && isNotNull(BUILD_AIDL)) {
+            if (rootProject.ext.build_aidl.toBoolean() &&
+                    project.hasProperty('BUILD_AIDL') && isNotNull(BUILD_AIDL)) {
                 aidl.srcDirs = [BUILD_AIDL]
             }
         }
     }
 
-    if (isNotNull(BUILD_NATIVE_ROOT)) {
+    if (project.hasProperty('BUILD_NATIVE_ROOT') && isNotNull(BUILD_NATIVE_ROOT)) {
         externalNativeBuild {
             cmake {
                 path "CMakeLists.txt"
@@ -69,17 +69,21 @@ android {
 }
 
 tasks.register('copyAospScrjar') {
-    def src_jars = "\"" + BUILD_SRC_JARS.join('#') + "\""// 将列表转换为以#号隔开的字符串
-    def project_src_jars_dir = project.projectDir.toString() + File.separator + rootProject.ext.aosp_srcjars_dir
-    def scriptFile = "${rootDir}" + File.separator + "scripts" + File.separator + "py" + File.separator + "copyAospScrjar.py"
-    def cmd = "python " + scriptFile + " -m " + project_src_jars_dir + " -s " + src_jars
-    logger.warn("task copyAospScrjar, cmd = " + cmd)
-    def process = cmd.execute()
-    process.waitFor()
+    if (project.hasProperty('BUILD_SRC_JARS') &&  isNotNull(BUILD_SRC_JARS)) {
+        def src_jars = "\"" + BUILD_SRC_JARS.join('#') + "\""// 将列表转换为以#号隔开的字符串
+        def project_src_jars_dir = project.projectDir.toString() + File.separator + rootProject.ext.aosp_srcjars_dir
+        def scriptFile = "${rootDir}" + File.separator + "scripts" + File.separator + "copy_aosp_scrjar.py"
+        def cmd = "python " + scriptFile + " -m " + project_src_jars_dir + " -s " + src_jars
+        logger.warn("task copyAospScrjar, cmd = " + cmd)
+        def process = cmd.execute()
+        process.waitFor()
+    } else {
+        logger.warn("task copyAospScrjar, src_jars was null")
+    }
 }
 
 dependencies {
-    if (isNotNull(BUILD_NATIVE_ROOT)) {
+    if (project.hasProperty('BUILD_NATIVE_ROOT') && isNotNull(BUILD_NATIVE_ROOT)) {
         logger.warn("Native [" + project.getName() + "] don't dependence other project")
     } else {
         rootProject.ext.allModules.each { dependence ->
@@ -124,7 +128,7 @@ task restoreAndroidSdk {
         def androidJarPath = "${android.sdkDirectory}/platforms/${platformVersion}/android.jar"
         def androidJarPathBackup = "${android.sdkDirectory}/platforms/${platformVersion}/android.jar.backup"
 
-        // 获取 android.jar 的 File 对象
+        // 获取 android.jar.backup 的 File 对象
         def androidJarBackupFile = file(androidJarPathBackup)
 
         // 检查 android.jar.backup 是否存在
