@@ -9,7 +9,8 @@ include ':FrameworkRes'
 project(':FrameworkRes').projectDir = "$rootDir/aosp-modules/FrameworkRes" as File
 /*************** aosp system-server & framework-res ***************/
 
-/*************** aosp ART module ***************/
-include ':ART'
-project(':ART').projectDir = "$rootDir/aosp-modules/ART" as File
-/*************** aosp ART module ***************/
+/*************** aosp PlatformBase module ***************/
+// android 平台一些基础的代码
+include ':PlatformBase'
+project(':PlatformBase').projectDir = "$rootDir/aosp-modules/PlatformBase" as File
+/*************** aosp PlatformBase module ***************/
