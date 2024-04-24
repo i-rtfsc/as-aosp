@@ -1,4 +1,4 @@
-def androidRoot = rootProject.ext.aosp.ART
+def androidRoot = rootProject.ext.aosp.PlatformBase
 
 ext {
     BUILD_MANIFEST = androidRoot.manifest
