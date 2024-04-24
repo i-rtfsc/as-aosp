@@ -2,9 +2,11 @@ ext {
     //通过scripts/config.gradle获取到设置的源码路径，
     //这里也可以改成自己定义的路径
     aospDir = rootProject.ext.aospRoot
+    aospOutRoot = rootProject.ext.aospOutRoot
 
     aosp = [
-            root             : "$aospDir",
+            rootDir          : "$aospDir",
+            rootOutDir       : "$aospOutRoot",
 
             /*************** 配置原生 fwk 路径 ***************/
             Framework        : [
@@ -37,36 +39,36 @@ ext {
                             "$aospDir/frameworks/libs/modules-utils/java",
                             "$aospDir/packages/modules/Wifi/framework/java",
                             // out
-                            "$aospDir/out/soong/.intermediates/frameworks/base/core/java/statslog-framework-java-gen/gen",
-                            "$aospDir/out/soong/.intermediates/frameworks/base/framework-minus-apex/android_common/gen/logtags/frameworks/base/core/java",
-                            "$aospDir/out/soong/.intermediates/frameworks/base/telephony/common/statslog-telephony-common-java-gen/gen",
-                            "$aospDir/out/soong/.intermediates/frameworks/base/telephony/java/statslog-telephony-java-gen/gen",
-                            "$aospDir/out/soong/.intermediates/hardware/interfaces/biometrics/common/aidl/android.hardware.biometrics.common-V3-java-source/gen",
-                            "$aospDir/out/soong/.intermediates/hardware/interfaces/biometrics/fingerprint/aidl/android.hardware.biometrics.fingerprint-V3-java-source/gen",
-                            "$aospDir/out/soong/.intermediates/hardware/interfaces/cas/aidl/android.hardware.cas-V1-java-source/gen",
-                            "$aospDir/out/soong/.intermediates/hardware/interfaces/gnss/aidl/android.hardware.gnss-V2-java-source/gen",
-                            "$aospDir/out/soong/.intermediates/hardware/interfaces/graphics/common/aidl/android.hardware.graphics.common-V3-java-source/gen",
-                            "$aospDir/out/soong/.intermediates/hardware/interfaces/keymaster/aidl/android.hardware.keymaster-V4-java-source/gen",
-                            "$aospDir/out/soong/.intermediates/hardware/interfaces/security/keymint/aidl/android.hardware.security.keymint-V3-java-source/gen",
-                            "$aospDir/out/soong/.intermediates/hardware/interfaces/security/secureclock/aidl/android.hardware.security.secureclock-V1-java-source/gen",
-                            "$aospDir/out/soong/.intermediates/hardware/interfaces/thermal/aidl/android.hardware.thermal-V1-java-source/gen",
-                            "$aospDir/out/soong/.intermediates/hardware/interfaces/tv/tuner/aidl/android.hardware.tv.tuner-V2-java-source/gen",
-                            "$aospDir/out/soong/.intermediates/system/hardware/interfaces/keystore2/aidl/android.system.keystore2-V3-java-source/gen",
-                            "$aospDir/out/soong/.intermediates/system/security/keystore2/aidl/android.security.apc-java-source/gen",
-                            "$aospDir/out/soong/.intermediates/system/security/keystore2/aidl/android.security.authorization-java-source/gen",
-                            "$aospDir/out/soong/.intermediates/system/security/keystore2/aidl/android.security.legacykeystore-java-source/gen",
-                            "$aospDir/out/soong/.intermediates/system/security/keystore2/aidl/android.security.maintenance-java-source/gen",
-                            "$aospDir/out/soong/.intermediates/system/security/keystore2/aidl/android.security.metrics-java-source/gen",
-                            "$aospDir/out/soong/.intermediates/system/update_engine/stable/libupdate_engine_stable-V2-java-source/gen",
+                            "$aospOutRoot/out/soong/.intermediates/frameworks/base/core/java/statslog-framework-java-gen/gen",
+                            "$aospOutRoot/out/soong/.intermediates/frameworks/base/framework-minus-apex/android_common/gen/logtags/frameworks/base/core/java",
+                            "$aospOutRoot/out/soong/.intermediates/frameworks/base/telephony/common/statslog-telephony-common-java-gen/gen",
+                            "$aospOutRoot/out/soong/.intermediates/frameworks/base/telephony/java/statslog-telephony-java-gen/gen",
+                            "$aospOutRoot/out/soong/.intermediates/hardware/interfaces/biometrics/common/aidl/android.hardware.biometrics.common-V3-java-source/gen",
+                            "$aospOutRoot/out/soong/.intermediates/hardware/interfaces/biometrics/fingerprint/aidl/android.hardware.biometrics.fingerprint-V3-java-source/gen",
+                            "$aospOutRoot/out/soong/.intermediates/hardware/interfaces/cas/aidl/android.hardware.cas-V1-java-source/gen",
+                            "$aospOutRoot/out/soong/.intermediates/hardware/interfaces/gnss/aidl/android.hardware.gnss-V2-java-source/gen",
+                            "$aospOutRoot/out/soong/.intermediates/hardware/interfaces/graphics/common/aidl/android.hardware.graphics.common-V3-java-source/gen",
+                            "$aospOutRoot/out/soong/.intermediates/hardware/interfaces/keymaster/aidl/android.hardware.keymaster-V4-java-source/gen",
+                            "$aospOutRoot/out/soong/.intermediates/hardware/interfaces/security/keymint/aidl/android.hardware.security.keymint-V3-java-source/gen",
+                            "$aospOutRoot/out/soong/.intermediates/hardware/interfaces/security/secureclock/aidl/android.hardware.security.secureclock-V1-java-source/gen",
+                            "$aospOutRoot/out/soong/.intermediates/hardware/interfaces/thermal/aidl/android.hardware.thermal-V1-java-source/gen",
+                            "$aospOutRoot/out/soong/.intermediates/hardware/interfaces/tv/tuner/aidl/android.hardware.tv.tuner-V2-java-source/gen",
+                            "$aospOutRoot/out/soong/.intermediates/system/hardware/interfaces/keystore2/aidl/android.system.keystore2-V3-java-source/gen",
+                            "$aospOutRoot/out/soong/.intermediates/system/security/keystore2/aidl/android.security.apc-java-source/gen",
+                            "$aospOutRoot/out/soong/.intermediates/system/security/keystore2/aidl/android.security.authorization-java-source/gen",
+                            "$aospOutRoot/out/soong/.intermediates/system/security/keystore2/aidl/android.security.legacykeystore-java-source/gen",
+                            "$aospOutRoot/out/soong/.intermediates/system/security/keystore2/aidl/android.security.maintenance-java-source/gen",
+                            "$aospOutRoot/out/soong/.intermediates/system/security/keystore2/aidl/android.security.metrics-java-source/gen",
+                            "$aospOutRoot/out/soong/.intermediates/system/update_engine/stable/libupdate_engine_stable-V2-java-source/gen",
                     ],
                     srcjars : [
-                            "$aospDir/out/soong/.intermediates/frameworks/base/*-java/android_common/gen/*.srcjar",
-                            "$aospDir/out/soong/.intermediates/frameworks/base/core/res/framework-res/android_common/gen/android/*.srcjar",
-                            "$aospDir/out/soong/.intermediates/frameworks/base/framework-javastream-protos/**/*.srcjar",
-                            "$aospDir/out/soong/.intermediates/frameworks/base/framework-minus-apex/**/*.srcjar",
-                            "$aospDir/out/soong/.intermediates/frameworks/av/media/aconfig/aconfig_mediacodec_flags_java_lib/android_common/gen/*.srcjar",
-                            "$aospDir/out/soong/.intermediates/hardware/interfaces/audio/7.0/config/audio_policy_configuration_V7_0/gen/java/*.srcjar",
-                            "$aospDir/out/soong/.intermediates/system/apex/apexd/apex-info-list/gen/java/*.srcjar",
+                            "$aospOutRoot/out/soong/.intermediates/frameworks/base/*-java/android_common/gen/*.srcjar",
+                            "$aospOutRoot/out/soong/.intermediates/frameworks/base/core/res/framework-res/android_common/gen/android/*.srcjar",
+                            "$aospOutRoot/out/soong/.intermediates/frameworks/base/framework-javastream-protos/**/*.srcjar",
+                            "$aospOutRoot/out/soong/.intermediates/frameworks/base/framework-minus-apex/**/*.srcjar",
+                            "$aospOutRoot/out/soong/.intermediates/frameworks/av/media/aconfig/aconfig_mediacodec_flags_java_lib/android_common/gen/*.srcjar",
+                            "$aospOutRoot/out/soong/.intermediates/hardware/interfaces/audio/7.0/config/audio_policy_configuration_V7_0/gen/java/*.srcjar",
+                            "$aospOutRoot/out/soong/.intermediates/system/apex/apexd/apex-info-list/gen/java/*.srcjar",
                     ],
                     aidl    : [
                             "$aospDir/frameworks/av/camera/aidl",
@@ -126,23 +128,23 @@ ext {
                             "$aospDir/packages/modules/AdServices/adservices/service/java",
                             "$aospDir/packages/modules/Wifi/service/java",
                             // out
-                            "$aospDir/out/soong/.intermediates/frameworks/base/services/contentcapture/services.contentcapture/android_common/gen/logtags/frameworks/base/services/contentcapture/java",
-                            //"$aospDir/out/soong/.intermediates/frameworks/base/services/core/services.core.json.gz/gen",
-                            //"$aospDir/out/soong/.intermediates/frameworks/base/services/core/services.core.priorityboosted/android_common/gen",
-                            //"$aospDir/out/soong/.intermediates/frameworks/base/services/core/services.core.protologsrc/gen",
-                            "$aospDir/out/soong/.intermediates/frameworks/base/services/core/services.core.unboosted/android_common/gen/logtags/frameworks/base/services/core/java",
-                            "$aospDir/out/soong/.intermediates/frameworks/base/services/core/statslog-art-java-gen/gen",
-                            "$aospDir/out/soong/.intermediates/frameworks/base/services/core/statslog-contexthub-java-gen/gen",
-                            "$aospDir/out/soong/.intermediates/hardware/interfaces/biometrics/face/aidl/android.hardware.biometrics.face-V3-java-source/gen",
-                            "$aospDir/out/soong/.intermediates/hardware/interfaces/tv/hdmi/connection/aidl/android.hardware.tv.hdmi.connection-V1-java-source/gen",
-                            "$aospDir/out/soong/.intermediates/hardware/interfaces/tv/hdmi/earc/aidl/android.hardware.tv.hdmi.earc-V1-java-source/gen",
-                            "$aospDir/out/soong/.intermediates/packages/modules/Wifi/service/statslog-wifi-java-gen/gen",
+                            "$aospOutRoot/out/soong/.intermediates/frameworks/base/services/contentcapture/services.contentcapture/android_common/gen/logtags/frameworks/base/services/contentcapture/java",
+                            //"$aospOutRoot/out/soong/.intermediates/frameworks/base/services/core/services.core.json.gz/gen",
+                            //"$aospOutRoot/out/soong/.intermediates/frameworks/base/services/core/services.core.priorityboosted/android_common/gen",
+                            //"$aospOutRoot/out/soong/.intermediates/frameworks/base/services/core/services.core.protologsrc/gen",
+                            "$aospOutRoot/out/soong/.intermediates/frameworks/base/services/core/services.core.unboosted/android_common/gen/logtags/frameworks/base/services/core/java",
+                            "$aospOutRoot/out/soong/.intermediates/frameworks/base/services/core/statslog-art-java-gen/gen",
+                            "$aospOutRoot/out/soong/.intermediates/frameworks/base/services/core/statslog-contexthub-java-gen/gen",
+                            "$aospOutRoot/out/soong/.intermediates/hardware/interfaces/biometrics/face/aidl/android.hardware.biometrics.face-V3-java-source/gen",
+                            "$aospOutRoot/out/soong/.intermediates/hardware/interfaces/tv/hdmi/connection/aidl/android.hardware.tv.hdmi.connection-V1-java-source/gen",
+                            "$aospOutRoot/out/soong/.intermediates/hardware/interfaces/tv/hdmi/earc/aidl/android.hardware.tv.hdmi.earc-V1-java-source/gen",
+                            "$aospOutRoot/out/soong/.intermediates/packages/modules/Wifi/service/statslog-wifi-java-gen/gen",
 
                     ],
                     srcjars : [
-                            "$aospDir/out/soong/.intermediates/frameworks/base/services/**/*.srcjar",
-                            "$aospDir/out/soong/.intermediates/packages/modules/AdServices/adservices/**/*.srcjar",
-                            "$aospDir/out/soong/.intermediates/packages/modules/Wifi/service/**/*.srcjar",
+                            "$aospOutRoot/out/soong/.intermediates/frameworks/base/services/**/*.srcjar",
+                            "$aospOutRoot/out/soong/.intermediates/packages/modules/AdServices/adservices/**/*.srcjar",
+                            "$aospOutRoot/out/soong/.intermediates/packages/modules/Wifi/service/**/*.srcjar",
                     ],
                     aidl    : [],
             ],
@@ -179,8 +181,8 @@ ext {
                             "$aospDir/libcore/xml/src/main/java",
                     ],
                     srcjars : [
-                            "$aospDir/out/soong/.intermediates/libcore/**/*.srcjar",
-                            "$aospDir/out/soong/.intermediates/external/icu/android_icu4j/i18n.module.intra.core.api.stubs.source/android_common/everything/*.srcjar",
+                            "$aospOutRoot/out/soong/.intermediates/libcore/**/*.srcjar",
+                            "$aospOutRoot/out/soong/.intermediates/external/icu/android_icu4j/i18n.module.intra.core.api.stubs.source/android_common/everything/*.srcjar",
                     ],
                     aidl    : [],
             ],
@@ -244,16 +246,16 @@ ext {
                             "$aospDir/frameworks/libs/systemui/motiontoollib/src",
                             "$aospDir/frameworks/libs/systemui/viewcapturelib/src",
                             // out
-                            "$aospDir/out/soong/.intermediates/frameworks/base/packages/SystemUI/SystemUI-tags/android_common/gen/logtags/frameworks/base/packages/SystemUI/src",
-                            "$aospDir/out/soong/.intermediates/frameworks/base/packages/SystemUI/shared/statslog-SystemUI-java-gen/gen",
+                            "$aospOutRoot/out/soong/.intermediates/frameworks/base/packages/SystemUI/SystemUI-tags/android_common/gen/logtags/frameworks/base/packages/SystemUI/src",
+                            "$aospOutRoot/out/soong/.intermediates/frameworks/base/packages/SystemUI/shared/statslog-SystemUI-java-gen/gen",
                             // go
                             "$aospDir/packages/apps/SystemUIGo/src",
 
 
                     ],
                     srcjars : [
-                            "$aospDir/out/soong/.intermediates/frameworks/base/packages/SystemUI/**/*.srcjar",
-                            "$aospDir/out/soong/.intermediates/packages/apps/SystemUIGo/**/*.srcjar",
+                            "$aospOutRoot/out/soong/.intermediates/frameworks/base/packages/SystemUI/**/*.srcjar",
+                            "$aospOutRoot/out/soong/.intermediates/packages/apps/SystemUIGo/**/*.srcjar",
 
                     ],
                     aidl    : [
@@ -294,7 +296,7 @@ ext {
                             "$aospDir/packages/apps/Settings/src",
                     ],
                     srcjars : [
-                            "$aospDir/out/soong/.intermediates/packages/apps/Settings/**/*.srcjar",
+                            "$aospOutRoot/out/soong/.intermediates/packages/apps/Settings/**/*.srcjar",
                     ],
                     aidl    : [],
             ],
@@ -420,7 +422,7 @@ ext {
                             "$aospDir/frameworks/base/packages/SettingsLib/src",
                     ],
                     srcjars : [
-                            "$aospDir/out/soong/.intermediates/frameworks/base/packages/SettingsLib/**/*.srcjar",
+                            "$aospOutRoot/out/soong/.intermediates/frameworks/base/packages/SettingsLib/**/*.srcjar",
                     ],
                     aidl    : [],
             ],
@@ -435,7 +437,7 @@ ext {
                     jni     : "",
                     src     : [
                             "$aospDir/frameworks/base/packages/SettingsProvider/src",
-                            "$aospDir/out/soong/.intermediates/frameworks/base/packages/SettingsProvider/SettingsProvider/android_common/gen",
+                            "$aospOutRoot/out/soong/.intermediates/frameworks/base/packages/SettingsProvider/SettingsProvider/android_common/gen",
                     ],
                     srcjars : [],
                     aidl    : [],
@@ -499,7 +501,7 @@ ext {
                             "$aospDir/packages/modules/ExtServices/java/src",
                     ],
                     srcjars : [
-                            "$aospDir/out/soong/.intermediates/packages/modules/ExtServices/**/*.srcjar",
+                            "$aospOutRoot/out/soong/.intermediates/packages/modules/ExtServices/**/*.srcjar",
                     ],
                     aidl    : [],
             ],

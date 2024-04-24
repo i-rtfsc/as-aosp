@@ -1,36 +1,38 @@
 <!-- TOC -->
-* [简介](#简介)
+* [as-aosp 工程简介](#as-aosp-工程简介)
   * [支持IDE](#支持ide)
-  * [对比 asfp 优缺点](#对比-asfp-优缺点)
+    * [对比 asfp 优缺点](#对比-asfp-优缺点)
   * [跳转](#跳转)
   * [提示、补全](#提示补全)
-* [配置介绍](#配置介绍)
-  * [settings.gradle](#settingsgradle)
-  * [根目录build.gradle](#根目录buildgradle)
-  * [core.gradle](#coregradle)
-  * [configs/aosp.gradle](#configsaospgradle)
-  * [configs/cts.gradle](#configsctsgradle)
-  * [configs/flyme.gradle](#configsflymegradle)
-  * [native](#native)
-  * [删除android.jar](#删除androidjar)
-  * [支持AIDL](#支持aidl)
-* [ext](#ext)
-  * [ext.properties](#extproperties)
-  * [ExtCarFramework](#extcarframework)
-  * [configs/ext.gradle](#configsextgradle)
-  * [settings/ext.gradle](#settingsextgradle)
-* [编译](#编译)
-* [版本](#版本)
-  * [5.x.x](#5xx)
-  * [4.0.0](#400)
-  * [3.2.1](#321)
-  * [2.1.0](#210)
-  * [1.x.x](#1xx)
-* [后话](#后话)
-* [即时讨论](#即时讨论)
+  * [使用教程](#使用教程)
+  * [编译](#编译)
+  * [版本](#版本)
+    * [5.x.x](#5xx)
+      * [scrjars](#scrjars)
+      * [android sdk](#android-sdk)
+      * [art](#art)
+      * [car](#car)
+      * [aosp-cmake](#aosp-cmake)
+      * [ext](#ext)
+      * [文件夹结构调整](#文件夹结构调整)
+    * [4.0.0](#400)
+      * [Car](#car-1)
+      * [移除/调整](#移除调整)
+      * [CTS](#cts)
+    * [3.2.1](#321)
+      * [移除/调整](#移除调整-1)
+    * [2.1.0](#210)
+      * [java模块](#java模块)
+      * [native模块](#native模块)
+      * [aidl](#aidl)
+    * [1.x.x](#1xx)
+  * [后话](#后话)
+  * [即时讨论](#即时讨论)
 <!-- TOC -->
 
-# 简介
+# as-aosp 工程简介
+
+工程地址：[as-aosp](https://github.com/i-rtfsc/as-aosp)
 
 此as工程可以快速的导入aosp framework(包含java/native)、 aosp 系统app、 国内某些厂商扩展的fwk代码；
 
@@ -38,16 +40,17 @@
 
 
 ## 支持IDE
+
 - Android Studio
 - IntelliJ IDEA
 - CLion
 
-> IDEA 只支持 java 模块，并且不需要执行 task deleteAndroidSdk。比使用 Android Studio 方便。
+> IDEA 只支持 java 模块。
 >
 > CLion 只支持 native 模块，直接打开 aosp-native 后，需要改 aosp-native/CMakeLists.txt 里 set(ANDROID_ROOT ${BUILD_NATIVE_ROOT})
 
 
-## 对比 asfp 优缺点
+### 对比 asfp 优缺点
 
 <table>
 
@@ -131,369 +134,109 @@
 </table>
 
 
-> 关于 “首次加载耗时” 提到 “根目录只有部分模块代码” ，我试过两种方案：
-> 1. 软链接：比如完整的aosp代码是在/home/solo/workspace/code/aosp，我把需要加载的模块通过软链接的方式 ln 到 /home/solo/code/aosp。
->    可以参考工程里的 scripts/ln.sh 脚本文件，SOURCE、DEST改成自己的源目录，目标目录即可；也可以在数组projects中添加自己需要的模块目录。
->    ln.sh 脚本文件里只软链接了常用的一些模块，每个人可以根据自己的需求删改。
-> 2. 只下载需要模块。
->
-> “支持平台” 提到as-asop支持win，经过朋友的测试，是没任何问题的，但有一点需要注意：
-> 如果你的代码目录是 D:\code\aosp\
-> 请不要写成 D:\\code\\aosp\\
-> 正确的写法 D:/code/aosp/
->
-> 总结：遥遥领先[狗头]
-
-
 下面以cpp代码为例，演示代码的跳转以及提示、补全。
 
 ## 跳转
 
-![](./res-readme/code_jump.gif)
+![](res-readme/code_jump.gif)
 
 ## 提示、补全
 
-![](./res-readme/code_completion.gif)
+![](res-readme/code_completion.gif)
 
+## 使用教程
 
-# 配置介绍
+[教程001-首次配置](https://i-rtfsc.github.io/%E6%BA%90%E7%A0%81%E5%B7%A5%E7%A8%8B/as-aosp/%E6%95%99%E7%A8%8B001-%E9%A6%96%E6%AC%A1%E9%85%8D%E7%BD%AE/)
 
-## settings.gradle
+[教程002-设计思路](https://i-rtfsc.github.io/%E6%BA%90%E7%A0%81%E5%B7%A5%E7%A8%8B/as-aosp/%E6%95%99%E7%A8%8B002-%E8%AE%BE%E8%AE%A1%E6%80%9D%E8%B7%AF/)
 
-settings.gradle 位于根目录下，用于项目的配置。
+[教程003-简单扩展](https://i-rtfsc.github.io/%E6%BA%90%E7%A0%81%E5%B7%A5%E7%A8%8B/as-aosp/%E6%95%99%E7%A8%8B003-%E7%AE%80%E5%8D%95%E6%89%A9%E5%B1%95/)
 
-```bash
+[教程004-插件扩展](https://i-rtfsc.github.io/%E6%BA%90%E7%A0%81%E5%B7%A5%E7%A8%8B/as-aosp/%E6%95%99%E7%A8%8B004-%E6%8F%92%E4%BB%B6%E6%89%A9%E5%B1%95/)
 
-rootProject.name = "flyme"
+[教程005-跳转系统源码](https://i-rtfsc.github.io/%E6%BA%90%E7%A0%81%E5%B7%A5%E7%A8%8B/as-aosp/%E6%95%99%E7%A8%8B005-%E8%B7%B3%E8%BD%AC%E7%B3%BB%E7%BB%9F%E6%BA%90%E7%A0%81/)
 
-apply from: "${rootDir}/scripts/func.gradle"
+[教程006-aidl跳转](https://i-rtfsc.github.io/%E6%BA%90%E7%A0%81%E5%B7%A5%E7%A8%8B/as-aosp/%E6%95%99%E7%A8%8B006-aidl%E8%B7%B3%E8%BD%AC/)
 
-//配置文件存在，则加载；文件中配置具体的模块
-applyConfig('scripts/settings/aosp.gradle')
-//applyConfig('scripts/settings/aosp-cmake.gradle')
-applyConfig('scripts/settings/aosp-system-server.gradle')
-applyConfig('scripts/settings/car.gradle')
-//applyConfig('scripts/settings/cts.gradle')
-applyConfig('scripts/settings/flyme.gradle')
-applyConfig('ext/scripts/settings/ext.gradle')
 
-```
-
-如果需要新增一个 aosp 的模块，需要在这里配置。
-
-使用者可以根据自己的需求修改 settings.gradle 的子模块，比如 Settings 开发不需要 native 部分、SystemUI 部分等，可以注释使其不被识别，加快加载 as 速度，降低内存。
-
-
-## 根目录build.gradle
-
-根目录 build.gradle 文件配置了很多扩展的 gradle 脚本，可根据实际情况自行添加到对应的脚本或者新增脚本。
-
-```bash
-
-apply from: "${rootDir}/scripts/func.gradle"
-//配置文件存在，则加载
-applyConfig('scripts/core.gradle')
-applyConfig('scripts/configs/aosp.gradle')
-applyConfig('scripts/configs/car.gradle')
-applyConfig('scripts/configs/cts.gradle')
-applyConfig('scripts/configs/flyme.gradle')
-applyConfig('ext/scripts/configs/ext.gradle')
-
-```
-
-
-## core.gradle
-
-core.gradle 最重要的功能就是通过 aospRoot 配置 Android 源码的根目录。
-而配置 aospRoot 的规则如下：
-
-- 工程根目录下存在 ext/scripts/ext.properties
-
-  - 配置 EXT_AOSP_ROOT
-  
-  aospRoot 从 ext/scripts/ext.properties 配置里获取
-
-  - 未配置 EXT_AOSP_ROOT
-  
-  aospRoot 从 scripts/core.gradle 里设置
-  
-- 工程根目录下不存在 ext/ext.properties，继续从 local.properties 查询，规则如上。
-
-
-> configs/aosp.gradle
-> 
-> configs/car.gradle
->
-> configs/cts.gradle
->
-> configs/flyme.gradle
->
-> 其他gradle脚本
-> 
-> 都是通过 core.gradle 的 aospRoot 获取到 Android 源码的根目录。
-
-core.gradle 脚本除了配置基本的 android sdk；还有一个很重要的功能，就是获取所有的模块名称（也就是 settings.gradle 配置的子模块）。
-
-也就是说 allModules 不需要手动维护，在 settings.gradle 里新增一个 module，脚本会自动识别到 project name 并添加到 allModules 数组。
-这个allModules数组的作用是方便每个 module 快速的互相依赖，如：
-
-```bash
-rootProject.ext.allModules.each { dependence -> compileOnly project(dependence.value) }
-```
-
-以上写法会循环依赖，真正的 app gradle 工程不能这样做的。这里这样子做是因为我们只是为了方便as阅读代码或者改代码，真正编译的时候还是用 ninja、make。
-
-## configs/aosp.gradle
-
-- aospDir: 通过 config.gradle 的 aospRoot 获取到 Android 源码的根目录。也可以自己配置源码所在的目录，如: aospDir = "/home/solo/code/flyme"。
-- aosp: 一个大数组，维护很多模块需要的路径。
-  - root: 等同于aospDir所设置的android源码根目录。
-  - Framework: 配置framework.jar的源码路径
-  - Services: 配置services.jar的源码路径
-  - FrameworkRes: 配置frameworkRes.apk的源码路径
-  - SystemUI: 配置SystemUI.apk的源码路径
-  - SystemUIPluginLib: 配置SystemUIPluginLib.jar的源码路径
-  - Settings: 配置Settings.apk的源码路径
-  - SettingsLib: 配置SettingsLib.aar的源码路径
-  - SettingsProvider: 配置SettingsProvider.apk的源码路径
-  - CarFramework: 配置CarFramework的源码路径
-  - CarServices: 配置CarServices.apk的源码路径
-  - Connectivity: 连接相关，包括Tethering、nearby、netd等等的源码路径
-  - ExtServices: ExtServices.apk的源码路径
-
-
-> 每个模块都是通过配置的 manifest、res、assets、jni、src、aidl 来分别配置 AndroidManifest.xml、资源文件目录、assets目录、jni代码目录、java\kt源码目录、aidl目录 等。
->
-> 不需要的可以写空。
-
-> 温馨提示
->
-> 在这个文件中只需要把 aospDir 设置成自己android源码的根目录就可以。
->
-> 里面具体模块的源码路径基本上都添加了（但确实不是100%添加），如果因为使用aosp版本不一致或者别的原因可以根据自己需要再添加。
-
-## configs/cts.gradle
-
-主要是配置了一些CTS模块，目前只配置了 CtsWindowManagerDeviceTestCases 、CtsInputTestCases 。
-
-
-## configs/flyme.gradle
-
-flyme代码所在的路径，主要是配置了 flyme-framework、flyme-services、flyme-framework-res、flyme-launcher、SystemUI、SystemUIPluginLib。
-
-可以根据自己的需要修改flymeDir对应的目录即可。
-
-
-## native
-
-通过根目录下的 settings.gradle 可以看到有如下的配置：
-
-```bash
-//applyConfig('scripts/settings/aosp-cmake.gradle')
-```
-
-scripts/settings/aosp-cmake.gradle 配置如：
-
-```bash
-/*************** aosp native ***************/
-include ':aosp-cmake'
-/*************** aosp native ***************/
-```
-
-**默认关闭native模块**
-
-在 aosp-cmake 目录下包含了所有的native模块，下面对 aosp-cmake 根目录下的两个文件稍作解释：
-
-- projects.json
-  所有的模块名字，以及此模块对应的 CMakeLists.txt 目录。
-
-- CMakeLists.txt
-  主 cmake 文件，可以配置打开或者关闭不需要的模块。
-  - BUILD_NATIVE_ROOT
-
-    BUILD_NATIVE_ROOT 是 build.gralde 配置的源码目录，cmake 会判断 BUILD_NATIVE_ROOT 的路径是否存来而设置 ANDROID_ROOT 
-    否则 ANDROID_ROOT=~/code/flyme  
-
-  - ANDROID_TARGET_ARCH
-
-    也就是 TARGET_ARCH
-
-  - ANDROID_ARCH_VARIANT
-
-    也就是 TARGET_ARCH_VARIANT
-
-  - ANDROID_CPU_VARIANT
-
-    也就是 ArchType
-
-  - OUT_ARCH_CPU
-
-    也就是 {TARGET_ARCH}_{TARGET_ARCH_VARIANT}_{ANDROID_CPU_VARIANT}
-
-    设置这几个配置是为了 CMakeLists.txt 里有一些源码是从 out 里获取，如：
-
-    ${OUT_INTERMEDIATES_ROOT}/frameworks/native/services/surfaceflinger/sysprop/libSurfaceFlingerProperties/android_${OUT_ARCH_CPU}_static/gen/sysprop/SurfaceFlingerProperties.sysprop.cpp
-
-  - add_subdirectory
-
-    可根据自己下需求打开或者关闭相应的模块
-
-
-## 删除android.jar
-
-根据以上步骤配置好后看，c/cpp 代码可以正确跳转了；但 java 有的代码还是跳转到 Android SDK 的 android.jar 里。所以还需要多做一步额外的配置，如下图：
-![](./res-readme/gradle_impl.jpg)
-
-如果在 .idea/modules 文件夹下没看到“以模块为名词”文件夹，那需要如上图勾选"generate *.impl files for modules import from gradle"。
-
-看到 .idea/modules 文件夹下生成“以模块为名词”文件夹，接着 sync，sync 过程中 gralde 会执行 deleteAndroidSdk 任务。这个 task 主要的作用就是去删除iml文件中的：
-
-```bash
-<arg>$USER_HOME$/Android/Sdk/platforms/android-34/android.jar</arg>
-<arg>$USER_HOME$/Android/Sdk/build-tools/34.0.0/core-lambda-stubs.jar</arg>
-```
-
-并把下面这行配置放在最后面。
-
-```bash
-<orderEntry type="jdk" jdkName="Android API 34, extension level 7 Platform" jdkType="Android SDK" />
-```
-
-sync 后确认 iml 文件中以上提的都已经执行好了，就可以重启AS；重启之后打开一个任意一个 java 代码都会看到：
-
-![](./res-readme/code_jump_source_code.gif)
-
-点 KeyEvent 已经能正确跳转到源码了，而不是跳转到 Android SDK 的 android.jar 里。
-
-> 关于勾选"generate *.impl files for modules import from gradle"后，要不要去掉勾选的问题，可以视情况而定。
->
-> 其目的只是为了 .idea/modules 文件夹下每个模块都有自己的iml配置。并确保iml中没有android.jar的配置和jdk的排序在最后面即可。
->
-> 如果配置目录新增了src或者配置了新的路径对的，建议更新iml并重新sync(确保删除Android SDK的配置)。
-
-
-## 支持AIDL
-
-在 scripts/core.gradle 里配置 build_aidl = true ，并 "Rebuild Project" 就可以生成java文件。
-
-生成 java 文件后改成 false ，确保模块直接能正常跳转。
-
-因为前面提到过模块互相循环依赖，无法无法编译； 所以在 scripts/android-build.gradle 里配置了如下：
-
-```
-if (rootProject.ext.build_aidl.toBoolean()) {
-    println("don't compileOnly forEach when build aidl")
-} else {
-    compileOnly project(dependence.value)
-}
-```
-
-> "Rebuild Project" 时编译 aidl 会有遇到报错的情况，所以这里支持 AIDL 只能看运气；如果你的 AIDL 能编译出来，那恭喜你，运气真好！
-
-# ext
-有些朋友反应在工程本地修改部分配置后，还希望能随时同步最新的代码。比如之前在 scripts/core.gradle 配置 aospRoot ，就需求 checkout、pull 再重新配置 aospRoot 
-所以这次改版就可以从 ext/scripts/ext.properties 里的 EXT_AOSP_ROOT 读取源码配置的路径。
-
-而 .gitignore 忽略目录 ext 就可以达到这个目的，这里给出一个 ext 的配置例子：
-
-```bash
-$ tree ext                                                                                                                                                                                                  git:(aosp*)
-ext
-├── ExtCarFramework
-│   └── build.gradle
-└── scripts
-    ├── configs
-    │   └── ext.gradle
-    ├── ext.properties
-    └── settings
-        └── ext.gradle
-```
-## ext.properties
-
-文件内容如下：
-
-```
-EXT_AOSP_ROOT=/Users/solo/code/flyme
-```
-
-这样就可以配置 Android 源码所在的路径。
-
-## ExtCarFramework
-
-ExtCarFramework 文件夹及其目录下的 build.gradle 文件，就是对于的一个模块。
-
-## configs/ext.gradle
-
-scripts/configs/ext.gradle 主要的目的是为了配置模块的路径，可以参考 scripts/configs/aosp.gradle 
-
-## settings/ext.gradle
-
-scripts/settings/ext.gradle 主要的目的是为了加载模块，可以参考 scripts/settings/aosp.gradle
-
-如：
-
-```
-include ':ExtCarFramework'
-project(':ExtCarFramework').projectDir = "$rootDir/ext/ExtCarFramework" as File
-```
-
-# 编译
+## 编译
 
 此工程无法编译framework.jar或者services.jar，请使用aosp推荐的编译方式。
 
 [global_scripts](https://github.com/i-rtfsc/global_scripts) 工程里的 [gs_android_build.sh](https://github.com/i-rtfsc/global_scripts/blob/main/plugins/android/build/gs_android_build.sh) 脚本实现了很多模块编译的快捷键。
 可以单独下载这个脚本并放到环境变量里，或者是用整个 [global_scripts](https://github.com/i-rtfsc/global_scripts) 实现插件化的方案【详情可以参考该工程的README】。
 
-# 版本
+## 版本
 as-aosp经历了两年多的更新，每次更新都是根据自己的需求。
 5.x.x 打算再次对 c/c++ 模块进行大改，自己本地验证大改后 vs 也能丝滑使用。
 
-## 5.x.x
+### 5.x.x
 
-- art
+#### scrjars
+
+- [x] aidl
+  支持 aidl 跳转
+
+- [ ] R.java
+  支持 R 跳转
+
+#### android sdk
+
+适配新版 android studio，实现自动删除恢复 android.jar ，丝滑调整源码。
+
+#### art
 
 public SDK API provided by the ART module
 
-- car
+####  car
 
-- [x] car 相关模块都放到 car 文件夹下
+- [x] car
+  相关模块都放到 car 文件夹下
 
+####  aosp-cmake
 
-- aosp-cmake
-
-- [x] 根据 Android.bp/Android.mk 生成 CMakeLists.txt
-
-
-- ext
-
-  git 忽略 ext ，方便同步代码的同时也方便个人定制化
+- [x] CMakeLists.txt
+  根据 Android.bp/Android.mk 生成 CMakeLists.txt
 
 
-- 文件夹结构调整
+####  ext
 
-  - aosp-modules
+git 忽略 ext ，方便同步代码的同时也方便个人定制化
 
+
+####  文件夹结构调整
+
+- [x]  aosp-modules
   system server、framework-res、aosp 其他模块
 
-  - aosp-car
-
+- [x]  aosp-car
   aosp car 模块
 
-  - aosp-cts
-
+- [x] aosp-cts
   aosp cts 模块
 
 
-## 4.0.0
+### 4.0.0
+
+####  Car
+
 - [x] 新增 CarSystemUI
+
 - [x] 新增 CarSettings
+
+####  移除/调整
+
 - [x] 移除 Java 模块下的 JNI 脚本
+
 - [x] 移除 Wifi
+
 - [x] framework 、services 包含 Wifi 相关（保持跟原生一致）
 
-- CTS
+####  CTS
+
 - [x] CtsWindowManagerDeviceTestCases
 - [x] CtsInputTestCases
+
 > CTS 相关的模块都放到 cts 文件夹下
 
 > 4开头版本主要是提供车机的两个模块，供其他车机模块参考。
@@ -503,67 +246,104 @@ public SDK API provided by the ART module
 > 基于这点，也没必要提供老版本的 【生成 cmakelist 脚本】
 
 
-## 3.2.1
+### 3.2.1
+
+####  移除/调整
 
 - [x] 移除 BUILD_APPLICATION
+
 - [x] 移除根目录下的 native 模块
+
 - [x] 把所有 native 模块都放在 aosp-native ，并通过 add_subdirectory() 方式添加子模块
+
 - [ ] 解决 Java 模块 包含 JNI 时，JNI代码无法跳转问题
+
 - [ ] 提供 生成 cmakelist 脚本
 
 > 最初的 BUILD_APPLICATION 确实是用了编译 test app，但目前功能已经改版；不需要编译 test app 了，并且这个工程无法编译 aosp 模块，为了不引起歧义，故删除。
 
 
-## 2.1.0
+### 2.1.0
 
-- java模块
+####  java模块
 
 - [x] Framework: framework.jar
+
 - [x] Services: services.jar
+
 - [x] FrameworkRes: framework-res.apk
+
 - [x] SystemUI: SystemUI.apk
+
 - [x] SystemUIPluginLib: SystemUIPluginLib.jar
+
 - [x] Settings: Settings.apk
+
 - [x] SettingsLib: SettingsLib.aar
+
 - [x] SettingsProvider: SettingsProvider.apk
+
 - [x] CarFramework: CarFramework
+
 - [x] CarServices: CarServices.apk
+
 - [x] Connectivity: 包括Tethering、nearby、netd相关的源码
+
 - [x] Wifi: wifi相关的源码
+
 - [x] ExtServices: ExtServices.apk
 
 > 在 1.x.x 的基础上完善更多功能。
 
-- native模块
+####  native模块
 
 - [x] AndroidRuntime: libandroid_runtime.so
+
 - [x] AndroidServices: libandroid_servers.so
+
 - [x] InputFlinger: inputflinger模块
+
 - [x] SurfaceFlinger: surfaceflinger模块
+
 - [x] NeuralNetworks: 封装tensorflow源码
+
 - [x] TensorFlow: google的tensorflow源码
 
-- aidl
+#### aidl
+
 - [x] 支持 aidl 编译成 java
 
-## 1.x.x
+### 1.x.x
 
 - [x] Framework: framework.jar
+
 - [x] Services: services.jar
+
 - [x] FrameworkRes: framework-res.apk
+
 - [x] SystemUI: SystemUI.apk
+
 - [x] SystemUIPluginLib: SystemUIPluginLib.jar
+
 - [x] Settings: Settings.apk
+
 - [x] SettingsLib: SettingsLib.aar
+
 - [x] SettingsProvider: SettingsProvider.apk
+
 - [x] CarFramework: CarFramework
+
 - [x] CarServices: CarServices.apk
+
 - [x] Connectivity: 包括Tethering、nearby、netd相关的源码
+
 - [x] Wifi: wifi相关的源码
+
 - [x] ExtServices: ExtServices.apk
+
 - [x] 多个手机厂商的 Framework 、Services、Ext-Framework 、Ext-Services 等
 
-# 后话
+## 后话
 
 此工程包含的 miui、flyme、oppo、vivo 等配置 不涉及任何这几家公司的代码，所以并没有泄露任何公司的代码！
 
@@ -571,7 +351,13 @@ public SDK API provided by the ART module
 
 此工程拆封成很多分支，默认是 aosp 分支。切分支有惊喜[狗头]。
 
-# 即时讨论
-![](./res-readme/wechat.png)
+## 即时讨论
 
-可以通过 [issues](https://github.com/i-rtfsc/as-aosp/issues) 反馈问题，或者通过微信联系。
+- 添加微信，入群与小伙伴交流：
+
+![](res-readme/wechat.png)
+
+- 通过 [issues](https://github.com/i-rtfsc/as-aosp/issues) 反馈问题
+
+- [博客留言讨论](https://i-rtfsc.github.io/%E6%BA%90%E7%A0%81%E5%B7%A5%E7%A8%8B/as-aosp/as-aosp%E5%B7%A5%E7%A8%8B%E7%AE%80%E4%BB%8B)
+
