@@ -1,7 +1,7 @@
 <!-- TOC -->
 * [as-aosp 工程简介](#as-aosp-工程简介)
   * [支持IDE](#支持ide)
-    * [对比 asfp 优缺点](#对比-asfp-优缺点)
+  * [对比 asfp 优缺点](#对比-asfp-优缺点)
   * [跳转](#跳转)
   * [提示、补全](#提示补全)
   * [使用教程](#使用教程)
@@ -10,7 +10,7 @@
     * [5.x.x](#5xx)
       * [scrjars](#scrjars)
       * [android sdk](#android-sdk)
-      * [art](#art)
+      * [PlatformBase](#platformbase)
       * [car](#car)
       * [aosp-cmake](#aosp-cmake)
       * [ext](#ext)
