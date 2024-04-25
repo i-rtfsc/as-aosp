@@ -15,11 +15,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-
-import glob
+import logging
 import optparse
 import os
+import subprocess
 import zipfile
 
 
@@ -43,15 +42,40 @@ def parseargs():
     return (options, args)
 
 
-def find_srcjar_files(input_path):
-    # 去除通配符路径中的 "**/" 部分
-    base_dir = os.path.dirname(input_path)
-    pattern = os.path.basename(input_path)
+def get_logger(log_file, level=logging.INFO):
+    """Create a configured instance of logger."""
+    fmt = '[%(asctime)s] %(levelname)s : %(message)s'
+    date_fmt = '%Y-%m-%d %H:%M:%S'
+    formatter = logging.Formatter(fmt, datefmt=date_fmt)
 
-    # 使用 glob.glob 函数递归查找符合条件的文件
-    srcjar_files = glob.glob(os.path.join(base_dir, "**", pattern), recursive=True)
-    srcjar_files = set(srcjar_files)
-    return srcjar_files
+    logger = logging.getLogger()
+
+    if not os.path.exists(log_file):
+        pardir = os.path.abspath(os.path.join(log_file, os.pardir))
+        if not os.path.exists(pardir):
+            os.makedirs(pardir)
+        file = open(log_file, 'w')
+        file.close()
+    fh = logging.FileHandler(filename=log_file, mode='w')
+    fh.setFormatter(formatter)
+    logger.addHandler(fh)
+
+    logger.setLevel(level)
+    logger.info("logger get or created.\n")
+
+    return logger
+
+
+def find_srcjar_files(input_path, logger):
+    if os.path.exists(input_path):
+        command = f"find {input_path} -type f \( -name '*.srcjar' \)"
+        logger.info("command = " + command)
+        output = subprocess.check_output(command, shell=True)
+        files = output.decode('utf-8').splitlines()
+        return files
+    else:
+        logger.warning("dir = " + input_path + " not exists")
+        return []
 
 
 def work(module, srcjars):
@@ -59,17 +83,23 @@ def work(module, srcjars):
     if not os.path.exists(build_dir):
         os.makedirs(build_dir)
 
+    logger = get_logger(os.path.join(build_dir, 'copy.log'))
+
     for srcjar in srcjars:
-        srcjar_files = find_srcjar_files(srcjar)
+        logger.info("srcjar = " + srcjar)
+        srcjar_files = find_srcjar_files(srcjar, logger)
 
         for srcjar_file in srcjar_files:
-            # print(srcjar_file)
-            # 打开.srcjar文件
-
             if not os.path.exists(srcjar_file):
-                print("file = " + srcjar_file + " not exists")
+                logger.warning("file = " + srcjar_file + " not exists")
                 continue
 
+            if srcjar_file.endswith("stubs.srcjar"):
+                logger.warning("file = " + srcjar_file + " don't unzip")
+                continue
+
+            logger.info("file = " + srcjar_file)
+            # 打开 .srcjar 文件
             with zipfile.ZipFile(srcjar_file, 'r') as zip_ref:
                 # 解压文件到目标目录
                 zip_ref.extractall(build_dir)
@@ -80,6 +110,12 @@ def main():
     module = options.module.strip()
 
     srcjars = options.srcjars.strip()
+
+    # gradle中调用必现得加 "" 才不报错
+    # 加之后要去掉
+    if srcjars.startswith('"') or srcjars.endswith('"'):
+        srcjars = srcjars.replace('"', "")
+
     srcjars = srcjars.split("#")
 
     work(module, srcjars)

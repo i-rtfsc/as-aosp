@@ -32,8 +32,15 @@ ext {
                             "$aospOutRoot/out/soong/.intermediates/packages/services/Car/car-builtin-lib/android.car.builtin.stubs.source.module_lib/android_common/gen/logtags/packages/services/Car/car-builtin-lib/src",
                             "$aospOutRoot/out/soong/.intermediates/packages/services/Car/car-builtin-lib/android.car.builtin.stubs.source/android_common/gen/logtags/packages/services/Car/car-builtin-lib/src",
                     ],
-                    //TODO
-                    srcjars : [],
+                    srcjars : [
+                            "$aospOutRoot/out/soong/.intermediates/packages/services/Car/FrameworkPackageStubs/CarFrameworkPackageStubs/android_common/gen/android",
+                            "$aospOutRoot/out/soong/.intermediates/packages/services/Car/car-admin-ui-lib/car-admin-ui-lib/android_common/gen/android",
+                            "$aospOutRoot/out/soong/.intermediates/packages/services/Car/car-evs-helper-lib/car-evs-helper-lib/android_common/gen/android",
+                            "$aospOutRoot/out/soong/.intermediates/packages/services/Car/car-helper-lib/car-helper-lib/android_common/gen/android",
+                            "$aospOutRoot/out/soong/.intermediates/packages/services/Car/car-lib-module/android.car-module/android_common/gen/aidl",
+                            "$aospOutRoot/out/soong/.intermediates/packages/services/Car/car-lib-module/android.car-module/android_common_apex33/gen/aidl",
+
+                    ],
                     aidl    : [],
             ],
 
@@ -50,8 +57,27 @@ ext {
                             "$aospDir/packages/services/Car/service-builtin/src",
                             "$aospDir/packages/services/Car/service/src",
                     ],
-                    //TODO
-                    srcjars : [],
+                    srcjars : [
+                            "$aospOutRoot/out/soong/.intermediates/frameworks/opt/car/services/builtInServices/tests/FrameworkOptCarServicesTest/android_common/gen/android",
+                            "$aospOutRoot/out/soong/.intermediates/frameworks/opt/car/services/updatableServices/tests/FrameworkOptCarServicesUpdatableTest/android_common/gen/android",
+                            "$aospOutRoot/out/soong/.intermediates/packages/services/Car/car_product/car_ui_portrait/rro/CarUiPortraitCarServiceRRO/CarUiPortraitCarServiceRRO/android_common/gen/android",
+                            "$aospOutRoot/out/soong/.intermediates/packages/services/Car/experimental/service/ExperimentalCarService/android_common/gen/android",
+                            "$aospOutRoot/out/soong/.intermediates/packages/services/Car/experimental/tests/experimentalcarservice_unit_test/ExperimentalCarServiceTests/android_common/gen/android",
+                            "$aospOutRoot/out/soong/.intermediates/packages/services/Car/service-builtin/CarService/android_common/gen/android",
+                            "$aospOutRoot/out/soong/.intermediates/packages/services/Car/service/CarServiceUpdatable/android_common/gen/aidl",
+                            "$aospOutRoot/out/soong/.intermediates/packages/services/Car/service/CarServiceUpdatable/android_common/gen/android",
+                            "$aospOutRoot/out/soong/.intermediates/packages/services/Car/service/CarServiceUpdatable/android_common/gen/proto",
+                            "$aospOutRoot/out/soong/.intermediates/packages/services/Car/service/CarServiceUpdatable/android_common_apex33/gen/aidl",
+                            "$aospOutRoot/out/soong/.intermediates/packages/services/Car/service/CarServiceUpdatable/android_common_apex33/gen/android",
+                            "$aospOutRoot/out/soong/.intermediates/packages/services/Car/service/CarServiceUpdatable/android_common_apex33/gen/proto",
+                            "$aospOutRoot/out/soong/.intermediates/packages/services/Car/service/CarServiceUpdatableNonModule/android_common/gen/aidl",
+                            "$aospOutRoot/out/soong/.intermediates/packages/services/Car/service/CarServiceUpdatableNonModule/android_common/gen/android",
+                            "$aospOutRoot/out/soong/.intermediates/packages/services/Car/service/CarServiceUpdatableNonModule/android_common/gen/proto",
+                            "$aospOutRoot/out/soong/.intermediates/packages/services/Car/tests/OemCarServiceTestApp/OemCarServiceTestApp/android_common/gen/android",
+                            "$aospOutRoot/out/soong/.intermediates/packages/services/Car/tests/carservice_test/CarServiceTest/android_common/gen/android",
+                            "$aospOutRoot/out/soong/.intermediates/packages/services/Car/tests/carservice_unit_test/CarServiceUnitTest/android_common/gen/aidl",
+                            "$aospOutRoot/out/soong/.intermediates/packages/services/Car/tests/carservice_unit_test/CarServiceUnitTest/android_common/gen/android",
+                    ],
                     aidl    : [],
             ],
 
@@ -71,8 +97,16 @@ ext {
                             "$aospDir/packages/apps/Car/SystemUI/src",
 
                     ],
-                    //TODO
-                    srcjars : [],
+                    srcjars : [
+                            "$aospOutRoot/out/soong/.intermediates/packages/apps/Car/SystemUI/CarSystemUI-core/android_common/gen/android",
+                            "$aospOutRoot/out/soong/.intermediates/packages/apps/Car/SystemUI/CarSystemUI-core/android_common/kapt",
+                            "$aospOutRoot/out/soong/.intermediates/packages/apps/Car/SystemUI/CarSystemUI-tests/android_common/gen/android",
+                            "$aospOutRoot/out/soong/.intermediates/packages/apps/Car/SystemUI/CarSystemUI-tests/android_common/kapt",
+                            "$aospOutRoot/out/soong/.intermediates/packages/apps/Car/SystemUI/CarSystemUI/android_common/gen/android",
+                            "$aospOutRoot/out/soong/.intermediates/packages/apps/Car/SystemUI/samples/sample1/rro/CarSystemUISampleOneRRO/android_common/gen/android",
+                            "$aospOutRoot/out/soong/.intermediates/packages/apps/Car/SystemUI/samples/sample2/rro/CarSystemUISampleTwoRRO/android_common/gen/android",
+                            "$aospOutRoot/out/soong/.intermediates/packages/apps/Car/SystemUI/samples/sample3/rro/CarSystemUISampleThreeRRO/android_common/gen/android",
+                    ],
                     aidl    : [],
             ],
 
@@ -88,8 +122,14 @@ ext {
                     src     : [
                             "$aospDir/packages/apps/Car/Settings/src",
                     ],
-                    //TODO
-                    srcjars : [],
+                    srcjars : [
+                            "$aospOutRoot/out/soong/.intermediates/packages/apps/Car/Settings/CarSettings-core/android_common/gen/android",
+                            "$aospOutRoot/out/soong/.intermediates/packages/apps/Car/Settings/CarSettings/android_common/gen/android",
+                            "$aospOutRoot/out/soong/.intermediates/packages/apps/Car/Settings/CarSettingsForTesting/android_common/gen/android",
+                            "$aospOutRoot/out/soong/.intermediates/packages/apps/Car/Settings/CarSettingsForUnitTesting/android_common/gen/android",
+                            "$aospOutRoot/out/soong/.intermediates/packages/apps/Car/Settings/tests/unit/CarSettingsUnitTests/android_common/gen/android",
+                            "$aospOutRoot/out/soong/.intermediates/packages/apps/Car/SettingsIntelligence/CarSettingsIntelligence/android_common/gen/android",
+                    ],
                     aidl    : [],
             ],
     ]

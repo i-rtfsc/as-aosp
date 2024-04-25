@@ -17,10 +17,10 @@
 # limitations under the License.
 
 import argparse
-import glob
 import os
 import platform
 import shutil
+import subprocess
 import time
 
 from tqdm import tqdm
@@ -37,13 +37,22 @@ def split_list_into_chunks(lst, num_chunks):
 
 def find_files_with_glob(directory, extensions):
     start_time = time.time()
-    files = []
-    for extension in extensions:
-        # files.extend(glob.glob(f"{directory}/**/*{extension}", recursive=True))
-        found_files = [f for f in glob.glob(f"{directory}/**/*{extension}", recursive=True) if os.path.isfile(f)]
-        files.extend(found_files)
-        # for file in found_files:
-        #     print(f"Found {extension} file: {file}")
+
+    # import glob
+    # files = []
+    # for extension in extensions:
+    #     # files.extend(glob.glob(f"{directory}/**/*{extension}", recursive=True))
+    #     found_files = [f for f in glob.glob(f"{directory}/**/*{extension}", recursive=True) if os.path.isfile(f)]
+    #     files.extend(found_files)
+
+    # 经过测试，使用 find 命令比用 glob 效率更高
+    command = f"find {directory} -type f \( " + \
+              " ".join([f"-name '*{ext}' -o" for ext in extensions])[:-3] + \
+              " \)"
+    print(command)
+    output = subprocess.check_output(command, shell=True)
+    files = output.decode('utf-8').splitlines()
+
     end_time = time.time()
     return files, end_time - start_time
 
@@ -83,7 +92,8 @@ def work(aosp_dir, target_dir, symbolic_link, thread=1):
     if symbolic_link:
         extensions.append('.java')
     else:
-        extensions.append('EventLogTags.java')
+        extensions.append('*LogTags.java')
+        extensions.append('*StatsLog.java')
 
     files, elapsed_time = find_files_with_glob(out_dir, extensions)
     print(f"Time elapsed: {elapsed_time:.2f} seconds")
@@ -120,7 +130,7 @@ def parseargs():
                         help="aosp dir", default="/Users/solo/workspace/code/aosp/")
     parser.add_argument("--target", dest="target",
                         help="target dir", default="/Users/solo/code/aosp/")
-    parser.add_argument("--link", dest="link",
+    parser.add_argument("--copy", dest="copy",
                         help="copy or link(1=copy, 0=link, default=link)", default=0)
     return parser.parse_args()
 
@@ -130,7 +140,8 @@ def main():
 
     aosp_dir = args.aosp.strip()
     target_dir = args.target.strip()
-    symbolic_link = (int(args.link) == 0)
+    symbolic_link = (int(args.copy) == 0)
+    print("link =", symbolic_link)
 
     if platform.system() != "Darwin":
         aosp_dir = aosp_dir.replace("Users", "home")
