@@ -20,7 +20,8 @@ ext {
                             "$flymeVendorDir/frameworks/base/core/java/",
                     ],
                     srcjars : [
-                            "$flymeDir/out/soong/.intermediates/vendor/flyme/frameworks/base/framework-flyme/**/*.srcjar",
+                            "$flymeDir/out/soong/.intermediates/vendor/flyme/frameworks/base/framework-flyme/android_common/gen/aidl",
+                            "$flymeDir/out/soong/.intermediates/vendor/flyme/frameworks/base/framework-flyme/android_common_apex33/gen/aidl",
                     ],
                     aidl    : [
                             //"$flymeDir/frameworks/base/core/java",
@@ -44,9 +45,7 @@ ext {
                             "$flymeVendorDir/frameworks/base/services/core/java/",
                             "$flymeVendorDir/frameworks/base/services/java/",
                     ],
-                    srcjars : [
-                            "$flymeDir/out/soong/.intermediates/vendor/flyme/frameworks/base/services/service-flyme.stubs.source/**/*.srcjar"
-                    ],
+                    srcjars : [],
                     aidl    : [],
             ],
 
@@ -97,8 +96,9 @@ ext {
 
                     ],
                     srcjars : [
-                            "$flymeDir/out/soong/.intermediates/packages/apps/SystemUI/**/*.srcjar",
-                            "$flymeDir/out/soong/.intermediates/packages/apps/SystemUIGo/**/*.srcjar",
+                            "$flymeDir/out/soong/.intermediates/packages/apps/SystemUI/SystemUI/android_common/gen/android",
+                            "$flymeDir/out/soong/.intermediates/packages/apps/SystemUIGo/SystemUIGo-core/android_common/gen/android",
+                            "$flymeDir/out/soong/.intermediates/packages/apps/SystemUIGo/SystemUIGo/android_common/gen/android",
                     ],
                     aidl    : [],
             ],
