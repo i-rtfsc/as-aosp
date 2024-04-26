@@ -304,6 +304,8 @@ ext {
                             "$aospOutRoot/out/soong/.intermediates/cts/common/device-side/util-axt/compatibility-device-util-axt/android_common/gen/aidl",
                             "$aospOutRoot/out/soong/.intermediates/external/setupcompat/setupcompat/android_common/gen/aidl",
                             "$aospOutRoot/out/soong/.intermediates/external/setupcompat/setupcompat/android_common/gen/android",
+                            "$aospOutRoot/out/soong/.intermediates/frameworks/base/proto/framework-protos/android_common/gen/proto",
+                            "$aospOutRoot/out/soong/.intermediates/frameworks/base/proto/framework-protos/linux_glibc_common/gen/proto",
                             "$aospOutRoot/out/soong/.intermediates/frameworks/native/services/surfaceflinger/sysprop/SurfaceFlingerProperties_java_gen/gen/sysprop/frameworks/native/services/surfaceflinger/sysprop",
                             "$aospOutRoot/out/soong/.intermediates/frameworks/native/services/surfaceflinger/sysprop/SurfaceFlingerProperties_java_gen_public/gen/sysprop/frameworks/native/services/surfaceflinger/sysprop",
                             "$aospOutRoot/out/soong/.intermediates/frameworks/opt/photoviewer/libphotoviewer_appcompat/android_common/gen/android",
