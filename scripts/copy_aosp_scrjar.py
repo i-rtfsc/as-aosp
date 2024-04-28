@@ -15,9 +15,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 import logging
 import optparse
 import os
+import platform
 import subprocess
 import zipfile
 
@@ -68,11 +70,19 @@ def get_logger(log_file, level=logging.INFO):
 
 def find_srcjar_files(input_path, logger):
     if os.path.exists(input_path):
-        command = f"find {input_path} -type f \( -name '*.srcjar' \)"
-        logger.info("command = " + command)
-        output = subprocess.check_output(command, shell=True)
-        files = output.decode('utf-8').splitlines()
-        return files
+        if platform.system() == 'Windows':
+            logger.info("find srcjar on win, use glob = " + input_path)
+            # win 没有 find 命令，换成 glob.glob
+            import glob
+            pattern = os.path.join(input_path, '**', '*.srcjar')
+            files = glob.glob(pattern, recursive=True)
+            return files
+        else:
+            command = f"find {input_path} -type f \( -name '*.srcjar' \)"
+            logger.info("command = " + command)
+            output = subprocess.check_output(command, shell=True)
+            files = output.decode('utf-8').splitlines()
+            return files
     else:
         logger.warning("dir = " + input_path + " not exists")
         return []
