@@ -37,21 +37,23 @@ def split_list_into_chunks(lst, num_chunks):
 
 def find_files_with_glob(directory, extensions):
     start_time = time.time()
+    files = []
 
-    # import glob
-    # files = []
-    # for extension in extensions:
-    #     # files.extend(glob.glob(f"{directory}/**/*{extension}", recursive=True))
-    #     found_files = [f for f in glob.glob(f"{directory}/**/*{extension}", recursive=True) if os.path.isfile(f)]
-    #     files.extend(found_files)
-
-    # 经过测试，使用 find 命令比用 glob 效率更高
-    command = f"find {directory} -type f \( " + \
-              " ".join([f"-name '*{ext}' -o" for ext in extensions])[:-3] + \
-              " \)"
-    print(command)
-    output = subprocess.check_output(command, shell=True)
-    files = output.decode('utf-8').splitlines()
+    if platform.system() == 'Windows':
+        print("win not supported find command, use glob")
+        import glob
+        for extension in extensions:
+            found_files = [f for f in glob.glob("{}/**/*{}".format(directory, extension), recursive=True) if
+                           os.path.isfile(f)]
+            files.extend(found_files)
+    else:
+        # 经过测试，使用 find 命令比用 glob 效率更高
+        command = "find {} -type f \( ".format(directory) + \
+                  " ".join(["-name '*{}' -o".format(ext) for ext in extensions])[:-3] + \
+                  " \)"
+        print(command)
+        output = subprocess.check_output(command, shell=True)
+        files = output.decode('utf-8').splitlines()
 
     end_time = time.time()
     return files, end_time - start_time
@@ -63,7 +65,7 @@ def process_files(files, aosp_dir, target_dir, symbolic_link=True):
         destination_path = os.path.join(target_dir, os.path.relpath(file, aosp_dir))
         # 如果目标路径存在，并且是一个文件或软链接，则跳过
         if os.path.exists(destination_path) and (os.path.isfile(destination_path) or os.path.islink(destination_path)):
-            print(f"Skipping: {destination_path} already exists.")
+            print("Skipping: {} already exists.".format(destination_path))
             continue
         # 确保目录存在
         os.makedirs(os.path.dirname(destination_path), exist_ok=True)
@@ -71,7 +73,7 @@ def process_files(files, aosp_dir, target_dir, symbolic_link=True):
             try:
                 os.symlink(file, destination_path)
             except FileExistsError:
-                print(f"Skipping: {destination_path} already exists.")
+                print("Skipping: {} already exists.".format(destination_path))
         else:
             shutil.copy2(file, destination_path)
 
@@ -96,7 +98,7 @@ def work(aosp_dir, target_dir, symbolic_link, thread=1):
         extensions.append('*StatsLog.java')
 
     files, elapsed_time = find_files_with_glob(out_dir, extensions)
-    print(f"Time elapsed: {elapsed_time:.2f} seconds")
+    print("Time elapsed: {:.2f} seconds".format(elapsed_time))
 
     start_time = time.time()
 
@@ -121,7 +123,7 @@ def work(aosp_dir, target_dir, symbolic_link, thread=1):
         task.result()  # 等待任务完成
 
     elapsed_time = time.time() - start_time
-    print(f"Time elapsed: {elapsed_time:.2f} seconds")
+    print("Time elapsed: {:.2f} seconds".format(elapsed_time))
 
 
 def parseargs():
