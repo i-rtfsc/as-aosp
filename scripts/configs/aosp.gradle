@@ -244,7 +244,8 @@ ext {
 
                     ],
                     srcjars : [
-                            "$aospOutRoot/out/soong/.intermediates/frameworks/base/services/core/services.core.protologsrc/gen",
+                            // out/soong/.intermediates/frameworks/base/services/core/services.core.protologsrc/gen/services.core.protolog.srcjar 包含源码，导致跳转出错，去掉
+//                            "$aospOutRoot/out/soong/.intermediates/frameworks/base/services/core/services.core.protologsrc/gen",
                             "$aospOutRoot/out/soong/.intermediates/frameworks/base/services/core/services.core.unboosted/android_common/gen/aidl",
                             "$aospOutRoot/out/soong/.intermediates/frameworks/base/services/core/xsd/device-state-config/gen/java",
                             "$aospOutRoot/out/soong/.intermediates/frameworks/base/services/core/xsd/display-device-config/gen/java",
