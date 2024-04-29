@@ -78,7 +78,7 @@ def find_srcjar_files(input_path, logger):
             files = glob.glob(pattern, recursive=True)
             return files
         else:
-            command = f"find {input_path} -type f \( -name '*.srcjar' \)"
+            command = "find {} -type f \( -name '*.srcjar' \)".format(input_path)
             logger.info("command = " + command)
             output = subprocess.check_output(command, shell=True)
             files = output.decode('utf-8').splitlines()
@@ -113,6 +113,14 @@ def work(module, srcjars):
             with zipfile.ZipFile(srcjar_file, 'r') as zip_ref:
                 # 解压文件到目标目录
                 zip_ref.extractall(build_dir)
+
+    # 很奇怪，为啥有的 .srcjar用zipfile解压之后，会被copy到build_dir
+    tmp_srcjar_files = find_srcjar_files(build_dir, logger)
+    for srcjar_file in tmp_srcjar_files:
+        if os.path.exists(srcjar_file) and os.path.isfile(srcjar_file):
+            logger.info("tmp file = " + srcjar_file)
+            # shutil.rmtree(srcjar_file)
+            os.remove(srcjar_file)
 
 
 def main():
