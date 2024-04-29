@@ -26,14 +26,14 @@ def delete_build_folders(root_dir):
         if 'build' in dirnames:
             build_dir = os.path.join(dirpath, 'build')
             if "aosp-cmake" in build_dir:
-                print(f"Don't delete {build_dir}")
+                print("Don't delete {}".format(build_dir))
                 continue
 
             try:
                 shutil.rmtree(build_dir)
-                print(f"Deleted {build_dir}")
+                print("Deleted {}".format(build_dir))
             except OSError as e:
-                print(f"Error deleting {build_dir}: {e}")
+                print("Error deleting {}: {}".format(build_dir, e))
 
 
 if __name__ == "__main__":
