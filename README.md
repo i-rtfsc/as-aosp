@@ -146,17 +146,19 @@
 
 ## 使用教程
 
-[教程001-首次配置](https://i-rtfsc.github.io/%E6%BA%90%E7%A0%81%E5%B7%A5%E7%A8%8B/as-aosp/%E6%95%99%E7%A8%8B001-%E9%A6%96%E6%AC%A1%E9%85%8D%E7%BD%AE/)
+[教程001-首次配置](https://i-rtfsc.github.io/source-code/as-aosp/first-configuration/)
 
-[教程002-设计思路](https://i-rtfsc.github.io/%E6%BA%90%E7%A0%81%E5%B7%A5%E7%A8%8B/as-aosp/%E6%95%99%E7%A8%8B002-%E8%AE%BE%E8%AE%A1%E6%80%9D%E8%B7%AF/)
+[教程002-设计思路](https://source-code/as-aosp/design/)
 
-[教程003-简单扩展](https://i-rtfsc.github.io/%E6%BA%90%E7%A0%81%E5%B7%A5%E7%A8%8B/as-aosp/%E6%95%99%E7%A8%8B003-%E7%AE%80%E5%8D%95%E6%89%A9%E5%B1%95/)
+[教程003-简单扩展](https://i-rtfsc.github.io/source-code/as-aosp/simple-extra/)
 
-[教程004-插件扩展](https://i-rtfsc.github.io/%E6%BA%90%E7%A0%81%E5%B7%A5%E7%A8%8B/as-aosp/%E6%95%99%E7%A8%8B004-%E6%8F%92%E4%BB%B6%E6%89%A9%E5%B1%95/)
+[教程004-插件扩展](https://i-rtfsc.github.io/as-aosp/plugin-extra/)
 
-[教程005-跳转系统源码](https://i-rtfsc.github.io/%E6%BA%90%E7%A0%81%E5%B7%A5%E7%A8%8B/as-aosp/%E6%95%99%E7%A8%8B005-%E8%B7%B3%E8%BD%AC%E7%B3%BB%E7%BB%9F%E6%BA%90%E7%A0%81/)
+[教程005-跳转系统源码](https://i-rtfsc.github.io/source-code/as-aosp/jump-system-code/)
 
-[教程006-aidl跳转](https://i-rtfsc.github.io/%E6%BA%90%E7%A0%81%E5%B7%A5%E7%A8%8B/as-aosp/%E6%95%99%E7%A8%8B006-aidl%E8%B7%B3%E8%BD%AC/)
+[教程006-aidl跳转](https://i-rtfsc.github.io/source-code/as-aosp/jump-aidl/)
+
+[教程007-c++跳转](https://i-rtfsc.github.io/source-code/as-aosp/jump-cpp/)
 
 
 ## 编译
