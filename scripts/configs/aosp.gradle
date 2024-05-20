@@ -171,6 +171,7 @@ ext {
                             "$aospOutRoot/out/soong/.intermediates/frameworks/base/framework-minus-apex/android_common/gen/aidl",
                             "$aospOutRoot/out/soong/.intermediates/hardware/interfaces/audio/7.0/config/audio_policy_configuration_V7_0/gen/java",
                             "$aospOutRoot/out/soong/.intermediates/system/apex/apexd/apex-info-list/gen/java",
+                            "$aospOutRoot/out/soong/.intermediates/packages/modules/Wifi/framework/framework-wifi.stubs.source.system/android_common/gen/aidl",
                     ],
                     aidl    : [
                             "$aospDir/frameworks/av/camera/aidl",
