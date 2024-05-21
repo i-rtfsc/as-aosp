@@ -23,6 +23,9 @@ project(':SettingsProvider').projectDir = "$rootDir/aosp-modules/SettingsProvide
 include ':Connectivity'
 project(':Connectivity').projectDir = "$rootDir/aosp-modules/Connectivity" as File
 
+include ':Wifi'
+project(':Wifi').projectDir = "$rootDir/aosp-modules/Wifi" as File
+
 //include ':Permission'
 //project(':Permission').projectDir = "$rootDir/aosp-modules/Permission" as File
 
