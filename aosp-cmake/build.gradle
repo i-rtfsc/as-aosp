@@ -11,4 +11,12 @@ ext {
     BUILD_NATIVE_OUT_ROOT = androidRoot.rootOutDir
 }
 
-apply from: "${rootDir}/scripts/android-build.gradle"
+// 这个模块是一个c/c++模块，
+// 目前不知道怎么在 java-library 中引用 CmakeLists.txt
+// 所以判断是 idea 则加载 java-library
+// 否则加载 android-library
+if (rootProject.ext.isIdea) {
+    apply from: "${rootDir}/scripts/java-build.gradle"
+} else {
+    apply from: "${rootDir}/scripts/android-build.gradle"
+}
