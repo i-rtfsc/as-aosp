@@ -11,4 +11,8 @@ ext {
     BUILD_NATIVE_ROOT = ""
 }
 
-apply from: "${rootDir}/scripts/android-build.gradle"
+if (rootProject.ext.isAndroid) {
+    apply from: "${rootDir}/scripts/android-build.gradle"
+} else {
+    apply from: "${rootDir}/scripts/java-build.gradle"
+}
