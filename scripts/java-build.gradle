@@ -1,0 +1,28 @@
+apply plugin: 'java-library'
+
+java {
+    sourceSets {
+        main {
+            java {
+                if (project.hasProperty('BUILD_SRC') && isNotNull(BUILD_SRC)) {
+                    srcDirs(BUILD_SRC)
+                }
+                srcDirs(rootProject.ext.aosp_srcjars_dir)
+            }
+            resources {
+                if (project.hasProperty('BUILD_ASSETS') && isNotNull(BUILD_ASSETS)) {
+                    srcDirs(BUILD_ASSETS)
+                }
+
+                if (project.hasProperty('BUILD_RES') && isNotNull(BUILD_RES)) {
+                    srcDirs(BUILD_RES)
+                }
+            }
+        }
+    }
+
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+apply from: "${rootDir}/scripts/task.gradle"
