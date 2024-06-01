@@ -73,3 +73,21 @@ ext.getOutRoot = { properties, root_dir ->
 
     return aospOutRoot
 }
+
+
+ext.getForceAndroidLibrary = { properties ->
+    // 检查 ext/scripts/ext.properties or local.properties 是否存在 EXT_FORCE_ANDROID_LIBRARY
+    def forceAndroidLibrary = properties.getProperty('EXT_FORCE_ANDROID_LIBRARY')
+    if (isNotNull(forceAndroidLibrary)) {
+        logger.warn("set forceAndroidLibrary from ext/scripts/ext.properties or local.properties")
+        forceAndroidLibrary = forceAndroidLibrary.toBoolean()
+    } else {
+        // 判断是否在中 as 中运行，
+        def isRunningInIDEA = System.getenv("IDEA_INITIAL_DIRECTORY") != null
+        def isRunningInAndroidStudio = !isRunningInIDEA && System.getProperty('idea.active') != null
+        logger.warn("Running on as = " + isRunningInAndroidStudio)
+        forceAndroidLibrary = isRunningInAndroidStudio
+    }
+
+    return forceAndroidLibrary
+}
