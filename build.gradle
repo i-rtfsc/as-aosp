@@ -50,5 +50,6 @@ allprojects {
 
 gradle.projectsEvaluated {
     // 打印出当前版本
-    logger.error("current version = " + rootProject.ext.version)
+    logger.error("current version = " + rootProject.ext.currentVersion)
+    logger.error("remote version = " + rootProject.ext.remoteVersion)
 }
