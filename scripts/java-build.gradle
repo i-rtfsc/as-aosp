@@ -1,5 +1,9 @@
 apply plugin: 'java-library'
 
+ext {
+    USE_PLUGIN = "java"
+}
+
 java {
     sourceSets {
         main {
