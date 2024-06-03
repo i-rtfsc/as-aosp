@@ -1,4 +1,9 @@
 ext {
+    // 当前版本
+    currentVersion = getCurrentVersion()
+    // 远程服务器上的版本（正式版本）
+    remoteVersion = getRemoteVersion()
+
     Properties properties = getExtProperties()
     // aosp 源码路径
     aospRoot = getRoot(properties)
