@@ -1,3 +1,35 @@
+ext.getCurrentVersion = {
+    def file = file("VERSION")
+    def content = ''
+
+    file.withInputStream { inputStream ->
+        content = inputStream.text
+    }
+
+    return content
+}
+
+ext.getRemoteVersion = {
+    // 定义网络文件的 URL
+    def url = new java.net.URL('https://raw.githubusercontent.com/i-rtfsc/as-aosp/aosp/VERSION')
+    // 读取网络文件内容
+    def content = ''
+    url.openStream().withReader { reader ->
+        content = reader.text
+    }
+}
+
+ext.convertVersionToInt = { version ->
+    def parts = version.tokenize('.').collect { it as Integer }
+
+    def intValue = 0
+    for (int i = 0; i < parts.size(); i++) {
+        intValue = intValue * 10 + parts[i]
+    }
+
+    return intValue
+}
+
 ext.applyConfig = { file ->
     def asbPath = "${rootDir}/" + file
     logger.warn(asbPath)
@@ -74,7 +106,6 @@ ext.getOutRoot = { properties, root_dir ->
     return aospOutRoot
 }
 
-
 ext.getForceAndroidLibrary = { properties ->
     // 检查 ext/scripts/ext.properties or local.properties 是否存在 EXT_FORCE_ANDROID_LIBRARY
     def forceAndroidLibrary = properties.getProperty('EXT_FORCE_ANDROID_LIBRARY')
@@ -82,11 +113,17 @@ ext.getForceAndroidLibrary = { properties ->
         logger.warn("set forceAndroidLibrary from ext/scripts/ext.properties or local.properties")
         forceAndroidLibrary = forceAndroidLibrary.toBoolean()
     } else {
-        // 判断是否在中 as 中运行，
-        def isRunningInIDEA = System.getenv("IDEA_INITIAL_DIRECTORY") != null
-        def isRunningInAndroidStudio = !isRunningInIDEA && System.getProperty('idea.active') != null
-        logger.warn("Running on as = " + isRunningInAndroidStudio)
-        forceAndroidLibrary = isRunningInAndroidStudio
+        // 经过测试发现，在 as 或者 idea 中使用 Java 模块也都可以断点调试
+        // 使用改成默认用 Java 模块
+        if (false) {
+            // 判断是否在中 as 中运行，
+            def isRunningInIDEA = System.getenv("IDEA_INITIAL_DIRECTORY") != null
+            def isRunningInAndroidStudio = !isRunningInIDEA && System.getProperty('idea.active') != null
+            logger.warn("Running on as = " + isRunningInAndroidStudio)
+            forceAndroidLibrary = isRunningInAndroidStudio
+        } else {
+            forceAndroidLibrary = false
+        }
     }
 
     return forceAndroidLibrary
