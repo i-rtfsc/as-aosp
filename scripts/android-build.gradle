@@ -5,6 +5,10 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-parcelize'
 
+ext {
+    USE_PLUGIN = "android"
+}
+
 android {
     namespace 'aosp.' + project.getName()
     def androidSdk = rootProject.ext.androidSdk

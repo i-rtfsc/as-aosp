@@ -19,6 +19,9 @@ dependencies {
         rootProject.ext.allModules.each { dependence ->
             if (dependence.key == project.name) {
                 logger.warn("Don't compileOnly myself, project = " + project.name)
+                if (project.hasProperty('USE_PLUGIN') && isNotNull(USE_PLUGIN)) {
+                    logger.warn("Running plugin = " + USE_PLUGIN)
+                }
             } else {
                 if (rootProject.ext.build_aidl.toBoolean()) {
                     logger.warn("don't compileOnly forEach when build aidl")
