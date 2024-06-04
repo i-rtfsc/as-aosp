@@ -1,33 +1,39 @@
 <!-- TOC -->
+
 * [as-aosp 工程简介](#as-aosp-工程简介)
-  * [支持IDE](#支持ide)
-  * [对比 asfp 优缺点](#对比-asfp-优缺点)
-  * [跳转](#跳转)
-  * [提示、补全](#提示补全)
-  * [使用教程](#使用教程)
-  * [编译](#编译)
-  * [版本](#版本)
-    * [5.x.x](#5xx)
-      * [scrjars](#scrjars)
-      * [android sdk](#android-sdk)
-      * [PlatformBase](#platformbase)
-      * [car](#car)
-      * [aosp-cmake](#aosp-cmake)
-      * [ext](#ext)
-      * [文件夹结构调整](#文件夹结构调整)
-    * [4.0.0](#400)
-      * [Car](#car-1)
-      * [移除/调整](#移除调整)
-      * [CTS](#cts)
-    * [3.2.1](#321)
-      * [移除/调整](#移除调整-1)
-    * [2.1.0](#210)
-      * [java模块](#java模块)
-      * [native模块](#native模块)
-      * [aidl](#aidl)
-    * [1.x.x](#1xx)
-  * [后话](#后话)
-  * [即时讨论](#即时讨论)
+    * [支持IDE](#支持ide)
+    * [对比 asfp 优缺点](#对比-asfp-优缺点)
+    * [跳转](#跳转)
+    * [提示、补全](#提示补全)
+    * [使用教程](#使用教程)
+    * [编译](#编译)
+    * [版本](#版本)
+        * [6.x.x](#6xx)
+            * [优化加载速度](#优化加载速度)
+            * [Java模块](#java模块)
+            * [新增版本号](#新增版本号)
+        * [5.x.x](#5xx)
+            * [scrjars](#scrjars)
+            * [android sdk](#android-sdk)
+            * [PlatformBase](#platformbase)
+            * [car](#car)
+            * [aosp-cmake](#aosp-cmake)
+            * [ext](#ext)
+            * [文件夹结构调整](#文件夹结构调整)
+        * [4.0.0](#400)
+            * [Car](#car-1)
+            * [移除/调整](#移除调整)
+            * [CTS](#cts)
+        * [3.2.1](#321)
+            * [移除/调整](#移除调整-1)
+        * [2.1.0](#210)
+            * [java模块](#java模块-1)
+            * [native模块](#native模块)
+            * [aidl](#aidl)
+        * [1.x.x](#1xx)
+    * [后话](#后话)
+    * [即时讨论](#即时讨论)
+
 <!-- TOC -->
 
 # as-aosp 工程简介
@@ -38,7 +44,6 @@
 
 比 idegen(android.ipr和android.iml) 方案还快，并且“联想”也很方便。
 
-
 ## 支持IDE
 
 - Android Studio
@@ -47,8 +52,8 @@
 
 > IDEA 只支持 java 模块。
 >
-> CLion 只支持 native 模块，直接打开 aosp-native 后，需要改 aosp-native/CMakeLists.txt 里 set(ANDROID_ROOT ${BUILD_NATIVE_ROOT})
-
+> CLion 只支持 native 模块，直接打开 aosp-native 后，需要改 aosp-native/CMakeLists.txt 里 set(
+> ANDROID_ROOT ${BUILD_NATIVE_ROOT})
 
 ## 对比 asfp 优缺点
 
@@ -155,20 +160,26 @@
 [教程004-插件扩展](https://i-rtfsc.github.io/as-aosp/plugin-extra/)
 
 [教程005-跳转系统源码](https://i-rtfsc.github.io/source-code/as-aosp/jump-system-code/)
+> 更新到 6.x 版本默认就可跳转系统源码
 
 [教程006-aidl跳转](https://i-rtfsc.github.io/source-code/as-aosp/jump-aidl/)
 
 [教程007-c++跳转](https://i-rtfsc.github.io/source-code/as-aosp/jump-cpp/)
 
+[教程008-跳转系统源码进阶版](https://i-rtfsc.github.io/source-code/as-aosp/jump-system-code-2/)
 
 ## 编译
 
 此工程无法编译framework.jar或者services.jar，请使用aosp推荐的编译方式。
 
-[global_scripts](https://github.com/i-rtfsc/global_scripts) 工程里的 [gs_android_build.sh](https://github.com/i-rtfsc/global_scripts/blob/main/plugins/android/build/gs_android_build.sh) 脚本实现了很多模块编译的快捷键。
-可以单独下载这个脚本并放到环境变量里，或者是用整个 [global_scripts](https://github.com/i-rtfsc/global_scripts) 实现插件化的方案【详情可以参考该工程的README】。
+[global_scripts](https://github.com/i-rtfsc/global_scripts)
+工程里的 [gs_android_build.sh](https://github.com/i-rtfsc/global_scripts/blob/main/plugins/android/build/gs_android_build.sh)
+脚本实现了很多模块编译的快捷键。
+可以单独下载这个脚本并放到环境变量里，或者是用整个 [global_scripts](https://github.com/i-rtfsc/global_scripts)
+实现插件化的方案【详情可以参考该工程的README】。
 
 ## 版本
+
 as-aosp经历了两年多的更新，每次更新都是根据自己的需求。
 5.x.x 打算再次对 c/c++ 模块进行大改，自己本地验证大改后 vs 也能丝滑使用。
 
@@ -176,7 +187,7 @@ as-aosp经历了两年多的更新，每次更新都是根据自己的需求。
 
 #### 优化加载速度
 
-不开c++模块从10分钟变成2-3分钟（同一台电脑，同一份工程测试）。
+不打开c++模块加载时间从10分钟变成2-3分钟（同一台电脑，同一份工程测试）。
 
 #### Java模块
 
@@ -204,23 +215,21 @@ Android模块改成Java模块，加载完成后直接跳转源码，无需再执
 
 不特指aosp中的哪个模块，而是android 平台一些基础的代码都放在这个模块里。
 
-####  car
+#### car
 
 - [x] car
   相关模块都放到 car 文件夹下
 
-####  aosp-cmake
+#### aosp-cmake
 
 - [x] CMakeLists.txt
   根据 Android.bp/Android.mk 生成 CMakeLists.txt
 
-
-####  ext
+#### ext
 
 git 忽略 ext ，方便同步代码的同时也方便个人定制化
 
-
-####  文件夹结构调整
+#### 文件夹结构调整
 
 - [x]  aosp-modules
   system server、framework-res、aosp 其他模块
@@ -231,16 +240,15 @@ git 忽略 ext ，方便同步代码的同时也方便个人定制化
 - [x] aosp-cts
   aosp cts 模块
 
-
 ### 4.0.0
 
-####  Car
+#### Car
 
 - [x] 新增 CarSystemUI
 
 - [x] 新增 CarSettings
 
-####  移除/调整
+#### 移除/调整
 
 - [x] 移除 Java 模块下的 JNI 脚本
 
@@ -248,7 +256,7 @@ git 忽略 ext ，方便同步代码的同时也方便个人定制化
 
 - [x] framework 、services 包含 Wifi 相关（保持跟原生一致）
 
-####  CTS
+#### CTS
 
 - [x] CtsWindowManagerDeviceTestCases
 - [x] CtsInputTestCases
@@ -261,10 +269,9 @@ git 忽略 ext ，方便同步代码的同时也方便个人定制化
 > 后续打算大改版 native 模块，所以暂时不在 Java 模块下提供 JNI，而是打算刚才使用 native 都单独一个模块。
 > 基于这点，也没必要提供老版本的 【生成 cmakelist 脚本】
 
-
 ### 3.2.1
 
-####  移除/调整
+#### 移除/调整
 
 - [x] 移除 BUILD_APPLICATION
 
@@ -276,12 +283,12 @@ git 忽略 ext ，方便同步代码的同时也方便个人定制化
 
 - [ ] 提供 生成 cmakelist 脚本
 
-> 最初的 BUILD_APPLICATION 确实是用了编译 test app，但目前功能已经改版；不需要编译 test app 了，并且这个工程无法编译 aosp 模块，为了不引起歧义，故删除。
-
+> 最初的 BUILD_APPLICATION 确实是用了编译 test app，但目前功能已经改版；不需要编译 test app
+> 了，并且这个工程无法编译 aosp 模块，为了不引起歧义，故删除。
 
 ### 2.1.0
 
-####  java模块
+#### java模块
 
 - [x] Framework: framework.jar
 
@@ -311,7 +318,7 @@ git 忽略 ext ，方便同步代码的同时也方便个人定制化
 
 > 在 1.x.x 的基础上完善更多功能。
 
-####  native模块
+#### native模块
 
 - [x] AndroidRuntime: libandroid_runtime.so
 
@@ -375,5 +382,4 @@ git 忽略 ext ，方便同步代码的同时也方便个人定制化
 
 - 通过 [issues](https://github.com/i-rtfsc/as-aosp/issues) 反馈问题
 
-- [博客留言讨论](https://i-rtfsc.github.io/%E6%BA%90%E7%A0%81%E5%B7%A5%E7%A8%8B/as-aosp/as-aosp%E5%B7%A5%E7%A8%8B%E7%AE%80%E4%BB%8B)
-
+- [博客留言讨论](https://i-rtfsc.github.io/source-code/as-aosp/intro/)
