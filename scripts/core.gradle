@@ -1,8 +1,11 @@
 ext {
     // 当前版本
-    currentVersion = getCurrentVersion()
+    localVersion = getCurrentVersion()
     // 远程服务器上的版本（正式版本）
     remoteVersion = getRemoteVersion()
+    // 转换成int
+    localVersionInt = convertVersionToInt(localVersion)
+    remoteVersionInt = convertVersionToInt(remoteVersion)
 
     Properties properties = getExtProperties()
     // aosp 源码路径
@@ -23,7 +26,7 @@ ext {
     // 设置模块存放 aosp 编译出来的 scr jars 目录
     aosp_srcjars_dir = "build/aosp_srcjars"
 
-    //android开发版本配置
+    // android开发版本配置
     androidSdk = [
             buildToolsVersion: "34.0.0",
             compileSdkVersion: 34,
@@ -31,6 +34,6 @@ ext {
             minSdkVersion    : 34,
     ]
 
-    //获取所有的模块
+    // 获取所有的模块
     allModules = getModules(project.subprojects)
 }
