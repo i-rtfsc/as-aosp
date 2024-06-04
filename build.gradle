@@ -50,6 +50,9 @@ allprojects {
 
 gradle.projectsEvaluated {
     // 打印出当前版本
-    logger.error("current version = " + rootProject.ext.currentVersion)
+    logger.error("local(current) version = " + rootProject.ext.localVersion)
     logger.error("remote version = " + rootProject.ext.remoteVersion)
+    if (rootProject.ext.localVersionInt < rootProject.ext.remoteVersionInt) {
+        logger.error("Please update to the latest version via \"git pull --rebase\" command.")
+    }
 }
