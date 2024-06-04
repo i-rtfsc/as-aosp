@@ -11,7 +11,7 @@ ext.getCurrentVersion = {
 
 ext.getRemoteVersion = {
     // 定义网络文件的 URL
-    def url = new java.net.URL('https://raw.githubusercontent.com/i-rtfsc/as-aosp/aosp/VERSION')
+    def url = new java.net.URL('https://raw.githubusercontent.com/i-rtfsc/as-aosp/flyme/VERSION')
     // 读取网络文件内容
     def content = ''
     url.openStream().withReader { reader ->
