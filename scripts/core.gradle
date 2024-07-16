@@ -19,9 +19,11 @@ ext {
     build_aidl = false
 
     // 如果是 idea 打开这个工程，默认是打开 Java 模块（非Android模块）
-    isIdea = (System.getenv("IDEA_INITIAL_DIRECTORY") != null)
+    isRunningInIDEA = getIdea()
+    isRunningInAndroidStudio = getAndroidStudio()
     isAndroid = getForceAndroidLibrary(properties)
-    logger.warn("Running on idea = " + isIdea + ", isAndroid = " + isAndroid)
+    logger.warn("Running on idea = " + isRunningInIDEA + ", Android Studio = " + isRunningInAndroidStudio)
+    logger.warn("Config Android module = " + isAndroid)
 
     // 设置模块存放 aosp 编译出来的 scr jars 目录
     aosp_srcjars_dir = "build/aosp_srcjars"
