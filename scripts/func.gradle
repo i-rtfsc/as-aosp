@@ -85,6 +85,10 @@ ext.getRoot = { properties ->
             aospRoot = "/Users/solo/code/oppo"
         }
     }
+    // win系统 需要转换，不然 cmake 无法识别路径
+    if (org.gradle.internal.os.OperatingSystem.current().isWindows()) {
+        aospRoot = aospRoot.replace('\\', '/')
+    }
     logger.warn("aospRoot = " + aospRoot)
 
     return aospRoot
@@ -101,9 +105,45 @@ ext.getOutRoot = { properties, root_dir ->
         // 未设置额外的 out 目录，则默认是在源码根目录下
         aospOutRoot = root_dir
     }
+    // win系统 需要转换，不然 cmake 无法识别路径
+    if (org.gradle.internal.os.OperatingSystem.current().isWindows()) {
+        aospOutRoot = aospOutRoot.replace('\\', '/')
+    }
     logger.warn("aospOutRoot = " + aospOutRoot)
 
     return aospOutRoot
+}
+
+ext.getIdea = { ->
+    def isIdea = (System.getenv("IDEA_INITIAL_DIRECTORY") != null)
+    if (org.gradle.internal.os.OperatingSystem.current().isWindows()) {
+        def command = System.properties['sun.java.command']
+        if (command != null) {
+            if (command.contains('idea') || command.contains('Idea')) {
+                isIdea = true
+            } else {
+                isIdea = false
+            }
+        }
+    }
+
+    return isIdea
+}
+
+ext.getAndroidStudio = { ->
+    def isRunningInIDEA = System.getenv("IDEA_INITIAL_DIRECTORY") != null
+    def isRunningInAndroidStudio = !isRunningInIDEA && System.getProperty('idea.active') != null
+
+    if (org.gradle.internal.os.OperatingSystem.current().isWindows()) {
+        def command = System.properties['sun.java.command']
+        if (command != null) {
+            if (command.contains('AndroidStudio') || command.contains('gradle')) {
+                isRunningInAndroidStudio = true
+            }
+        }
+    }
+
+    return isRunningInAndroidStudio
 }
 
 ext.getForceAndroidLibrary = { properties ->
