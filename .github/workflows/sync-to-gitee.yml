@@ -1,0 +1,42 @@
+name: Sync to Gitee
+
+on:
+  push:
+    branches:
+      - '*'      # 监听所有分支的推送，包括新创建的分支
+  pull_request:
+    branches:
+      - '*'      # 监听所有 PR 的合并
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout the repository
+      uses: actions/checkout@v3
+    
+    - name: Set up Git
+      run: |
+        git config --global user.name "solo"
+        git config --global user.email "anqi.huang@outlook.com"
+    
+    - name: Set up SSH with ssh-agent
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.GITEE_SSH_KEY }}" > ~/.ssh/id_rsa   # 使用 GitHub Secret 存储的 SSH 私钥
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan gitee.com >> ~/.ssh/known_hosts            # 添加 Gitee 公钥到 known_hosts 文件
+
+    - name: Fetch full history (unshallow)
+      run: |
+        git fetch --unshallow   # 将仓库转换为完整仓库
+
+    - name: Add Gitee remote
+      run: |
+        git remote add gitee git@gitee.com:i-rtfsc/as-aosp.git  # 添加 Gitee 远程仓库
+
+    - name: Force Push to Gitee
+      run: |
+        git push --force --all gitee   # 强制推送所有分支
+        git push --force --tags gitee  # 强制推送所有标签
