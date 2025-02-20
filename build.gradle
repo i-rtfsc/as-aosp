@@ -10,18 +10,12 @@ buildscript {
     repositories {
         google()
         mavenCentral()
-        maven {
-            url 'http://maven.aliyun.com/repository/gradle-plugin/'
-            allowInsecureProtocol true
-        }
-        maven {
-            url 'http://maven.aliyun.com/repository/google/'
-            allowInsecureProtocol true
-        }
-        maven {
-            url 'http://maven.aliyun.com/repository/public/'
-            allowInsecureProtocol true
-        }
+        // 配置国内镜像源
+        maven { url 'https://maven.aliyun.com/repository/google' }
+        maven { url 'https://maven.aliyun.com/repository/public' }
+        maven { url 'https://maven.tencent.com/repository/maven-public' }
+        // 可选的备用镜像源
+        maven { url 'https://mirrors.tencent.com/android/maven2/' }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:8.1.1'
@@ -33,18 +27,12 @@ allprojects {
     repositories {
         google()
         mavenCentral()
-        maven {
-            url 'http://maven.aliyun.com/repository/gradle-plugin/'
-            allowInsecureProtocol true
-        }
-        maven {
-            url 'http://maven.aliyun.com/repository/google/'
-            allowInsecureProtocol true
-        }
-        maven {
-            url 'http://maven.aliyun.com/repository/public/'
-            allowInsecureProtocol true
-        }
+        // 配置国内镜像源
+        maven { url 'https://maven.aliyun.com/repository/google' }
+        maven { url 'https://maven.aliyun.com/repository/public' }
+        maven { url 'https://maven.tencent.com/repository/maven-public' }
+        // 可选的备用镜像源
+        maven { url 'https://mirrors.tencent.com/android/maven2/' }
     }
 }
 
