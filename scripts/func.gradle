@@ -10,12 +10,24 @@ ext.getCurrentVersion = {
 }
 
 ext.getRemoteVersion = {
-    // 定义网络文件的 URL
-    def url = new java.net.URL('https://raw.githubusercontent.com/i-rtfsc/as-aosp/miui/VERSION')
-    // 读取网络文件内容
-    def content = ''
-    url.openStream().withReader { reader ->
-        content = reader.text
+    try {
+        // 定义网络文件的 URL
+        def url = new java.net.URL('https://raw.githubusercontent.com/i-rtfsc/as-aosp/miui/VERSION')
+        // 读取网络文件内容
+        def content = ''
+        url.openStream().withReader { reader ->
+            content = reader.text
+        }
+    } catch (Exception e) {
+        logger.error("An error occurred while checking versions: " + e.message)
+        def file = file("VERSION")
+        def content = ''
+
+        file.withInputStream { inputStream ->
+            content = inputStream.text
+        }
+
+        return content
     }
 }
 
