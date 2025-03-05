@@ -1,0 +1,18 @@
+def androidRoot = rootProject.ext.car.RotaryController
+
+ext {
+    BUILD_MANIFEST = androidRoot.manifest
+    BUILD_RES = androidRoot.res
+    BUILD_ASSETS = androidRoot.assets
+    BUILD_SRC = androidRoot.src
+    BUILD_SRC_JARS = androidRoot.srcjars
+    BUILD_AIDL = [androidRoot.src + androidRoot.aidl]
+    BUILD_NATIVE_ROOT = ""
+    BUILD_NATIVE_OUT_ROOT = ""
+}
+
+if (rootProject.ext.isAndroid) {
+    apply from: "${rootDir}/scripts/android-build.gradle"
+} else {
+    apply from: "${rootDir}/scripts/java-build.gradle"
+}
