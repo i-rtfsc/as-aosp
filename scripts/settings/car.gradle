@@ -11,6 +11,6 @@ project(':CarSystemUI').projectDir = "$rootDir/aosp-car/CarSystemUI" as File
 include ':CarSettings'
 project(':CarSettings').projectDir = "$rootDir/aosp-car/CarSettings" as File
 
-include ':CarFramework'
-project(':CarFramework').projectDir = "$rootDir/aosp-car/CarFramework" as File
+include ':RotaryController'
+project(':RotaryController').projectDir = "$rootDir/aosp-car/RotaryController" as File
 /*************** aaos ***************/

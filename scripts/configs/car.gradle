@@ -6,11 +6,11 @@ ext {
     aospOutRoot = rootProject.ext.aospOutRoot
 
     car = [
-            rootDir   : "$aospDir",
-            rootOutDir: "$aospOutRoot",
+            rootDir         : "$aospDir",
+            rootOutDir      : "$aospOutRoot",
 
             /*************** 配置原生 car-framework 路径 ***************/
-            Framework : [
+            Framework       : [
                     manifest: "$aospDir/packages/services/Car/car-lib/AndroidManifest.xml",
                     res     : [
                             "$aospDir/packages/services/Car/FrameworkPackageStubs/res/",
@@ -45,7 +45,7 @@ ext {
             ],
 
             /*************** 配置原生 car-services 路径 ***************/
-            Services  : [
+            Services        : [
                     manifest: "$aospDir/packages/services/Car/service/AndroidManifest.xml",
                     res     : [
                             "$aospDir/packages/services/Car/service/res",
@@ -82,7 +82,7 @@ ext {
             ],
 
             /*************** 配置原生 CarSystemUI 路径 ***************/
-            SystemUI  : [
+            SystemUI        : [
                     manifest: "$aospDir/packages/apps/Car/SystemUI/AndroidManifest.xml",
                     res     : [
                             "$aospDir/packages/apps/Car/SystemUI/res-keyguard",
@@ -111,7 +111,7 @@ ext {
             ],
 
             /*************** 配置原生 CarSettings 路径 ***************/
-            Settings  : [
+            Settings        : [
                     manifest: "$aospDir/packages/apps/Car/Settings/AndroidManifest.xml",
                     res     : [
                             "$aospDir/packages/apps/Car/Settings/res",
@@ -130,6 +130,22 @@ ext {
                             "$aospOutRoot/out/soong/.intermediates/packages/apps/Car/Settings/tests/unit/CarSettingsUnitTests/android_common/gen/android",
                             "$aospOutRoot/out/soong/.intermediates/packages/apps/Car/SettingsIntelligence/CarSettingsIntelligence/android_common/gen/android",
                     ],
+                    aidl    : [],
+            ],
+
+            /*************** 配置原生 RotaryController 路径 ***************/
+            RotaryController: [
+                    manifest: "$aospDir/packages/apps/Car/RotaryController/AndroidManifest.xml",
+                    res     : [
+                            "$aospDir/packages/apps/Car/RotaryController/res",
+
+                    ],
+                    assets  : [],
+                    jni     : "",
+                    src     : [
+                            "$aospDir/packages/apps/Car/RotaryController/src",
+                    ],
+                    srcjars : [],
                     aidl    : [],
             ],
     ]
