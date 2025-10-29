@@ -14,9 +14,13 @@
 
 # Check if the specified directory exists and contains the CMakeLists.txt file.
 function(add_subdirectory_safe dir_path)
+    # 转换为绝对路径
+    if(NOT IS_ABSOLUTE ${dir_path})
+        set(dir_path "${CMAKE_CURRENT_SOURCE_DIR}/${dir_path}")
+    endif()
+
     if (IS_DIRECTORY ${dir_path})
-        file(GLOB CMAKELISTS ${dir_path}/CMakeLists.txt)
-        if (CMAKELISTS)
+        if (EXISTS ${dir_path}/CMakeLists.txt)
             add_subdirectory(${dir_path})
         else ()
             message(WARNING "CMakeLists.txt does not exist in directory: ${dir_path}")
