@@ -20,6 +20,13 @@
 
 ## P1：语言和 IDE
 
+### AOSP-IDE-AIDL-GENERATED-01
+
+- 目标：接入 Soong AIDL include roots、srcjar/generated files，以及 Java/C++/NDK generated peer 映射。
+- 技术前置：AIDL source parser/index 和 metadata reader 基线已具备。
+- 下一验收：同一 AIDL fixture 在 source-only 与 build-backed 模式返回不同来源和置信度，且 generated file 缺失时只降级不失败。
+- 负能力：不执行 AIDL compiler，不复刻 stable API/hash 检查。
+
 ### AOSP-IDE-JNI-01
 
 - 目标：Java native、静态导出、JNINativeMethod 和 JNI descriptor。
@@ -29,7 +36,7 @@
 ### AOSP-IDE-JB-01
 
 - 目标：JetBrains 配置页、Workspace Model、Java/generated source 和 AIDL PSI。
-- 技术前置：AIDL-01、CLI-01。
+- 技术前置：AIDL source baseline 和 CLI baseline 已具备；generated peer 接线可以按能力渐进启用。
 - 下一验收：Android Studio/IDEA baseline plugin verification。
 
 ### AOSP-IDE-VSCODE-01

@@ -29,3 +29,12 @@
 - 远程能力统一使用 `remote-execution` 命名；
 - 不在 dev-ide 恢复旧 Gradle/CMake 目录；
 - 不以裸编译命令作为最终验证报告。
+
+## 4. AOSP-IDE-AIDL-GENERATED-01
+
+1. 从 Java metadata 读取 AIDL include dirs 和 srcjars。
+2. 建立 AIDL declaration 到 generated Java/C++/NDK 路径规则。
+3. 用 out 中存在的文件将 inferred 升级为 build-backed exact。
+4. generated file 缺失时保留 source declaration 和诊断。
+
+下一验收：source-only 和 build-backed fixture 的 peer 结果可区分。

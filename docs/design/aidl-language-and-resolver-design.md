@@ -90,4 +90,4 @@ parser 接收 `(RepoPath, content)`，不直接读取文件。文件发现、Sou
 - 同 package 和显式 import 都能解析；
 - 缺失和歧义返回稳定 diagnostics；
 - Windows/Linux 风格路径只影响文件访问，不改变 RepoPath symbol key；
-- source-only 结果标记 `parser`/`inferred`，不宣称 generated source 已存在。
+- 直接从 AIDL 文本解析的声明标记 `parser`/`exact`；无 out 的 Java/C++ generated peer 映射标记 `inferred`，不宣称生成文件已存在。
