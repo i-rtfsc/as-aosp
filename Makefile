@@ -1,7 +1,7 @@
-.PHONY: help fmt fmt-check vet test-core check
+.PHONY: help fmt fmt-check vet test-core smoke check
 
 help:
-	@printf '%s\n' 'make fmt        Format Go source' 'make fmt-check  Check Go formatting' 'make vet        Run Go static checks' 'make test-core  Run core tests' 'make check      Run core checks'
+	@printf '%s\n' 'make fmt        Format Go source' 'make fmt-check  Check Go formatting' 'make vet        Run Go static checks' 'make test-core  Run core tests' 'make smoke      Run CLI fixture smoke' 'make check      Run all Phase 0 checks'
 
 fmt:
 	gofmt -w core cmd
@@ -13,6 +13,9 @@ test-core:
 	go test ./core/...
 
 vet:
-	go vet ./core/...
+	go vet ./core/... ./cmd/...
 
-check: fmt-check vet test-core
+smoke:
+	go run ./cmd/aosp-index scan --profile testdata/source-only/profile.json
+
+check: fmt-check vet test-core smoke

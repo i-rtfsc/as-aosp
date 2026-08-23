@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "id": "source-only-fixture",
+  "workspaceViewRoot": "testdata/source-only/view",
+  "canonicalRepoRoot": "testdata/source-only/full-aosp",
+  "scope": {
+    "mode": "selected-repositories",
+    "include": ["frameworks/base"]
+  },
+  "visibilityPolicy": {
+    "mode": "strict-view",
+    "allowOpenExternalFile": true,
+    "confirmBeforeExpanding": true
+  }
+}
