@@ -1,0 +1,23 @@
+docs/engineering/commit-message-guidelines.md
+  s_0fcc3f909ad4ee::t_d12432a8b1555d 118
+  s_0fcc3f909ad4ee::t_72c0ef8c217f1c 196-212
+CONTRIBUTING.md
+  s_0fcc3f909ad4ee::t_0253ab68bca4c2 28-32
+  s_0fcc3f909ad4ee::t_72c0ef8c217f1c 25-27
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "7f7d0f3b50bd7410c700c16f6a1ca5e4cc6df78c",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
