@@ -1,0 +1,24 @@
+core/generated/store_test.go
+  s_0fcc3f909ad4ee::t_3fe9eec36878f0 48
+  s_0fcc3f909ad4ee::t_8e5f8a09bf561d 1-47,49-96
+core/generated/store.go
+  s_0fcc3f909ad4ee::t_3fe9eec36878f0 20-21,34-35
+  s_0fcc3f909ad4ee::t_4fb49fe94d8ca2 142-143,151-159,200-204,207,212,217,220,223,225,269,272-275
+  s_0fcc3f909ad4ee::t_4106b6a657e47b 1-19,22-33,36-141,144-150,160-199,205-206,208-211,213-216,218-219,221-222,224,226-268,270-271,276-303
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "e7de0cc38355b799b6a75c2eab8e3a8ac6cdbcea",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
