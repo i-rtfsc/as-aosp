@@ -13,6 +13,7 @@
 | `protocol/` | RPC/profile schema | 业务实现 |
 | `remote-execution/` | 可选 Linux 构建桥接 | 核心索引 owner |
 | `packaging/` | 多平台二进制和插件打包 | runtime 逻辑 |
+| `scripts/` | 仓库质量 gate 和薄维护入口 | 领域解析和产品逻辑 |
 | `testdata/` | fixture、metadata 和目录拓扑样本 | 生产源码 |
 | `docs/` | 文档权威入口 | 代码事实快照 |
 

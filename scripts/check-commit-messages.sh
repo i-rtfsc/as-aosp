@@ -4,10 +4,13 @@ set -euo pipefail
 
 range=${COMMIT_RANGE:-HEAD}
 
+commits=()
 if [[ "$range" == *..* ]]; then
-  mapfile -t commits < <(git rev-list --reverse "$range")
+  while IFS= read -r commit; do
+    commits+=("$commit")
+  done < <(git rev-list --reverse "$range")
 else
-  commits=("$range")
+	commits=("$range")
 fi
 
 for commit in "${commits[@]}"; do
