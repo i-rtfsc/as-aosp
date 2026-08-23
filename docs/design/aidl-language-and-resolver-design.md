@@ -78,12 +78,39 @@ symbol key 使用 `package + name`，不使用本机绝对路径。
 | `AIDL_TYPE_NOT_FOUND` | resolver 找不到类型 |
 | `AIDL_TYPE_AMBIGUOUS` | 多个候选类型匹配 |
 
-## 6. 文件系统边界
+## 6. Generated peer 规则
+
+首版只生成确定的候选路径，不运行 AIDL compiler：
+
+| 声明 | Java | C++/NDK 候选 |
+|---|---|---|
+| 顶层 interface/type | `package/path/Type.java` | `package/path/Type.cpp`、`BpX.h`、`BnX.h` |
+| parcelable/enum/union | `package/path/Type.java` | backend-specific type/header 候选 |
+| nested declaration | 外层 `Outer.java` | 外层生成单元或 backend 输出，不能单独假设 `Nested.java` |
+
+如果 interface 名为 `IFoo`，C++ Bp/Bn base name 通常为 `Foo`；这只是 AIDL 当前 generator
+的命名规则，不代表所有厂商 backend 都完全一致。
+
+每个 peer 返回：
+
+```text
+source AIDL RepoPath
+generated candidate PathRef
+language/backend
+origin: naming-rule | build-metadata
+confidence: inferred | exact
+exists
+```
+
+source-only 只返回 `inferred`。当 out metadata 提供匹配路径且本机文件存在时升级为 `exact`；metadata
+有路径但文件不可见时保留候选并产生 missing 诊断。
+
+## 7. 文件系统边界
 
 parser 接收 `(RepoPath, content)`，不直接读取文件。文件发现、SourceMount 和 PathMapper 由上层提供。
 这样同一 parser 可以被 CLI、JetBrains PSI adapter 和 VS Code LSP 使用。
 
-## 7. Acceptance
+## 8. Acceptance
 
 - interface、parcelable、enum、union fixture 能建立 symbol；
 - package/import/type definition 能返回 source range；
@@ -91,3 +118,6 @@ parser 接收 `(RepoPath, content)`，不直接读取文件。文件发现、Sou
 - 缺失和歧义返回稳定 diagnostics；
 - Windows/Linux 风格路径只影响文件访问，不改变 RepoPath symbol key；
 - 直接从 AIDL 文本解析的声明标记 `parser`/`exact`；无 out 的 Java/C++ generated peer 映射标记 `inferred`，不宣称生成文件已存在。
+- interface 名称 `IFoo` 能生成 Java、C++、Bp/Bn 和 NDK peer 候选；
+- nested declaration 不被错误映射为独立 Java 文件；
+- 匹配的 existing generated path 升级为 `build-metadata`/`exact`，缺失路径保持 `inferred` 并诊断。
