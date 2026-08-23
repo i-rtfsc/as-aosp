@@ -6,13 +6,13 @@
 
 - `dev-ide` 分支已切换为新方案仓库边界；旧 Gradle/CMake 实现在 `aosp` 分支。
 - 产品可行性、详细设计、拓扑和关键决策文档已存在。
-- 当前没有 Go engine、JetBrains plugin 或 VS Code extension 实现。
+- Phase 0 已有 Go model、WorkspaceTopology 和 PathMapper core；CLI、JetBrains plugin 和 VS Code extension 尚未实现。
 - AOSP 源码研究已覆盖 Soong IdeInfo、Java/CC metadata、compdb、AIDL 和 JNI 模式。
 
 ## 2. Partial
 
-- 根目录和文档骨架已完成，但工程构建入口尚未实现。
-- WorkspaceTopology、PathMapper、SourceMount 已完成设计，未有代码实现。
+- 根目录、Makefile 和 core 工程入口已完成；CLI、metadata、IDE 和远程执行入口尚未实现。
+- WorkspaceTopology、PathMapper、SourceMount 已有初始实现，但完整 topology 发现和 metadata 尚未闭合。
 - AIDL/JNI 目标算法已定义，未有 parser/index 实现。
 
 ## 3. Target
@@ -33,4 +33,5 @@
 - 设计入口：`docs/aosp-ide-plugin-design.md`；
 - 规范化设计：`docs/design/`；
 - Phase 0 计划：`docs/roadmap/delivery-plan.md`；
-- 代码和测试结果以本分支后续工程入口为准。
+- 代码入口：`core/model`、`core/topology`、`core/pathmap`；
+- 当前提交通过 `make check` 和 `go test -race ./core/...`；这不证明真实 IDE、Windows 或完整 AOSP 兼容。
