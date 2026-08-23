@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/i-rtfsc/as-aosp/core/aidl"
 	"github.com/i-rtfsc/as-aosp/core/graph"
 	"github.com/i-rtfsc/as-aosp/core/metadata"
 	"github.com/i-rtfsc/as-aosp/core/model"
@@ -21,7 +22,7 @@ type scanOutput struct {
 
 func main() {
 	if len(os.Args) < 2 {
-		fatal(errors.New("usage: aosp-index <doctor|scan|metadata> [options]"))
+		fatal(errors.New("usage: aosp-index <doctor|scan|metadata|aidl> [options]"))
 	}
 	switch os.Args[1] {
 	case "doctor":
@@ -30,9 +31,56 @@ func main() {
 		runScan(os.Args[2:])
 	case "metadata":
 		runMetadata(os.Args[2:])
+	case "aidl":
+		runAidl(os.Args[2:])
 	default:
 		fatal(fmt.Errorf("unknown command %q", os.Args[1]))
 	}
+}
+
+type aidlOutput struct {
+	Report     aidl.LoadReport  `json:"report"`
+	Resolution *aidl.Resolution `json:"resolution,omitempty"`
+}
+
+type aidlSummaryOutput struct {
+	Summary     aidl.Summary       `json:"summary"`
+	Resolution  *aidl.Resolution   `json:"resolution,omitempty"`
+	Diagnostics []model.Diagnostic `json:"diagnostics"`
+}
+
+func runAidl(args []string) {
+	flags := flag.NewFlagSet("aidl", flag.ExitOnError)
+	root := flags.String("root", "", "AIDL source root")
+	file := flags.String("file", "", "RepoPath of the AIDL document")
+	typeName := flags.String("type", "", "canonical or imported type to resolve")
+	summaryOnly := flags.Bool("summary", false, "print only summary and resolution")
+	_ = flags.Parse(args)
+	if *root == "" {
+		fatal(errors.New("--root is required"))
+	}
+	report, err := aidl.LoadTree(*root)
+	if err != nil {
+		fatal(err)
+	}
+	output := aidlOutput{Report: report}
+	if *file != "" && *typeName != "" {
+		repoPath, err := model.NormalizeRepoPath(*file)
+		if err != nil {
+			fatal(err)
+		}
+		document, ok := report.Index.Documents[repoPath]
+		if !ok {
+			fatal(fmt.Errorf("AIDL document not found: %s", repoPath))
+		}
+		resolution := report.Index.Resolve(document, *typeName)
+		output.Resolution = &resolution
+	}
+	if *summaryOnly {
+		writeJSON(aidlSummaryOutput{Summary: report.Index.Summary(len(report.Diagnostics)), Resolution: output.Resolution, Diagnostics: report.Diagnostics})
+		return
+	}
+	writeJSON(output)
 }
 
 type metadataOutput struct {
@@ -41,15 +89,25 @@ type metadataOutput struct {
 	Summary metadata.Summary    `json:"summary"`
 }
 
+type metadataSummaryOutput struct {
+	Summary     metadata.Summary   `json:"summary"`
+	Diagnostics []model.Diagnostic `json:"diagnostics"`
+}
+
 func runMetadata(args []string) {
 	flags := flag.NewFlagSet("metadata", flag.ExitOnError)
 	root := flags.String("root", "", "metadata root")
+	summaryOnly := flags.Bool("summary", false, "print only summary and diagnostics")
 	_ = flags.Parse(args)
 	if *root == "" {
 		fatal(errors.New("--root is required"))
 	}
 	report := metadata.LoadDirectory(*root)
 	moduleGraph := graph.Build(report.Snapshot)
+	if *summaryOnly {
+		writeJSON(metadataSummaryOutput{Summary: report.Snapshot.Summary(len(moduleGraph.Modules)), Diagnostics: report.Diagnostics})
+		return
+	}
 	writeJSON(metadataOutput{Report: report, Graph: moduleGraph, Summary: report.Snapshot.Summary(len(moduleGraph.Modules))})
 }
 
