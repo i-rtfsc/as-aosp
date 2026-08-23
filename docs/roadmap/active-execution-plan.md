@@ -15,9 +15,10 @@
 1. 固定 251 baseline 并创建 Kotlin/IntelliJ Platform 工程边界。
 2. 实现 Kotlin JSON-RPC framing 与 initialize/shutdown client。
 3. 加入插件 descriptor、单元测试和 `buildPlugin` 验证。
-4. 后续实现 engine process、profile UI 和 Workspace Model。
+4. 实现跨平台 EngineProcess 和项目级 profile persistence。
+5. 后续实现 profile UI 和 Workspace Model。
 
-下一验收：`make test-jetbrains` 通过并生成可安装插件 zip。
+下一验收：`make test-jetbrains` 通过，EngineProcess lifecycle fixture 和 profile state fixture 通过。
 
 ## 3. 开发约束
 

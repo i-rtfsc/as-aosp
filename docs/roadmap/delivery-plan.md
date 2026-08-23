@@ -39,8 +39,8 @@
 
 - 目标：JetBrains 配置页、Workspace Model、Java/generated source 和 AIDL PSI。
 - 技术前置：AIDL source baseline 和 CLI baseline 已具备；generated peer 接线可以按能力渐进启用。
-- 当前切片：251 baseline、插件工程、Kotlin RPC framing 和 lifecycle client。
-- 下一验收：Android Studio/IDEA baseline plugin build 与 descriptor verification。
+- 当前切片：251 baseline、插件工程、Kotlin RPC framing 和 lifecycle client 已完成；EngineProcess 与 profile persistence 进行中。
+- 下一验收：Android Studio/IDEA baseline plugin build、descriptor verification 和 engine lifecycle fixture。
 
 ### AOSP-IDE-VSCODE-01
 

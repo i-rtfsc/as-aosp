@@ -20,7 +20,8 @@
 
 ### Current
 
-无插件代码。
+已具备插件 descriptor、251 baseline、Kotlin RPC framing 和
+initialize/shutdown client bootstrap。
 
 ### Target
 
@@ -75,6 +76,46 @@ clients/jetbrains/
 
 `EngineProcess`、profile UI、Workspace Model、AIDL/JNI actions 在后续 slice 接入。首版不把本机
 绝对路径写入仓库，也不内置尚未构建的 engine binary。
+
+### 2.3 Engine process contract
+
+Engine process 的默认启动方式：
+
+```text
+configured executable path -> ProcessBuilder(argument list) -> aosp-indexd
+```
+
+约束：
+
+- 不通过 shell 拼接命令，避免空格、引号和注入问题；
+- executable 必须是用户配置或插件 cache 中的明确文件；
+- stdout 专用于 JSON-RPC，stderr 由独立 drain thread 读取并写入 IDE log；
+- start 后必须先 initialize，initialize 失败则立即 terminate；
+- stop 先发送 shutdown，等待有限超时后 destroy，最后才 destroyForcibly；
+- EOF、非零退出和 framing 错误都使 session 失效；
+- restart 创建新进程和新 RPC client，不复用旧 request id/session；
+- Windows 使用 `.exe`，Linux/macOS 使用可执行文件，路径均通过 `java.nio.file.Path` 传递。
+
+首个实现允许注入 process factory 进行单元测试，不要求测试启动真实平台二进制。
+
+### 2.4 Project profile persistence
+
+profile 保存为项目级 IDE workspace state：
+
+```text
+profileId
+workspaceViewRoot
+canonicalRepoRoot
+outRoot
+engineExecutable
+```
+
+这些字段只保存用户本机配置；共享 scope、RepoPath include/exclude 和 mount 规则后续单独
+加入 profile editor。加载 state 时缺失字段使用空值，路径不自动 canonicalize，不在持久化
+阶段扫描完整 AOSP。启动 engine 前由 RPC `aosp/profile/validate` 检查 profile。
+
+状态服务不启动 engine，也不持有 IDE Project Model；engine lifecycle 由独立 project service
+管理，便于测试和后续 VS Code 复用同一 profile schema。
 
 ## 3. VS Code
 
