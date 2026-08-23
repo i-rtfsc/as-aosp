@@ -1,0 +1,63 @@
+clients/jetbrains/src/test/kotlin/io/github/irtfsc/aospide/engine/EngineRpcClientTest.kt
+  s_0fcc3f909ad4ee::t_cf7bbfd00d740a 1-4,7-21
+  s_0fcc3f909ad4ee::t_5dd818f2c7fc26 5-6
+clients/jetbrains/src/main/kotlin/io/github/irtfsc/aospide/engine/EngineRpcClient.kt
+  s_0fcc3f909ad4ee::t_cf7bbfd00d740a 1-54
+clients/jetbrains/gradle/wrapper/gradle-wrapper.properties
+  s_0fcc3f909ad4ee::t_6df22e2831615a 1-7
+clients/jetbrains/settings.gradle.kts
+  s_0fcc3f909ad4ee::t_cf7bbfd00d740a 1-14
+Makefile
+  s_0fcc3f909ad4ee::t_d3cbb955be5587 1,18
+  s_0fcc3f909ad4ee::t_d2e418dfa6b43c 19
+  s_5f30dac179bcb2::t_a1f2a4a030a15e 20
+docs/roadmap/current-state.md
+  s_0fcc3f909ad4ee::t_d2e418dfa6b43c 9,14,26,42
+.gitignore
+  s_0fcc3f909ad4ee::t_d2e418dfa6b43c 32
+clients/jetbrains/gradlew.bat
+  s_0fcc3f909ad4ee::t_22155fa046055c 1-93
+clients/jetbrains/src/test/kotlin/io/github/irtfsc/aospide/engine/JsonRpcFramingTest.kt
+  s_0fcc3f909ad4ee::t_cf7bbfd00d740a 1-4,8-13,15-17,19-25,28-33,35,38-40
+  s_0fcc3f909ad4ee::t_5dd818f2c7fc26 5-7,14,18,26-27,34,36-37
+clients/jetbrains/build.gradle.kts
+  s_0fcc3f909ad4ee::t_cf7bbfd00d740a 1-10,13-21,27,29-48,50-54
+  s_0fcc3f909ad4ee::t_d3cbb955be5587 11-12,22-26
+  s_0fcc3f909ad4ee::t_5dd818f2c7fc26 28,49
+docs/engineering/build-and-test-guide.md
+  s_0fcc3f909ad4ee::t_d2e418dfa6b43c 14,17,29-38
+  s_5f30dac179bcb2::t_f0b7cc6bf1a383 39
+clients/jetbrains/src/main/kotlin/io/github/irtfsc/aospide/engine/JsonRpcFraming.kt
+  s_0fcc3f909ad4ee::t_cf7bbfd00d740a 1-73
+clients/jetbrains/src/main/resources/META-INF/plugin.xml
+  s_0fcc3f909ad4ee::t_cf7bbfd00d740a 1-3,5-11
+  s_0fcc3f909ad4ee::t_d3cbb955be5587 4
+clients/jetbrains/gradle.properties
+  s_0fcc3f909ad4ee::t_cf7bbfd00d740a 1-2
+clients/jetbrains/gradlew
+  s_0fcc3f909ad4ee::t_6df22e2831615a 1-248
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "edd1d68f86caf40cf13720bfac92af5a479b89ad",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    },
+    "s_5f30dac179bcb2": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "019ffe38-b3cd-77e3-8987-f48bc62a086c",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
