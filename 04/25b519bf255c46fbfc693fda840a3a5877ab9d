@@ -1,0 +1,26 @@
+clients/jetbrains/src/test/kotlin/io/github/irtfsc/aospide/profile/EngineProfileSettingsTest.kt
+  s_0fcc3f909ad4ee::t_6ba44209242789 1-24
+clients/jetbrains/src/main/kotlin/io/github/irtfsc/aospide/profile/EngineProfileState.kt
+  s_0fcc3f909ad4ee::t_e284099b9d5ce9 1-9
+clients/jetbrains/src/main/kotlin/io/github/irtfsc/aospide/engine/ProjectEngineService.kt
+  s_0fcc3f909ad4ee::t_6ba44209242789 3,12,26
+  s_0fcc3f909ad4ee::t_e284099b9d5ce9 1-2,4-11,13-25,27-29
+clients/jetbrains/src/main/kotlin/io/github/irtfsc/aospide/profile/EngineProfileSettings.kt
+  s_0fcc3f909ad4ee::t_e284099b9d5ce9 1-29
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "0425b519bf255c46fbfc693fda840a3a5877ab9d",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
