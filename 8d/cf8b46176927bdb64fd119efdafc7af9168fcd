@@ -1,0 +1,34 @@
+docs/design/ide-client-and-navigation-design.md
+  s_5f30dac179bcb2::t_bfb187ed394109 117
+  s_0fcc3f909ad4ee::t_6dea6d7aae9c2b 23-24,80-116
+  s_0fcc3f909ad4ee::t_ae40abc7762f7a 118-119
+docs/roadmap/active-execution-plan.md
+  s_0fcc3f909ad4ee::t_b27893210eb812 19,21
+  s_0fcc3f909ad4ee::t_6dea6d7aae9c2b 18
+docs/roadmap/delivery-plan.md
+  s_0fcc3f909ad4ee::t_b27893210eb812 42-43
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "8dcf8b46176927bdb64fd119efdafc7af9168fcd",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    },
+    "s_5f30dac179bcb2": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "019ffe38-b3cd-77e3-8987-f48bc62a086c",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
