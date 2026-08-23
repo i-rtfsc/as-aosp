@@ -1,0 +1,27 @@
+testdata/jni/source/cpp/android_security_Scrypt.cpp
+  s_0fcc3f909ad4ee::t_c337393cf268ea 1-8
+Makefile
+  s_0fcc3f909ad4ee::t_c337393cf268ea 1,4,27-29,33
+cmd/aosp-index/main.go
+  s_0fcc3f909ad4ee::t_c337393cf268ea 8,10,17,32,43-44,50,52-54,63-122,127-143,148-154,159-167,172-176
+  s_0fcc3f909ad4ee::t_15f211f3d99bcb 51,55-62,123-126,144-147,155-158,168-171
+  s_0fcc3f909ad4ee::t_7a090cc0076fb3 177
+testdata/jni/source/java/android/security/Scrypt.java
+  s_0fcc3f909ad4ee::t_c337393cf268ea 1-6
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "23fac1ff00ccebc8a55bf4206974683520d78ce2",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
