@@ -1,0 +1,23 @@
+docs/roadmap/delivery-plan.md
+  s_0fcc3f909ad4ee::t_4285ebd7a205ee 27-29
+docs/design/jni-cross-language-index-design.md
+  s_0fcc3f909ad4ee::t_4285ebd7a205ee 3,84-92
+docs/roadmap/current-state.md
+  s_0fcc3f909ad4ee::t_4285ebd7a205ee 9,16,26,38-39
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "7f89a31a17ed9f2c0c7ed0d8b0d0645ef4e66eaf",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
