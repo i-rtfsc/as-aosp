@@ -11,13 +11,6 @@
 - 下一验收：fixture 覆盖普通目录、软链接、别名、overlay、断链、循环、冲突和 Windows 路径。
 - 负能力：不读取真实 AOSP 全树，不接 IDE，不执行构建。
 
-### AOSP-IDE-METADATA-01
-
-- 目标：读取 Soong Java/CC metadata、module-info、compdb，并映射 ExternalPath。
-- 技术前置：CORE-01。
-- 下一验收：最小 JSON fixture 解析和 unknown field 容错。
-- 负能力：不复刻 Soong mutator，不保证全部 variant。
-
 ### AOSP-IDE-CLI-01
 
 - 目标：提供 `aosp-index doctor/scan` 和仓库 Make 入口。
