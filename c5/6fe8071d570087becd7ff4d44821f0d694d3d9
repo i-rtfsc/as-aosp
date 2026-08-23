@@ -1,0 +1,21 @@
+docs/README.md
+  s_0fcc3f909ad4ee::t_c7a36a8d0fe38a 15-16
+docs/design/jni-cross-language-index-design.md
+  s_0fcc3f909ad4ee::t_c7a36a8d0fe38a 1-83
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "c56fe8071d570087becd7ff4d44821f0d694d3d9",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
