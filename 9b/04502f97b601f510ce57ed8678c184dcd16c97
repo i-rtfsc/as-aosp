@@ -1,0 +1,54 @@
+core/graph/module_graph_test.go
+  s_0fcc3f909ad4ee::t_def1f781dda6b0 36-53
+  s_0fcc3f909ad4ee::t_ee6d07117dea7b 32
+  s_0fcc3f909ad4ee::t_2d09bf6cda5a65 54-55
+core/index/aidl_peers_test.go
+  s_0fcc3f909ad4ee::t_def1f781dda6b0 54-79
+core/metadata/read.go
+  s_0fcc3f909ad4ee::t_76d5cfb1ab7a89 77-79,94-96
+testdata/metadata/out/module_bp_java_deps.json
+  s_0fcc3f909ad4ee::t_e1626c33fa3611 5
+  s_0fcc3f909ad4ee::t_76d5cfb1ab7a89 7-9
+core/metadata/read_test.go
+  s_0fcc3f909ad4ee::t_fde92139710f4d 27-30
+core/aidl/generated.go
+  s_0fcc3f909ad4ee::t_34582b991b8217 108,125-143
+  s_0fcc3f909ad4ee::t_c1e167fca3a3a8 84-85
+  s_0fcc3f909ad4ee::t_ee6d07117dea7b 36-42,49,100-101,144-185,187
+  s_5f30dac179bcb2::t_26d447b6e073bf 186,188
+core/aidl/generated_test.go
+  s_0fcc3f909ad4ee::t_49bd382ca1bb87 63-92,124
+  s_0fcc3f909ad4ee::t_34582b991b8217 4,93-123,125
+core/metadata/types.go
+  s_0fcc3f909ad4ee::t_76d5cfb1ab7a89 58
+core/graph/module_graph.go
+  s_0fcc3f909ad4ee::t_76d5cfb1ab7a89 31,63-81,102
+core/index/aidl_peers.go
+  s_0fcc3f909ad4ee::t_3fe9eec36878f0 84
+  s_0fcc3f909ad4ee::t_ee6d07117dea7b 17-33,42
+  s_0fcc3f909ad4ee::t_76d5cfb1ab7a89 7,16,47-83,85-93
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "9b04502f97b601f510ce57ed8678c184dcd16c97",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    },
+    "s_5f30dac179bcb2": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "019ffe38-b3cd-77e3-8987-f48bc62a086c",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
