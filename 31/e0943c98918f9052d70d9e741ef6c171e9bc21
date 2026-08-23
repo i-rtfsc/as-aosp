@@ -1,0 +1,23 @@
+docs/design/ide-client-and-navigation-design.md
+  s_0fcc3f909ad4ee::t_8ff847e2842068 120-137
+docs/roadmap/delivery-plan.md
+  s_0fcc3f909ad4ee::t_8ff847e2842068 43
+docs/roadmap/active-execution-plan.md
+  s_0fcc3f909ad4ee::t_8ff847e2842068 19-20,23
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "31e0943c98918f9052d70d9e741ef6c171e9bc21",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
