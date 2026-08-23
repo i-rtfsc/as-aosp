@@ -16,9 +16,10 @@
 2. 实现 Kotlin JSON-RPC framing 与 initialize/shutdown client。
 3. 加入插件 descriptor、单元测试和 `buildPlugin` 验证。
 4. 实现跨平台 EngineProcess 和项目级 profile persistence。
-5. 后续实现 profile UI 和 Workspace Model。
+5. 实现 profile UI 和 Workspace Model。
 
-下一验收：`make test-jetbrains` 通过，EngineProcess lifecycle fixture 和 profile state fixture 通过。
+当前验收：`make test-jetbrains`、EngineProcess lifecycle fixture 和 profile state fixture 已通过。
+下一验收：profile UI 能验证并保存配置，再创建 focused source roots。
 
 ## 3. 开发约束
 

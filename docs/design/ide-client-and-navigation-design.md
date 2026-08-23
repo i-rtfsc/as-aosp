@@ -74,8 +74,8 @@ clients/jetbrains/
 - initialize/shutdown RPC client；
 - 不启动外部进程的 framing/client unit tests。
 
-`EngineProcess`、profile UI、Workspace Model、AIDL/JNI actions 在后续 slice 接入。首版不把本机
-绝对路径写入仓库，也不内置尚未构建的 engine binary。
+`EngineProcess` 和 project-local profile state 已进入实现；profile UI、Workspace Model、AIDL/JNI
+actions 仍在后续 slice。首版不把本机绝对路径写入仓库，也不内置尚未构建的 engine binary。
 
 ### 2.3 Engine process contract
 

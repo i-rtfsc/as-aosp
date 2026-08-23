@@ -23,7 +23,7 @@
 ## 4. Negative capability
 
 - 当前不能打开 AOSP 并自动提供导航；
-- 当前 JetBrains 插件只有 descriptor 与 Kotlin RPC framing/lifecycle client，没有配置 UI、engine process、Workspace Model、AIDL PSI 或 JNI action；
+- 当前 JetBrains 插件已有 descriptor、Kotlin RPC framing/lifecycle client、EngineProcess 和 project-local profile state；仍没有配置 UI、Workspace Model、AIDL PSI 或 JNI action；
 - 当前 daemon 只启用 initialize、shutdown、profile validate、topology discover/validate；索引、AIDL、JNI RPC capability 尚未启用；
 - 当前 JNI 只覆盖 Java/Kotlin declaration、静态导出、常见 `JNINativeMethod` 注册表和有限注册调用；复杂宏、运行时 class 解析和完整 C++ 语义仍未覆盖；
 - 当前没有发布版跨平台 engine binary；
@@ -39,4 +39,4 @@
 - 代码入口：`cmd/aosp-index`、`core/model`、`core/topology`、`core/pathmap`、`core/metadata`、`core/graph`、`core/generated`、`core/aidl`、`core/index`；
 - 代码入口：`cmd/aosp-index`、`core/model`、`core/topology`、`core/pathmap`、`core/metadata`、`core/graph`、`core/generated`、`core/aidl`、`core/jni`、`core/index`；
 - JNI fixture 通过 `make check`；只读 `frameworks/base/core/java` 与 `core/jni` 探测得到 1126 个 Java/Kotlin native 符号、2686 个 native 符号、988 个注册项、673 条链接，其中 561 条 exact、112 条 inferred。该结果不证明真实 IDE、Windows 或完整 AOSP 兼容。
-- JetBrains bootstrap 已使用 JDK 21 和本机 IntelliJ IDEA 2025.2.4 SDK 通过 `test` 与 `buildPlugin`，生成 `aosp-ide-jetbrains-0.1.0-dev.zip`；251 baseline 的下载式构建和 Android Studio verifier 尚未闭合。
+- JetBrains bootstrap、EngineProcess 和 profile state 已使用 JDK 21 与本机 IntelliJ IDEA 2025.2.4 SDK 通过 `test` 与 `buildPlugin`，生成 `aosp-ide-jetbrains-0.1.0-dev.zip`；251 baseline 的下载式构建和 Android Studio verifier 尚未闭合。
