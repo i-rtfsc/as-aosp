@@ -31,9 +31,9 @@ clients/jetbrains/src/main/kotlin/io/github/irtfsc/aospide/engine/EngineRpcClien
   "sessions": {
     "s_0fcc3f909ad4ee": {
       "agent_id": {
-        "tool": "codex",
+        "tool": "copilot",
         "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
-        "model": "gpt-5.6-sol"
+        "model": "auto"
       },
       "human_author": null
     },
@@ -41,7 +41,7 @@ clients/jetbrains/src/main/kotlin/io/github/irtfsc/aospide/engine/EngineRpcClien
       "agent_id": {
         "tool": "copilot",
         "id": "019ffe38-b3cd-77e3-8987-f48bc62a086c",
-        "model": "gpt-5.5"
+        "model": "claude-opus-5"
       },
       "human_author": "Solo <anqi.huang@outlook.com>"
     }
