@@ -1,0 +1,64 @@
+core/index/aidl_peers_test.go
+  s_0fcc3f909ad4ee::t_829c7df36c7cec 1-19,26-40,44-53
+  s_0fcc3f909ad4ee::t_bb9f99b0ba74f9 20-25,41-43
+testdata/aidl/generated/android/demo/IFoo.java
+  s_0fcc3f909ad4ee::t_5ebc99619a935c 1-4
+core/index/aidl_peers.go
+  s_0fcc3f909ad4ee::t_829c7df36c7cec 1-20,23-26
+  s_0fcc3f909ad4ee::t_bb9f99b0ba74f9 21-22
+core/aidl/generated_test.go
+  s_0fcc3f909ad4ee::t_70018e92ed75a0 1-11,13-39
+  s_0fcc3f909ad4ee::t_4c4bcf17afc84b 12
+  s_0fcc3f909ad4ee::t_c6632e93d04086 40-61
+core/graph/module_graph_test.go
+  s_0fcc3f909ad4ee::t_1f6ea83f650a60 28
+  s_0fcc3f909ad4ee::t_5ebc99619a935c 25-27,29-35
+core/aidl/generated.go
+  s_0fcc3f909ad4ee::t_bb9f99b0ba74f9 40-41,47-49
+  s_0fcc3f909ad4ee::t_45ab14f41e18f8 53-58,61-62,75-76,90-91
+  s_0fcc3f909ad4ee::t_2534a9b13647ad 46
+  s_0fcc3f909ad4ee::t_d3b34769d8ef99 22,24,28-35
+  s_0fcc3f909ad4ee::t_4c4bcf17afc84b 59,74,77,128,132,134-135,138,141,145,147-148,151
+  s_0fcc3f909ad4ee::t_70018e92ed75a0 1-21,23,25-27,36-39,42-45,50-52,60,63-73,78-89,92-127,129-131,133,136-137,139-140,142-144,146,149-150,152
+core/metadata/read_test.go
+  s_0fcc3f909ad4ee::t_41b2ee04b6e768 18-21,29-35
+  s_5f30dac179bcb2::t_494acb2203d401 36-37
+core/graph/module_graph.go
+  s_0fcc3f909ad4ee::t_bb9f99b0ba74f9 53,55-70
+  s_0fcc3f909ad4ee::t_5ebc99619a935c 5,40-52
+  s_45523d6cdd74f1::t_acdf876bee032d 54
+testdata/metadata/out/module_bp_java_deps.json
+  s_0fcc3f909ad4ee::t_5ebc99619a935c 5-8
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "fca47b0261d8707947ed73b92b76fae018df1087",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    },
+    "s_45523d6cdd74f1": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a0137d-ebb1-79b2-abfb-ac185f54e4f5",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    },
+    "s_5f30dac179bcb2": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "019ffe38-b3cd-77e3-8987-f48bc62a086c",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
