@@ -2,7 +2,14 @@
   "framework-minus-apex": {
     "path": ["frameworks/base"],
     "dependencies": ["core-all"],
-    "srcs": ["frameworks/base/core/java/android/os/Bundle.java"],
+    "srcs": [
+      "frameworks/base/core/java/android/os/Bundle.java",
+      "/srv/aosp/out/soong/generated/android/demo/IFoo.cpp",
+      "/srv/aosp/out/soong/generated/android/demo/BpFoo.h",
+      "/srv/aosp/out/soong/generated/android/demo/BnFoo.h",
+      "/srv/aosp/out/soong/generated/aidl/android/demo/BpFoo.h",
+      "/srv/aosp/out/soong/generated/aidl/android/demo/BnFoo.h"
+    ],
     "srcjars": ["/srv/aosp/out/soong/.intermediates/frameworks/base/framework-minus-apex/gen/framework.srcjar"],
     "class": ["JAVA_LIBRARIES"],
     "tags": ["optional"],

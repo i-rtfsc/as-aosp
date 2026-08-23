@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/i-rtfsc/as-aosp/core/aidl"
+	"github.com/i-rtfsc/as-aosp/core/generated"
 	"github.com/i-rtfsc/as-aosp/core/graph"
 	coreindex "github.com/i-rtfsc/as-aosp/core/index"
 	"github.com/i-rtfsc/as-aosp/core/metadata"
@@ -75,6 +76,7 @@ func runAidl(args []string) {
 	typeName := flags.String("type", "", "canonical or imported type to resolve")
 	metadataRoot := flags.String("metadata-root", "", "Soong metadata root")
 	moduleName := flags.String("module", "", "Soong module for generated peers")
+	cacheRoot := flags.String("cache-root", "", "generated source cache root")
 	summaryOnly := flags.Bool("summary", false, "print only summary and resolution")
 	var rawMappings mappingFlags
 	flags.Var(&rawMappings, "path-map", "external=local generated path mapping")
@@ -101,25 +103,38 @@ func runAidl(args []string) {
 		if *metadataRoot != "" && *moduleName != "" {
 			metadataReport := metadata.LoadDirectory(*metadataRoot)
 			moduleGraph := graph.Build(metadataReport.Snapshot)
-			mapper := pathmap.Mapper{Mappings: parsePathMappings(rawMappings)}
-			peers := coreindex.AidlGeneratedPeers(
+			peers := buildAidlPeers(
 				document,
 				*typeName,
 				moduleGraph,
 				*moduleName,
-				func(ref metadata.PathRef) bool {
-					if ref.ExternalPath == "" {
-						return false
-					}
-					local, ok := mapper.ExternalToLocal(ref.ExternalPath)
-					if !ok {
-						return false
-					}
-					_, err := os.Stat(string(local))
-					return err == nil
-				},
+				*cacheRoot,
+				rawMappings,
 			)
 			output.Peers = &peers
+		} else if *metadataRoot != "" {
+			metadataReport := metadata.LoadDirectory(*metadataRoot)
+			moduleGraph := graph.Build(metadataReport.Snapshot)
+			owner, found, ambiguous := moduleGraph.AidlOwner(document.Path)
+			if !found || ambiguous {
+				peers := coreindex.AidlGeneratedPeersAutoOwner(
+					document,
+					*typeName,
+					moduleGraph,
+					func(metadata.PathRef) bool { return false },
+				)
+				output.Peers = &peers
+			} else {
+				peers := buildAidlPeers(
+					document,
+					*typeName,
+					moduleGraph,
+					owner,
+					*cacheRoot,
+					rawMappings,
+				)
+				output.Peers = &peers
+			}
 		}
 	}
 	if *summaryOnly {
@@ -127,6 +142,71 @@ func runAidl(args []string) {
 		return
 	}
 	writeJSON(output)
+}
+
+func buildAidlPeers(
+	document aidl.Document,
+	typeName string,
+	moduleGraph graph.ModuleGraph,
+	moduleName string,
+	cacheRoot string,
+	rawMappings []string,
+) aidl.PeerReport {
+	mapper := pathmap.Mapper{Mappings: parsePathMappings(rawMappings)}
+	exists := func(ref metadata.PathRef) bool {
+		local, ok := localMetadataPath(mapper, ref)
+		if !ok {
+			return false
+		}
+		_, err := os.Stat(string(local))
+		return err == nil
+	}
+	archiveEntries := make([]aidl.ArchiveEntry, 0)
+	diagnostics := make([]model.Diagnostic, 0)
+	if cacheRoot != "" {
+		for _, archiveRef := range moduleGraph.SourceArchives(moduleName) {
+			local, ok := localMetadataPath(mapper, archiveRef)
+			if !ok {
+				continue
+			}
+			extracted := generated.ExtractSrcJar(
+				string(local),
+				cacheRoot,
+				generated.DefaultLimits(),
+			)
+			diagnostics = append(diagnostics, extracted.Diagnostics...)
+			if extracted.Archive == nil {
+				continue
+			}
+			for entry, entryPath := range extracted.Archive.Entries {
+				archiveEntries = append(archiveEntries, aidl.ArchiveEntry{
+					Archive:   archiveRef,
+					Entry:     entry,
+					LocalPath: entryPath,
+				})
+			}
+		}
+	}
+	peers := coreindex.AidlGeneratedPeersWithArchives(
+		document,
+		typeName,
+		moduleGraph,
+		moduleName,
+		exists,
+		archiveEntries,
+	)
+	peers.Diagnostics = append(peers.Diagnostics, diagnostics...)
+	return peers
+}
+
+func localMetadataPath(
+	mapper pathmap.Mapper,
+	ref metadata.PathRef,
+) (model.LocalPath, bool) {
+	if ref.ExternalPath != "" {
+		return mapper.ExternalToLocal(ref.ExternalPath)
+	}
+	return "", false
 }
 
 func parsePathMappings(values []string) []model.PathMapping {
