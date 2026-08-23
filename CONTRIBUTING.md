@@ -22,6 +22,11 @@ Commit subjects use Conventional Commits, for example:
 feat(topology): resolve source providers by prefix priority
 ```
 
-Every commit requires one `Change-Id` footer. The configured commit hook generates it automatically; contributors
-without that hook must install a compatible hook or provide a valid Change-Id manually. DCO `Signed-off-by`
-footers are not required. Do not add AI, tool, or generator attribution to commit messages.
+Every commit-message line, including body and footers, must be at most
+75 characters long.
+
+Every commit requires one `Change-Id` footer. The configured commit hook
+generates it automatically; contributors without that hook must install a
+compatible hook or provide a valid Change-Id manually. DCO `Signed-off-by`
+footers are not required. Do not add AI, tool, or generator attribution to
+commit messages.

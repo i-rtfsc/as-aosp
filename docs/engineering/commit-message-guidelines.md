@@ -115,7 +115,7 @@ feat: changes for path
 
 - 正文可以使用英文或中文，但一个 commit 内保持同一种语言；
 - 公共产品和跨团队提交优先使用英文；
-- 每行不超过 100 个字符，尽量在 72 至 80 字符处自然换行；
+- 每一行都不得超过 75 个字符，正文尽量在 72 字符前自然换行；
 - 同一逻辑段连续换行，段落之间保留一个空行；
 - 行为、协议、数据、构建、兼容性或安全边界变化必须有正文；
 - 验证必须写工程入口，例如 `make check`，不能只写 `tests passed`；
@@ -192,6 +192,23 @@ git diff --cached --stat
 git diff --cached
 make check
 ```
+
+检查待推送提交的 message 行宽：
+
+```bash
+for commit in $(git rev-list --reverse origin/dev-ide..HEAD); do
+  git show -s --format=%B "$commit" | awk -v commit="$commit" '
+    length($0) > 75 {
+      printf "%s:%d exceeds 75 characters: %s\n", commit, NR, $0
+      failed = 1
+    }
+    END { exit failed }
+  '
+done
+```
+
+没有 upstream 时，将 `origin/dev-ide..HEAD` 替换为明确的本地范围，
+例如 `HEAD~6..HEAD`。
 
 还必须确认：
 
