@@ -1,0 +1,73 @@
+core/topology/topology_test.go
+  s_0fcc3f909ad4ee::t_c196e1b1b0342f 1-5,7-28
+  s_0fcc3f909ad4ee::t_4b4c42b9cf90b5 6
+core/model/profile.go
+  s_0fcc3f909ad4ee::t_b478593b007bf0 46-54
+  s_0fcc3f909ad4ee::t_4df947c5836417 1-3,15-30,32-45
+  s_0fcc3f909ad4ee::t_b2b083bc431423 4-14,31
+core/topology/topology.go
+  s_0fcc3f909ad4ee::t_b2b083bc431423 13-20,24-30,50-53
+  s_0fcc3f909ad4ee::t_89d0d2697984dc 57
+  s_0fcc3f909ad4ee::t_4b4c42b9cf90b5 7
+  s_0fcc3f909ad4ee::t_d5c464880ed824 107-111
+  s_0fcc3f909ad4ee::t_4df947c5836417 1-6,8-12,21-23,31-49,54-56,58-106,112
+core/topology/discover_test.go
+  s_0fcc3f909ad4ee::t_17e2ae0f17afd6 60-78,80-92
+  s_0fcc3f909ad4ee::t_0f7f5ed3b8b8c6 37-59
+  s_0fcc3f909ad4ee::t_bcfb544daf57df 79
+  s_0fcc3f909ad4ee::t_c196e1b1b0342f 1-36
+core/pathmap/mapper_test.go
+  s_0fcc3f909ad4ee::t_c196e1b1b0342f 1-5,8-30
+  s_0fcc3f909ad4ee::t_0f7f5ed3b8b8c6 31-51
+  s_0fcc3f909ad4ee::t_4b4c42b9cf90b5 6-7
+core/model/diagnostics.go
+  s_0fcc3f909ad4ee::t_4df947c5836417 1-11,21
+  s_0fcc3f909ad4ee::t_b2b083bc431423 12-20
+core/model/path_test.go
+  s_0fcc3f909ad4ee::t_c196e1b1b0342f 1-21
+go.mod
+  s_0fcc3f909ad4ee::t_4df947c5836417 2-3
+  s_0fcc3f909ad4ee::t_89d0d2697984dc 1
+core/pathmap/mapper.go
+  s_0fcc3f909ad4ee::t_d5c464880ed824 27,58,62-65,68-72,74-95,100-121
+  s_0fcc3f909ad4ee::t_4df947c5836417 1-7,10-26,28-57,59-61,66-67,73,96-99,122
+  s_0fcc3f909ad4ee::t_4b4c42b9cf90b5 8-9
+core/topology/discover.go
+  s_0fcc3f909ad4ee::t_f34aa27bf94271 33-41
+  s_0fcc3f909ad4ee::t_89d0d2697984dc 43
+  s_0fcc3f909ad4ee::t_4b4c42b9cf90b5 9
+  s_0fcc3f909ad4ee::t_4df947c5836417 1-8,10-32,42,45-51,53,55-57,65-93,95-98,100-130
+  s_0fcc3f909ad4ee::t_17e2ae0f17afd6 44,52,54,58-64,94,99
+Makefile
+  s_0fcc3f909ad4ee::t_99b5aa7e31f17b 1,4,18
+  s_0fcc3f909ad4ee::t_4df947c5836417 2-3,8-14
+  s_0fcc3f909ad4ee::t_c7d34c9920008a 15,17
+  s_0fcc3f909ad4ee::t_677718afa5ecd1 16
+  s_0fcc3f909ad4ee::t_d5c464880ed824 5-7
+docs/roadmap/current-state.md
+  s_0fcc3f909ad4ee::t_99b5aa7e31f17b 9,14-15,36-37
+core/model/path.go
+  s_0fcc3f909ad4ee::t_4df947c5836417 1-53
+core/topology/profile.go
+  s_0fcc3f909ad4ee::t_b478593b007bf0 1-3,5-25
+  s_0fcc3f909ad4ee::t_4b4c42b9cf90b5 4
+core/model/profile_validate.go
+  s_0fcc3f909ad4ee::t_b478593b007bf0 1-5,7-20
+  s_0fcc3f909ad4ee::t_89d0d2697984dc 6
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "7456363650430f9b3d2b729d2e367b5ad6d03016",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
