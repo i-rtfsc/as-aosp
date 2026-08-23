@@ -24,7 +24,9 @@
 
 - 目标：Java native、静态导出、JNINativeMethod 和 JNI descriptor。
 - 技术前置：CORE-01、METADATA-01。
-- 下一验收：精确/推断/未解析三类结果 fixture。
+- 状态：Partial；Go core 与 `aosp-index jni` source-only fixture 已交付。
+- 已验收：Java/Kotlin declaration、静态导出、常见注册表、描述符校验、exact/inferred/unresolved 结果和 Java/C++ 双向查询。
+- 下一验收：接入 JetBrains/VS Code adapter，并补充复杂宏、`RegisterNatives` 变量流和真实多平台路径测试。
 
 ### AOSP-IDE-JB-01
 

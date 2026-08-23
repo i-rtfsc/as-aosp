@@ -1,6 +1,6 @@
 # JNI 跨语言索引设计
 
-> 状态：Target；首版实现 source-only 静态/注册表索引，复杂宏和运行时绑定保持 unresolved。
+> 状态：Partial；首版已实现 source-only 静态/注册表索引，复杂宏和运行时绑定保持 unresolved。
 
 ## 1. 责任与非目标
 
@@ -81,3 +81,12 @@ android/view/InputEventReceiver
 - 注册函数能绑定 class string；
 - Java/C++ 双向查询返回相同 link；
 - 多候选和动态 class 不被错误标记 exact。
+
+当前 CLI 夹具位于 `testdata/jni`，入口为：
+
+```text
+make jni-smoke
+```
+
+真实 AOSP 的只读探测已覆盖 `frameworks/base/core/java` 与 `core/jni`，但不替代
+Windows、挂载/软链接组合或 IDE host 验证。
