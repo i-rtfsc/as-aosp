@@ -74,6 +74,9 @@ type rawJavaInfo struct {
 	ResourceDirs    []string `json:"resource_dirs,omitempty"`
 	Javacflags      []string `json:"javacflags,omitempty"`
 	Kotlincflags    []string `json:"kotlincflags,omitempty"`
+	Aidl            *struct {
+		Srcs []string `json:"srcs,omitempty"`
+	} `json:"aidl,omitempty"`
 }
 
 func decodeJavaDeps(data []byte, destination *map[string]JavaModule) error {
@@ -88,6 +91,9 @@ func decodeJavaDeps(data []byte, destination *map[string]JavaModule) error {
 		module.Jars = pathRefs(item.Jars)
 		module.SrcJars = pathRefs(item.SrcJars)
 		module.AidlIncludeDirs = pathRefs(item.AidlIncludeDirs)
+		if item.Aidl != nil {
+			module.AidlSources = pathRefs(item.Aidl.Srcs)
+		}
 		module.ResourceDirs = pathRefs(item.ResourceDirs)
 		(*destination)[name] = module
 	}

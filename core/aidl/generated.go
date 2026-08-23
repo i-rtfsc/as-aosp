@@ -33,12 +33,20 @@ type GeneratedPeer struct {
 	Origin     string           `json:"origin"`
 	Confidence string           `json:"confidence"`
 	Exists     bool             `json:"exists"`
+	LocalPath  model.LocalPath  `json:"localPath,omitempty"`
+}
+
+type ArchiveEntry struct {
+	Archive   metadata.PathRef `json:"archive"`
+	Entry     string           `json:"entry"`
+	LocalPath model.LocalPath  `json:"localPath"`
 }
 
 type PeerOptions struct {
 	GeneratedPaths []metadata.PathRef
 	IncludeRoots   []metadata.PathRef
 	SourceArchives []metadata.PathRef
+	ArchiveEntries []ArchiveEntry
 	Exists         func(metadata.PathRef) bool
 }
 
@@ -73,7 +81,8 @@ func (index Index) GeneratedPeers(document Document, typeName string, options Pe
 	add(PeerJava, PeerSource, basePath+".java")
 	if nested {
 		report.Peers = peers
-		return applyGeneratedPaths(report, options)
+		report = applyGeneratedPaths(report, options)
+		return applyArchiveEntries(report, options)
 	}
 	if declaration.Kind == DeclarationInterface {
 		add(PeerCpp, PeerCppSource, basePath+".cpp")
@@ -88,14 +97,15 @@ func (index Index) GeneratedPeers(document Document, typeName string, options Pe
 		add(PeerNdk, PeerHeader, path.Join("aidl", packagePath, baseName+".h"))
 	}
 	report.Peers = peers
-	return applyGeneratedPaths(report, options)
+	report = applyGeneratedPaths(report, options)
+	return applyArchiveEntries(report, options)
 }
 
 func applyGeneratedPaths(report PeerReport, options PeerOptions) PeerReport {
 	for index := range report.Peers {
 		peer := &report.Peers[index]
 		for _, generated := range options.GeneratedPaths {
-			if !sameGeneratedSuffix(peer.Path.Raw, generated.Raw) {
+			if !matchesGeneratedPeer(*peer, generated.Raw) {
 				continue
 			}
 			if options.Exists == nil || !options.Exists(generated) {
@@ -108,6 +118,70 @@ func applyGeneratedPaths(report PeerReport, options PeerOptions) PeerReport {
 			peer.Exists = true
 			break
 		}
+	}
+	return report
+}
+
+func matchesGeneratedPeer(peer GeneratedPeer, actual string) bool {
+	actual = strings.TrimPrefix(
+		path.Clean(strings.ReplaceAll(actual, "\\", "/")),
+		"./",
+	)
+	if !sameGeneratedSuffix(peer.Path.Raw, actual) {
+		return false
+	}
+	if peer.Language == PeerCpp && peer.Kind == PeerHeader {
+		expected := strings.TrimPrefix(peer.Path.Raw, "./")
+		if strings.HasSuffix(actual, "/aidl/"+expected) {
+			return false
+		}
+	}
+	if peer.Language == PeerNdk {
+		return strings.Contains(actual, "/aidl/") ||
+			strings.HasPrefix(actual, "aidl/")
+	}
+	return true
+}
+
+func applyArchiveEntries(
+	report PeerReport,
+	options PeerOptions,
+) PeerReport {
+	foundJava := false
+	for index := range report.Peers {
+		peer := &report.Peers[index]
+		if peer.Language != PeerJava || peer.Exists {
+			if peer.Language == PeerJava && peer.Exists {
+				foundJava = true
+			}
+			continue
+		}
+		for _, entry := range options.ArchiveEntries {
+			if !sameGeneratedSuffix(peer.Path.Raw, entry.Entry) {
+				continue
+			}
+			peer.Path = metadata.PathRef{
+				Raw:  entry.Archive.Raw + "!/" + entry.Entry,
+				Kind: metadata.PathGenerated,
+			}
+			peer.Origin = "build-srcjar"
+			peer.Confidence = "exact"
+			peer.Exists = true
+			peer.LocalPath = entry.LocalPath
+			foundJava = true
+			break
+		}
+	}
+	if len(options.SourceArchives) > 0 && !foundJava {
+		report.Diagnostics = append(
+			report.Diagnostics,
+			model.Diagnostic{
+				Code:     "GENERATED_ENTRY_NOT_FOUND",
+				Severity: model.SeverityWarning,
+				Stage:    "aidl-generated",
+				Message:  "generated Java entry was not found in source archives",
+			},
+		)
 	}
 	return report
 }

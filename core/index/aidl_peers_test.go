@@ -51,3 +51,29 @@ func TestAidlGeneratedPeersUsesModuleGraphEvidence(t *testing.T) {
 	}
 	t.Fatal("Java peer not found")
 }
+
+func TestAidlGeneratedPeersSelectsOwnerFromMetadata(t *testing.T) {
+	document := aidl.Parse(
+		"android/demo/IFoo.aidl",
+		"package android.demo; interface IFoo {}",
+	)
+	moduleGraph := graph.Build(metadata.Snapshot{
+		Java: map[string]metadata.JavaModule{
+			"framework": {
+				Name: "framework",
+				AidlSources: []metadata.PathRef{
+					metadata.NewPathRef("android/demo/IFoo.aidl"),
+				},
+			},
+		},
+	})
+	report := AidlGeneratedPeersAutoOwner(
+		document,
+		"android.demo.IFoo",
+		moduleGraph,
+		func(metadata.PathRef) bool { return false },
+	)
+	if len(report.Peers) == 0 || len(report.Diagnostics) != 0 {
+		t.Fatalf("report: %+v", report)
+	}
+}

@@ -28,6 +28,7 @@ type Module struct {
 	SrcJars         []metadata.PathRef `json:"srcjars,omitempty"`
 	Dependencies    []string           `json:"dependencies,omitempty"`
 	AidlIncludeDirs []metadata.PathRef `json:"aidlIncludeDirs,omitempty"`
+	AidlSources     []metadata.PathRef `json:"aidlSources,omitempty"`
 	CC              *metadata.CCModule `json:"cc,omitempty"`
 }
 
@@ -43,7 +44,6 @@ func (g ModuleGraph) GeneratedPaths(moduleName string) []metadata.PathRef {
 		return []metadata.PathRef{}
 	}
 	result := addPathRefs(nil, module.Generated)
-	result = addPathRefs(result, module.SrcJars)
 	for _, source := range module.Sources {
 		if source.Kind == metadata.PathGenerated || source.Kind == metadata.PathExternalAbsolute && strings.Contains(strings.ReplaceAll(source.Raw, "\\", "/"), "/out/") {
 			result = addPathRefs(result, []metadata.PathRef{source})
@@ -58,6 +58,25 @@ func (g ModuleGraph) AidlIncludeDirs(moduleName string) []metadata.PathRef {
 		return []metadata.PathRef{}
 	}
 	return addPathRefs(nil, module.AidlIncludeDirs)
+}
+
+func (g ModuleGraph) AidlOwner(
+	repoPath model.RepoPath,
+) (string, bool, bool) {
+	owners := make([]string, 0)
+	for name, module := range g.Modules {
+		for _, source := range module.AidlSources {
+			if source.RepoPath == repoPath {
+				owners = append(owners, name)
+				break
+			}
+		}
+	}
+	sort.Strings(owners)
+	if len(owners) == 1 {
+		return owners[0], true, false
+	}
+	return "", false, len(owners) > 1
 }
 
 func (g ModuleGraph) SourceArchives(moduleName string) []metadata.PathRef {
@@ -80,6 +99,7 @@ func Build(snapshot metadata.Snapshot) ModuleGraph {
 		module.SrcJars = addPathRefs(module.SrcJars, javaModule.SrcJars)
 		module.Dependencies = addStrings(module.Dependencies, javaModule.Dependencies)
 		module.AidlIncludeDirs = addPathRefs(module.AidlIncludeDirs, javaModule.AidlIncludeDirs)
+		module.AidlSources = addPathRefs(module.AidlSources, javaModule.AidlSources)
 		graph.Modules[name] = module
 	}
 	for name, ccModule := range snapshot.CC {

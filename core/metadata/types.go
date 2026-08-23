@@ -55,6 +55,7 @@ type JavaModule struct {
 	Jars            []PathRef `json:"jars,omitempty"`
 	SrcJars         []PathRef `json:"srcjars,omitempty"`
 	AidlIncludeDirs []PathRef `json:"aidlIncludeDirs,omitempty"`
+	AidlSources     []PathRef `json:"aidlSources,omitempty"`
 	ResourceDirs    []PathRef `json:"resourceDirs,omitempty"`
 	CompilerFlags   []string  `json:"compilerFlags,omitempty"`
 }

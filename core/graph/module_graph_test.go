@@ -29,7 +29,27 @@ func TestGeneratedPathsIncludesOutBackedSources(t *testing.T) {
 		Sources: []metadata.PathRef{metadata.NewPathRef("/srv/aosp/out/generated/android/demo/IFoo.java")},
 		SrcJars: []metadata.PathRef{metadata.NewPathRef("/srv/aosp/out/generated/foo.srcjar")},
 	}}})
-	if paths := result.GeneratedPaths("foo"); len(paths) != 2 {
+	if paths := result.GeneratedPaths("foo"); len(paths) != 1 {
 		t.Fatalf("paths: %+v", paths)
+	}
+}
+
+func TestAidlOwnerUsesExactMetadataSource(t *testing.T) {
+	result := Build(metadata.Snapshot{Java: map[string]metadata.JavaModule{
+		"framework": {
+			Name: "framework",
+			AidlSources: []metadata.PathRef{
+				metadata.NewPathRef("android/demo/IFoo.aidl"),
+			},
+		},
+	}})
+	owner, found, ambiguous := result.AidlOwner("android/demo/IFoo.aidl")
+	if !found || ambiguous || owner != "framework" {
+		t.Fatalf(
+			"owner=%q found=%v ambiguous=%v",
+			owner,
+			found,
+			ambiguous,
+		)
 	}
 }

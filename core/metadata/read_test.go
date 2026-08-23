@@ -24,6 +24,10 @@ func TestLoadDirectoryReadsAllSupportedMetadata(t *testing.T) {
 	if java.Jars[0].Kind != PathExternalAbsolute {
 		t.Fatalf("jar path kind: %+v", java.Jars[0])
 	}
+	if len(java.AidlSources) != 1 ||
+		java.AidlSources[0].RepoPath != "android/demo/IFoo.aidl" {
+		t.Fatalf("AIDL sources: %+v", java.AidlSources)
+	}
 }
 
 func hasRepoPath(values []PathRef, expected string) bool {
