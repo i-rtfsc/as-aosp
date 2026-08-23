@@ -1,0 +1,84 @@
+docs/product/scope-and-non-goals.md
+  s_0fcc3f909ad4ee::t_a57fd6bab35fbf 1-34
+docs/engineering/build-and-test-guide.md
+  s_0fcc3f909ad4ee::t_85aac8406f7c3d 1-10,12-20,22-48
+  s_0fcc3f909ad4ee::t_c7d34c9920008a 11,21
+docs/architecture/system-architecture.md
+  s_0fcc3f909ad4ee::t_85aac8406f7c3d 1-78
+docs/decisions/dev-ide-repository-boundary.md
+  s_0fcc3f909ad4ee::t_a57fd6bab35fbf 1-28
+docs/design/index-engine-design.md
+  s_0fcc3f909ad4ee::t_a552734d51c4ee 1-74
+docs/design/protocol-and-profile-design.md
+  s_0fcc3f909ad4ee::t_a552734d51c4ee 1-61
+docs/roadmap/README.md
+  s_0fcc3f909ad4ee::t_85aac8406f7c3d 1-26
+docs/product/product-overview.md
+  s_0fcc3f909ad4ee::t_a57fd6bab35fbf 1-44
+docs/roadmap/current-state.md
+  s_0fcc3f909ad4ee::t_85aac8406f7c3d 1-8,10-13,16-35
+  s_0fcc3f909ad4ee::t_c92ef3f9220dc2 9,14-15,36
+docs/decisions/workspace-view-separation.md
+  s_0fcc3f909ad4ee::t_a57fd6bab35fbf 1-38
+docs/product/terminology.md
+  s_0fcc3f909ad4ee::t_a57fd6bab35fbf 1-21
+docs/design/ide-client-and-navigation-design.md
+  s_0fcc3f909ad4ee::t_a552734d51c4ee 1-67
+docs/engineering/code-guidelines.md
+  s_0fcc3f909ad4ee::t_85aac8406f7c3d 1-33
+docs/decisions/shared-go-index-engine.md
+  s_0fcc3f909ad4ee::t_a57fd6bab35fbf 1-41
+docs/design/workspace-topology-and-path-mapping-design.md
+  s_0fcc3f909ad4ee::t_a552734d51c4ee 1-75
+docs/aosp-ide-plugin-feasibility-report.md
+  s_0fcc3f909ad4ee::t_dbb26aa0631ff2 178,182,184-208,215,218-221,229-233,236-262,264,266-291,315-323,335,338-349,351
+  s_0fcc3f909ad4ee::t_4fda2388c55149 292-312
+  s_0fcc3f909ad4ee::t_76d50405534496 97,148,161,476
+  s_0fcc3f909ad4ee::t_e15610be76fb6b 331-332
+  s_0fcc3f909ad4ee::t_dcdf97ab145233 40-55
+  s_0fcc3f909ad4ee::t_e764d128f25300 461
+  s_0fcc3f909ad4ee::t_42bf2ea2966f3f 1-4,6-39,56-96,98-147,149-160,162-177,179-181,183,209-214,216-217,222-228,234-235,263,265,313-314,324-330,333-334,336-337,350,352-460,462-475
+  s_0fcc3f909ad4ee::t_10b9bdc269480c 5
+docs/architecture/source-and-module-boundaries.md
+  s_0fcc3f909ad4ee::t_85aac8406f7c3d 1-61
+docs/roadmap/delivery-plan.md
+  s_0fcc3f909ad4ee::t_85aac8406f7c3d 1-61
+docs/README.md
+  s_0fcc3f909ad4ee::t_43a3cbb130ea78 64-67
+  s_0fcc3f909ad4ee::t_a57fd6bab35fbf 1-63
+docs/aosp-ide-plugin-design.md
+  s_0fcc3f909ad4ee::t_9d21dcfab00982 406,1050,1471
+  s_0fcc3f909ad4ee::t_76d50405534496 7,9,173
+  s_0fcc3f909ad4ee::t_5c4d036ec2e742 1101-1104,1112-1113,1115
+  s_0fcc3f909ad4ee::t_4b93f471a6074f 452,464,479-480
+  s_0fcc3f909ad4ee::t_bd098e3bff7e7b 1072,1074,1081,1086,1100,1105-1111,1114,1117,1296-1298,1488,1523,1525
+  s_0fcc3f909ad4ee::t_080df1d0104357 1-6,8,10-72,76-94,120-123,125-129,131-144,146-149,202,204,206-234,236-237,239-242,244-247,249,287,330,332,334-345,348-350,352,370-376,380-387,389-391,411,427-432,434-451,453-456,458-463,465-478,481-541,544-808,818,821-899,901-902,904,931-932,934-943,945-953,955-963,966,968,975-996,1001-1049,1054-1071,1073,1075-1080,1082-1085,1087-1099,1116,1118-1155,1167-1295,1299-1320,1329-1342,1346-1391,1398-1412,1423-1447,1451-1470,1472-1487,1489-1501,1509-1522,1524,1526-1530,1532-1539
+  s_0fcc3f909ad4ee::t_4fda2388c55149 115-119,303,306-329,351,368,393
+  s_0fcc3f909ad4ee::t_79e4bf937113a5 433,457,542-543,809-817,819-820,900,903,905-930,933,944,954,964-965,967,969-974
+  s_0fcc3f909ad4ee::t_a5e3ce0f89c1bc 75,124,130
+  s_0fcc3f909ad4ee::t_e15610be76fb6b 412-426
+  s_0fcc3f909ad4ee::t_588abda016082a 1156-1166,1321-1328,1343-1345,1502-1508
+  s_0fcc3f909ad4ee::t_e764d128f25300 997-1000,1051-1053,1392-1397,1413-1422,1448-1450,1531
+  s_0fcc3f909ad4ee::t_8ad22426515ffe 73-74,95-114,145,150-172,174-201,203,205,235,238,243,248,250-286,288-302,304-305,331,333,346-347,353-367,369,377-379,388,392,394-405,407-410
+docs/roadmap/active-execution-plan.md
+  s_0fcc3f909ad4ee::t_4b4c42b9cf90b5 29
+  s_0fcc3f909ad4ee::t_85aac8406f7c3d 1-28,30-31
+README.md
+  s_0fcc3f909ad4ee::t_c92ef3f9220dc2 3,5,7-21
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "829ab8586e54561c2089254e6767bd03cabeed6d",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
