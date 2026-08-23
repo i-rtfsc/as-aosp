@@ -22,6 +22,6 @@ metadata-smoke:
 	go run ./cmd/aosp-index metadata --root testdata/metadata/out --summary
 
 aidl-smoke:
-	go run ./cmd/aosp-index aidl --root testdata/aidl/source --file android/demo/IFoo.aidl --type android.other.IBar --summary
+	go run ./cmd/aosp-index aidl --root testdata/aidl/source --file android/demo/IFoo.aidl --type android.demo.IFoo --metadata-root testdata/metadata/out --module framework-minus-apex --path-map /srv/aosp/out/soong/generated=testdata/aidl/generated --summary
 
 check: fmt-check vet test-core smoke metadata-smoke aidl-smoke

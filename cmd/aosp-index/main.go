@@ -6,11 +6,14 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/i-rtfsc/as-aosp/core/aidl"
 	"github.com/i-rtfsc/as-aosp/core/graph"
+	coreindex "github.com/i-rtfsc/as-aosp/core/index"
 	"github.com/i-rtfsc/as-aosp/core/metadata"
 	"github.com/i-rtfsc/as-aosp/core/model"
+	"github.com/i-rtfsc/as-aosp/core/pathmap"
 	"github.com/i-rtfsc/as-aosp/core/topology"
 )
 
@@ -41,12 +44,28 @@ func main() {
 type aidlOutput struct {
 	Report     aidl.LoadReport  `json:"report"`
 	Resolution *aidl.Resolution `json:"resolution,omitempty"`
+	Peers      *aidl.PeerReport `json:"peers,omitempty"`
 }
 
 type aidlSummaryOutput struct {
 	Summary     aidl.Summary       `json:"summary"`
 	Resolution  *aidl.Resolution   `json:"resolution,omitempty"`
+	Peers       *aidl.PeerReport   `json:"peers,omitempty"`
 	Diagnostics []model.Diagnostic `json:"diagnostics"`
+}
+
+type mappingFlags []string
+
+func (values *mappingFlags) String() string {
+	return strings.Join(*values, ",")
+}
+
+func (values *mappingFlags) Set(value string) error {
+	if !strings.Contains(value, "=") {
+		return fmt.Errorf("path mapping must use external=local")
+	}
+	*values = append(*values, value)
+	return nil
 }
 
 func runAidl(args []string) {
@@ -54,7 +73,11 @@ func runAidl(args []string) {
 	root := flags.String("root", "", "AIDL source root")
 	file := flags.String("file", "", "RepoPath of the AIDL document")
 	typeName := flags.String("type", "", "canonical or imported type to resolve")
+	metadataRoot := flags.String("metadata-root", "", "Soong metadata root")
+	moduleName := flags.String("module", "", "Soong module for generated peers")
 	summaryOnly := flags.Bool("summary", false, "print only summary and resolution")
+	var rawMappings mappingFlags
+	flags.Var(&rawMappings, "path-map", "external=local generated path mapping")
 	_ = flags.Parse(args)
 	if *root == "" {
 		fatal(errors.New("--root is required"))
@@ -75,12 +98,48 @@ func runAidl(args []string) {
 		}
 		resolution := report.Index.Resolve(document, *typeName)
 		output.Resolution = &resolution
+		if *metadataRoot != "" && *moduleName != "" {
+			metadataReport := metadata.LoadDirectory(*metadataRoot)
+			moduleGraph := graph.Build(metadataReport.Snapshot)
+			mapper := pathmap.Mapper{Mappings: parsePathMappings(rawMappings)}
+			peers := coreindex.AidlGeneratedPeers(
+				document,
+				*typeName,
+				moduleGraph,
+				*moduleName,
+				func(ref metadata.PathRef) bool {
+					if ref.ExternalPath == "" {
+						return false
+					}
+					local, ok := mapper.ExternalToLocal(ref.ExternalPath)
+					if !ok {
+						return false
+					}
+					_, err := os.Stat(string(local))
+					return err == nil
+				},
+			)
+			output.Peers = &peers
+		}
 	}
 	if *summaryOnly {
-		writeJSON(aidlSummaryOutput{Summary: report.Index.Summary(len(report.Diagnostics)), Resolution: output.Resolution, Diagnostics: report.Diagnostics})
+		writeJSON(aidlSummaryOutput{Summary: report.Index.Summary(len(report.Diagnostics)), Resolution: output.Resolution, Peers: output.Peers, Diagnostics: report.Diagnostics})
 		return
 	}
 	writeJSON(output)
+}
+
+func parsePathMappings(values []string) []model.PathMapping {
+	mappings := make([]model.PathMapping, 0, len(values))
+	for _, value := range values {
+		parts := strings.SplitN(value, "=", 2)
+		mappings = append(mappings, model.PathMapping{
+			ExternalPrefix: parts[0],
+			LocalPrefix:    parts[1],
+			Kind:           "generated",
+		})
+	}
+	return mappings
 }
 
 type metadataOutput struct {
