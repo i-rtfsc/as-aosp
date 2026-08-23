@@ -1,0 +1,32 @@
+protocol/aosp/server.go
+  s_0fcc3f909ad4ee::t_26e28cc97c49ef 110-111
+  s_0fcc3f909ad4ee::t_5c12fafbbb6361 1-109,112-172
+cmd/aosp-indexd/main.go
+  s_0fcc3f909ad4ee::t_5c12fafbbb6361 1-6,8-14,22-25,27-28,30-34,36,39,41-43,46-48,51-54,56-59,61
+  s_0fcc3f909ad4ee::t_2e220672f9b045 7,15-21,26,29,35,37-38,40,44-45,49-50,55,60
+cmd/aosp-indexd/main_test.go
+  s_0fcc3f909ad4ee::t_2e220672f9b045 1-51
+protocol/aosp/server_test.go
+  s_0fcc3f909ad4ee::t_a1f5530fbe1b92 5,8-9,44-100
+  s_0fcc3f909ad4ee::t_5c12fafbbb6361 1-4,6-7,10-43,101-102
+Makefile
+  s_0fcc3f909ad4ee::t_6fc60800d54787 1,4,15-17,33,39
+  s_0fcc3f909ad4ee::t_2e220672f9b045 7,10,19,34
+  s_0fcc3f909ad4ee::t_d4fb1b41386cd5 35
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "9971ac93da2f8f4ad97d40c127fd7fa563e773c8",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
