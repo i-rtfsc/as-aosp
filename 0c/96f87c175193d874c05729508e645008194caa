@@ -1,0 +1,62 @@
+core/aidl/parser.go
+  s_0fcc3f909ad4ee::t_fd8f2a399c104a 15-16,62-66
+  s_0fcc3f909ad4ee::t_64bb11525ddb3e 71,86-90
+  s_0fcc3f909ad4ee::t_2613e9bae5e39e 156-162,255,272-274
+  s_0fcc3f909ad4ee::t_6db816aa6c4d24 303-310
+  s_0fcc3f909ad4ee::t_dc4a869c0795d2 164-166,170
+  s_0fcc3f909ad4ee::t_00c3de105a3865 1-14,17-56,58-61,67-70,72-85,91-138,146-152,154-155,169,172-173,175-180,182-184,186-187,198-207,209-213,235-254,256-271,275-281,283-302,311-412
+  s_0fcc3f909ad4ee::t_4ffea7fa6d12cd 57,139-145,153,163,167-168,171,174,181,185,188-197,208
+  s_0fcc3f909ad4ee::t_15a4544a53a6a8 232-234
+  s_0fcc3f909ad4ee::t_e3cb47a1d52d93 214-231,282
+testdata/aidl/source/android/demo/Data.aidl
+  s_0fcc3f909ad4ee::t_bd57a0fed56412 1-6
+testdata/aidl/source/android/other/IBar.aidl
+  s_0fcc3f909ad4ee::t_bd57a0fed56412 1-5
+core/aidl/index.go
+  s_0fcc3f909ad4ee::t_64bb11525ddb3e 36-45
+  s_0fcc3f909ad4ee::t_d882da9b170e65 1-22,25,29-35,46-52,64-79,95-148
+  s_0fcc3f909ad4ee::t_fd8f2a399c104a 23-24,26-28
+  s_0fcc3f909ad4ee::t_4ffea7fa6d12cd 53-63
+  s_0fcc3f909ad4ee::t_e3cb47a1d52d93 80-94
+core/aidl/parser_test.go
+  s_0fcc3f909ad4ee::t_bd57a0fed56412 1-38
+  s_0fcc3f909ad4ee::t_15a4544a53a6a8 67,69
+  s_0fcc3f909ad4ee::t_d665ea13ae396d 73
+  s_0fcc3f909ad4ee::t_2613e9bae5e39e 62-66,68,70-72
+  s_0fcc3f909ad4ee::t_64bb11525ddb3e 39-45
+  s_0fcc3f909ad4ee::t_5053a771c34281 54-61
+  s_0fcc3f909ad4ee::t_4ffea7fa6d12cd 46-53,74-75
+core/aidl/load_test.go
+  s_0fcc3f909ad4ee::t_bd57a0fed56412 1-15,17-19
+  s_0fcc3f909ad4ee::t_d269319ea25fb6 16
+testdata/aidl/source/android/demo/IFoo.aidl
+  s_0fcc3f909ad4ee::t_bd57a0fed56412 1-8
+core/aidl/lexer_test.go
+  s_0fcc3f909ad4ee::t_bd57a0fed56412 1-13
+core/aidl/index_test.go
+  s_0fcc3f909ad4ee::t_bd57a0fed56412 1-29
+  s_0fcc3f909ad4ee::t_4ffea7fa6d12cd 30-39
+core/aidl/load.go
+  s_0fcc3f909ad4ee::t_7ff71de1a9c611 58-62
+  s_0fcc3f909ad4ee::t_e3cb47a1d52d93 1-57,63-70
+core/aidl/lexer.go
+  s_0fcc3f909ad4ee::t_fd8f2a399c104a 131-133
+  s_0fcc3f909ad4ee::t_e3cb47a1d52d93 137
+  s_0fcc3f909ad4ee::t_00c3de105a3865 1-130,134-136,138-146
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "0c96f87c175193d874c05729508e645008194caa",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
