@@ -1,0 +1,24 @@
+cmd/aosp-index/main.go
+  s_0fcc3f909ad4ee::t_6646fa4e6f5289 10-11,24,31-32,38-54
+  s_0fcc3f909ad4ee::t_1d94eb61f399ce 55
+Makefile
+  s_0fcc3f909ad4ee::t_3dd3f8d2b9de43 24
+  s_0fcc3f909ad4ee::t_6646fa4e6f5289 1,4,21-22
+  s_0fcc3f909ad4ee::t_6b8010bb89e06f 23
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "798ff00622910b42975e75f4033dfc2817ad5a9a",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
