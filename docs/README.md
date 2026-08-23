@@ -11,7 +11,8 @@
 4. [索引引擎设计](design/index-engine-design.md)。
 5. [IDE 客户端与跨语言导航设计](design/ide-client-and-navigation-design.md)。
 6. [AIDL 语言与解析器设计](design/aidl-language-and-resolver-design.md)。
-7. [当前状态](roadmap/current-state.md)和[当前交付计划](roadmap/delivery-plan.md)。
+7. [Generated Source Store 设计](design/generated-source-store-design.md)。
+8. [当前状态](roadmap/current-state.md)和[当前交付计划](roadmap/delivery-plan.md)。
 
 ## 2. 文档权威性
 
