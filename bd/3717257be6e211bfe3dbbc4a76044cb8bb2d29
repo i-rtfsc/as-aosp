@@ -1,0 +1,21 @@
+.gitignore
+  s_0fcc3f909ad4ee::t_c7e0093af9a5b7 41
+testdata/metadata/out/compile_commands.json
+  s_0fcc3f909ad4ee::t_cdb0a689a12c35 1-7
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "bd3717257be6e211bfe3dbbc4a76044cb8bb2d29",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
