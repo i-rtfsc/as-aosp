@@ -13,7 +13,7 @@
 
 - 根目录、Makefile 和 Phase 0 工程入口已完成；IDE 和远程执行入口尚未实现。
 - WorkspaceTopology、PathMapper、SourceMount 和四类 metadata reader 已有初始实现，但真实 AOSP schema 覆盖、路径映射接线和完整 topology 发现仍未闭合。
-- AIDL source-only parser/index 已有初始实现；generated peers、Soong AIDL metadata 和 JNI 尚未接入。
+- AIDL source parser/index 和初始 generated peer 已接入 ModuleGraph；Java direct generated file 可以由 build metadata 升级为 exact，srcjar entry、C++/NDK out 证据和 JNI 尚未闭合。
 
 ## 3. Target
 
@@ -26,7 +26,7 @@
 - 当前没有发布版跨平台 engine binary；
 - 当前没有任何远程执行服务；
 - 当前不声称 Android Studio/IDEA/VS Code 已支持；
-- 当前不声称 Java/generated AIDL peers、完整 AIDL include roots 或 JNI 已可跳转。
+- 当前不声称 srcjar 内 Java entry、完整 AIDL include roots、C++/NDK build-backed peers 或 JNI 已可跳转。
 
 ## 5. Evidence
 

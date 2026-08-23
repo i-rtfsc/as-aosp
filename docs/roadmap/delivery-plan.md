@@ -22,9 +22,10 @@
 
 ### AOSP-IDE-AIDL-GENERATED-01
 
-- 目标：接入 Soong AIDL include roots、srcjar/generated files，以及 Java/C++/NDK generated peer 映射。
+- 目标：完成 Soong AIDL include roots、srcjar/generated files，以及 Java/C++/NDK generated peer 映射。
 - 技术前置：AIDL source parser/index 和 metadata reader 基线已具备。
-- 下一验收：同一 AIDL fixture 在 source-only 与 build-backed 模式返回不同来源和置信度，且 generated file 缺失时只降级不失败。
+- 当前已有：命名候选、Java direct generated exact 升级、include roots 和 srcjar container 证据。
+- 下一验收：解压并匹配 srcjar entry；用 C++/NDK out fixture 升级 exact；按 AIDL RepoPath 自动选择 owning module。
 - 负能力：不执行 AIDL compiler，不复刻 stable API/hash 检查。
 
 ### AOSP-IDE-JNI-01

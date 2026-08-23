@@ -32,9 +32,9 @@
 
 ## 4. AOSP-IDE-AIDL-GENERATED-01
 
-1. 从 Java metadata 读取 AIDL include dirs 和 srcjars。
-2. 建立 AIDL declaration 到 generated Java/C++/NDK 路径规则。
-3. 用 out 中存在的文件将 inferred 升级为 build-backed exact。
-4. generated file 缺失时保留 source declaration 和诊断。
+1. 解压受控 srcjar 并按 package/type 匹配 Java entry。
+2. 增加 C++/NDK direct generated fixture 和 exact 升级。
+3. 从 ModuleGraph source/include 信息反查 AIDL owning module。
+4. generated file 缺失时继续保留 source declaration 和诊断。
 
-下一验收：source-only 和 build-backed fixture 的 peer 结果可区分。
+下一验收：Java srcjar、C++ 和 NDK peer 都有 build-backed fixture。
