@@ -1,0 +1,25 @@
+docs/engineering/commit-message-guidelines.md
+  s_0fcc3f909ad4ee::t_bb839e93e59e8b 213-219
+docs/engineering/build-and-test-guide.md
+  s_0fcc3f909ad4ee::t_bb839e93e59e8b 12
+scripts/check-commit-messages.sh
+  s_0fcc3f909ad4ee::t_bb839e93e59e8b 1-28
+Makefile
+  s_0fcc3f909ad4ee::t_bb839e93e59e8b 1,4,27-30
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "26840bbe49ad43e890c20383c9ae1a428bbe948d",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
