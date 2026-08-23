@@ -42,6 +42,52 @@ Profile
 
 reader 必须忽略未知字段，保留 source path、external path 和 fingerprint。不要把绝对路径直接当 symbol identity。
 
+### 4.1 归一化路径引用
+
+reader 不把字符串路径直接转换成 `RepoPath`。每个路径先变成：
+
+```text
+PathRef
+  raw
+  kind: repo-relative | external-absolute | generated | unknown
+  repoPath, when provable
+  externalPath, when absolute
+```
+
+只有经过 WorkspaceTopology/PathMapper 证明的路径才填 `repoPath`。服务器 compdb 中的
+`directory`、`file`、`-I`、`--sysroot` 和 response-file 路径保留原值，后续由 pathmap 生成本机 overlay。
+
+### 4.2 Reader 输入合同
+
+| Reader | 输入形态 | 归一化字段 |
+|---|---|---|
+| Java deps | module name -> IdeInfo | srcs、deps、jars、srcjars、AIDL include dirs、resources |
+| CC deps | clang/compiler + modules map | srcs、include dirs、sysroot、flags、compiler |
+| module-info | module name -> core/extra info | paths、deps、srcs、srcjars、classes、tags |
+| compdb | entry array | directory、arguments、file、output |
+
+未知 JSON 字段忽略；文件不存在、JSON 损坏和顶层类型错误只影响对应 reader，并产生稳定 diagnostic code。
+
+### 4.3 ModuleGraph 合并
+
+以 Soong module name 为 key 合并 reader 结果：
+
+```text
+Module
+  id/name
+  origins: java-deps | cc-deps | module-info | compdb
+  moduleTypes/classes/tags
+  sources: PathRef[]
+  generated: PathRef[]
+  jars/srcjars
+  dependencies
+  aidlIncludeDirs
+  ccCompileEntries
+```
+
+合并规则：列表去重并保持确定性排序；空字段不覆盖已有字段；同一 module 的冲突 scalar 保留第一
+个有来源值并产生 warning；compdb 以 `file` 建索引，不假设一条记录代表全部 variant。
+
 ## 5. Generated Source Store
 
 - srcjar 解压到 IDE cache；
@@ -72,3 +118,7 @@ snapshot key 至少包含 profile id、topology fingerprint、metadata fingerpri
 - source-only 不需要 out；
 - generated 缓存不污染源码；
 - 相同逻辑 RepoPath 在不同 OS 得到相同 symbol key。
+- 四类 metadata fixture 可独立读取，未知字段不会失败；
+- 缺失一个 metadata 文件时其他 reader 仍能产出结果；
+- ModuleGraph 合并结果包含来源、依赖、生成物和 compdb 条目；
+- 外部绝对路径不会被错误标记为 RepoPath。
