@@ -1,19 +1,22 @@
-.PHONY: help fmt fmt-check vet test-core smoke metadata-smoke aidl-smoke jni-smoke commit-message-check check
+.PHONY: help fmt fmt-check vet test-core test-protocol smoke metadata-smoke aidl-smoke jni-smoke rpc-smoke commit-message-check check
 
 help:
-	@printf '%s\n' 'make fmt                  Format Go source' 'make fmt-check            Check Go formatting' 'make vet                  Run Go static checks' 'make test-core            Run core tests' 'make smoke                Run CLI fixture smoke' 'make metadata-smoke       Read metadata fixture' 'make aidl-smoke           Read AIDL fixture' 'make jni-smoke            Read JNI fixture' 'make commit-message-check Check message width and Change-Id' 'make check                Run all Phase 0 checks'
+	@printf '%s\n' 'make fmt                  Format Go source' 'make fmt-check            Check Go formatting' 'make vet                  Run Go static checks' 'make test-core            Run core tests' 'make test-protocol        Run protocol tests' 'make smoke                Run CLI fixture smoke' 'make metadata-smoke       Read metadata fixture' 'make aidl-smoke             Read AIDL fixture' 'make jni-smoke              Read JNI fixture' 'make rpc-smoke             Run JSON-RPC daemon smoke' 'make commit-message-check  Check message width and Change-Id' 'make check                 Run all checks'
 
 fmt:
-	gofmt -w core cmd
+	gofmt -w core protocol cmd
 
 fmt-check:
-	@test -z "$$(gofmt -l core cmd)" || (echo 'Go files need gofmt:'; gofmt -l core cmd; exit 1)
+	@test -z "$$(gofmt -l core protocol cmd)" || (echo 'Go files need gofmt:'; gofmt -l core protocol cmd; exit 1)
 
 test-core:
 	go test ./core/...
 
+test-protocol:
+	go test ./protocol/...
+
 vet:
-	go vet ./core/... ./cmd/...
+	go vet ./core/... ./protocol/... ./cmd/...
 
 smoke:
 	go run ./cmd/aosp-index scan --profile testdata/source-only/profile.json
@@ -27,7 +30,10 @@ aidl-smoke:
 jni-smoke:
 	go run ./cmd/aosp-index jni --java-root testdata/jni/source/java --cpp-root testdata/jni/source/cpp --class android.security.Scrypt --method nativeScrypt --summary
 
+rpc-smoke:
+	go test ./cmd/aosp-indexd -run '^TestDaemonSmoke$$' -count=1
+
 commit-message-check:
 	bash scripts/check-commit-messages.sh
 
-check: fmt-check vet test-core smoke metadata-smoke aidl-smoke jni-smoke commit-message-check
+check: fmt-check vet test-core test-protocol smoke metadata-smoke aidl-smoke jni-smoke rpc-smoke commit-message-check
