@@ -1,0 +1,22 @@
+Makefile
+  s_0fcc3f909ad4ee::t_c6632e93d04086 25
+cmd/aosp-index/main.go
+  s_0fcc3f909ad4ee::t_c6632e93d04086 9,13,16,47,53,57-70,76-77,79-80,101-123,126,132-143
+  s_0fcc3f909ad4ee::t_a0443f6b3b6600 144
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "5446d6ff95fdd33088508bb55120b9f1d5600b1f",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
