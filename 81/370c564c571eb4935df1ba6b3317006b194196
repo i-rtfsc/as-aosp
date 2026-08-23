@@ -1,0 +1,35 @@
+core/jni/index_test.go
+  s_0fcc3f909ad4ee::t_4cfba34f58b21b 1-2,5,9,11-16,18-37,39-41,43-52,73-74
+  s_0fcc3f909ad4ee::t_560be813cc6865 3-4,6-8,10,17,38,42,53-72
+cmd/aosp-index/main.go
+  s_0fcc3f909ad4ee::t_c337393cf268ea 8,10,17,32,43-44,50,52-54,63-122,127-143,148-154,159-167,172-176
+  s_0fcc3f909ad4ee::t_15f211f3d99bcb 51,55-62,123-126,144-147,155-158,168-171
+  s_0fcc3f909ad4ee::t_2fd4ba205d112b 177
+testdata/jni/source/java/android/security/Scrypt.java
+  s_0fcc3f909ad4ee::t_c337393cf268ea 1-6
+testdata/jni/source/cpp/android_security_Scrypt.cpp
+  s_0fcc3f909ad4ee::t_c337393cf268ea 1-8
+core/jni/index.go
+  s_0fcc3f909ad4ee::t_ccf53fe9b232ff 1-20,22-47,52-57,65-66,68-121
+  s_0fcc3f909ad4ee::t_560be813cc6865 21
+  s_0fcc3f909ad4ee::t_a95a09283bb6dd 48-51
+  s_0fcc3f909ad4ee::t_89ea7f4bdf75cd 58-64,67
+Makefile
+  s_0fcc3f909ad4ee::t_c337393cf268ea 1,4,27-29,33
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "81370c564c571eb4935df1ba6b3317006b194196",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
