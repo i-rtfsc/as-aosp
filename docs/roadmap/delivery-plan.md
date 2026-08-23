@@ -20,12 +20,6 @@
 
 ## P1：语言和 IDE
 
-### AOSP-IDE-AIDL-01
-
-- 目标：AIDL parser、resolver、generated peer 和 source-only fallback。
-- 技术前置：CORE-01、METADATA-01。
-- 下一验收：package/import/interface/parcelable fixture 双向定义查询。
-
 ### AOSP-IDE-JNI-01
 
 - 目标：Java native、静态导出、JNINativeMethod 和 JNI descriptor。
