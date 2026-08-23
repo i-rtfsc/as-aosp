@@ -1,0 +1,47 @@
+docs/design/ide-client-and-navigation-design.md
+  s_0fcc3f909ad4ee::t_6dea6d7aae9c2b 23-24,80-118
+  s_5f30dac179bcb2::t_bfb187ed394109 119
+docs/roadmap/delivery-plan.md
+  s_0fcc3f909ad4ee::t_6dea6d7aae9c2b 42-43
+docs/roadmap/active-execution-plan.md
+  s_0fcc3f909ad4ee::t_6dea6d7aae9c2b 18-19,21
+clients/jetbrains/src/main/kotlin/io/github/irtfsc/aospide/engine/EngineProcess.kt
+  s_0fcc3f909ad4ee::t_013f31dfa718af 9,93-97
+  s_0fcc3f909ad4ee::t_5859177fd39130 7-8,24-28,38,52-54,75,83-92,98-99
+  s_0fcc3f909ad4ee::t_b39a0b79117339 1-6,10-23,29-37,39-51,55-74,76-79,81-82,100-102
+  s_0fcc3f909ad4ee::t_7628e468546554 80
+clients/jetbrains/src/test/kotlin/io/github/irtfsc/aospide/engine/EngineRpcClientTest.kt
+  s_0fcc3f909ad4ee::t_7628e468546554 12-14,23-38
+  s_0fcc3f909ad4ee::t_392b206567190a 39
+clients/jetbrains/src/test/kotlin/io/github/irtfsc/aospide/engine/EngineProcessTest.kt
+  s_0fcc3f909ad4ee::t_7628e468546554 23,53,78,80,84-86
+  s_0fcc3f909ad4ee::t_6ba44209242789 1-22,24-52,54-77,79,81-83,87-113
+clients/jetbrains/src/main/kotlin/io/github/irtfsc/aospide/engine/ManagedProcess.kt
+  s_0fcc3f909ad4ee::t_b39a0b79117339 1-55
+clients/jetbrains/src/main/kotlin/io/github/irtfsc/aospide/engine/EngineRpcClient.kt
+  s_0fcc3f909ad4ee::t_7628e468546554 3,12,37-54,74-75
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "842c2ccb6fe6f6f5291508194b67b8a3063de89a",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    },
+    "s_5f30dac179bcb2": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "019ffe38-b3cd-77e3-8987-f48bc62a086c",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
