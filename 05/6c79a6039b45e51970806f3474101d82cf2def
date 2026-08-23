@@ -1,0 +1,26 @@
+cmd/aosp-index/main.go
+  s_0fcc3f909ad4ee::t_d269319ea25fb6 10,25,34-35,41,44-45,52-56,58-77,82-83
+  s_0fcc3f909ad4ee::t_fd8f2a399c104a 42-43
+  s_0fcc3f909ad4ee::t_64bb11525ddb3e 46,49-51,57,78-81,84,92,94-96,100,107-110
+  s_0fcc3f909ad4ee::t_f5aeaae875d63c 47-48,93
+  s_0fcc3f909ad4ee::t_fc7f5f867e2163 85
+Makefile
+  s_0fcc3f909ad4ee::t_64bb11525ddb3e 22,25
+  s_0fcc3f909ad4ee::t_d269319ea25fb6 1,4,24,26-27
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "056c79a6039b45e51970806f3474101d82cf2def",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
