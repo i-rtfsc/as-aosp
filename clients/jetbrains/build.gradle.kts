@@ -29,6 +29,7 @@ dependencies {
 }
 
 intellijPlatform {
+    buildSearchableOptions = false
     pluginConfiguration {
         name = "AOSP IDE"
         version = project.version.toString()

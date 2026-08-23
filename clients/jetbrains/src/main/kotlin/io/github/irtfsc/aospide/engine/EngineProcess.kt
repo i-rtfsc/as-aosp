@@ -66,6 +66,12 @@ internal class EngineProcess(
     }
 
     @Synchronized
+    fun request(method: String, params: String, timeoutMillis: Long = 5_000): ByteArray {
+        val client = rpcClient ?: error("engine process is not running")
+        return callWithTimeout(timeoutMillis) { client.request(method, params) }
+    }
+
+    @Synchronized
     fun restart(
         executable: Path,
         arguments: List<String> = emptyList(),
