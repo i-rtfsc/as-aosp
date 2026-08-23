@@ -1,0 +1,35 @@
+clients/jetbrains/src/main/kotlin/io/github/irtfsc/aospide/profile/EngineProfileState.kt
+  s_0fcc3f909ad4ee::t_b75fb57b5a8b38 9-17
+clients/jetbrains/build.gradle.kts
+  s_0fcc3f909ad4ee::t_b75fb57b5a8b38 32
+clients/jetbrains/src/main/kotlin/io/github/irtfsc/aospide/profile/ProfileConfigurable.kt
+  s_0fcc3f909ad4ee::t_b75fb57b5a8b38 3,16,34,40-44,85,100-102,107-108,119,124-139,148-152
+  s_0fcc3f909ad4ee::t_4b92c15f9cb63e 1-2,4-15,17-33,35-39,45-84,86-99,103-106,109-118,120-123,140-147,153-156
+clients/jetbrains/src/test/kotlin/io/github/irtfsc/aospide/profile/ProfileJsonTest.kt
+  s_0fcc3f909ad4ee::t_4b92c15f9cb63e 1-20,22-28,36-37
+  s_0fcc3f909ad4ee::t_b75fb57b5a8b38 21,29-35
+clients/jetbrains/src/main/kotlin/io/github/irtfsc/aospide/profile/ProfileJson.kt
+  s_0fcc3f909ad4ee::t_b75fb57b5a8b38 17-18
+  s_0fcc3f909ad4ee::t_4b92c15f9cb63e 1-16,19-28
+clients/jetbrains/src/main/resources/META-INF/plugin.xml
+  s_0fcc3f909ad4ee::t_4b92c15f9cb63e 10
+clients/jetbrains/src/main/kotlin/io/github/irtfsc/aospide/engine/EngineProcess.kt
+  s_0fcc3f909ad4ee::t_4b92c15f9cb63e 69-73
+  s_0fcc3f909ad4ee::t_a3858fc98fed52 68
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "f53226a81478bb1fd26e94a913fdbfed9082e025",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": null
+    }
+  }
+}
