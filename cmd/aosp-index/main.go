@@ -5,13 +5,16 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"io/fs"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/i-rtfsc/as-aosp/core/aidl"
 	"github.com/i-rtfsc/as-aosp/core/generated"
 	"github.com/i-rtfsc/as-aosp/core/graph"
 	coreindex "github.com/i-rtfsc/as-aosp/core/index"
+	"github.com/i-rtfsc/as-aosp/core/jni"
 	"github.com/i-rtfsc/as-aosp/core/metadata"
 	"github.com/i-rtfsc/as-aosp/core/model"
 	"github.com/i-rtfsc/as-aosp/core/pathmap"
@@ -26,7 +29,7 @@ type scanOutput struct {
 
 func main() {
 	if len(os.Args) < 2 {
-		fatal(errors.New("usage: aosp-index <doctor|scan|metadata|aidl> [options]"))
+		fatal(errors.New("usage: aosp-index <doctor|scan|metadata|aidl|jni> [options]"))
 	}
 	switch os.Args[1] {
 	case "doctor":
@@ -37,9 +40,139 @@ func main() {
 		runMetadata(os.Args[2:])
 	case "aidl":
 		runAidl(os.Args[2:])
+	case "jni":
+		runJni(os.Args[2:])
 	default:
 		fatal(fmt.Errorf("unknown command %q", os.Args[1]))
 	}
+}
+
+type jniOutput struct {
+	Index jni.Index `json:"index"`
+}
+
+type jniSummaryOutput struct {
+	JavaSymbols   int                `json:"javaSymbols"`
+	NativeSymbols int                `json:"nativeSymbols"`
+	Registrations int                `json:"registrations"`
+	Links         int                `json:"links"`
+	ExactLinks    int                `json:"exactLinks"`
+	InferredLinks int                `json:"inferredLinks"`
+	Diagnostics   []model.Diagnostic `json:"diagnostics"`
+	Peers         []jni.Link         `json:"peers,omitempty"`
+}
+
+func runJni(args []string) {
+	flags := flag.NewFlagSet("jni", flag.ExitOnError)
+	javaRoot := flags.String("java-root", "", "Java/Kotlin source root")
+	cppRoot := flags.String("cpp-root", "", "C/C++ source root")
+	className := flags.String("class", "", "Java class name to inspect")
+	methodName := flags.String("method", "", "native method name to inspect")
+	summaryOnly := flags.Bool("summary", false, "print only index counts")
+	_ = flags.Parse(args)
+	if *javaRoot == "" || *cppRoot == "" {
+		fatal(errors.New("--java-root and --cpp-root are required"))
+	}
+	javaFiles, javaDiagnostics := loadSourceFiles(*javaRoot, map[string]bool{
+		".java": true,
+		".kt":   true,
+	})
+	cppFiles, cppDiagnostics := loadSourceFiles(*cppRoot, map[string]bool{
+		".c":   true,
+		".cc":  true,
+		".cpp": true,
+		".cxx": true,
+		".h":   true,
+		".hh":  true,
+		".hpp": true,
+	})
+	index := jni.BuildIndex(javaFiles, cppFiles)
+	index.Diagnostics = append(index.Diagnostics, javaDiagnostics...)
+	index.Diagnostics = append(index.Diagnostics, cppDiagnostics...)
+	if *summaryOnly {
+		output := jniSummaryOutput{
+			JavaSymbols:   len(index.JavaSymbols),
+			NativeSymbols: len(index.NativeSymbols),
+			Registrations: len(index.Registrations),
+			Links:         len(index.Links),
+			Diagnostics:   index.Diagnostics,
+		}
+		for _, link := range index.Links {
+			switch link.Confidence {
+			case jni.ConfidenceExact:
+				output.ExactLinks++
+			case jni.ConfidenceInferred:
+				output.InferredLinks++
+			}
+		}
+		if *className != "" && *methodName != "" {
+			output.Peers = index.JavaPeers(*className, *methodName)
+		}
+		writeJSON(output)
+		return
+	}
+	writeJSON(jniOutput{Index: index})
+}
+
+func loadSourceFiles(root string, extensions map[string]bool) (map[model.RepoPath]string, []model.Diagnostic) {
+	files := make(map[model.RepoPath]string)
+	diagnostics := make([]model.Diagnostic, 0)
+	err := filepath.WalkDir(root, func(pathName string, entry fs.DirEntry, walkErr error) error {
+		if walkErr != nil {
+			diagnostics = append(diagnostics, model.Diagnostic{
+				Code:      "JNI_SOURCE_READ_FAILED",
+				Severity:  model.SeverityWarning,
+				Stage:     "jni-load",
+				Message:   walkErr.Error(),
+				LocalPath: pathName,
+			})
+			return nil
+		}
+		if entry.IsDir() {
+			return nil
+		}
+		if !extensions[strings.ToLower(filepath.Ext(pathName))] {
+			return nil
+		}
+		relative, err := filepath.Rel(root, pathName)
+		if err != nil {
+			return err
+		}
+		repoPath, err := model.NormalizeRepoPath(relative)
+		if err != nil {
+			diagnostics = append(diagnostics, model.Diagnostic{
+				Code:      "JNI_SOURCE_PATH_INVALID",
+				Severity:  model.SeverityWarning,
+				Stage:     "jni-load",
+				Message:   err.Error(),
+				LocalPath: pathName,
+			})
+			return nil
+		}
+		data, err := os.ReadFile(pathName)
+		if err != nil {
+			diagnostics = append(diagnostics, model.Diagnostic{
+				Code:      "JNI_SOURCE_READ_FAILED",
+				Severity:  model.SeverityWarning,
+				Stage:     "jni-load",
+				Message:   err.Error(),
+				LocalPath: pathName,
+			})
+			return nil
+		}
+		files[repoPath] = string(data)
+		return nil
+	})
+	if err != nil {
+		diagnostics = append(diagnostics, model.Diagnostic{
+			Code:      "JNI_SOURCE_WALK_FAILED",
+			Severity:  model.SeverityWarning,
+			Stage:     "jni-load",
+			Message:   err.Error(),
+			LocalPath: root,
+		})
+	}
+	return files, diagnostics
 }
 
 type aidlOutput struct {
