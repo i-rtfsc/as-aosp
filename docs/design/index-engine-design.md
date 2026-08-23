@@ -85,8 +85,8 @@ Module
   ccCompileEntries
 ```
 
-合并规则：列表去重并保持确定性排序；空字段不覆盖已有字段；同一 module 的冲突 scalar 保留第一
-个有来源值并产生 warning；compdb 以 `file` 建索引，不假设一条记录代表全部 variant。
+合并规则：列表去重并保持确定性排序；空字段不覆盖已有字段；module type、class 和 tag 使用
+有来源值的并集；compdb 以 `file` 建索引，不假设一条记录代表全部 variant。
 
 ## 5. Generated Source Store
 
