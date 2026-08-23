@@ -1,7 +1,7 @@
-.PHONY: help fmt fmt-check vet test-core smoke metadata-smoke aidl-smoke check
+.PHONY: help fmt fmt-check vet test-core smoke metadata-smoke aidl-smoke commit-message-check check
 
 help:
-	@printf '%s\n' 'make fmt            Format Go source' 'make fmt-check      Check Go formatting' 'make vet            Run Go static checks' 'make test-core      Run core tests' 'make smoke          Run CLI fixture smoke' 'make metadata-smoke Read metadata fixture' 'make aidl-smoke     Read AIDL fixture' 'make check          Run all Phase 0 checks'
+	@printf '%s\n' 'make fmt                  Format Go source' 'make fmt-check            Check Go formatting' 'make vet                  Run Go static checks' 'make test-core            Run core tests' 'make smoke                Run CLI fixture smoke' 'make metadata-smoke       Read metadata fixture' 'make aidl-smoke           Read AIDL fixture' 'make commit-message-check Check message width and Change-Id' 'make check                Run all Phase 0 checks'
 
 fmt:
 	gofmt -w core cmd
@@ -24,4 +24,7 @@ metadata-smoke:
 aidl-smoke:
 	go run ./cmd/aosp-index aidl --root testdata/aidl/source --file android/demo/IFoo.aidl --type android.demo.IFoo --metadata-root testdata/metadata/out --path-map /srv/aosp/out/soong/generated=testdata/aidl/generated --path-map /srv/aosp/out/soong/.intermediates/frameworks/base/framework-minus-apex/gen=testdata/aidl/generated --cache-root .aosp-ide/cache/smoke --summary
 
-check: fmt-check vet test-core smoke metadata-smoke aidl-smoke
+commit-message-check:
+	bash scripts/check-commit-messages.sh
+
+check: fmt-check vet test-core smoke metadata-smoke aidl-smoke commit-message-check

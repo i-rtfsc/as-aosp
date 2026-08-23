@@ -9,6 +9,7 @@ Phase 0 采用仓库根 Makefile 作为统一入口。不得把裸 `go build`、
 | 查看帮助 | `make help` |
 | 格式检查 | `make fmt-check` |
 | Go 静态检查 | `make vet` |
+| Commit message 检查 | `make commit-message-check` |
 | Core 测试 | `make test-core` |
 | 全部本地检查 | `make check` |
 | CLI smoke | `make smoke` |

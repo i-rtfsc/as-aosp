@@ -210,6 +210,13 @@ done
 没有 upstream 时，将 `origin/dev-ide..HEAD` 替换为明确的本地范围，
 例如 `HEAD~6..HEAD`。
 
+仓库入口：
+
+```bash
+make commit-message-check
+COMMIT_RANGE=origin/dev-ide..HEAD make commit-message-check
+```
+
 还必须确认：
 
 - 暂存区只包含当前主题；
