@@ -1,0 +1,19 @@
+{
+  "clang": "/srv/aosp/prebuilts/clang/bin/clang",
+  "clang++": "/srv/aosp/prebuilts/clang/bin/clang++",
+  "modules": {
+    "framework-native": {
+      "path": ["frameworks/base"],
+      "srcs": ["frameworks/base/core/jni/android_os_Binder.cpp"],
+      "global_common_flags": {
+        "header_search_path": ["frameworks/base/core/jni/include"],
+        "flag": ["-DANDROID"]
+      },
+      "system_include_flags": {
+        "system_search_path": ["/srv/aosp/prebuilts/clang/sysroot/usr/include"]
+      },
+      "module_name": "framework-native",
+      "future_field": "ignored"
+    }
+  }
+}

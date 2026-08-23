@@ -1,0 +1,11 @@
+{
+  "framework-minus-apex": {
+    "path": ["frameworks/base"],
+    "dependencies": ["core-all"],
+    "srcs": ["frameworks/base/core/java/android/os/Bundle.java"],
+    "srcjars": ["/srv/aosp/out/soong/.intermediates/frameworks/base/framework-minus-apex/gen/framework.srcjar"],
+    "class": ["JAVA_LIBRARIES"],
+    "tags": ["optional"],
+    "unknown_field": ["ignored"]
+  }
+}
