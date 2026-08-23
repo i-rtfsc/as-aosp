@@ -1,0 +1,35 @@
+testdata/metadata/out/module-info.json
+  s_0fcc3f909ad4ee::t_e1626c33fa3611 5-12
+testdata/aidl/generated/aidl/android/demo/BpFoo.h
+  s_0fcc3f909ad4ee::t_e1626c33fa3611 1
+testdata/aidl/generated/aidl/android/demo/BnFoo.h
+  s_0fcc3f909ad4ee::t_e1626c33fa3611 1
+testdata/aidl/generated/android/demo/BpFoo.h
+  s_0fcc3f909ad4ee::t_e1626c33fa3611 1
+testdata/aidl/generated/android/demo/BnFoo.h
+  s_0fcc3f909ad4ee::t_e1626c33fa3611 1
+Makefile
+  s_0fcc3f909ad4ee::t_49bd382ca1bb87 25
+testdata/aidl/generated/android/demo/IFoo.cpp
+  s_0fcc3f909ad4ee::t_e1626c33fa3611 1-2
+cmd/aosp-index/main.go
+  s_0fcc3f909ad4ee::t_49bd382ca1bb87 12,79,106,111-112,115-137,147-190,198-210
+  s_0fcc3f909ad4ee::t_b5351a2ada632a 191-197
+  s_0fcc3f909ad4ee::t_985427d23f18b0 211
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "9586a9f8031a1d4162c920f86b6bde20190e2053",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
