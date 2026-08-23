@@ -117,6 +117,24 @@ engineExecutable
 状态服务不启动 engine，也不持有 IDE Project Model；engine lifecycle 由独立 project service
 管理，便于测试和后续 VS Code 复用同一 profile schema。
 
+### 2.5 Profile configuration UI
+
+项目设置页提供五个字段：profile id、Workspace View Root、Canonical AOSP Root、Out Root
+和 engine executable。Canonical/Out 可以为空；engine executable 是验证和后续启动的唯一
+可执行文件，不根据 PATH 猜测。
+
+按钮语义：
+
+- Apply/OK 只保存 workspace state；
+- Validate 在 background task 中启动一次临时 engine，调用 `aosp/profile/validate`，显示
+  diagnostics 数量后关闭进程；
+- Validate 失败不覆盖已保存 state；
+- project dispose 或 settings page dispose 不自动启动 engine；
+- 路径选择使用 IDE file chooser，保存字符串原样，不跟随软链接或访问远程挂载。
+
+首版 UI 不创建 source root、不读取 Soong metadata、不递归扫描 AOSP，也不把 engine stderr
+直接展示为用户诊断；详细诊断后续通过 Tool Window 展示。
+
 ## 3. VS Code
 
 ### Target
