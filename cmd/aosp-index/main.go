@@ -7,6 +7,8 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/i-rtfsc/as-aosp/core/graph"
+	"github.com/i-rtfsc/as-aosp/core/metadata"
 	"github.com/i-rtfsc/as-aosp/core/model"
 	"github.com/i-rtfsc/as-aosp/core/topology"
 )
@@ -19,16 +21,36 @@ type scanOutput struct {
 
 func main() {
 	if len(os.Args) < 2 {
-		fatal(errors.New("usage: aosp-index <doctor|scan> --profile <file>"))
+		fatal(errors.New("usage: aosp-index <doctor|scan|metadata> [options]"))
 	}
 	switch os.Args[1] {
 	case "doctor":
 		runDoctor(os.Args[2:])
 	case "scan":
 		runScan(os.Args[2:])
+	case "metadata":
+		runMetadata(os.Args[2:])
 	default:
 		fatal(fmt.Errorf("unknown command %q", os.Args[1]))
 	}
+}
+
+type metadataOutput struct {
+	Report  metadata.ReadReport `json:"report"`
+	Graph   graph.ModuleGraph   `json:"graph"`
+	Summary metadata.Summary    `json:"summary"`
+}
+
+func runMetadata(args []string) {
+	flags := flag.NewFlagSet("metadata", flag.ExitOnError)
+	root := flags.String("root", "", "metadata root")
+	_ = flags.Parse(args)
+	if *root == "" {
+		fatal(errors.New("--root is required"))
+	}
+	report := metadata.LoadDirectory(*root)
+	moduleGraph := graph.Build(report.Snapshot)
+	writeJSON(metadataOutput{Report: report, Graph: moduleGraph, Summary: report.Snapshot.Summary(len(moduleGraph.Modules))})
 }
 
 func runDoctor(args []string) {
