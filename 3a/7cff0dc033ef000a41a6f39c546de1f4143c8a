@@ -1,0 +1,29 @@
+README.md
+  s_0fcc3f909ad4ee::t_3f11d1583e4fad 20
+CONTRIBUTING.md
+  s_0fcc3f909ad4ee::t_43a3cbb130ea78 1-24
+  s_0fcc3f909ad4ee::t_3f11d1583e4fad 25-27
+docs/engineering/repository-and-worktree-policy.md
+  s_0fcc3f909ad4ee::t_43a3cbb130ea78 1-104
+docs/README.md
+  s_0fcc3f909ad4ee::t_3f11d1583e4fad 68-69
+docs/engineering/commit-message-guidelines.md
+  s_0fcc3f909ad4ee::t_43a3cbb130ea78 1-133,140-143,145-213
+  s_0fcc3f909ad4ee::t_3f11d1583e4fad 134-139,144
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "3a7cff0dc033ef000a41a6f39c546de1f4143c8a",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
