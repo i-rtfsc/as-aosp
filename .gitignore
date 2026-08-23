@@ -38,6 +38,7 @@ yarn-error.log*
 .cxx/
 cmake-build-*/
 compile_commands.json
+!testdata/metadata/out/compile_commands.json
 
 # Logs and temporary files
 *.log
