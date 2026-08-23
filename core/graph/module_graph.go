@@ -2,6 +2,7 @@ package graph
 
 import (
 	"sort"
+	"strings"
 
 	"github.com/i-rtfsc/as-aosp/core/metadata"
 	"github.com/i-rtfsc/as-aosp/core/model"
@@ -34,6 +35,37 @@ type ModuleGraph struct {
 	Modules      map[string]Module                 `json:"modules"`
 	CompDBByFile map[string][]metadata.CompDBEntry `json:"compdbByFile"`
 	Diagnostics  []model.Diagnostic                `json:"diagnostics"`
+}
+
+func (g ModuleGraph) GeneratedPaths(moduleName string) []metadata.PathRef {
+	module, ok := g.Modules[moduleName]
+	if !ok {
+		return []metadata.PathRef{}
+	}
+	result := addPathRefs(nil, module.Generated)
+	result = addPathRefs(result, module.SrcJars)
+	for _, source := range module.Sources {
+		if source.Kind == metadata.PathGenerated || source.Kind == metadata.PathExternalAbsolute && strings.Contains(strings.ReplaceAll(source.Raw, "\\", "/"), "/out/") {
+			result = addPathRefs(result, []metadata.PathRef{source})
+		}
+	}
+	return result
+}
+
+func (g ModuleGraph) AidlIncludeDirs(moduleName string) []metadata.PathRef {
+	module, ok := g.Modules[moduleName]
+	if !ok {
+		return []metadata.PathRef{}
+	}
+	return addPathRefs(nil, module.AidlIncludeDirs)
+}
+
+func (g ModuleGraph) SourceArchives(moduleName string) []metadata.PathRef {
+	module, ok := g.Modules[moduleName]
+	if !ok {
+		return []metadata.PathRef{}
+	}
+	return addPathRefs(nil, module.SrcJars)
 }
 
 func Build(snapshot metadata.Snapshot) ModuleGraph {

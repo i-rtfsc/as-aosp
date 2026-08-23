@@ -15,12 +15,24 @@ func TestLoadDirectoryReadsAllSupportedMetadata(t *testing.T) {
 		t.Fatalf("snapshot: %+v", report.Snapshot)
 	}
 	java := report.Snapshot.Java["framework-minus-apex"]
-	if java.Sources[0].RepoPath != "frameworks/base/core/java/android/os/Bundle.java" {
+	if !hasRepoPath(
+		java.Sources,
+		"frameworks/base/core/java/android/os/Bundle.java",
+	) {
 		t.Fatalf("java source: %+v", java.Sources)
 	}
 	if java.Jars[0].Kind != PathExternalAbsolute {
 		t.Fatalf("jar path kind: %+v", java.Jars[0])
 	}
+}
+
+func hasRepoPath(values []PathRef, expected string) bool {
+	for _, value := range values {
+		if string(value.RepoPath) == expected {
+			return true
+		}
+	}
+	return false
 }
 
 func TestLoadDirectoryIsolatesMissingReader(t *testing.T) {

@@ -22,3 +22,14 @@ func TestBuildMergesJavaCCAndModuleInfo(t *testing.T) {
 		t.Fatalf("compdb: %+v", result.CompDBByFile)
 	}
 }
+
+func TestGeneratedPathsIncludesOutBackedSources(t *testing.T) {
+	result := Build(metadata.Snapshot{Java: map[string]metadata.JavaModule{"foo": {
+		Name:    "foo",
+		Sources: []metadata.PathRef{metadata.NewPathRef("/srv/aosp/out/generated/android/demo/IFoo.java")},
+		SrcJars: []metadata.PathRef{metadata.NewPathRef("/srv/aosp/out/generated/foo.srcjar")},
+	}}})
+	if paths := result.GeneratedPaths("foo"); len(paths) != 2 {
+		t.Fatalf("paths: %+v", paths)
+	}
+}
