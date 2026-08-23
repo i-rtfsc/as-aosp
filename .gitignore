@@ -29,6 +29,7 @@ yarn-error.log*
 
 # Gradle used to build the JetBrains client
 .gradle/
+.intellijPlatform/
 **/build/
 !testdata/**/build/
 !testdata/metadata/out/

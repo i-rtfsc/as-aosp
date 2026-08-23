@@ -1,0 +1,11 @@
+<idea-plugin>
+    <id>io.github.irtfsc.aospide</id>
+    <name>AOSP IDE</name>
+    <vendor>AOSP IDE contributors</vendor>
+    <description><![CDATA[
+        Focused AOSP source navigation and cross-language indexing.
+    ]]></description>
+    <depends>com.intellij.modules.platform</depends>
+    <extensions defaultExtensionNs="com.intellij">
+    </extensions>
+</idea-plugin>

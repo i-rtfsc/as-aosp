@@ -11,9 +11,10 @@ Phase 0 采用仓库根 Makefile 作为统一入口。不得把裸 `go build`、
 | Go 静态检查 | `make vet` |
 | Commit message 检查 | `make commit-message-check` |
 | Core 测试 | `make test-core` |
+| Protocol 测试 | `make test-protocol` |
 | 全部本地检查 | `make check` |
 | CLI smoke | `make smoke` |
-| JetBrains 验证 | `make test-jetbrains`（后续添加） |
+| JetBrains 验证 | `make test-jetbrains` |
 | VS Code 验证 | `make test-vscode`（后续添加） |
 
 ## 2. Phase 0 最低验收
@@ -24,6 +25,17 @@ Phase 0 采用仓库根 Makefile 作为统一入口。不得把裸 `go build`、
 - `make smoke` 能解析 fixture profile 并输出 topology；
 - 真实 AOSP 不是测试输入，除非命令显式指定路径；
 - 测试输出不暴露用户绝对路径或敏感 metadata。
+
+JetBrains 首次构建默认下载锁定的 IntelliJ Platform SDK。开发者也可以复用本机已安装 IDE：
+
+```text
+JAVA_HOME_21=<jdk-21> \
+INTELLIJ_PLATFORM_PATH=<idea-or-android-studio-contents> \
+make test-jetbrains
+```
+
+`INTELLIJ_PLATFORM_PATH` 只属于本机环境，不能写入版本控制。Wrapper 锁定 Gradle 9.1.0，
+Linux、macOS 和 Windows 使用相同 Gradle/Kotlin 源码；具体 IDE build 兼容仍由 verifier 证明。
 
 ## 3. 测试边界
 
