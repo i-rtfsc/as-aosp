@@ -65,3 +65,5 @@
 
 - [代码规范](engineering/code-guidelines.md)
 - [构建与测试指南](engineering/build-and-test-guide.md)
+- [Commit Message 与提交粒度规范](engineering/commit-message-guidelines.md)
+- [仓库、暂存与工作树规范](engineering/repository-and-worktree-policy.md)
