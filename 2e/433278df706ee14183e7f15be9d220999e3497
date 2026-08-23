@@ -1,0 +1,25 @@
+core/jni/index.go
+  s_0fcc3f909ad4ee::t_ccf53fe9b232ff 1-20,22-47,52-57,65-66,68-121
+  s_0fcc3f909ad4ee::t_560be813cc6865 21
+  s_0fcc3f909ad4ee::t_89ea7f4bdf75cd 58-64,67
+  s_0fcc3f909ad4ee::t_a95a09283bb6dd 48-51
+core/jni/index_test.go
+  s_0fcc3f909ad4ee::t_560be813cc6865 3-4,6-8,10,17,38,42,53-72
+  s_0fcc3f909ad4ee::t_4cfba34f58b21b 1-2,5,9,11-16,18-37,39-41,43-52,73-74
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "2e433278df706ee14183e7f15be9d220999e3497",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
