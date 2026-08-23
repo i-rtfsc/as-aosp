@@ -1,6 +1,6 @@
 # IDE 客户端与跨语言导航设计
 
-> 状态：Target；JetBrains 先于 VS Code 开发。
+> 状态：Partial；JetBrains 工程与 RPC client bootstrap 进入交付，Workspace Model 和语言适配仍为 Target。
 
 ## 1. 客户端边界
 
@@ -32,6 +32,50 @@
 - Java/AIDL、Java/JNI 自定义 Definition；
 - Tool Window 显示 mode、provider、missing、stale 和 diagnostics。
 
+### 2.1 首版平台 baseline
+
+- IntelliJ Platform Gradle Plugin：`2.18.1`；
+- compile/test platform：IntelliJ IDEA Community `2025.1.7.2`；
+- compatible build line：`sinceBuild = 251`，`untilBuild = 251.*`；
+- Kotlin/JVM toolchain：21；
+- plugin id：`io.github.irtfsc.aospide`；
+- Kotlin package：`io.github.irtfsc.aospide`。
+
+251 build line 用于同时覆盖同平台线的 IntelliJ IDEA 与 Android Studio。是否兼容具体 Android
+Studio patch 版本必须由 plugin verifier 证明，不能仅凭 build number 声称支持。
+
+### 2.2 代码边界
+
+```text
+clients/jetbrains/
+  build.gradle.kts
+  settings.gradle.kts
+  gradle.properties
+  src/main/kotlin/io/github/irtfsc/aospide/
+    engine/
+      JsonRpcFraming.kt
+      EngineRpcClient.kt
+      EngineProcess.kt
+    model/
+    settings/
+    ui/
+    project/
+    aidl/
+    jni/
+  src/main/resources/META-INF/plugin.xml
+  src/test/kotlin/
+```
+
+首个 bootstrap slice 只交付：
+
+- 可构建的插件包和 `plugin.xml`；
+- Kotlin `Content-Length` framing；
+- initialize/shutdown RPC client；
+- 不启动外部进程的 framing/client unit tests。
+
+`EngineProcess`、profile UI、Workspace Model、AIDL/JNI actions 在后续 slice 接入。首版不把本机
+绝对路径写入仓库，也不内置尚未构建的 engine binary。
+
 ## 3. VS Code
 
 ### Target
@@ -60,6 +104,8 @@ engine 返回 `RepoPath + range + origin + confidence`。有 out 时依据 AIDL 
 
 ## 6. Acceptance
 
+- JetBrains bootstrap 可执行 `test`、`buildPlugin` 和 plugin descriptor 校验；
+- Kotlin RPC framing 与 Go daemon framing fixture 语义一致；
 - JetBrains fixture 能从 profile 创建 focused view；
 - AIDL 文件和 Java generated peer 可互跳；
 - JNI 常见注册模式双向可跳；

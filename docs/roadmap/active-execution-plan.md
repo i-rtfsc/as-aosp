@@ -12,12 +12,12 @@
 
 ## 2. AOSP-IDE-JB-01
 
-1. 创建 Kotlin/IntelliJ Platform 工程边界。
-2. 实现 engine lifecycle 与 RPC client。
-3. 实现 profile 配置和验证界面。
-4. 将 focused source mounts 投影到 Workspace Model。
+1. 固定 251 baseline 并创建 Kotlin/IntelliJ Platform 工程边界。
+2. 实现 Kotlin JSON-RPC framing 与 initialize/shutdown client。
+3. 加入插件 descriptor、单元测试和 `buildPlugin` 验证。
+4. 后续实现 engine process、profile UI 和 Workspace Model。
 
-下一验收：JetBrains fixture 能初始化 daemon 并展示 profile diagnostics。
+下一验收：`make test-jetbrains` 通过并生成可安装插件 zip。
 
 ## 3. 开发约束
 
