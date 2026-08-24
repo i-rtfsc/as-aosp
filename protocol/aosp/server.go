@@ -105,7 +105,7 @@ func (server *Server) initialize(request jsonrpc.Request) (jsonrpc.Response, boo
 	server.initialized = true
 	return jsonrpc.Success(request.ID, InitializeResult{
 		ProtocolVersion: ProtocolVersion,
-		ServerInfo:      ServerInfo{Name: "aosp-indexd", Version: "dev"},
+		ServerInfo:      ServerInfo{Name: "aosp-index", Version: "dev"},
 		Capabilities: Capabilities{
 			ProfileValidation:  true,
 			TopologyDiscovery:  true,

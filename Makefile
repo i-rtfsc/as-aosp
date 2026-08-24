@@ -34,7 +34,7 @@ jni-smoke:
 	go run ./cmd/aosp-index jni --java-root testdata/jni/source/java --cpp-root testdata/jni/source/cpp --class android.security.Scrypt --method nativeScrypt --summary
 
 rpc-smoke:
-	go test ./cmd/aosp-indexd -run '^TestDaemonSmoke$$' -count=1
+	go test ./cmd/aosp-index -run '^TestServeJSONRPCSmoke$$' -count=1
 
 commit-message-check:
 	bash scripts/check-commit-messages.sh

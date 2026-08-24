@@ -10,22 +10,22 @@ import (
 	"github.com/i-rtfsc/as-aosp/protocol/jsonrpc"
 )
 
-func TestDaemonSmoke(t *testing.T) {
+func TestServeJSONRPCSmoke(t *testing.T) {
 	var input bytes.Buffer
-	writeRequest(t, &input, map[string]any{
+	writeServeRequest(t, &input, map[string]any{
 		"jsonrpc": "2.0",
 		"id":      1,
 		"method":  "aosp/initialize",
 		"params":  map[string]string{"protocolVersion": "1.0"},
 	})
-	writeRequest(t, &input, map[string]any{
+	writeServeRequest(t, &input, map[string]any{
 		"jsonrpc": "2.0",
 		"id":      2,
 		"method":  "aosp/shutdown",
 		"params":  nil,
 	})
 	var output bytes.Buffer
-	if err := run(&input, &output, log.New(io.Discard, "", 0)); err != nil {
+	if err := runJSONRPC(&input, &output, log.New(io.Discard, "", 0)); err != nil {
 		t.Fatal(err)
 	}
 	framer := jsonrpc.NewFramer(&output)
@@ -39,7 +39,7 @@ func TestDaemonSmoke(t *testing.T) {
 	}
 }
 
-func writeRequest(t *testing.T, writer io.Writer, value any) {
+func writeServeRequest(t *testing.T, writer io.Writer, value any) {
 	t.Helper()
 	payload, err := json.Marshal(value)
 	if err != nil {

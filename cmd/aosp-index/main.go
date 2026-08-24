@@ -5,7 +5,9 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"io"
 	"io/fs"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -19,6 +21,8 @@ import (
 	"github.com/i-rtfsc/as-aosp/core/model"
 	"github.com/i-rtfsc/as-aosp/core/pathmap"
 	"github.com/i-rtfsc/as-aosp/core/topology"
+	"github.com/i-rtfsc/as-aosp/protocol/aosp"
+	"github.com/i-rtfsc/as-aosp/protocol/jsonrpc"
 )
 
 type scanOutput struct {
@@ -29,7 +33,7 @@ type scanOutput struct {
 
 func main() {
 	if len(os.Args) < 2 {
-		fatal(errors.New("usage: aosp-index <doctor|scan|metadata|aidl|jni> [options]"))
+		fatal(errors.New("usage: aosp-index <doctor|scan|metadata|aidl|jni|serve> [options]"))
 	}
 	switch os.Args[1] {
 	case "doctor":
@@ -42,9 +46,66 @@ func main() {
 		runAidl(os.Args[2:])
 	case "jni":
 		runJni(os.Args[2:])
+	case "serve":
+		runServe(os.Args[2:])
 	default:
 		fatal(fmt.Errorf("unknown command %q", os.Args[1]))
 	}
+}
+
+func runServe(args []string) {
+	flags := flag.NewFlagSet("serve", flag.ExitOnError)
+	stdio := flags.Bool("stdio", false, "serve JSON-RPC over stdin/stdout")
+	_ = flags.Parse(args)
+	if !*stdio || flags.NArg() != 0 {
+		fatal(errors.New("usage: aosp-index serve --stdio"))
+	}
+	if err := runJSONRPC(os.Stdin, os.Stdout, log.New(os.Stderr, "", 0)); err != nil {
+		fatal(err)
+	}
+}
+
+func runJSONRPC(reader io.Reader, writer io.Writer, logger *log.Logger) error {
+	framer := jsonrpc.NewFramer(reader)
+	server := &aosp.Server{}
+	for {
+		payload, err := framer.Read()
+		if err == io.EOF {
+			return nil
+		}
+		if err != nil {
+			return err
+		}
+		request, parseErr := jsonrpc.ParseRequest(payload)
+		if parseErr != nil {
+			rpcError, ok := parseErr.(*jsonrpc.Error)
+			if !ok {
+				return parseErr
+			}
+			if err := writeRPCResponse(writer, jsonrpc.Failure(nil, rpcError)); err != nil {
+				return err
+			}
+			return nil
+		}
+		response, reply := server.Handle(request)
+		if reply {
+			if err := writeRPCResponse(writer, response); err != nil {
+				return err
+			}
+		}
+		if server.IsShutdown() {
+			logger.Print("shutdown complete")
+			return nil
+		}
+	}
+}
+
+func writeRPCResponse(writer io.Writer, response jsonrpc.Response) error {
+	payload, err := json.Marshal(response)
+	if err != nil {
+		return err
+	}
+	return jsonrpc.Write(writer, payload)
 }
 
 type jniOutput struct {
