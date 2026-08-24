@@ -3,6 +3,7 @@ import { EngineClient } from "../engine/client";
 import { workspaceViewRoot } from "./paths";
 import * as path from "node:path";
 import { overlayClangdConfig } from "./clangd_config";
+import { overlayResponseFilePath } from "./compdb_paths";
 
 export async function refreshCompdbOverlay(engine: EngineClient, output?: vscode.OutputChannel): Promise<void> {
   const root = workspaceViewRoot();
@@ -24,7 +25,12 @@ export async function refreshCompdbOverlay(engine: EngineClient, output?: vscode
   await vscode.workspace.fs.writeFile(target, Buffer.from(JSON.stringify(result.entries, null, 2), "utf8"));
   if (result.responseFiles) {
     for (const [name, content] of Object.entries(result.responseFiles)) {
-      const responseTarget = vscode.Uri.file(path.join(path.dirname(target.fsPath), path.basename(name)));
+      const responsePath = overlayResponseFilePath(path.dirname(target.fsPath), name);
+      if (!responsePath) {
+        output?.appendLine(`diagnostic: rejected response file target ${name}`);
+        continue;
+      }
+      const responseTarget = vscode.Uri.file(responsePath);
       await vscode.workspace.fs.writeFile(responseTarget, Buffer.from(content, "utf8"));
     }
   }
