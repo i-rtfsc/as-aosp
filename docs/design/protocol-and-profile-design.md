@@ -112,7 +112,7 @@ aosp-index serve --stdio
 ```
 
 插件只配置 `aosp-index` executable，固定追加 `serve --stdio` 参数；不再分发独立
-独立 `aosp-indexd` 文件。
+独立 daemon 文件。
 
 后续索引 slice：
 
