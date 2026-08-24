@@ -1,0 +1,37 @@
+docs/roadmap/delivery-plan.md
+  s_0fcc3f909ad4ee::t_67d0106c27bd10 36
+protocol/aosp/aidl_references.go
+  s_0fcc3f909ad4ee::t_d52d609fbc6a06 11-12,14-17,21-23,25-27,30-33,35-38
+  s_0fcc3f909ad4ee::t_f0e4138de4ca17 1-10,13,18-20,24,28-29,34,39
+protocol/aosp/server.go
+  s_0fcc3f909ad4ee::t_f0e4138de4ca17 129-130
+core/aidl/index_test.go
+  s_0fcc3f909ad4ee::t_386c565327fac5 40-49
+docs/design/ide-client-and-navigation-design.md
+  s_0fcc3f909ad4ee::t_67d0106c27bd10 229-232
+core/aidl/index.go
+  s_0fcc3f909ad4ee::t_8a68b5fe80a70a 141-146
+  s_0fcc3f909ad4ee::t_8f896c3de36bf8 130-132,152-157
+  s_0fcc3f909ad4ee::t_e0b93ba46c6fba 109-129,133-140,147-151,158-161
+docs/design/protocol-and-profile-design.md
+  s_0fcc3f909ad4ee::t_67d0106c27bd10 158-168
+protocol/aosp/server_test.go
+  s_0fcc3f909ad4ee::t_d52d609fbc6a06 287,290-292
+  s_0fcc3f909ad4ee::t_f0e4138de4ca17 282-286,288-289,293-294
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "32c6d9ebcc67e7fdd275dfffb671055bdff13237",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
