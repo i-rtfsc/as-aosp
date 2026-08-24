@@ -1,0 +1,26 @@
+protocol/aosp/aidl.go
+  s_0fcc3f909ad4ee::t_76632bc7cd2014 63-66,69-70
+  s_0fcc3f909ad4ee::t_83038f4ae53225 54-62
+protocol/aosp/server_test.go
+  s_0fcc3f909ad4ee::t_efba0752c398f6 33
+protocol/aosp/workspace_sources.go
+  s_0fcc3f909ad4ee::t_83038f4ae53225 1-129
+protocol/aosp/server.go
+  s_0fcc3f909ad4ee::t_83038f4ae53225 243-255,258
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "c9606d425f4c475252f3230a3e835005721f58eb",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
