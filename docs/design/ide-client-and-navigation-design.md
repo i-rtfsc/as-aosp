@@ -191,7 +191,8 @@ src/navigation/jni.ts     JNI peer command 和目标打开
 extension 不实现 AIDL/JNI parser。AIDL DefinitionProvider 和 JNI command 都只发送
 当前 `workspaceViewRoot + currentPath (+ name)`，由统一 engine 扫描 view 并返回
 `RepoPath + range`。engine 进程由 workspace extension host 管理，退出或配置改变时
-销毁，不把绝对路径写入共享协议之外的 fixture。
+销毁，不把绝对路径写入共享协议之外的 fixture。engine client 启动失败必须清理
+半启动进程；异常退出后下一次命令允许重新启动。
 
 ## 4. AIDL navigation
 

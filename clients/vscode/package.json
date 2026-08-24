@@ -46,7 +46,7 @@
   },
   "scripts": {
     "compile": "tsc -p ./tsconfig.json",
-    "check": "npm run compile && node --test out/engine/frame.test.js",
+    "check": "npm run compile && node --test out/engine/*.test.js",
     "package": "npm run compile && vsce package --no-dependencies"
   },
   "devDependencies": {

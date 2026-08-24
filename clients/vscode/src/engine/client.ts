@@ -1,6 +1,13 @@
 import { ChildProcessWithoutNullStreams, spawn } from "node:child_process";
 import { encodeFrame, FrameDecoder } from "./frame";
 
+type SpawnProcess = (executable: string, arguments_: string[]) => ChildProcessWithoutNullStreams;
+type PendingRequest = {
+  resolve: (value: any) => void;
+  reject: (error: Error) => void;
+  timeout: NodeJS.Timeout;
+};
+
 export interface AidlResolveResult {
   resolution: {
     state: string;
@@ -19,29 +26,60 @@ export interface JniPeersResult {
 
 export class EngineClient {
   private process?: ChildProcessWithoutNullStreams;
+  private startPromise?: Promise<void>;
   private decoder = new FrameDecoder();
   private nextId = 1;
-  private pending = new Map<number, { resolve: (value: any) => void; reject: (error: Error) => void }>();
+  private pending = new Map<number, PendingRequest>();
   private queue = Promise.resolve();
 
+  constructor(
+    private readonly spawnProcess: SpawnProcess = (executable, arguments_) =>
+      spawn(executable, arguments_, { stdio: "pipe" }),
+    private readonly timeoutMilliseconds = 5_000,
+  ) {}
+
   async start(executable: string): Promise<void> {
+    if (this.startPromise) return this.startPromise;
     if (this.process) return;
-    this.process = spawn(executable, ["serve", "--stdio"], { stdio: "pipe" });
-    this.process.stdout.on("data", (chunk: Buffer) => this.onData(chunk));
-    this.process.on("error", (error) => this.failPending(error));
-    this.process.on("exit", () => this.failPending(new Error("aosp-index exited")));
-    await this.request("aosp/initialize", { protocolVersion: "1.0" });
+    const operation = this.launch(executable);
+    this.startPromise = operation;
+    try {
+      await operation;
+    } finally {
+      if (this.startPromise === operation) this.startPromise = undefined;
+    }
+  }
+
+  private async launch(executable: string): Promise<void> {
+    const process = this.spawnProcess(executable, ["serve", "--stdio"]);
+    this.process = process;
+    process.stdout.on("data", (chunk: Buffer) => this.onData(chunk));
+    process.on("error", (error) => this.handleExit(process, error));
+    process.on("exit", () => this.handleExit(process, new Error("aosp-index exited")));
+    try {
+      await this.request("aosp/initialize", { protocolVersion: "1.0" });
+    } catch (error) {
+      process.kill();
+      this.handleExit(process, error instanceof Error ? error : new Error(String(error)));
+      throw error;
+    }
   }
 
   async stop(): Promise<void> {
-    if (!this.process) return;
+    try {
+      await this.startPromise;
+    } catch {
+      return;
+    }
+    const process = this.process;
+    if (!process) return;
     try {
       await this.request("aosp/shutdown", null);
     } catch {
       // The process may have already closed its protocol streams.
     }
-    this.process.kill();
-    this.process = undefined;
+    process.kill();
+    this.handleExit(process, new Error("aosp-index stopped"));
   }
 
   async aidlResolve(params: { workspaceViewRoot: string; currentPath: string; name: string }): Promise<AidlResolveResult> {
@@ -59,7 +97,11 @@ export class EngineClient {
         return;
       }
       const id = this.nextId++;
-      this.pending.set(id, { resolve, reject });
+      const timeout = setTimeout(() => {
+        if (!this.pending.delete(id)) return;
+        reject(new Error(`aosp-index request timed out: ${method}`));
+      }, this.timeoutMilliseconds);
+      this.pending.set(id, { resolve, reject, timeout });
       this.process.stdin.write(encodeFrame(JSON.stringify({ jsonrpc: "2.0", id, method, params })));
     }));
     this.queue = operation.then(() => undefined, () => undefined);
@@ -72,13 +114,23 @@ export class EngineClient {
       const pending = this.pending.get(response.id);
       if (!pending) continue;
       this.pending.delete(response.id);
+      clearTimeout(pending.timeout);
       if (response.error) pending.reject(new Error(response.error.message ?? "aosp-index request failed"));
       else pending.resolve(response.result);
     }
   }
 
   private failPending(error: Error): void {
-    for (const pending of this.pending.values()) pending.reject(error);
+    for (const pending of this.pending.values()) {
+      clearTimeout(pending.timeout);
+      pending.reject(error);
+    }
     this.pending.clear();
+  }
+
+  private handleExit(process: ChildProcessWithoutNullStreams, error: Error): void {
+    if (this.process !== process) return;
+    this.process = undefined;
+    this.failPending(error);
   }
 }

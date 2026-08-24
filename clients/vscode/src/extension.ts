@@ -5,8 +5,10 @@ import { goToJniPeer } from "./navigation/jni";
 
 export function activate(context: vscode.ExtensionContext): void {
   const engine = new EngineClient();
-  const executable = vscode.workspace.getConfiguration("aospIde").get<string>("engineExecutable") || "aosp-index";
-  const ensureEngine = async (): Promise<void> => engine.start(executable);
+  const ensureEngine = async (): Promise<void> => {
+    const executable = vscode.workspace.getConfiguration("aospIde").get<string>("engineExecutable") || "aosp-index";
+    await engine.start(executable);
+  };
   context.subscriptions.push(
     vscode.languages.registerDefinitionProvider({ language: "aidl" }, {
       provideDefinition: async (...args) => {
@@ -17,6 +19,12 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.commands.registerCommand("aospIde.goToJniPeer", async () => {
       await ensureEngine();
       await goToJniPeer(engine);
+    }),
+    vscode.workspace.onDidChangeConfiguration((event) => {
+      if (event.affectsConfiguration("aospIde.engineExecutable") ||
+        event.affectsConfiguration("aospIde.workspaceViewRoot")) {
+        void engine.stop();
+      }
     }),
     { dispose: () => void engine.stop() },
   );

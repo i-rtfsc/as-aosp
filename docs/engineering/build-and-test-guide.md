@@ -15,7 +15,7 @@ Phase 0 采用仓库根 Makefile 作为统一入口。不得把裸 `go build`、
 | 全部本地检查 | `make check` |
 | CLI smoke | `make smoke` |
 | JetBrains 验证 | `make test-jetbrains` |
-| VS Code 验证 | `make test-vscode`（后续添加） |
+| VS Code 验证 | `make test-vscode` |
 
 ## 2. Phase 0 最低验收
 
