@@ -1,0 +1,26 @@
+protocol/aosp/server_test.go
+  s_0fcc3f909ad4ee::t_168d05e7bae559 341-344,346-347,351-352
+  s_0fcc3f909ad4ee::t_dd0db5b1676659 345,348-350
+docs/design/protocol-and-profile-design.md
+  s_0fcc3f909ad4ee::t_7cbabb35d61439 179
+protocol/aosp/compdb.go
+  s_0fcc3f909ad4ee::t_dd0db5b1676659 57-60
+  s_0fcc3f909ad4ee::t_168d05e7bae559 49,55
+  s_0fcc3f909ad4ee::t_99af82a0be5d4d 56
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "4f44652951cc1674d7b48e5a6c9f4cc160216ba6",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
