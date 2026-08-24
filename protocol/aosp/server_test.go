@@ -292,6 +292,21 @@ func TestServerReturnsAIDLReferences(t *testing.T) {
 	}
 }
 
+func TestServerMapsCompDBOverlayPaths(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, "compile_commands.json", `[{"directory":"/srv/aosp/out","arguments":["clang++","-I/srv/aosp/include"],"file":"/srv/aosp/frameworks/base/foo.cpp","output":"/srv/aosp/out/foo.o"}]`)
+	server := initializedServer(t)
+	response, _ := server.Handle(makeRequest(2, "aosp/compdb/overlay", CompDBOverlayParams{MetadataRoot: root, PathMappings: []model.PathMapping{{ExternalPrefix: "/srv/aosp", LocalPrefix: "/work/aosp"}}}))
+	var result CompDBOverlayResult
+	decodeResult(t, response, &result)
+	if len(result.Diagnostics) != 0 || len(result.Entries) != 1 {
+		t.Fatalf("result=%+v", result)
+	}
+	if result.Entries[0].File != "/work/aosp/frameworks/base/foo.cpp" || result.Entries[0].Arguments[1] != "-I/work/aosp/include" {
+		t.Fatalf("entry=%+v", result.Entries[0])
+	}
+}
+
 func TestServerUpgradesVisibleAIDLGeneratedJavaPeer(t *testing.T) {
 	root := t.TempDir()
 	writeTestFile(t, root, "demo/IFoo.aidl", "package demo; interface IFoo {}")

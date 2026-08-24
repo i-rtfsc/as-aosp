@@ -38,6 +38,11 @@ export interface AidlReferencesResult {
   diagnostics: unknown[];
 }
 
+export interface CompdbOverlayResult {
+  entries: Array<{ directory: string; arguments: string[]; file: string; output?: string }>;
+  diagnostics: unknown[];
+}
+
 export class EngineClient {
   private process?: ChildProcessWithoutNullStreams;
   private startPromise?: Promise<void>;
@@ -110,6 +115,10 @@ export class EngineClient {
 
   async aidlReferences(params: { workspaceViewRoot: string; currentPath: string; name: string }): Promise<AidlReferencesResult> {
     return this.request("aosp/aidl/references", params);
+  }
+
+  async compdbOverlay(params: { metadataRoot: string; workspaceViewRoot: string; pathMappings: unknown[] }): Promise<CompdbOverlayResult> {
+    return this.request("aosp/compdb/overlay", params);
   }
 
   private request(method: string, params: unknown): Promise<any> {

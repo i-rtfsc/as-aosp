@@ -166,6 +166,17 @@ aosp/aidl/references
 `typeRange` 时返回具体类型 token，`confidence` 为 `exact`；无法恢复 token span 时
 才降级到所属声明 range 和 `inferred`，不改变 references DTO。
 
+首个 compdb overlay slice：
+
+```text
+aosp/compdb/overlay
+```
+
+请求携带 `metadataRoot`、`workspaceViewRoot` 和显式 `pathMappings`。engine 读取
+compilation database，映射 `directory`、`file`、`output` 以及 argv 中的构建机绝对
+路径，返回 overlay entries 与 diagnostics；原始 out/compdb 不被修改。不能证明映射
+的参数保留原值并标记 `COMPDB_PATH_UNMAPPED`，不会猜测本机路径。
+
 后续索引 slice：
 
 ```text

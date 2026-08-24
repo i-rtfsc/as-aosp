@@ -128,6 +128,8 @@ func (server *Server) Handle(request jsonrpc.Request) (jsonrpc.Response, bool) {
 		response = server.aidlPeers(request)
 	case "aosp/aidl/references":
 		response = server.aidlReferences(request)
+	case "aosp/compdb/overlay":
+		response = server.compdbOverlay(request)
 	default:
 		response = jsonrpc.Failure(request.ID, jsonrpc.MethodNotFound(request.Method))
 	}

@@ -235,6 +235,11 @@ VS Code JNI 首个 DefinitionProvider 只消费 `aosp/jni/peers` 的唯一 link�
 多候选、`inferred`/`unresolved` 或 Workspace View 外目标返回空，让 Java/Kotlin
 language server 和 clangd 继续拥有本语言定义权威。
 
+VS Code 提供 `AOSP: Refresh clangd Compilation Database` command。command 调用
+`aosp/compdb/overlay`，把返回 entries 写到 Workspace View 的
+`.aosp-ide/compdb-overlay/compile_commands.json`，不覆盖 AOSP out。clangd 的配置
+由用户选择该 overlay；command 只负责生成和报告 diagnostics。
+
 Extension Host 验收使用 `@vscode/test-electron` 的显式 `host-test` 脚本，验证真实
 extension activation、AIDL language registration、definition/reference provider 和
 commands。默认 `make test-vscode` 不下载 VS Code runtime；离线 CI 仍由 TypeScript/

@@ -4,6 +4,7 @@ import { AidlDefinitionProvider } from "./navigation/aidl";
 import { goToAidlGeneratedPeer } from "./navigation/aidl_peers";
 import { AidlReferenceProvider } from "./navigation/aidl_references";
 import { goToJniPeer, JniDefinitionProvider } from "./navigation/jni";
+import { refreshCompdbOverlay } from "./navigation/compdb";
 
 export function activate(context: vscode.ExtensionContext): void {
   const engine = new EngineClient();
@@ -38,6 +39,10 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.commands.registerCommand("aospIde.goToAidlGeneratedPeer", async () => {
       await ensureEngine();
       await goToAidlGeneratedPeer(engine);
+    }),
+    vscode.commands.registerCommand("aospIde.refreshCompdbOverlay", async () => {
+      await ensureEngine();
+      await refreshCompdbOverlay(engine);
     }),
     vscode.workspace.onDidChangeConfiguration((event) => {
       if (event.affectsConfiguration("aospIde.engineExecutable") ||

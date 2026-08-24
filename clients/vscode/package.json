@@ -12,7 +12,8 @@
   "activationEvents": [
     "onLanguage:aidl",
     "onCommand:aospIde.goToJniPeer",
-    "onCommand:aospIde.goToAidlGeneratedPeer"
+    "onCommand:aospIde.goToAidlGeneratedPeer",
+    "onCommand:aospIde.refreshCompdbOverlay"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -28,6 +29,17 @@
           "type": "string",
           "default": "",
           "description": "Workspace View root containing selected AOSP repositories."
+        },
+        "aospIde.metadataRoot": {
+          "type": "string",
+          "default": "",
+          "description": "AOSP out or metadata root containing compile_commands.json."
+        },
+        "aospIde.pathMappings": {
+          "type": "array",
+          "default": [],
+          "description": "Build-host to local path mappings.",
+          "items": { "type": "object" }
         }
       }
     },
@@ -39,6 +51,10 @@
       {
         "command": "aospIde.goToAidlGeneratedPeer",
         "title": "AOSP: Go to AIDL Generated Peer"
+      },
+      {
+        "command": "aospIde.refreshCompdbOverlay",
+        "title": "AOSP: Refresh clangd Compilation Database"
       }
     ],
     "languages": [
