@@ -1,0 +1,28 @@
+docs/design/packaging-and-release-design.md
+  s_0fcc3f909ad4ee::t_6155d4cef28972 1-39
+Makefile
+  s_0fcc3f909ad4ee::t_517be066a1b569 1,24-25
+  s_0fcc3f909ad4ee::t_d91e2d290fff44 26
+docs/README.md
+  s_0fcc3f909ad4ee::t_6155d4cef28972 17
+docs/roadmap/delivery-plan.md
+  s_0fcc3f909ad4ee::t_6155d4cef28972 54-60
+packaging/build.sh
+  s_0fcc3f909ad4ee::t_517be066a1b569 1-33
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "264669933ed8479905c22853cf0bf2f16383322a",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
