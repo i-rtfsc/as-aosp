@@ -1,0 +1,23 @@
+packaging/manifest.js
+  s_0fcc3f909ad4ee::t_e009c4879e907f 18-26
+docs/design/packaging-and-release-design.md
+  s_0fcc3f909ad4ee::t_e009c4879e907f 33-34
+packaging/verify.sh
+  s_0fcc3f909ad4ee::t_e009c4879e907f 11-18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "fd70c4b8d8409974f005bf2b6e90dc9112bcae3a",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
