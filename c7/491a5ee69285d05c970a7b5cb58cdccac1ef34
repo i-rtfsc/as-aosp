@@ -1,0 +1,30 @@
+docs/roadmap/active-execution-plan.md
+  s_0fcc3f909ad4ee::t_3efde323971454 20-21
+  s_0fcc3f909ad4ee::t_ce3a24eccda6d2 23-24
+docs/roadmap/delivery-plan.md
+  s_0fcc3f909ad4ee::t_ce3a24eccda6d2 42-43
+docs/design/ide-client-and-navigation-design.md
+  s_0fcc3f909ad4ee::t_733b911e61bae4 108
+clients/jetbrains/src/test/kotlin/com/rtfsc/aosp/project/WorkspaceRootPlanTest.kt
+  s_0fcc3f909ad4ee::t_733b911e61bae4 62-73
+docs/roadmap/current-state.md
+  s_0fcc3f909ad4ee::t_ce3a24eccda6d2 26
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/project/WorkspaceRootPlan.kt
+  s_0fcc3f909ad4ee::t_eaa21e98dc3fe0 35
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "c7491a5ee69285d05c970a7b5cb58cdccac1ef34",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": null
+    }
+  }
+}
