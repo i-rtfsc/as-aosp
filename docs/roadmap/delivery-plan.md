@@ -25,7 +25,7 @@
 - 目标：由 `aosp-index serve --stdio` 提供版本化 JSON-RPC，作为 JetBrains 与 VS Code 的共享边界。
 - 技术前置：CORE-01、CLI-01。
 - 下一验收：initialize、profile/topology validation、topology discovery 和 shutdown smoke。
-- 负能力：首版不持有长期索引，不启用 AIDL/JNI navigation capability。
+- 负能力：首版不持有长期索引；AIDL/JNI capability 按独立 slice 启用。
 
 ### AOSP-IDE-JNI-01
 
@@ -33,7 +33,7 @@
 - 技术前置：CORE-01、METADATA-01。
 - 状态：Partial；Go core 与 `aosp-index jni` source-only fixture 已交付。
 - 已验收：Java/Kotlin declaration、静态导出、常见注册表、描述符校验、exact/inferred/unresolved 结果和 Java/C++ 双向查询。
-- 下一验收：接入 JetBrains/VS Code adapter，并补充复杂宏、`RegisterNatives` 变量流和真实多平台路径测试。
+- 下一验收：启用 `aosp/jni/peers`，接入 JetBrains action，再补充 VS Code adapter、复杂宏、`RegisterNatives` 变量流和真实多平台路径测试。
 
 ### AOSP-IDE-JB-01
 

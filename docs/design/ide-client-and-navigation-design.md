@@ -205,6 +205,17 @@ engine 返回 `RepoPath + range + origin + confidence`。有 out 时依据 AIDL 
 
 结果等级：`exact`、`inferred`、`unresolved`。复杂宏、运行时反射和动态加载不升级为 exact。
 
+### 5.1 JetBrains 首个实现切片
+
+JetBrains 提供 `Go to JNI Peer` action。action 只收集当前 editor symbol 和 focused
+view 内可见的 Java/Kotlin/C/C++ 候选文档，通过 `aosp/jni/peers` 发送给共享 engine，
+再用返回的 `RepoPath + byte range` 打开目标。没有 engine、没有唯一 peer 或只有
+`unresolved` 时显示诊断，不用 Kotlin 正则猜测目标。
+
+首版不依赖 Java 或 C++ PSI 的私有实现，也不要求 `out`。后续可在 Java native、
+Kotlin external、`Java_` export 和 `JNINativeMethod` 上增加 gutter，但 gutter 与
+VS Code command 必须复用同一 RPC 结果。
+
 ## 6. Acceptance
 
 - JetBrains bootstrap 可执行 `test`、`buildPlugin` 和 plugin descriptor 校验；

@@ -114,6 +114,18 @@ aosp-index serve --stdio
 插件只配置 `aosp-index` executable，固定追加 `serve --stdio` 参数；不再分发独立
 独立 daemon 文件。
 
+首个 JNI navigation slice：
+
+```text
+aosp/jni/peers
+```
+
+请求携带当前 source 的 `RepoPath`、`language` 和 `content`，以及同一 focused
+view 中可见的候选 source documents。engine 使用 `core/jni` 建立临时 source-only
+index，返回 `Link[]`；不读取客户端不可见的 canonical root，也不要求 `out`。
+JetBrains 和 VS Code 只消费同一个 peer schema，不各自复制 descriptor、静态导出
+或动态注册解析。首版是按需查询，长期 snapshot 和增量失效属于后续 index slice。
+
 后续索引 slice：
 
 ```text
@@ -122,7 +134,6 @@ aosp/index/rebuild
 aosp/definition
 aosp/references
 aosp/aidl/resolve
-aosp/jni/peers
 aosp/path/explain
 aosp/diagnostics/list
 ```
