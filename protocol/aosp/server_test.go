@@ -26,6 +26,11 @@ func TestServerLifecycleAndCapabilities(t *testing.T) {
 	if !reply || response.Error != nil {
 		t.Fatalf("initialize=%+v reply=%v", response, reply)
 	}
+	var initialized InitializeResult
+	decodeResult(t, response, &initialized)
+	if !initialized.Capabilities.JNINavigation {
+		t.Fatalf("capabilities=%+v", initialized.Capabilities)
+	}
 	response, _ = server.Handle(makeRequest(3, "aosp/initialize", InitializeParams{ProtocolVersion: "1.0"}))
 	if response.Error == nil {
 		t.Fatalf("duplicate initialize=%+v", response)
@@ -76,6 +81,46 @@ func TestServerDiscoversAnEmptyWorkspace(t *testing.T) {
 	expected, err := os.Stat(root)
 	if err != nil || !expected.IsDir() || string(result.Topology.WorkspaceViewRoot) == "" {
 		t.Fatalf("result=%+v err=%v", result, err)
+	}
+}
+
+func TestServerReturnsJNIPeersFromVisibleSources(t *testing.T) {
+	server := initializedServer(t)
+	response, _ := server.Handle(makeRequest(2, "aosp/jni/peers", JNIPeersParams{
+		JavaFiles: map[string]string{
+			"demo/Bridge.java": "package demo; class Bridge { native void close(); }",
+		},
+		CppFiles: map[string]string{
+			"demo/bridge.cpp": `
+static const JNINativeMethod methods[] = {
+  {"close", "()V", (void*)closeNative},
+};
+int registerMethods(JNIEnv* env) {
+  return RegisterMethodsOrDie(env, "demo/Bridge", methods, 1);
+}`,
+		},
+		ClassName:  "demo.Bridge",
+		MethodName: "close",
+	}))
+	var result JNIPeersResult
+	decodeResult(t, response, &result)
+	if len(result.Diagnostics) != 0 || len(result.Peers) != 1 {
+		t.Fatalf("result=%+v", result)
+	}
+	if result.Peers[0].Native.FunctionName != "closeNative" || result.Peers[0].Confidence != "exact" {
+		t.Fatalf("peers=%+v", result.Peers)
+	}
+}
+
+func TestServerRejectsAbsoluteJNIPaths(t *testing.T) {
+	server := initializedServer(t)
+	response, _ := server.Handle(makeRequest(2, "aosp/jni/peers", JNIPeersParams{
+		JavaFiles: map[string]string{"/tmp/Bridge.java": "class Bridge {}"},
+	}))
+	var result JNIPeersResult
+	decodeResult(t, response, &result)
+	if len(result.Diagnostics) != 1 || result.Diagnostics[0].Code != "JNI_INVALID_REPO_PATH" {
+		t.Fatalf("result=%+v", result)
 	}
 }
 

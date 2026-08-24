@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/i-rtfsc/as-aosp/core/jni"
 	"github.com/i-rtfsc/as-aosp/core/model"
 	"github.com/i-rtfsc/as-aosp/core/topology"
 	"github.com/i-rtfsc/as-aosp/protocol/jsonrpc"
@@ -60,6 +61,19 @@ type TopologyResult struct {
 	Diagnostics []model.Diagnostic         `json:"diagnostics"`
 }
 
+type JNIPeersParams struct {
+	JavaFiles    map[string]string `json:"javaFiles,omitempty"`
+	CppFiles     map[string]string `json:"cppFiles,omitempty"`
+	ClassName    string            `json:"className,omitempty"`
+	MethodName   string            `json:"methodName,omitempty"`
+	FunctionName string            `json:"functionName,omitempty"`
+}
+
+type JNIPeersResult struct {
+	Peers       []jni.Link         `json:"peers"`
+	Diagnostics []model.Diagnostic `json:"diagnostics"`
+}
+
 func (server *Server) Handle(request jsonrpc.Request) (jsonrpc.Response, bool) {
 	if request.Method == "aosp/initialize" {
 		return server.initialize(request)
@@ -85,6 +99,8 @@ func (server *Server) Handle(request jsonrpc.Request) (jsonrpc.Response, bool) {
 		response = server.topologyDiscover(request)
 	case "aosp/topology/validate":
 		response = server.topologyValidate(request)
+	case "aosp/jni/peers":
+		response = server.jniPeers(request)
 	default:
 		response = jsonrpc.Failure(request.ID, jsonrpc.MethodNotFound(request.Method))
 	}
@@ -110,8 +126,50 @@ func (server *Server) initialize(request jsonrpc.Request) (jsonrpc.Response, boo
 			ProfileValidation:  true,
 			TopologyDiscovery:  true,
 			TopologyValidation: true,
+			JNINavigation:      true,
 		},
 	}), !request.IsNotification()
+}
+
+func (server *Server) jniPeers(request jsonrpc.Request) jsonrpc.Response {
+	var params JNIPeersParams
+	if err := decodeParams(request, &params); err != nil {
+		return jsonrpc.Failure(request.ID, jsonrpc.InvalidParams(err.Error()))
+	}
+	javaFiles, diagnostics := normalizeJNIInputs(params.JavaFiles, "java")
+	cppFiles, cppDiagnostics := normalizeJNIInputs(params.CppFiles, "cpp")
+	diagnostics = append(diagnostics, cppDiagnostics...)
+	if len(diagnostics) > 0 {
+		return jsonrpc.Success(request.ID, JNIPeersResult{Peers: []jni.Link{}, Diagnostics: diagnostics})
+	}
+	index := jni.BuildIndex(javaFiles, cppFiles)
+	peers := make([]jni.Link, 0)
+	if params.ClassName != "" || params.MethodName != "" {
+		peers = append(peers, index.JavaPeers(params.ClassName, params.MethodName)...)
+	}
+	if params.FunctionName != "" {
+		peers = append(peers, index.NativePeers(params.FunctionName)...)
+	}
+	return jsonrpc.Success(request.ID, JNIPeersResult{Peers: peers, Diagnostics: index.Diagnostics})
+}
+
+func normalizeJNIInputs(inputs map[string]string, language string) (map[model.RepoPath]string, []model.Diagnostic) {
+	result := make(map[model.RepoPath]string, len(inputs))
+	diagnostics := make([]model.Diagnostic, 0)
+	for rawPath, source := range inputs {
+		path, err := model.NormalizeRepoPath(rawPath)
+		if err != nil {
+			diagnostics = append(diagnostics, model.Diagnostic{
+				Code:     "JNI_INVALID_REPO_PATH",
+				Severity: model.SeverityError,
+				Stage:    "jni-rpc",
+				Message:  language + " file path is invalid: " + rawPath,
+			})
+			continue
+		}
+		result[path] = source
+	}
+	return result, diagnostics
 }
 
 func (server *Server) profileValidate(request jsonrpc.Request) jsonrpc.Response {
