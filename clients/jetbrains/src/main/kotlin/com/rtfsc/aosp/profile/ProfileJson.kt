@@ -1,4 +1,4 @@
-package io.github.irtfsc.aospide.profile
+package com.rtfsc.aosp.profile
 
 import com.fasterxml.jackson.databind.ObjectMapper
 
@@ -12,6 +12,11 @@ internal object ProfileJson {
                     "schemaVersion" to 1,
                     "id" to state.profileId,
                     "workspaceViewRoot" to state.workspaceViewRoot,
+                    "scope" to mapOf(
+                        "mode" to "selected-repositories",
+                        "include" to state.focusedSourcePaths.split(',')
+                            .map(String::trim).filter(String::isNotEmpty),
+                    ),
                     "canonicalRepoRoot" to state.canonicalRepoRoot,
                     "outRoot" to state.outRoot,
                     "visibilityPolicy" to mapOf("mode" to "strict-view"),

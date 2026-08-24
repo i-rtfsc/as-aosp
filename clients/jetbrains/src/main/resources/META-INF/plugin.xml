@@ -1,5 +1,5 @@
 <idea-plugin>
-    <id>io.github.irtfsc.aospide</id>
+    <id>com.rtfsc.aosp</id>
     <name>AOSP IDE</name>
     <vendor>AOSP IDE contributors</vendor>
     <description><![CDATA[
@@ -7,6 +7,7 @@
     ]]></description>
     <depends>com.intellij.modules.platform</depends>
     <extensions defaultExtensionNs="com.intellij">
-        <projectConfigurable instance="io.github.irtfsc.aospide.profile.ProfileConfigurable"/>
+        <projectConfigurable instance="com.rtfsc.aosp.profile.ProfileConfigurable"/>
+        <projectService serviceImplementation="com.rtfsc.aosp.project.FocusedRootsService"/>
     </extensions>
 </idea-plugin>

@@ -1,4 +1,4 @@
-package io.github.irtfsc.aospide.engine
+package com.rtfsc.aosp.engine
 
 import java.io.BufferedReader
 import java.io.InputStream

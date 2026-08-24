@@ -1,4 +1,4 @@
-package io.github.irtfsc.aospide.profile
+package com.rtfsc.aosp.profile
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue

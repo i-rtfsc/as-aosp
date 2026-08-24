@@ -1,4 +1,4 @@
-package io.github.irtfsc.aospide.profile
+package com.rtfsc.aosp.profile
 
 import com.intellij.openapi.fileChooser.FileChooserDescriptor
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory
@@ -10,7 +10,9 @@ import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.ui.TextFieldWithBrowseButton
 import com.intellij.ui.components.JBTextField
 import com.intellij.util.ui.FormBuilder
-import io.github.irtfsc.aospide.engine.EngineProcess
+import com.rtfsc.aosp.engine.EngineProcess
+import com.rtfsc.aosp.project.WorkspaceRootPlanner
+import com.rtfsc.aosp.project.FocusedRootsService
 import java.awt.BorderLayout
 import java.awt.FlowLayout
 import java.awt.event.ActionListener
@@ -26,10 +28,12 @@ internal class ProfileConfigurable(
     private val settings = project.getService(EngineProfileSettings::class.java)
     private val profileId = JBTextField()
     private val workspaceViewRoot = TextFieldWithBrowseButton()
+    private val focusedSourcePaths = JBTextField()
     private val canonicalRepoRoot = TextFieldWithBrowseButton()
     private val outRoot = TextFieldWithBrowseButton()
     private val engineExecutable = TextFieldWithBrowseButton()
     private val validateButton = JButton("Validate")
+    private val applyRootsButton = JButton("Apply Focused Roots")
     private val panel = JPanel(BorderLayout())
     private val validateAction = ActionListener { validateInBackground() }
 
@@ -42,15 +46,18 @@ internal class ProfileConfigurable(
             FileChooserDescriptorFactory.createSingleFileOrExecutableAppDescriptor(),
         )
         validateButton.addActionListener(validateAction)
+        applyRootsButton.addActionListener { applyFocusedRoots() }
         val form = FormBuilder.createFormBuilder()
             .addLabeledComponent(JLabel("Profile ID"), profileId)
             .addLabeledComponent(JLabel("Workspace View Root"), workspaceViewRoot)
+            .addLabeledComponent(JLabel("Focused Source Paths"), focusedSourcePaths)
             .addLabeledComponent(JLabel("Canonical AOSP Root"), canonicalRepoRoot)
             .addLabeledComponent(JLabel("Out Root"), outRoot)
             .addLabeledComponent(JLabel("Engine Executable"), engineExecutable)
             .panel
         val actions = JPanel(FlowLayout(FlowLayout.LEFT))
         actions.add(validateButton)
+        actions.add(applyRootsButton)
         panel.add(form, BorderLayout.NORTH)
         panel.add(actions, BorderLayout.SOUTH)
     }
@@ -66,6 +73,7 @@ internal class ProfileConfigurable(
         settings.update { state ->
             state.profileId = draft.profileId
             state.workspaceViewRoot = draft.workspaceViewRoot
+            state.focusedSourcePaths = draft.focusedSourcePaths
             state.canonicalRepoRoot = draft.canonicalRepoRoot
             state.outRoot = draft.outRoot
             state.engineExecutable = draft.engineExecutable
@@ -76,6 +84,7 @@ internal class ProfileConfigurable(
         val state = settings.current
         profileId.text = state.profileId
         workspaceViewRoot.text = state.workspaceViewRoot
+        focusedSourcePaths.text = state.focusedSourcePaths
         canonicalRepoRoot.text = state.canonicalRepoRoot
         outRoot.text = state.outRoot
         engineExecutable.text = state.engineExecutable
@@ -89,6 +98,7 @@ internal class ProfileConfigurable(
         return EngineProfileState(
             profileId = profileId.text,
             workspaceViewRoot = workspaceViewRoot.text,
+            focusedSourcePaths = focusedSourcePaths.text,
             canonicalRepoRoot = canonicalRepoRoot.text,
             outRoot = outRoot.text,
             engineExecutable = engineExecutable.text,
@@ -100,6 +110,11 @@ internal class ProfileConfigurable(
         val errors = draft.localValidationErrors()
         if (errors.isNotEmpty()) {
             Messages.showWarningDialog(panel, errors.joinToString("\n"), "AOSP IDE")
+            return
+        }
+        val plan = WorkspaceRootPlanner.plan(draft)
+        if (plan.diagnostics.isNotEmpty()) {
+            Messages.showWarningDialog(panel, plan.diagnostics.joinToString("\n"), "AOSP IDE")
             return
         }
         validateButton.isEnabled = false
@@ -143,6 +158,25 @@ internal class ProfileConfigurable(
                 validateButton.isEnabled = true
             }
         }.queue()
+    }
+
+    private fun applyFocusedRoots() {
+        val errors = draftState().localValidationErrors()
+        if (errors.isNotEmpty()) {
+            Messages.showWarningDialog(panel, errors.joinToString("\n"), "AOSP IDE")
+            return
+        }
+        val plan = WorkspaceRootPlanner.plan(draftState())
+        if (!plan.isUsable) {
+            Messages.showWarningDialog(panel, plan.diagnostics.joinToString("\n"), "AOSP IDE")
+            return
+        }
+        val applied = project.getService(FocusedRootsService::class.java).apply()
+        Messages.showInfoMessage(
+            panel,
+            "Applied ${applied.sourceRoots.size} focused source root(s).",
+            "AOSP IDE",
+        )
     }
 
     private fun configureChooser(

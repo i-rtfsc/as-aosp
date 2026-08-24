@@ -39,8 +39,8 @@ initialize/shutdown client bootstrap。
 - compile/test platform：IntelliJ IDEA Community `2025.1.7.2`；
 - compatible build line：`sinceBuild = 251`，`untilBuild = 251.*`；
 - Kotlin/JVM toolchain：21；
-- plugin id：`io.github.irtfsc.aospide`；
-- Kotlin package：`io.github.irtfsc.aospide`。
+- plugin id：`com.rtfsc.aosp`；
+- Kotlin package：`com.rtfsc.aosp`。
 
 251 build line 用于同时覆盖同平台线的 IntelliJ IDEA 与 Android Studio。是否兼容具体 Android
 Studio patch 版本必须由 plugin verifier 证明，不能仅凭 build number 声称支持。
@@ -52,7 +52,7 @@ clients/jetbrains/
   build.gradle.kts
   settings.gradle.kts
   gradle.properties
-  src/main/kotlin/io/github/irtfsc/aospide/
+  src/main/kotlin/com/rtfsc/aosp/
     engine/
       JsonRpcFraming.kt
       EngineRpcClient.kt
@@ -119,8 +119,10 @@ engineExecutable
 
 ### 2.5 Profile configuration UI
 
-项目设置页提供五个字段：profile id、Workspace View Root、Canonical AOSP Root、Out Root
-和 engine executable。Canonical/Out 可以为空；engine executable 是验证和后续启动的唯一
+项目设置页提供六个字段：profile id、Workspace View Root、Focused Source Paths、Canonical
+AOSP Root、Out Root 和 engine executable。Focused Source Paths 使用 Workspace View Root
+下的相对路径（逗号分隔），例如 `frameworks/base,system/core,ui`；空值表示只投影
+Workspace View Root。Canonical/Out 可以为空；engine executable 是验证和后续启动的唯一
 可执行文件，不根据 PATH 猜测。
 
 按钮语义：
@@ -134,6 +136,27 @@ engineExecutable
 
 首版 UI 不创建 source root、不读取 Soong metadata、不递归扫描 AOSP，也不把 engine stderr
 直接展示为用户诊断；详细诊断后续通过 Tool Window 展示。
+
+### 2.6 Focused source root projection
+
+投影由纯 Kotlin planner 先生成 `WorkspaceRootPlan`，再由 JetBrains adapter 应用：
+
+```text
+EngineProfileState
+  -> WorkspaceRootPlan
+       sourceRoots: explicit focused paths or workspace root
+       excludedRoots: .git, .repo, out, .aosp-ide, canonical root when nested
+       diagnostics: invalid/escaping/missing paths
+  -> non-persistent focused module
+       content roots + source folders + excluded folders
+```
+
+planner 只规范化用户明确填写的相对路径和固定排除目录，不递归列举 Workspace View，
+不 follow symlink，不把 Canonical AOSP Root 注册为 content root。投影模块使用
+`newNonPersistentModule`，关闭项目时释放；已有 Android/IDEA 模块不被重写。
+
+Apply Focused Roots 是显式操作，失败只保留诊断，不修改 profile state。后续可把同一 plan
+接到 Workspace Model；当前 adapter 使用 IntelliJ ModuleRootModel 证明 focused view 边界。
 
 ## 3. VS Code
 

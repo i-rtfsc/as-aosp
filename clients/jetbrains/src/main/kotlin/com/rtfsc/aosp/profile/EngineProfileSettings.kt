@@ -1,4 +1,4 @@
-package io.github.irtfsc.aospide.profile
+package com.rtfsc.aosp.profile
 
 import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.Service

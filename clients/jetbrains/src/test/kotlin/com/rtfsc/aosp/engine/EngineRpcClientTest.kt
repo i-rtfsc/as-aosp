@@ -1,4 +1,4 @@
-package io.github.irtfsc.aospide.engine
+package com.rtfsc.aosp.engine
 
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream

@@ -5,7 +5,7 @@ plugins {
     id("org.jetbrains.intellij.platform") version "2.18.1"
 }
 
-group = "io.github.irtfsc.aospide"
+group = "com.rtfsc.aosp"
 version = "0.1.0-dev"
 
 val localPlatformPath = providers.gradleProperty("intellijPlatformPath")
