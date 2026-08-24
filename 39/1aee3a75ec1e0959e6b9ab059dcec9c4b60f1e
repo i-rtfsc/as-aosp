@@ -1,0 +1,42 @@
+clients/vscode/src/status.test.ts
+  s_0fcc3f909ad4ee::t_2c4e19aa94ae8c 1-13
+docs/roadmap/current-state.md
+  s_0fcc3f909ad4ee::t_2c4e19aa94ae8c 14
+docs/roadmap/delivery-plan.md
+  s_0fcc3f909ad4ee::t_6e91eec898b202 50
+clients/vscode/src/extension.ts
+  s_0fcc3f909ad4ee::t_18f15805b10d50 8,14,52-58
+  s_5f30dac179bcb2::t_7e5423afa2c9e7 59
+clients/vscode/package.json
+  s_0fcc3f909ad4ee::t_18f15805b10d50 17,59-62
+clients/vscode/src/status.ts
+  s_0fcc3f909ad4ee::t_18f15805b10d50 1-16
+docs/design/ide-client-and-navigation-design.md
+  s_0fcc3f909ad4ee::t_6e91eec898b202 257-260
+clients/vscode/src/engine/client.ts
+  s_0fcc3f909ad4ee::t_18f15805b10d50 54-56,64-69,73,91,114,179-185
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "391aee3a75ec1e0959e6b9ab059dcec9c4b60f1e",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    },
+    "s_5f30dac179bcb2": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "019ffe38-b3cd-77e3-8987-f48bc62a086c",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
