@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import { EngineClient } from "../engine/client";
 import { workspaceViewRoot } from "./paths";
 import * as path from "node:path";
+import { overlayClangdConfig } from "./clangd_config";
 
 export async function refreshCompdbOverlay(engine: EngineClient, output?: vscode.OutputChannel): Promise<void> {
   const root = workspaceViewRoot();
@@ -28,7 +29,7 @@ export async function refreshCompdbOverlay(engine: EngineClient, output?: vscode
     }
   }
   const clangdConfig = vscode.Uri.file(path.join(path.dirname(target.fsPath), ".clangd"));
-  await vscode.workspace.fs.writeFile(clangdConfig, Buffer.from("CompileFlags:\n  CompilationDatabase: .\n", "utf8"));
+  await vscode.workspace.fs.writeFile(clangdConfig, Buffer.from(overlayClangdConfig, "utf8"));
   if (result.diagnostics.length > 0) {
     void vscode.window.showWarningMessage(`Compilation database refreshed with ${result.diagnostics.length} diagnostics.`);
   } else {
