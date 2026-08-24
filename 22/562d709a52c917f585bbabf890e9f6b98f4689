@@ -1,0 +1,41 @@
+docs/design/ide-client-and-navigation-design.md
+  s_0fcc3f909ad4ee::t_fbd4db7f9b462c 194-195
+clients/vscode/package.json
+  s_0fcc3f909ad4ee::t_29dce03a3977ac 49
+clients/vscode/src/extension.ts
+  s_0fcc3f909ad4ee::t_fbd4db7f9b462c 8-11,23-27
+  s_e9dd769d815b63::t_5fc3905ff2356d 28
+docs/roadmap/current-state.md
+  s_0fcc3f909ad4ee::t_856703b5fe175e 9
+clients/vscode/src/engine/client.ts
+  s_0fcc3f909ad4ee::t_29dce03a3977ac 4-10,29,32,35-40,42,44-54,57-58,62-63,69-73,82,100-104,117,124-127,131-132,135
+  s_0fcc3f909ad4ee::t_fbd4db7f9b462c 55-56,59-61,64-65,74-75,81,130,133-134
+docs/engineering/build-and-test-guide.md
+  s_0fcc3f909ad4ee::t_fbd4db7f9b462c 18
+clients/vscode/src/engine/client.test.ts
+  s_0fcc3f909ad4ee::t_29dce03a3977ac 1-77
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "22562d709a52c917f585bbabf890e9f6b98f4689",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    },
+    "s_e9dd769d815b63": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a03183-9fdd-7f72-b2c6-acb6e5382f11",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
