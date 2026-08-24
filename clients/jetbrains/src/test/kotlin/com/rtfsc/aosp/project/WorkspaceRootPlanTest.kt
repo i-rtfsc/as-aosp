@@ -59,4 +59,16 @@ class WorkspaceRootPlanTest {
         assertTrue(plan.diagnostics.any { it.contains("Canonical AOSP Root") })
         assertTrue(!plan.isUsable)
     }
+
+    @Test
+    fun excludesCanonicalRootWhenItIsNestedInTheView() {
+        val plan = WorkspaceRootPlanner.plan(
+            EngineProfileState(
+                workspaceViewRoot = "/workspace",
+                canonicalRepoRoot = "/workspace/full-aosp",
+            ),
+        )
+
+        assertTrue(plan.excludedRoots.contains(Paths.get("/workspace/full-aosp")))
+    }
 }

@@ -32,7 +32,7 @@ internal object WorkspaceRootPlanner {
             if (canonicalPath != null && canonicalPath == contentRoot) {
                 diagnostics += "Canonical AOSP Root must not be the Workspace View Root."
             }
-            if (canonicalPath != null && contentRoot.startsWith(canonicalPath)) {
+            if (canonicalPath != null && canonicalPath.startsWith(contentRoot)) {
                 excludedRoots.add(canonicalPath)
             }
         }

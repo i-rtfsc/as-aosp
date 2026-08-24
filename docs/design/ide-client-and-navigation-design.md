@@ -105,6 +105,7 @@ profile 保存为项目级 IDE workspace state：
 ```text
 profileId
 workspaceViewRoot
+focusedSourcePaths
 canonicalRepoRoot
 outRoot
 engineExecutable

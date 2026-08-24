@@ -23,7 +23,7 @@
 ## 4. Negative capability
 
 - 当前不能打开 AOSP 并自动提供导航；
-- 当前 JetBrains 插件已有 descriptor、Kotlin RPC framing/lifecycle client、EngineProcess 和 project-local profile state；仍没有配置 UI、Workspace Model、AIDL PSI 或 JNI action；
+- 当前 JetBrains 插件已有 descriptor、Kotlin RPC framing/lifecycle client、EngineProcess、project-local profile state、profile UI 和 focused root planner/非持久投影模块；仍没有 AIDL PSI 或 JNI action；
 - 当前 daemon 只启用 initialize、shutdown、profile validate、topology discover/validate；索引、AIDL、JNI RPC capability 尚未启用；
 - 当前 JNI 只覆盖 Java/Kotlin declaration、静态导出、常见 `JNINativeMethod` 注册表和有限注册调用；复杂宏、运行时 class 解析和完整 C++ 语义仍未覆盖；
 - 当前没有发布版跨平台 engine binary；

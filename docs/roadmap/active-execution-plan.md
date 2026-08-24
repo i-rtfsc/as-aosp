@@ -17,10 +17,11 @@
 3. 加入插件 descriptor、单元测试和 `buildPlugin` 验证。
 4. 实现跨平台 EngineProcess 和项目级 profile persistence。
 5. 实现 profile UI，并通过 RPC 验证配置。
-6. 后续实现 Workspace Model focused source roots。
+6. 实现 focused source root planner 和非持久投影模块。
+7. 后续替换为 Workspace Model focused source roots。
 
-当前验收：`make test-jetbrains`、EngineProcess lifecycle fixture 和 profile state fixture 已通过。
-下一验收：profile UI 能保存配置并显示 profile diagnostics，再创建 focused source roots。
+当前验收：`make test-jetbrains`、EngineProcess lifecycle fixture、profile state fixture 和 focused root planner fixture 已通过。
+下一验收：真实 IDE fixture 验证非持久模块、source roots 和排除目录投影。
 
 ## 3. 开发约束
 
