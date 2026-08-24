@@ -307,6 +307,18 @@ func TestServerMapsCompDBOverlayPaths(t *testing.T) {
 	}
 }
 
+func TestServerMapsWindowsCompDBPathsOnAnyHost(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, "compile_commands.json", `[{"directory":"C:\\build\\out","arguments":["clang++","-IC:\\build\\include"],"file":"C:\\build\\src\\foo.cpp"}]`)
+	server := initializedServer(t)
+	response, _ := server.Handle(makeRequest(2, "aosp/compdb/overlay", CompDBOverlayParams{MetadataRoot: root, PathMappings: []model.PathMapping{{ExternalPrefix: "C:\\build", LocalPrefix: "D:\\aosp"}}}))
+	var result CompDBOverlayResult
+	decodeResult(t, response, &result)
+	if len(result.Entries) != 1 || filepath.ToSlash(result.Entries[0].File) != "D:/aosp/src/foo.cpp" {
+		t.Fatalf("result=%+v", result)
+	}
+}
+
 func TestServerUpgradesVisibleAIDLGeneratedJavaPeer(t *testing.T) {
 	root := t.TempDir()
 	writeTestFile(t, root, "demo/IFoo.aidl", "package demo; interface IFoo {}")

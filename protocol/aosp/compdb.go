@@ -66,17 +66,25 @@ func readCompDB(root string) ([]byte, error) {
 }
 
 func mapCompDBPath(value string, mappings []model.PathMapping, diagnostics []model.Diagnostic) (string, []model.Diagnostic) {
-	if value == "" || !filepath.IsAbs(value) {
+	normalizedValue := strings.ReplaceAll(value, "\\", "/")
+	if value == "" || (!filepath.IsAbs(value) && !isCompDBAbsolute(normalizedValue)) {
 		return value, diagnostics
 	}
 	for _, mapping := range mappings {
-		external := filepath.Clean(mapping.ExternalPrefix)
-		if value == external || strings.HasPrefix(value, external+string(os.PathSeparator)) || strings.HasPrefix(strings.ReplaceAll(value, "\\", "/"), strings.TrimRight(strings.ReplaceAll(external, "\\", "/"), "/")+"/") {
-			return filepath.Clean(filepath.Join(mapping.LocalPrefix, strings.TrimPrefix(strings.TrimPrefix(value, external), string(os.PathSeparator)))), diagnostics
+		external := strings.TrimRight(strings.ReplaceAll(mapping.ExternalPrefix, "\\", "/"), "/")
+		if normalizedValue == external || strings.HasPrefix(normalizedValue, external+"/") {
+			suffix := strings.TrimPrefix(normalizedValue, external)
+			local := strings.ReplaceAll(mapping.LocalPrefix, "\\", "/") + suffix
+			return filepath.Clean(filepath.FromSlash(local)), diagnostics
 		}
 	}
 	diagnostics = append(diagnostics, model.Diagnostic{Code: "COMPDB_PATH_UNMAPPED", Severity: model.SeverityWarning, Stage: "compdb-rpc", Message: "compdb path was not mapped: " + value})
 	return value, diagnostics
+}
+
+func isCompDBAbsolute(value string) bool {
+	return strings.HasPrefix(value, "/") || strings.HasPrefix(value, "//") ||
+		(len(value) >= 3 && value[1] == ':' && value[2] == '/')
 }
 
 func mapCompDBArgument(value string, mappings []model.PathMapping, diagnostics []model.Diagnostic) (string, []model.Diagnostic) {
