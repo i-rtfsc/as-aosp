@@ -4,7 +4,6 @@ import (
 	"crypto/sha256"
 	"encoding/json"
 	"fmt"
-	"os"
 	"path/filepath"
 	"sort"
 	"strconv"
@@ -241,101 +240,22 @@ func filterJNIPeersByPath(peers []jni.Link, current model.RepoPath) []jni.Link {
 func scanJNIWorkspace(root string) (map[model.RepoPath]string, map[model.RepoPath]string, []model.Diagnostic) {
 	javaFiles := make(map[model.RepoPath]string)
 	cppFiles := make(map[model.RepoPath]string)
-	diagnostics := make([]model.Diagnostic, 0)
-	absolute, err := filepath.Abs(root)
-	if err != nil {
-		return javaFiles, cppFiles, []model.Diagnostic{{
-			Code: "JNI_WORKSPACE_INVALID", Severity: model.SeverityError,
-			Stage: "jni-workspace", Message: err.Error(),
-		}}
-	}
-	info, err := os.Stat(absolute)
-	if err != nil || !info.IsDir() {
-		message := "workspace view root is not a directory"
-		if err != nil {
-			message = err.Error()
-		}
-		return javaFiles, cppFiles, []model.Diagnostic{{
-			Code: "JNI_WORKSPACE_INVALID", Severity: model.SeverityError,
-			Stage: "jni-workspace", Message: message,
-		}}
-	}
-	var walk func(string, string, map[string]bool) error
-	walk = func(current, relative string, ancestors map[string]bool) error {
-		real, evalErr := filepath.EvalSymlinks(current)
-		if evalErr == nil {
-			real = filepath.Clean(real)
-			if ancestors[real] {
-				return nil
-			}
-			ancestors = cloneStringSet(ancestors)
-			ancestors[real] = true
-		}
-		entries, readErr := os.ReadDir(current)
-		if readErr != nil {
-			return readErr
-		}
-		for _, entry := range entries {
-			childRelative := filepath.Join(relative, entry.Name())
-			if isJNIExcluded(childRelative) {
-				continue
-			}
-			child := filepath.Join(current, entry.Name())
-			info, statErr := os.Stat(child)
-			if statErr != nil {
-				diagnostics = append(diagnostics, jniWorkspaceDiagnostic("JNI_WORKSPACE_READ", statErr.Error()))
-				continue
-			}
-			if info.IsDir() {
-				if err := walk(child, childRelative, ancestors); err != nil {
-					diagnostics = append(diagnostics, jniWorkspaceDiagnostic("JNI_WORKSPACE_READ", err.Error()))
-				}
-				continue
-			}
-			extension := strings.ToLower(filepath.Ext(entry.Name()))
-			if !isJNISourceExtension(extension) {
-				continue
-			}
-			source, readErr := os.ReadFile(child)
-			if readErr != nil {
-				diagnostics = append(diagnostics, jniWorkspaceDiagnostic("JNI_WORKSPACE_READ", readErr.Error()))
-				continue
-			}
-			repoPath, pathErr := model.NormalizeRepoPath(filepath.ToSlash(childRelative))
-			if pathErr != nil {
-				diagnostics = append(diagnostics, jniWorkspaceDiagnostic("JNI_INVALID_REPO_PATH", pathErr.Error()))
-				continue
-			}
-			if extension == ".java" || extension == ".kt" {
-				javaFiles[repoPath] = string(source)
-			} else {
-				cppFiles[repoPath] = string(source)
-			}
-		}
-		return nil
-	}
-	err = walk(absolute, "", map[string]bool{})
-	if err != nil {
-		diagnostics = append(diagnostics, jniWorkspaceDiagnostic("JNI_WORKSPACE_READ", err.Error()))
-	}
-	return javaFiles, cppFiles, diagnostics
-}
-
-func cloneStringSet(values map[string]bool) map[string]bool {
-	clone := make(map[string]bool, len(values)+1)
-	for value := range values {
-		clone[value] = true
-	}
-	return clone
-}
-
-func isJNIExcluded(relative string) bool {
-	for _, part := range strings.Split(filepath.ToSlash(relative), "/") {
-		if part == ".git" || part == ".repo" || part == "out" || part == ".aosp-ide" {
-			return true
+	scan := scanWorkspaceSources(
+		root,
+		"jni-workspace",
+		"JNI_WORKSPACE_INVALID",
+		"JNI_WORKSPACE_READ",
+		isJNISourceExtension,
+	)
+	for repoPath, source := range scan.Files {
+		extension := strings.ToLower(filepath.Ext(string(repoPath)))
+		if extension == ".java" || extension == ".kt" {
+			javaFiles[repoPath] = source
+		} else {
+			cppFiles[repoPath] = source
 		}
 	}
-	return false
+	return javaFiles, cppFiles, scan.Diagnostics
 }
 
 func isJNISourceExtension(extension string) bool {
@@ -345,10 +265,6 @@ func isJNISourceExtension(extension string) bool {
 	default:
 		return false
 	}
-}
-
-func jniWorkspaceDiagnostic(code, message string) model.Diagnostic {
-	return model.Diagnostic{Code: code, Severity: model.SeverityWarning, Stage: "jni-workspace", Message: message}
 }
 
 func normalizeJNIInputs(inputs map[string]string, language string) (map[model.RepoPath]string, []model.Diagnostic) {

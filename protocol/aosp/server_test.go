@@ -30,7 +30,7 @@ func TestServerLifecycleAndCapabilities(t *testing.T) {
 	}
 	var initialized InitializeResult
 	decodeResult(t, response, &initialized)
-	if !initialized.Capabilities.JNINavigation {
+	if !initialized.Capabilities.AIDLNavigation || !initialized.Capabilities.JNINavigation {
 		t.Fatalf("capabilities=%+v", initialized.Capabilities)
 	}
 	response, _ = server.Handle(makeRequest(3, "aosp/initialize", InitializeParams{ProtocolVersion: "1.0"}))

@@ -1,10 +1,6 @@
 package aosp
 
 import (
-	"os"
-	"path/filepath"
-	"strings"
-
 	"github.com/i-rtfsc/as-aosp/core/aidl"
 	"github.com/i-rtfsc/as-aosp/core/model"
 	"github.com/i-rtfsc/as-aosp/protocol/jsonrpc"
@@ -55,81 +51,23 @@ func (server *Server) aidlResolve(request jsonrpc.Request) jsonrpc.Response {
 
 func scanAIDLWorkspace(root string) (aidl.Index, []model.Diagnostic) {
 	index := aidl.NewIndex()
-	diagnostics := make([]model.Diagnostic, 0)
-	absolute, err := filepath.Abs(root)
-	if err != nil {
-		return index, []model.Diagnostic{{Code: "AIDL_WORKSPACE_INVALID", Severity: model.SeverityError, Stage: "aidl-workspace", Message: err.Error()}}
-	}
-	info, err := os.Stat(absolute)
-	if err != nil || !info.IsDir() {
-		message := "workspace view root is not a directory"
-		if err != nil {
-			message = err.Error()
+	scan := scanWorkspaceSources(
+		root,
+		"aidl-workspace",
+		"AIDL_WORKSPACE_INVALID",
+		"AIDL_WORKSPACE_READ",
+		func(extension string) bool { return extension == ".aidl" },
+	)
+	diagnostics := scan.Diagnostics
+	for repoPath, source := range scan.Files {
+		document := aidl.Parse(repoPath, source)
+		for index := range document.Diagnostics {
+			if document.Diagnostics[index].RepoPath == "" {
+				document.Diagnostics[index].RepoPath = repoPath
+			}
 		}
-		return index, []model.Diagnostic{{Code: "AIDL_WORKSPACE_INVALID", Severity: model.SeverityError, Stage: "aidl-workspace", Message: message}}
-	}
-	var walk func(string, string, map[string]bool) error
-	walk = func(current, relative string, ancestors map[string]bool) error {
-		real, evalErr := filepath.EvalSymlinks(current)
-		if evalErr == nil {
-			real = filepath.Clean(real)
-			if ancestors[real] {
-				return nil
-			}
-			ancestors = cloneStringSet(ancestors)
-			ancestors[real] = true
-		}
-		entries, readErr := os.ReadDir(current)
-		if readErr != nil {
-			return readErr
-		}
-		for _, entry := range entries {
-			childRelative := filepath.Join(relative, entry.Name())
-			if isJNIExcluded(childRelative) {
-				continue
-			}
-			child := filepath.Join(current, entry.Name())
-			info, statErr := os.Stat(child)
-			if statErr != nil {
-				diagnostics = append(diagnostics, aidlWorkspaceDiagnostic("AIDL_WORKSPACE_READ", statErr.Error()))
-				continue
-			}
-			if info.IsDir() {
-				if err := walk(child, childRelative, ancestors); err != nil {
-					diagnostics = append(diagnostics, aidlWorkspaceDiagnostic("AIDL_WORKSPACE_READ", err.Error()))
-				}
-				continue
-			}
-			if strings.ToLower(filepath.Ext(entry.Name())) != ".aidl" {
-				continue
-			}
-			source, readErr := os.ReadFile(child)
-			if readErr != nil {
-				diagnostics = append(diagnostics, aidlWorkspaceDiagnostic("AIDL_WORKSPACE_READ", readErr.Error()))
-				continue
-			}
-			repoPath, pathErr := model.NormalizeRepoPath(filepath.ToSlash(childRelative))
-			if pathErr != nil {
-				diagnostics = append(diagnostics, aidlWorkspaceDiagnostic("AIDL_INVALID_REPO_PATH", pathErr.Error()))
-				continue
-			}
-			document := aidl.Parse(repoPath, string(source))
-			for index := range document.Diagnostics {
-				if document.Diagnostics[index].RepoPath == "" {
-					document.Diagnostics[index].RepoPath = repoPath
-				}
-			}
-			diagnostics = append(diagnostics, document.Diagnostics...)
-			index.Add(document)
-		}
-		return nil
-	}
-	if err := walk(absolute, "", map[string]bool{}); err != nil {
-		diagnostics = append(diagnostics, aidlWorkspaceDiagnostic("AIDL_WORKSPACE_READ", err.Error()))
+		diagnostics = append(diagnostics, document.Diagnostics...)
+		index.Add(document)
 	}
 	return index, diagnostics
-}
-
-func aidlWorkspaceDiagnostic(code, message string) model.Diagnostic {
-	return model.Diagnostic{Code: code, Severity: model.SeverityWarning, Stage: "aidl-workspace", Message: message}
 }
