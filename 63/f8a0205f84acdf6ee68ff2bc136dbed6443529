@@ -1,0 +1,21 @@
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/jni/JniPeerAction.kt
+  s_0fcc3f909ad4ee::t_e4a4b4f71fb430 24-25,92-94,113-114,116-120,122-127
+docs/design/protocol-and-profile-design.md
+  s_0fcc3f909ad4ee::t_1f197af8bc56d8 88
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "63f8a0205f84acdf6ee68ff2bc136dbed6443529",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
