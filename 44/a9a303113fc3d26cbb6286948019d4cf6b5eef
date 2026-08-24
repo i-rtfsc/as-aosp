@@ -1,0 +1,21 @@
+clients/jetbrains/src/test/kotlin/com/rtfsc/aosp/project/FocusedRootsServicePlatformTest.kt
+  s_0fcc3f909ad4ee::t_d5b112750c2880 4,34,36-42,47-48,51-52
+  s_0fcc3f909ad4ee::t_105f80359321aa 35,43-46,49-50
+  s_0fcc3f909ad4ee::t_de270c5bd50ac5 53
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "44a9a303113fc3d26cbb6286948019d4cf6b5eef",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
