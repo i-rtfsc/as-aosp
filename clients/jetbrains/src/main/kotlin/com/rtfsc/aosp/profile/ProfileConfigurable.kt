@@ -11,12 +11,12 @@ import com.intellij.openapi.ui.TextFieldWithBrowseButton
 import com.intellij.ui.components.JBTextField
 import com.intellij.util.ui.FormBuilder
 import com.rtfsc.aosp.engine.EngineProcess
+import com.rtfsc.aosp.engine.EngineCommand
 import com.rtfsc.aosp.project.WorkspaceRootPlanner
 import com.rtfsc.aosp.project.FocusedRootsService
 import java.awt.BorderLayout
 import java.awt.FlowLayout
 import java.awt.event.ActionListener
-import java.nio.file.Path
 import javax.swing.JButton
 import javax.swing.JComponent
 import javax.swing.JLabel
@@ -125,7 +125,7 @@ internal class ProfileConfigurable(
                 val process = EngineProcess()
                 try {
                     indicator.text = "Starting engine"
-                    process.start(Path.of(draft.engineExecutable))
+                    EngineCommand.start(process, draft.engineExecutable)
                     indicator.text = "Validating profile"
                     val response = process.request(
                         "aosp/profile/validate",

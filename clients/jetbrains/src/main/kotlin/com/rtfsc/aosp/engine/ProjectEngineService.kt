@@ -4,7 +4,6 @@ import com.intellij.openapi.Disposable
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.project.Project
 import com.rtfsc.aosp.profile.EngineProfileSettings
-import java.nio.file.Path
 
 @Service(Service.Level.PROJECT)
 internal class ProjectEngineService(
@@ -16,7 +15,7 @@ internal class ProjectEngineService(
     fun start(): ByteArray {
         val executable = profileSettings.current.engineExecutable
         require(executable.isNotBlank()) { "engine executable is not configured" }
-        return engineProcess.start(Path.of(executable))
+        return EngineCommand.start(engineProcess, executable)
     }
 
     fun stop() {

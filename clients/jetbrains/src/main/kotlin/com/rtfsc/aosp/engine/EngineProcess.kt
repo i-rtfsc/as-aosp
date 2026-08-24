@@ -82,7 +82,7 @@ internal class EngineProcess(
     }
 
     private fun drainStderr(stream: InputStream) {
-        thread(start = true, isDaemon = true, name = "aosp-indexd-stderr") {
+        thread(start = true, isDaemon = true, name = "aosp-index-stderr") {
             BufferedReader(InputStreamReader(stream, Charsets.UTF_8)).useLines { lines ->
                 lines.forEach(stderrSink)
             }
@@ -92,7 +92,7 @@ internal class EngineProcess(
     private fun <T> callWithTimeout(timeoutMillis: Long, operation: () -> T): T {
         require(timeoutMillis > 0) { "engine timeout must be positive" }
         val executor = Executors.newSingleThreadExecutor { runnable ->
-            Thread(runnable, "aosp-indexd-rpc").apply { isDaemon = true }
+            Thread(runnable, "aosp-index-rpc").apply { isDaemon = true }
         }
         return try {
             executor.submit(Callable(operation)).get(timeoutMillis, TimeUnit.MILLISECONDS)

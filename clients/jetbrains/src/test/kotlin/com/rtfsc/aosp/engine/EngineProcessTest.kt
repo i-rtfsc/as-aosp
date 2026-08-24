@@ -16,13 +16,13 @@ class EngineProcessTest {
         val process = EngineProcess(factory)
 
         val response = process.start(
-            Path.of("/opt/aosp-indexd"),
+            Path.of("/opt/aosp-index"),
             listOf("--stdio", "path with spaces"),
         )
 
         assertTrue(response.decodeToString().contains("\"result\":{}"))
         assertEquals(
-            listOf("/opt/aosp-indexd", "--stdio", "path with spaces"),
+            listOf("/opt/aosp-index", "--stdio", "path with spaces"),
             factory.command,
         )
         assertTrue(process.isRunning)
@@ -33,7 +33,7 @@ class EngineProcessTest {
     fun stopSendsShutdownAndClearsSession() {
         val factory = RecordingProcessFactory()
         val process = EngineProcess(factory)
-        process.start(Path.of("aosp-indexd"))
+        process.start(Path.of("aosp-index"))
 
         process.stop()
 
@@ -48,7 +48,7 @@ class EngineProcessTest {
         val process = EngineProcess(factory)
 
         try {
-            process.start(Path.of("aosp-indexd"))
+        process.start(Path.of("aosp-index"))
             throw AssertionError("initialize error was accepted")
         } catch (_: EngineRpcException) {
         }
