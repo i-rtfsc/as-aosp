@@ -1,0 +1,44 @@
+docs/roadmap/current-state.md
+  s_0fcc3f909ad4ee::t_e0d0a1674b9826 26
+clients/vscode/src/navigation/jni.test.ts
+  s_0fcc3f909ad4ee::t_235d5baacafa7d 1-2,4-26
+  s_0fcc3f909ad4ee::t_fe9a59e3cf86e3 3
+clients/vscode/src/extension.ts
+  s_0fcc3f909ad4ee::t_235d5baacafa7d 6,29-31
+  s_0fcc3f909ad4ee::t_9370039050f434 27-28,33
+  s_e9dd769d815b63::t_03d6949abb6825 32
+clients/vscode/src/navigation/jni_selection.ts
+  s_0fcc3f909ad4ee::t_fe9a59e3cf86e3 1-15
+docs/roadmap/delivery-plan.md
+  s_0fcc3f909ad4ee::t_e0d0a1674b9826 50
+clients/vscode/src/navigation/jni.ts
+  s_0fcc3f909ad4ee::t_235d5baacafa7d 6-9,11-23,31-32,36,42
+  s_0fcc3f909ad4ee::t_9370039050f434 10
+  s_0fcc3f909ad4ee::t_fe9a59e3cf86e3 4-5
+docs/design/ide-client-and-navigation-design.md
+  s_0fcc3f909ad4ee::t_e0d0a1674b9826 233-237
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "392274f4ed9394ea71358c4bbb3aa04e1e429e82",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    },
+    "s_e9dd769d815b63": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a03183-9fdd-7f72-b2c6-acb6e5382f11",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
