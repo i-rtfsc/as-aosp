@@ -83,7 +83,7 @@ clients/jetbrains/
 Engine process 的默认启动方式：
 
 ```text
-configured executable path -> ProcessBuilder(argument list) -> aosp-indexd
+configured executable path -> ProcessBuilder([executable, "serve", "--stdio"])
 ```
 
 约束：

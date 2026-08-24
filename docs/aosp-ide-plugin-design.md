@@ -12,7 +12,7 @@
 
 | 领域 | 决策 |
 |---|---|
-| 共享核心 | Go 常驻进程 aosp-indexd |
+| 共享核心 | Go `aosp-index serve --stdio` |
 | IDE 通信 | stdin/stdout JSON-RPC 2.0 |
 | JetBrains 客户端 | Kotlin + IntelliJ Platform SDK |
 | VS Code 客户端 | TypeScript + vscode-languageclient |
@@ -46,7 +46,7 @@ Go 不是唯一可选项，但最符合当前需求：
                               |
                     +---------v---------+
                     |  AOSP Index Engine |
-                    |    aosp-indexd     |
+                    | aosp-index serve   |
                     +----+----------+----+
                          | JSON-RPC |
              +-----------+          +-----------+
@@ -1251,8 +1251,6 @@ dev-ide 分支的当前 Git 仓库根目录就是插件项目根目录，不创�
 │
 ├── cmd/
 │   ├── aosp-index/
-│   │   └── main.go
-│   ├── aosp-indexd/
 │   │   └── main.go
 │   └── aosp-doctor/
 │       └── main.go

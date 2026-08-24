@@ -6,7 +6,7 @@
 2. 实现 JSON-RPC request/response/error envelope。
 3. 实现 initialize/shutdown lifecycle 和版本协商。
 4. 暴露 profile validate、topology discover/validate。
-5. 增加 daemon stdio integration test 与 Make smoke。
+5. 增加 `aosp-index serve --stdio` integration test 与 Make smoke。
 
 下一验收：`make rpc-smoke` 和 `go test -race ./protocol/...` 通过。
 

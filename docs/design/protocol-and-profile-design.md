@@ -28,8 +28,8 @@ protocol/jsonrpc
 protocol/aosp
   AOSP 方法名、参数、结果、版本和 capability
 
-cmd/aosp-indexd
-  stdio lifecycle 与 core service wiring
+cmd/aosp-index
+  CLI commands and `serve --stdio` lifecycle wiring
 ```
 
 `core` 不依赖 `protocol`，JetBrains/VS Code 客户端不解析 CLI 文本。
@@ -77,7 +77,7 @@ created -> initialized -> shutdown-requested -> exited
 {
   "protocolVersion": "1.0",
   "serverInfo": {
-    "name": "aosp-indexd",
+    "name": "aosp-index",
     "version": "dev"
   },
   "capabilities": {
@@ -103,6 +103,16 @@ aosp/profile/validate
 aosp/topology/discover
 aosp/topology/validate
 ```
+
+进程入口统一为一个跨平台二进制：
+
+```text
+aosp-index doctor|scan|metadata|aidl|jni
+aosp-index serve --stdio
+```
+
+插件只配置 `aosp-index` executable，固定追加 `serve --stdio` 参数；不再分发独立
+独立 `aosp-indexd` 文件。
 
 后续索引 slice：
 

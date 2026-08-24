@@ -55,8 +55,7 @@ clients -> rpc only
 
 ## 4. 产物边界
 
-- `aosp-index`：诊断和单次查询 CLI；
-- `aosp-indexd`：stdio JSON-RPC daemon；
+- `aosp-index`：诊断、单次查询和 `serve --stdio` JSON-RPC daemon；
 - JetBrains plugin：平台插件包；
 - VS Code extension：VSIX；
 - engine binaries：按 OS/arch 携带，不进入 AOSP out。

@@ -41,7 +41,7 @@ L4 External Sources
 
 ~~~text
 Android Studio / IDEA ─┐
-                       ├─ stdio JSON-RPC ─> aosp-indexd
+                       ├─ stdio JSON-RPC ─> aosp-index serve --stdio
 VS Code Extension ─────┘                         │
                                                 ├─ source view
                                                 ├─ out metadata

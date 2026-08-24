@@ -11,7 +11,7 @@
 
 ## 2. Partial
 
-- 根目录、Makefile、Phase 0 CLI、首版 stdio JSON-RPC daemon 和 JetBrains 251 bootstrap 已完成；Workspace Model、语言适配和远程执行入口尚未实现，ModuleRootModel focused adapter 已具备。
+- 根目录、Makefile、Phase 0 CLI、`aosp-index serve --stdio` 和 JetBrains 251 bootstrap 已完成；Workspace Model、语言适配和远程执行入口尚未实现，ModuleRootModel focused adapter 已具备。
 - WorkspaceTopology、PathMapper、SourceMount 和四类 metadata reader 已有初始实现，但真实 AOSP schema 覆盖、路径映射接线和完整 topology 发现仍未闭合。
 - AIDL source parser/index、owning module、srcjar entry 和 Java/C++/NDK build-backed peers 已接入 ModuleGraph；JNI source-only index 与 profile/topology RPC 已接入 CLI/daemon，IDE adapters 尚未闭合。
 
@@ -24,7 +24,7 @@
 
 - 当前不能打开 AOSP 并自动提供导航；
 - 当前 JetBrains 插件已有 descriptor、Kotlin RPC framing/lifecycle client、EngineProcess、project-local profile state、profile UI 和 focused root planner/非持久投影模块；仍没有 AIDL PSI 或 JNI action；
-- 当前 daemon 只启用 initialize、shutdown、profile validate、topology discover/validate；索引、AIDL、JNI RPC capability 尚未启用；
+- 当前 `aosp-index serve --stdio` 只启用 initialize、shutdown、profile validate、topology discover/validate；索引、AIDL、JNI RPC capability 尚未启用；
 - 当前 JNI 只覆盖 Java/Kotlin declaration、静态导出、常见 `JNINativeMethod` 注册表和有限注册调用；复杂宏、运行时 class 解析和完整 C++ 语义仍未覆盖；
 - 当前没有发布版跨平台 engine binary；
 - 当前没有任何远程执行服务；

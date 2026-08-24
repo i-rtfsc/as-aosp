@@ -22,7 +22,7 @@
 
 ### AOSP-IDE-RPC-01
 
-- 目标：提供版本化 stdio JSON-RPC daemon，作为 JetBrains 与 VS Code 的共享边界。
+- 目标：由 `aosp-index serve --stdio` 提供版本化 JSON-RPC，作为 JetBrains 与 VS Code 的共享边界。
 - 技术前置：CORE-01、CLI-01。
 - 下一验收：initialize、profile/topology validation、topology discovery 和 shutdown smoke。
 - 负能力：首版不持有长期索引，不启用 AIDL/JNI navigation capability。
