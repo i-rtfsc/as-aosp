@@ -1,0 +1,19 @@
+docs/design/protocol-and-profile-design.md
+  s_0fcc3f909ad4ee::t_4716c7748ac7a7 115
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "54f73e45b6d37c5222c0fc034f24e88eb7ba2fa6",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
