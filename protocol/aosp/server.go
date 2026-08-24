@@ -150,6 +150,9 @@ func (server *Server) jniPeers(request jsonrpc.Request) jsonrpc.Response {
 	if params.FunctionName != "" {
 		peers = append(peers, index.NativePeers(params.FunctionName)...)
 	}
+	if params.ClassName == "" && params.MethodName == "" && params.FunctionName == "" {
+		peers = append(peers, index.Links...)
+	}
 	return jsonrpc.Success(request.ID, JNIPeersResult{Peers: peers, Diagnostics: index.Diagnostics})
 }
 

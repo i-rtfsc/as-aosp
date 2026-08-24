@@ -112,6 +112,29 @@ int registerMethods(JNIEnv* env) {
 	}
 }
 
+func TestServerReturnsAllJNIPeersWithoutSelector(t *testing.T) {
+	server := initializedServer(t)
+	response, _ := server.Handle(makeRequest(2, "aosp/jni/peers", JNIPeersParams{
+		JavaFiles: map[string]string{
+			"demo/Bridge.java": "package demo; class Bridge { native void close(); }",
+		},
+		CppFiles: map[string]string{
+			"demo/bridge.cpp": `
+static const JNINativeMethod methods[] = {
+  {"close", "()V", (void*)closeNative},
+};
+int registerMethods(JNIEnv* env) {
+  return RegisterMethodsOrDie(env, "demo/Bridge", methods, 1);
+}`,
+		},
+	}))
+	var result JNIPeersResult
+	decodeResult(t, response, &result)
+	if len(result.Diagnostics) != 0 || len(result.Peers) != 1 {
+		t.Fatalf("result=%+v", result)
+	}
+}
+
 func TestServerRejectsAbsoluteJNIPaths(t *testing.T) {
 	server := initializedServer(t)
 	response, _ := server.Handle(makeRequest(2, "aosp/jni/peers", JNIPeersParams{
