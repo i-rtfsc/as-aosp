@@ -8,6 +8,8 @@ import { refreshCompdbOverlay } from "./navigation/compdb";
 
 export function activate(context: vscode.ExtensionContext): void {
   const engine = new EngineClient();
+  const output = vscode.window.createOutputChannel("AOSP IDE");
+  context.subscriptions.push(output);
   const ensureEngine = async (): Promise<void> => {
     const executable = vscode.workspace.getConfiguration("aospIde").get<string>("engineExecutable") || "aosp-index";
     await engine.start(executable);
@@ -42,11 +44,14 @@ export function activate(context: vscode.ExtensionContext): void {
     }),
     vscode.commands.registerCommand("aospIde.refreshCompdbOverlay", async () => {
       await ensureEngine();
-      await refreshCompdbOverlay(engine);
+      output.show(true);
+      await refreshCompdbOverlay(engine, output);
     }),
     vscode.workspace.onDidChangeConfiguration((event) => {
       if (event.affectsConfiguration("aospIde.engineExecutable") ||
-        event.affectsConfiguration("aospIde.workspaceViewRoot")) {
+        event.affectsConfiguration("aospIde.workspaceViewRoot") ||
+        event.affectsConfiguration("aospIde.metadataRoot") ||
+        event.affectsConfiguration("aospIde.pathMappings")) {
         void engine.stop();
       }
     }),

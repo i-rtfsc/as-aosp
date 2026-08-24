@@ -3,7 +3,7 @@ import { EngineClient } from "../engine/client";
 import { workspaceViewRoot } from "./paths";
 import * as path from "node:path";
 
-export async function refreshCompdbOverlay(engine: EngineClient): Promise<void> {
+export async function refreshCompdbOverlay(engine: EngineClient, output?: vscode.OutputChannel): Promise<void> {
   const root = workspaceViewRoot();
   const metadataRoot = vscode.workspace.getConfiguration("aospIde").get<string>("metadataRoot")?.trim();
   if (!root || !metadataRoot) {
@@ -15,6 +15,8 @@ export async function refreshCompdbOverlay(engine: EngineClient): Promise<void> 
     workspaceViewRoot: root,
     pathMappings: vscode.workspace.getConfiguration("aospIde").get<unknown[]>("pathMappings") ?? [],
   });
+  output?.appendLine(`compdb overlay: ${result.entries.length} entries`);
+  for (const diagnostic of result.diagnostics) output?.appendLine(`diagnostic: ${JSON.stringify(diagnostic)}`);
   const target = vscode.Uri.file(path.join(root, ".aosp-ide", "compdb-overlay", "compile_commands.json"));
   const directory = vscode.Uri.file(path.dirname(target.fsPath));
   await vscode.workspace.fs.createDirectory(directory);
