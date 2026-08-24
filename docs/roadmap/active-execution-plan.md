@@ -18,10 +18,10 @@
 4. 实现跨平台 EngineProcess 和项目级 profile persistence。
 5. 实现 profile UI，并通过 RPC 验证配置。
 6. 实现 focused source root planner 和非持久投影模块。
-7. 后续替换为 Workspace Model focused source roots。
+7. 继续使用公开 ModuleRootModel facade，并验证 Workspace Model legacy bridge 行为。
 
 当前验收：`make test-jetbrains`、EngineProcess lifecycle fixture、profile state fixture、focused root planner fixture 和真实平台 root projection fixture 已通过。
-下一验收：Workspace Model adapter、AIDL PSI 和 JNI actions。
+下一验收：Workspace Model bridge fixture、AIDL PSI 和 JNI actions。
 
 ## 3. 开发约束
 

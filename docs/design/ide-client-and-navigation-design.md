@@ -149,16 +149,18 @@ EngineProfileState
        sourceRoots: explicit focused paths or workspace root
        excludedRoots: .git, .repo, out, .aosp-ide, canonical root when nested
        diagnostics: invalid/escaping/missing paths
-  -> non-persistent focused module
-       content roots + source folders + excluded folders
+  -> ModuleRootModel facade
+       non-persistent module + content roots + source folders + excluded folders
+  -> IntelliJ Workspace Model legacy bridge persists the projection on current platforms
 ```
 
 planner 只规范化用户明确填写的相对路径和固定排除目录，不递归列举 Workspace View，
 不 follow symlink，不把 Canonical AOSP Root 注册为 content root。投影模块使用
-`newNonPersistentModule`，关闭项目时释放；已有 Android/IDEA 模块不被重写。
+公开 `ModuleRootModel` facade 创建非持久模块，当前 IntelliJ 平台由 Workspace Model legacy
+bridge 写入对应实体；已有 Android/IDEA 模块不被重写。
 
-Apply Focused Roots 是显式操作，失败只保留诊断，不修改 profile state。后续可把同一 plan
-接到 Workspace Model；当前 adapter 使用 IntelliJ ModuleRootModel 证明 focused view 边界。
+Apply Focused Roots 是显式操作，失败只保留诊断，不修改 profile state。公开 facade 和平台
+Workspace Model bridge 使用同一个 `WorkspaceRootPlan`，不会重复扫描或复制 AOSP 事实。
 平台 fixture 使用 `BasePlatformTestCase` 验证 content entry、source folder 和固定排除目录。
 
 插件不打包 Kotlin stdlib，运行时使用目标 IDE 自带 Kotlin runtime，避免覆盖平台 API。
