@@ -235,6 +235,11 @@ VS Code JNI 首个 DefinitionProvider 只消费 `aosp/jni/peers` 的唯一 link�
 多候选、`inferred`/`unresolved` 或 Workspace View 外目标返回空，让 Java/Kotlin
 language server 和 clangd 继续拥有本语言定义权威。
 
+Extension Host 验收使用 `@vscode/test-electron` 的显式 `host-test` 脚本，验证真实
+extension activation、AIDL language registration、definition/reference provider 和
+commands。默认 `make test-vscode` 不下载 VS Code runtime；离线 CI 仍由 TypeScript/
+framing/navigation fixtures 提供确定性 gate。
+
 ## 5. JNI navigation
 
 支持：

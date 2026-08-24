@@ -22,7 +22,7 @@
 
 ## 4. Negative capability
 
-- 当前不能打开 AOSP 并自动提供导航；
+- 当前不能在未配置 engine/profile 时打开完整 AOSP 并自动提供导航；
 - 当前 JetBrains 插件已有 descriptor、Kotlin RPC framing/lifecycle client、EngineProcess、project-local profile state、profile UI、focused root planner/非持久投影模块、source-only AIDL fallback、异步 AIDL definition/generated peer/references 和 JNI peer actions；VS Code 已有 AIDL providers、AIDL generated peer/JNI commands 和待接入的 JNI DefinitionProvider；仍没有 AIDL PSI 或 JNI gutter；
 - 当前 `aosp-index serve --stdio` 已启用 initialize、shutdown、profile validate、topology discover/validate、`aosp/jni/peers`、`aosp/aidl/resolve`、`aosp/aidl/peers` 和 `aosp/aidl/references`；长期增量索引尚未启用；
 - 当前 JNI 只覆盖 Java/Kotlin declaration、静态导出、常见 `JNINativeMethod` 注册表和有限注册调用；复杂宏、运行时 class 解析和完整 C++ 语义仍未覆盖；
@@ -30,6 +30,7 @@
 - 当前没有任何远程执行服务；
 - 当前不声称 Android Studio/IDEA/VS Code 已支持；
 - 当前不声称真实 Android Studio/VS Code 已可跳转，也不声称 AIDL compiler 的 stable API/hash 或全部厂商 backend 已兼容。
+- `npm run host-test` 已具备真实 Extension Host fixture；本次运行进入 `@vscode/test-electron` 后因下载 VS Code runtime 请求超时，未完成外部 runtime 验证。
 
 ## 5. Evidence
 
