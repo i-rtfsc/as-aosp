@@ -13,8 +13,8 @@
     "onLanguage:aidl",
     "onCommand:aospIde.goToJniPeer",
     "onCommand:aospIde.goToAidlGeneratedPeer",
-    "onCommand:aospIde.refreshCompdbOverlay"
-    ,"onCommand:aospIde.showStatus"
+    "onCommand:aospIde.refreshCompdbOverlay",
+    "onCommand:aospIde.showStatus"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -23,8 +23,8 @@
       "properties": {
         "aospIde.engineExecutable": {
           "type": "string",
-          "default": "aosp-index",
-          "description": "Path to the aosp-index executable."
+          "default": "",
+          "description": "Optional path to aosp-index. Bundled engine and PATH are used when empty."
         },
         "aospIde.workspaceViewRoot": {
           "type": "string",

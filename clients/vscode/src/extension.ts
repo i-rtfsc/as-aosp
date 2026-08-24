@@ -6,6 +6,7 @@ import { AidlReferenceProvider } from "./navigation/aidl_references";
 import { goToJniPeer, JniDefinitionProvider } from "./navigation/jni";
 import { refreshCompdbOverlay } from "./navigation/compdb";
 import { createAospStatusBar } from "./status";
+import { resolveEngineExecutable } from "./engine/resolve";
 
 export function activate(context: vscode.ExtensionContext): void {
   const engine = new EngineClient();
@@ -13,7 +14,8 @@ export function activate(context: vscode.ExtensionContext): void {
   context.subscriptions.push(output);
   context.subscriptions.push(createAospStatusBar(engine, output));
   const ensureEngine = async (): Promise<void> => {
-    const executable = vscode.workspace.getConfiguration("aospIde").get<string>("engineExecutable") || "aosp-index";
+    const configured = vscode.workspace.getConfiguration("aospIde").get<string>("engineExecutable");
+    const executable = resolveEngineExecutable({ configured, extensionPath: context.extensionPath });
     await engine.start(executable);
   };
   context.subscriptions.push(
