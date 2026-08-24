@@ -40,6 +40,7 @@ export interface AidlReferencesResult {
 
 export interface CompdbOverlayResult {
   entries: Array<{ directory: string; arguments: string[]; file: string; output?: string }>;
+  responseFiles?: Record<string, string>;
   diagnostics: unknown[];
 }
 

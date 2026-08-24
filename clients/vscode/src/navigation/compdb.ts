@@ -21,6 +21,12 @@ export async function refreshCompdbOverlay(engine: EngineClient, output?: vscode
   const directory = vscode.Uri.file(path.dirname(target.fsPath));
   await vscode.workspace.fs.createDirectory(directory);
   await vscode.workspace.fs.writeFile(target, Buffer.from(JSON.stringify(result.entries, null, 2), "utf8"));
+  if (result.responseFiles) {
+    for (const [name, content] of Object.entries(result.responseFiles)) {
+      const responseTarget = vscode.Uri.file(path.join(path.dirname(target.fsPath), path.basename(name)));
+      await vscode.workspace.fs.writeFile(responseTarget, Buffer.from(content, "utf8"));
+    }
+  }
   const clangdConfig = vscode.Uri.file(path.join(path.dirname(target.fsPath), ".clangd"));
   await vscode.workspace.fs.writeFile(clangdConfig, Buffer.from("CompileFlags:\n  CompilationDatabase: .\n", "utf8"));
   if (result.diagnostics.length > 0) {
