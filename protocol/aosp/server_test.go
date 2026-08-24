@@ -338,6 +338,18 @@ func TestResponseFileTokenizerPreservesQuotedPaths(t *testing.T) {
 	}
 }
 
+func TestServerReportsDuplicateCompDBVariants(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, "compile_commands.json", `[{"directory":".","arguments":["clang++","-DHOST"],"file":"foo.cpp"},{"directory":".","arguments":["clang++","-DDEVICE"],"file":"foo.cpp"}]`)
+	server := initializedServer(t)
+	response, _ := server.Handle(makeRequest(2, "aosp/compdb/overlay", CompDBOverlayParams{MetadataRoot: root}))
+	var result CompDBOverlayResult
+	decodeResult(t, response, &result)
+	if len(result.Entries) != 2 || len(result.Diagnostics) != 1 || result.Diagnostics[0].Code != "COMPDB_VARIANT_DUPLICATE" {
+		t.Fatalf("result=%+v", result)
+	}
+}
+
 func TestServerUpgradesVisibleAIDLGeneratedJavaPeer(t *testing.T) {
 	root := t.TempDir()
 	writeTestFile(t, root, "demo/IFoo.aidl", "package demo; interface IFoo {}")

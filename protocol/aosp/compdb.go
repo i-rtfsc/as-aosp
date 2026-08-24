@@ -46,11 +46,18 @@ func (server *Server) compdbOverlay(request jsonrpc.Request) jsonrpc.Response {
 	}
 	diagnostics := make([]model.Diagnostic, 0)
 	responseFiles := make(map[string]string)
+	variants := make(map[string]int)
 	for index := range entries {
 		entries[index].Directory, diagnostics = mapCompDBPath(entries[index].Directory, params.PathMappings, diagnostics)
 		entries[index].File, diagnostics = mapCompDBPath(entries[index].File, params.PathMappings, diagnostics)
 		entries[index].Output, diagnostics = mapCompDBPath(entries[index].Output, params.PathMappings, diagnostics)
 		entries[index].Arguments, responseFiles, diagnostics = mapCompDBArguments(entries[index].Arguments, responseFiles, params.PathMappings, diagnostics)
+		variants[entries[index].File]++
+	}
+	for file, count := range variants {
+		if count > 1 {
+			diagnostics = append(diagnostics, model.Diagnostic{Code: "COMPDB_VARIANT_DUPLICATE", Severity: model.SeverityWarning, Stage: "compdb-rpc", Message: "multiple compilation database variants were preserved for: " + file})
+		}
 	}
 	return jsonrpc.Success(request.ID, CompDBOverlayResult{Entries: entries, ResponseFiles: responseFiles, Diagnostics: diagnostics})
 }
