@@ -223,6 +223,9 @@ engine range 由异步 `Go to AIDL Definition` action 承载；后台任务完�
 线程打开目标。Plain Text PSI 仍只能返回文件元素，完整 declaration PSI 留到 parser
 definition。
 
+`aosp/aidl/peers` 负责 AIDL 到 generated Java/C++/NDK 的异步跳转。首版 UI 显示并打开
+唯一可见 peer；`inferred` 候选如果当前 view 中不存在则只显示诊断，不自动创建文件。
+
 ## 5. JNI navigation
 
 支持：

@@ -258,6 +258,50 @@ func TestServerReusesUnchangedAIDLWorkspaceSnapshot(t *testing.T) {
 	}
 }
 
+func TestServerReturnsAIDLGeneratedPeersWithInferredFallback(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, "demo/IFoo.aidl", "package demo; interface IFoo {}")
+	server := initializedServer(t)
+	response, _ := server.Handle(makeRequest(2, "aosp/aidl/peers", AIDLPeersParams{
+		WorkspaceViewRoot: root,
+		CurrentPath:       "demo/IFoo.aidl",
+		Name:              "demo.IFoo",
+	}))
+	var result AIDLPeersResult
+	decodeResult(t, response, &result)
+	if len(result.Peers) != 6 {
+		t.Fatalf("result=%+v", result)
+	}
+	for _, peer := range result.Peers {
+		if peer.Confidence != "inferred" || peer.Exists {
+			t.Fatalf("peer=%+v", peer)
+		}
+	}
+}
+
+func TestServerUpgradesVisibleAIDLGeneratedJavaPeer(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, "demo/IFoo.aidl", "package demo; interface IFoo {}")
+	writeTestFile(t, root, "demo/IFoo.java", "package demo; final class IFoo {}")
+	server := initializedServer(t)
+	response, _ := server.Handle(makeRequest(2, "aosp/aidl/peers", AIDLPeersParams{
+		WorkspaceViewRoot: root,
+		CurrentPath:       "demo/IFoo.aidl",
+		Name:              "demo.IFoo",
+	}))
+	var result AIDLPeersResult
+	decodeResult(t, response, &result)
+	for _, peer := range result.Peers {
+		if peer.Language == aidl.PeerJava {
+			if peer.Confidence != "exact" || !peer.Exists {
+				t.Fatalf("peer=%+v", peer)
+			}
+			return
+		}
+	}
+	t.Fatal("Java peer not found")
+}
+
 func TestServerKeepsDistinctSymlinkAliases(t *testing.T) {
 	if os.PathSeparator == '\\' {
 		t.Skip("symlink fixture requires platform permission on Windows")

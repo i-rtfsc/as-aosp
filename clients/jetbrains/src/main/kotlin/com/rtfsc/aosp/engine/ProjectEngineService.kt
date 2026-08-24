@@ -32,6 +32,11 @@ internal class ProjectEngineService(
         return engineProcess.request("aosp/aidl/resolve", params)
     }
 
+    fun aidlPeers(params: String): ByteArray {
+        if (!engineProcess.isRunning) start()
+        return engineProcess.request("aosp/aidl/peers", params)
+    }
+
     override fun dispose() {
         stop()
     }

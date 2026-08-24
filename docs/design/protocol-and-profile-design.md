@@ -143,6 +143,18 @@ aosp/aidl/resolve
 resolver 返回 `Resolution` 与精确 source range；固定排除目录和 symlink cycle 规则
 与 JNI workspace 扫描一致。首版不返回 generated peers，也不启用 references。
 
+首个 AIDL generated peer slice：
+
+```text
+aosp/aidl/peers
+```
+
+请求同样携带 `workspaceViewRoot`、`currentPath` 和 `name`。engine 先解析当前
+source declaration，再调用 `core/aidl.GeneratedPeers` 生成 Java/C++/NDK 命名候选。
+候选路径相对 Workspace View 且实际存在时升级为 `exact`；只有命名规则时保持
+`inferred`，不声明 generated 文件一定存在。srcjar/out metadata 接入后沿用同一
+`GeneratedPeer` schema，不改变客户端路径和 confidence 语义。
+
 后续索引 slice：
 
 ```text
