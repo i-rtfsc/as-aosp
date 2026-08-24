@@ -29,8 +29,9 @@ Go core 当前不依赖 CGO，因此同一源码可以交叉编译。插件包�
 - 打包前执行对应 test/build gate；
 - 首版不声称代码签名、公证、JetBrains Marketplace 或 VS Code Marketplace 已完成；
 - VSIX 使用 `.vscodeignore` 排除 TypeScript 源码、测试、node_modules 和 source map；
-- 每次本地打包生成 `dist/manifest.sha256`，路径按 Unix `/` 归一化并记录 SHA-256；
-  manifest 不包含自身，签名设计另行评审。
+- 每次本地打包生成 `dist/manifest.sha256` 和 `dist/manifest.json`。JSON manifest 包含
+  version、client/engine kind、相对路径和 SHA-256；两个 manifest 都不包含自身，
+  签名设计另行评审。
 
 ## 4. Acceptance
 
@@ -40,3 +41,4 @@ Go core 当前不依赖 CGO，因此同一源码可以交叉编译。插件包�
 - 打包脚本不依赖用户真实 AOSP；
 - `dist/` 不进入 Git。
 - manifest 能覆盖 engine、JetBrains ZIP 和 VSIX，且不包含临时文件。
+- JSON manifest 的 version 与 `AOSP_IDE_VERSION` 一致。
