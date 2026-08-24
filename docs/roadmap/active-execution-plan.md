@@ -20,8 +20,8 @@
 6. 实现 focused source root planner 和非持久投影模块。
 7. 继续使用公开 ModuleRootModel facade，并验证 Workspace Model legacy bridge 行为。
 
-当前验收：`make test-jetbrains`、EngineProcess lifecycle fixture、profile state fixture、focused root planner fixture 和真实平台 root projection fixture 已通过。
-下一验收：Workspace Model bridge fixture、AIDL PSI 和 JNI actions。
+当前验收：`make check`、`make test-jetbrains`、`make test-vscode`、Workspace Model bridge、AIDL source/generated/references 和 JNI navigation fixture 已通过。
+下一验收：AIDL declaration PSI、VS Code extension host、JNI gutter 和 clangd overlay。
 
 ## 3. 开发约束
 
