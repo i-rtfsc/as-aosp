@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 
 plugins {
     kotlin("jvm") version "2.1.21"
@@ -24,6 +25,7 @@ dependencies {
         } else {
             intellijIdeaCommunity("2025.1.7.2")
         }
+        testFramework(TestFrameworkType.Platform)
     }
     testImplementation("junit:junit:4.13.2")
 }

@@ -20,10 +20,27 @@ internal class FocusedRootsService(
     fun apply(): WorkspaceRootPlan {
         val plan = WorkspaceRootPlanner.plan(settings.current)
         if (!plan.isUsable) return plan
-        WriteAction.compute<Unit, RuntimeException> {
-            val module = focusedModule ?: ModuleManager.getInstance(project)
+        val module = WriteAction.compute<Module, RuntimeException> {
+            focusedModule ?: ModuleManager.getInstance(project)
                 .newNonPersistentModule("AOSP Focused", EmptyModuleType.EMPTY_MODULE)
                 .also { focusedModule = it }
+        }
+        FocusedRootsApplier.apply(module, plan)
+        return plan
+    }
+
+    override fun dispose() {
+        val module = focusedModule ?: return
+        WriteAction.run<RuntimeException> {
+            ModuleManager.getInstance(project).disposeModule(module)
+        }
+        focusedModule = null
+    }
+}
+
+internal object FocusedRootsApplier {
+    fun apply(module: Module, plan: WorkspaceRootPlan) {
+        WriteAction.compute<Unit, RuntimeException> {
             val rootModel = ModuleRootManager.getInstance(module).modifiableModel
             rootModel.clear()
             plan.sourceRoots.forEach { sourceRoot ->
@@ -35,14 +52,5 @@ internal class FocusedRootsService(
             }
             rootModel.commit()
         }
-        return plan
-    }
-
-    override fun dispose() {
-        val module = focusedModule ?: return
-        WriteAction.run<RuntimeException> {
-            ModuleManager.getInstance(project).disposeModule(module)
-        }
-        focusedModule = null
     }
 }
