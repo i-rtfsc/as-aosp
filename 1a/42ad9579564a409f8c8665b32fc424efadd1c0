@@ -1,0 +1,25 @@
+docs/roadmap/current-state.md
+  s_0fcc3f909ad4ee::t_be0f84ceac4386 14,42
+docs/roadmap/active-execution-plan.md
+  s_0fcc3f909ad4ee::t_be0f84ceac4386 23-24
+docs/design/ide-client-and-navigation-design.md
+  s_0fcc3f909ad4ee::t_be0f84ceac4386 77-79,162-164
+docs/roadmap/delivery-plan.md
+  s_0fcc3f909ad4ee::t_be0f84ceac4386 42-43
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "1a42ad9579564a409f8c8665b32fc424efadd1c0",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
