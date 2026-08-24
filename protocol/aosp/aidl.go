@@ -1,6 +1,9 @@
 package aosp
 
 import (
+	"crypto/sha256"
+	"sort"
+
 	"github.com/i-rtfsc/as-aosp/core/aidl"
 	"github.com/i-rtfsc/as-aosp/core/model"
 	"github.com/i-rtfsc/as-aosp/protocol/jsonrpc"
@@ -31,7 +34,7 @@ func (server *Server) aidlResolve(request jsonrpc.Request) jsonrpc.Response {
 			}},
 		})
 	}
-	index, diagnostics := scanAIDLWorkspace(params.WorkspaceViewRoot)
+	index, diagnostics := server.buildAIDLIndex(params.WorkspaceViewRoot)
 	document, ok := index.Documents[current]
 	if !ok {
 		diagnostics = append(diagnostics, model.Diagnostic{
@@ -49,7 +52,7 @@ func (server *Server) aidlResolve(request jsonrpc.Request) jsonrpc.Response {
 	return jsonrpc.Success(request.ID, AIDLResolveResult{Resolution: resolution, Diagnostics: diagnostics})
 }
 
-func scanAIDLWorkspace(root string) (aidl.Index, []model.Diagnostic) {
+func (server *Server) buildAIDLIndex(root string) (aidl.Index, []model.Diagnostic) {
 	index := aidl.NewIndex()
 	scan := scanWorkspaceSources(
 		root,
@@ -58,6 +61,11 @@ func scanAIDLWorkspace(root string) (aidl.Index, []model.Diagnostic) {
 		"AIDL_WORKSPACE_READ",
 		func(extension string) bool { return extension == ".aidl" },
 	)
+	signature := hashAIDLFiles(scan.Files)
+	if server.aidlSnapshot != nil && server.aidlSnapshot.root == root &&
+		server.aidlSnapshot.signature == signature {
+		return server.aidlSnapshot.index, server.aidlSnapshot.diagnostics
+	}
 	diagnostics := scan.Diagnostics
 	for repoPath, source := range scan.Files {
 		document := aidl.Parse(repoPath, source)
@@ -69,5 +77,25 @@ func scanAIDLWorkspace(root string) (aidl.Index, []model.Diagnostic) {
 		diagnostics = append(diagnostics, document.Diagnostics...)
 		index.Add(document)
 	}
+	if root != "" {
+		server.aidlSnapshot = &aidlSnapshot{
+			root: root, signature: signature, index: index,
+			diagnostics: diagnostics,
+		}
+	}
 	return index, diagnostics
+}
+
+func hashAIDLFiles(files map[model.RepoPath]string) [32]byte {
+	keys := make([]string, 0, len(files))
+	for path := range files {
+		keys = append(keys, string(path))
+	}
+	sort.Strings(keys)
+	hash := sha256.New()
+	for _, key := range keys {
+		_, _ = hash.Write([]byte(key))
+		_, _ = hash.Write([]byte(files[model.RepoPath(key)]))
+	}
+	return sha256.Sum256(hash.Sum(nil))
 }

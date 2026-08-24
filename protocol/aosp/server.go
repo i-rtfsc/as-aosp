@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/i-rtfsc/as-aosp/core/aidl"
 	"github.com/i-rtfsc/as-aosp/core/jni"
 	"github.com/i-rtfsc/as-aosp/core/model"
 	"github.com/i-rtfsc/as-aosp/core/topology"
@@ -18,15 +19,23 @@ import (
 const ProtocolVersion = "1.0"
 
 type Server struct {
-	initialized bool
-	shutdown    bool
-	jniSnapshot *jniSnapshot
+	initialized  bool
+	shutdown     bool
+	jniSnapshot  *jniSnapshot
+	aidlSnapshot *aidlSnapshot
 }
 
 type jniSnapshot struct {
 	root      string
 	signature [32]byte
 	index     jni.Index
+}
+
+type aidlSnapshot struct {
+	root        string
+	signature   [32]byte
+	index       aidl.Index
+	diagnostics []model.Diagnostic
 }
 
 func (server *Server) IsShutdown() bool {

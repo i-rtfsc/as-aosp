@@ -236,6 +236,28 @@ func TestServerResolvesAIDLSourceRangeFromWorkspace(t *testing.T) {
 	}
 }
 
+func TestServerReusesUnchangedAIDLWorkspaceSnapshot(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, "demo/IFoo.aidl", "package demo; interface IFoo {}")
+	writeTestFile(t, root, "demo/Client.aidl", "package demo; import demo.IFoo; interface Client { IFoo value(); }")
+	server := initializedServer(t)
+	params := AIDLResolveParams{WorkspaceViewRoot: root, CurrentPath: "demo/Client.aidl", Name: "IFoo"}
+	first, _ := server.Handle(makeRequest(2, "aosp/aidl/resolve", params))
+	var firstResult AIDLResolveResult
+	decodeResult(t, first, &firstResult)
+	if server.aidlSnapshot == nil || firstResult.Resolution.State != aidl.ResolutionFound {
+		t.Fatalf("snapshot=%+v result=%+v", server.aidlSnapshot, firstResult)
+	}
+	signature := server.aidlSnapshot.signature
+	second, _ := server.Handle(makeRequest(3, "aosp/aidl/resolve", params))
+	var secondResult AIDLResolveResult
+	decodeResult(t, second, &secondResult)
+	if server.aidlSnapshot == nil || server.aidlSnapshot.signature != signature ||
+		secondResult.Resolution.State != aidl.ResolutionFound {
+		t.Fatalf("snapshot=%+v result=%+v", server.aidlSnapshot, secondResult)
+	}
+}
+
 func TestServerKeepsDistinctSymlinkAliases(t *testing.T) {
 	if os.PathSeparator == '\\' {
 		t.Skip("symlink fixture requires platform permission on Windows")

@@ -24,7 +24,7 @@
 
 - 当前不能打开 AOSP 并自动提供导航；
 - 当前 JetBrains 插件已有 descriptor、Kotlin RPC framing/lifecycle client、EngineProcess、project-local profile state、profile UI、focused root planner/非持久投影模块、source-only AIDL 文件级跳转和 JNI peer action；仍没有 AIDL PSI 或 JNI gutter；
-- 当前 `aosp-index serve --stdio` 已启用 initialize、shutdown、profile validate、topology discover/validate 和 `aosp/jni/peers`；索引与 AIDL RPC capability 尚未启用；
+- 当前 `aosp-index serve --stdio` 已启用 initialize、shutdown、profile validate、topology discover/validate、`aosp/jni/peers` 和 `aosp/aidl/resolve`；长期索引与 AIDL references capability 尚未启用；
 - 当前 JNI 只覆盖 Java/Kotlin declaration、静态导出、常见 `JNINativeMethod` 注册表和有限注册调用；复杂宏、运行时 class 解析和完整 C++ 语义仍未覆盖；
 - 当前没有发布版跨平台 engine binary；
 - 当前没有任何远程执行服务；
