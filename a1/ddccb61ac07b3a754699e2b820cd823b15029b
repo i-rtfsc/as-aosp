@@ -1,0 +1,33 @@
+docs/design/ide-client-and-navigation-design.md
+  s_0fcc3f909ad4ee::t_ba5e653d1a15ca 187-189
+clients/jetbrains/src/main/resources/META-INF/plugin.xml
+  s_0fcc3f909ad4ee::t_9cdb1dccaebb2b 10-11
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/aidl/AidlGotoDeclarationHandler.kt
+  s_0fcc3f909ad4ee::t_3eed9b58ad258a 96-98
+  s_0fcc3f909ad4ee::t_84465fcddece55 3,44-55
+  s_0fcc3f909ad4ee::t_9cdb1dccaebb2b 1-2,5-36,39,56-88,94-95,99-100
+  s_0fcc3f909ad4ee::t_093cf1f206bd7e 4,37-38,40-43,89-93
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/aidl/AidlLanguage.kt
+  s_0fcc3f909ad4ee::t_9cdb1dccaebb2b 1-5
+clients/jetbrains/src/test/kotlin/com/rtfsc/aosp/aidl/AidlGotoDeclarationPlatformTest.kt
+  s_0fcc3f909ad4ee::t_f6356a266ace02 1-29,31-32
+  s_0fcc3f909ad4ee::t_ba5e653d1a15ca 30
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/aidl/AidlFileType.kt
+  s_0fcc3f909ad4ee::t_9cdb1dccaebb2b 1-14
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "a1ddccb61ac07b3a754699e2b820cd823b15029b",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
