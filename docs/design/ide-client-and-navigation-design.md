@@ -237,8 +237,14 @@ language server 和 clangd 继续拥有本语言定义权威。
 
 VS Code 提供 `AOSP: Refresh clangd Compilation Database` command。command 调用
 `aosp/compdb/overlay`，把返回 entries 写到 Workspace View 的
-`.aosp-ide/compdb-overlay/compile_commands.json`，不覆盖 AOSP out。clangd 的配置
-由用户选择该 overlay；command 只负责生成和报告 diagnostics。
+`.aosp-ide/compdb-overlay/compile_commands.json`，并写入同目录 `.clangd` 的
+`CompilationDatabase: .`，不覆盖 AOSP out 或用户根目录 `.clangd`。用户可将 clangd
+工作目录指向该 overlay；command 只负责生成和报告 diagnostics。
+
+compdb 参数映射覆盖拼接形式和分离形式（例如 `-I/path`、`-I /path`、
+`--sysroot=/path`、`--sysroot /path`），并处理 `@response-file` 的本机路径映射。
+同一字段有多个 mapping 时按最长 external prefix 选择；overlay 不改写原始 response
+file，无法读取或映射时保留原参数并返回稳定 diagnostic。
 
 Extension Host 验收使用 `@vscode/test-electron` 的显式 `host-test` 脚本，验证真实
 extension activation、AIDL language registration、definition/reference provider 和

@@ -48,9 +48,7 @@ func (server *Server) compdbOverlay(request jsonrpc.Request) jsonrpc.Response {
 		entries[index].Directory, diagnostics = mapCompDBPath(entries[index].Directory, params.PathMappings, diagnostics)
 		entries[index].File, diagnostics = mapCompDBPath(entries[index].File, params.PathMappings, diagnostics)
 		entries[index].Output, diagnostics = mapCompDBPath(entries[index].Output, params.PathMappings, diagnostics)
-		for arg := range entries[index].Arguments {
-			entries[index].Arguments[arg], diagnostics = mapCompDBArgument(entries[index].Arguments[arg], params.PathMappings, diagnostics)
-		}
+		entries[index].Arguments, diagnostics = mapCompDBArguments(entries[index].Arguments, params.PathMappings, diagnostics)
 	}
 	return jsonrpc.Success(request.ID, CompDBOverlayResult{Entries: entries, Diagnostics: diagnostics})
 }
@@ -70,13 +68,21 @@ func mapCompDBPath(value string, mappings []model.PathMapping, diagnostics []mod
 	if value == "" || (!filepath.IsAbs(value) && !isCompDBAbsolute(normalizedValue)) {
 		return value, diagnostics
 	}
-	for _, mapping := range mappings {
+	selected := -1
+	selectedPrefix := ""
+	for index, mapping := range mappings {
 		external := strings.TrimRight(strings.ReplaceAll(mapping.ExternalPrefix, "\\", "/"), "/")
 		if normalizedValue == external || strings.HasPrefix(normalizedValue, external+"/") {
-			suffix := strings.TrimPrefix(normalizedValue, external)
-			local := strings.ReplaceAll(mapping.LocalPrefix, "\\", "/") + suffix
-			return filepath.Clean(filepath.FromSlash(local)), diagnostics
+			if len(external) > len(selectedPrefix) {
+				selected = index
+				selectedPrefix = external
+			}
 		}
+	}
+	if selected >= 0 {
+		suffix := strings.TrimPrefix(normalizedValue, selectedPrefix)
+		local := strings.ReplaceAll(mappings[selected].LocalPrefix, "\\", "/") + suffix
+		return filepath.Clean(filepath.FromSlash(local)), diagnostics
 	}
 	diagnostics = append(diagnostics, model.Diagnostic{Code: "COMPDB_PATH_UNMAPPED", Severity: model.SeverityWarning, Stage: "compdb-rpc", Message: "compdb path was not mapped: " + value})
 	return value, diagnostics
@@ -87,12 +93,28 @@ func isCompDBAbsolute(value string) bool {
 		(len(value) >= 3 && value[1] == ':' && value[2] == '/')
 }
 
-func mapCompDBArgument(value string, mappings []model.PathMapping, diagnostics []model.Diagnostic) (string, []model.Diagnostic) {
-	for _, prefix := range []string{"-I", "-isystem", "--sysroot", "-include"} {
-		if strings.HasPrefix(value, prefix) {
-			mapped, next := mapCompDBPath(strings.TrimPrefix(value, prefix), mappings, diagnostics)
-			return prefix + mapped, next
+func mapCompDBArguments(arguments []string, mappings []model.PathMapping, diagnostics []model.Diagnostic) ([]string, []model.Diagnostic) {
+	result := append([]string(nil), arguments...)
+	separate := map[string]bool{"-I": true, "-isystem": true, "--sysroot": true, "-include": true}
+	for index := 0; index < len(result); index++ {
+		value := result[index]
+		if separate[value] && index+1 < len(result) {
+			result[index+1], diagnostics = mapCompDBPath(result[index+1], mappings, diagnostics)
+			index++
+			continue
+		}
+		if strings.HasPrefix(value, "@") {
+			mapped, next := mapCompDBPath(strings.TrimPrefix(value, "@"), mappings, diagnostics)
+			result[index], diagnostics = "@"+mapped, next
+			continue
+		}
+		for _, prefix := range []string{"-I", "-isystem", "--sysroot=", "-include"} {
+			if strings.HasPrefix(value, prefix) && len(value) > len(prefix) {
+				mapped, next := mapCompDBPath(strings.TrimPrefix(value, prefix), mappings, diagnostics)
+				result[index], diagnostics = prefix+mapped, next
+				break
+			}
 		}
 	}
-	return value, diagnostics
+	return result, diagnostics
 }

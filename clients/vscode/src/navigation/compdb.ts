@@ -16,8 +16,11 @@ export async function refreshCompdbOverlay(engine: EngineClient): Promise<void> 
     pathMappings: vscode.workspace.getConfiguration("aospIde").get<unknown[]>("pathMappings") ?? [],
   });
   const target = vscode.Uri.file(path.join(root, ".aosp-ide", "compdb-overlay", "compile_commands.json"));
-  await vscode.workspace.fs.createDirectory(vscode.Uri.file(path.dirname(target.fsPath)));
+  const directory = vscode.Uri.file(path.dirname(target.fsPath));
+  await vscode.workspace.fs.createDirectory(directory);
   await vscode.workspace.fs.writeFile(target, Buffer.from(JSON.stringify(result.entries, null, 2), "utf8"));
+  const clangdConfig = vscode.Uri.file(path.join(path.dirname(target.fsPath), ".clangd"));
+  await vscode.workspace.fs.writeFile(clangdConfig, Buffer.from("CompileFlags:\n  CompilationDatabase: .\n", "utf8"));
   if (result.diagnostics.length > 0) {
     void vscode.window.showWarningMessage(`Compilation database refreshed with ${result.diagnostics.length} diagnostics.`);
   } else {
