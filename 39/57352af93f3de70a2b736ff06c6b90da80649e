@@ -1,0 +1,30 @@
+protocol/aosp/aidl.go
+  s_0fcc3f909ad4ee::t_bd4ca142d91bd7 1-46,48-135
+  s_0fcc3f909ad4ee::t_c9e1c5e72c10b5 47
+protocol/aosp/server_test.go
+  s_0fcc3f909ad4ee::t_c9e1c5e72c10b5 226-227
+  s_0fcc3f909ad4ee::t_621e54d8878fcb 9
+  s_0fcc3f909ad4ee::t_bd4ca142d91bd7 219-225,228-238
+docs/design/protocol-and-profile-design.md
+  s_0fcc3f909ad4ee::t_17d104d9ba7143 135-145
+protocol/aosp/server.go
+  s_0fcc3f909ad4ee::t_bd4ca142d91bd7 117-118,144
+docs/design/ide-client-and-navigation-design.md
+  s_0fcc3f909ad4ee::t_17d104d9ba7143 196-200
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "3957352af93f3de70a2b736ff06c6b90da80649e",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
