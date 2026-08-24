@@ -24,6 +24,15 @@ export interface JniPeersResult {
   diagnostics: unknown[];
 }
 
+export interface AidlPeersResult {
+  peers: Array<{
+    path: { raw: string; repoPath?: string };
+    confidence: string;
+    exists: boolean;
+  }>;
+  diagnostics: unknown[];
+}
+
 export class EngineClient {
   private process?: ChildProcessWithoutNullStreams;
   private startPromise?: Promise<void>;
@@ -88,6 +97,10 @@ export class EngineClient {
 
   async jniPeers(params: { workspaceViewRoot: string; currentPath: string }): Promise<JniPeersResult> {
     return this.request("aosp/jni/peers", params);
+  }
+
+  async aidlPeers(params: { workspaceViewRoot: string; currentPath: string; name: string }): Promise<AidlPeersResult> {
+    return this.request("aosp/aidl/peers", params);
   }
 
   private request(method: string, params: unknown): Promise<any> {

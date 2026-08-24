@@ -11,7 +11,8 @@
   "categories": ["Programming Languages", "Other"],
   "activationEvents": [
     "onLanguage:aidl",
-    "onCommand:aospIde.goToJniPeer"
+    "onCommand:aospIde.goToJniPeer",
+    "onCommand:aospIde.goToAidlGeneratedPeer"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -34,6 +35,10 @@
       {
         "command": "aospIde.goToJniPeer",
         "title": "AOSP: Go to JNI Peer"
+      },
+      {
+        "command": "aospIde.goToAidlGeneratedPeer",
+        "title": "AOSP: Go to AIDL Generated Peer"
       }
     ],
     "languages": [

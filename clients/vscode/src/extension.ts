@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import { EngineClient } from "./engine/client";
 import { AidlDefinitionProvider } from "./navigation/aidl";
+import { goToAidlGeneratedPeer } from "./navigation/aidl_peers";
 import { goToJniPeer } from "./navigation/jni";
 
 export function activate(context: vscode.ExtensionContext): void {
@@ -19,6 +20,10 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.commands.registerCommand("aospIde.goToJniPeer", async () => {
       await ensureEngine();
       await goToJniPeer(engine);
+    }),
+    vscode.commands.registerCommand("aospIde.goToAidlGeneratedPeer", async () => {
+      await ensureEngine();
+      await goToAidlGeneratedPeer(engine);
     }),
     vscode.workspace.onDidChangeConfiguration((event) => {
       if (event.affectsConfiguration("aospIde.engineExecutable") ||

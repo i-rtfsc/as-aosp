@@ -19,6 +19,7 @@ export class AidlDefinitionProvider implements vscode.DefinitionProvider {
     if (result.resolution.state !== "found" || result.resolution.symbols?.length !== 1) return undefined;
     const symbol = result.resolution.symbols[0];
     const target = targetUri(root, symbol.path);
+    if (!target) return undefined;
     const targetDocument = await vscode.workspace.openTextDocument(target);
     const offset = Math.min(symbol.range.start.offset, targetDocument.getText().length);
     return new vscode.Location(target, targetDocument.positionAt(offset));

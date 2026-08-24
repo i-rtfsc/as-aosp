@@ -1,0 +1,15 @@
+export interface AidlPeerCandidate {
+  path: { raw: string; repoPath?: string };
+  confidence: string;
+  exists: boolean;
+}
+
+export function selectAidlPeerPath(result: { peers: AidlPeerCandidate[] }): string | undefined {
+  const targets = result.peers
+    .filter((peer) => peer.confidence === "exact" && peer.exists)
+    .map((peer) => peer.path.repoPath ?? peer.path.raw)
+    .filter((repo) => !repo.startsWith("/") && !/^[A-Za-z]:[\\/]/.test(repo) && !repo.startsWith("\\\\"))
+    .filter((repo) => repo.length > 0)
+    .filter((repo, index, values) => values.indexOf(repo) === index);
+  return targets.length === 1 ? targets[0] : undefined;
+}
