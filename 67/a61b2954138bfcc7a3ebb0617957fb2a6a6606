@@ -1,0 +1,28 @@
+docs/design/aidl-language-and-resolver-design.md
+  s_0fcc3f909ad4ee::t_c72ea174e18879 57-60
+core/aidl/index.go
+  s_0fcc3f909ad4ee::t_eb692301cdbfe0 147,151,155,159,161,165
+  s_0fcc3f909ad4ee::t_49ac7d6ee2052f 148-150,156-158,162-164
+docs/design/protocol-and-profile-design.md
+  s_0fcc3f909ad4ee::t_c72ea174e18879 165-167
+core/aidl/parser.go
+  s_0fcc3f909ad4ee::t_eb692301cdbfe0 42,51,240,249,258,266,283,296,299,301-303,308-309,311-312,323-324,328-329,334
+core/aidl/index_test.go
+  s_0fcc3f909ad4ee::t_565131041a58b2 49-51
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "67a61b2954138bfcc7a3ebb0617957fb2a6a6606",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
