@@ -165,6 +165,30 @@ int registerMethods(JNIEnv* env) {
 	}
 }
 
+func TestServerReusesUnchangedJNIWorkspaceSnapshot(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, "demo/Bridge.java",
+		"package demo; class Bridge { native void close(); }")
+	writeTestFile(t, root, "demo/bridge.cpp", `
+void Java_demo_Bridge_close(JNIEnv*, jobject) {}
+`)
+	server := initializedServer(t)
+	params := JNIPeersParams{WorkspaceViewRoot: root}
+	first, _ := server.Handle(makeRequest(2, "aosp/jni/peers", params))
+	second, _ := server.Handle(makeRequest(3, "aosp/jni/peers", params))
+	var firstResult, secondResult JNIPeersResult
+	decodeResult(t, first, &firstResult)
+	decodeResult(t, second, &secondResult)
+	if server.jniSnapshot == nil || len(firstResult.Peers) != len(secondResult.Peers) {
+		t.Fatalf("snapshot=%+v first=%+v second=%+v", server.jniSnapshot, firstResult, secondResult)
+	}
+	signature := server.jniSnapshot.signature
+	second, _ = server.Handle(makeRequest(4, "aosp/jni/peers", params))
+	if server.jniSnapshot == nil || server.jniSnapshot.signature != signature {
+		t.Fatalf("snapshot changed for unchanged workspace: %+v", server.jniSnapshot)
+	}
+}
+
 func TestServerScansSymlinkedWorkspaceDirectory(t *testing.T) {
 	if os.PathSeparator == '\\' {
 		t.Skip("symlink fixture requires platform permission on Windows")
@@ -187,6 +211,34 @@ void Java_demo_Bridge_close(JNIEnv*, jobject) {}
 	var result JNIPeersResult
 	decodeResult(t, response, &result)
 	if len(result.Diagnostics) != 0 || len(result.Peers) != 1 {
+		t.Fatalf("result=%+v", result)
+	}
+}
+
+func TestServerKeepsDistinctSymlinkAliases(t *testing.T) {
+	if os.PathSeparator == '\\' {
+		t.Skip("symlink fixture requires platform permission on Windows")
+	}
+	root := t.TempDir()
+	target := t.TempDir()
+	writeTestFile(t, target, "demo/Bridge.java",
+		"package demo; class Bridge { native void close(); }")
+	writeTestFile(t, target, "demo/bridge.cpp", `
+void Java_demo_Bridge_close(JNIEnv*, jobject) {}
+`)
+	if err := os.Symlink(filepath.Join(target, "demo"), filepath.Join(root, "one")); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Symlink(filepath.Join(target, "demo"), filepath.Join(root, "two")); err != nil {
+		t.Fatal(err)
+	}
+	server := initializedServer(t)
+	response, _ := server.Handle(makeRequest(2, "aosp/jni/peers", JNIPeersParams{
+		WorkspaceViewRoot: root,
+	}))
+	var result JNIPeersResult
+	decodeResult(t, response, &result)
+	if len(result.Diagnostics) != 0 || len(result.Peers) != 4 {
 		t.Fatalf("result=%+v", result)
 	}
 }

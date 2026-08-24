@@ -213,6 +213,10 @@ focused view，再用返回的 `RepoPath + byte range` 选择当前文件对应�
 打开目标。没有 engine、没有唯一 peer 或只有 `unresolved` 时显示诊断，不用 Kotlin
 正则猜测目标。显式 source map 仅保留给远程桥接和协议 fixture。
 
+engine 在同一 daemon 会话内缓存 Workspace View 的 JNI snapshot。JetBrains action
+不负责缓存失效，也不根据 canonical real path 合并 symlink alias；所有目标仍以
+用户打开的 view-relative RepoPath 返回。
+
 首版不依赖 Java 或 C++ PSI 的私有实现，也不要求 `out`。后续可在 Java native、
 Kotlin external、`Java_` export 和 `JNINativeMethod` 上增加 gutter，但 gutter 与
 VS Code command 必须复用同一 RPC 结果。

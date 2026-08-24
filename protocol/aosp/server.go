@@ -1,10 +1,12 @@
 package aosp
 
 import (
+	"crypto/sha256"
 	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -19,6 +21,13 @@ const ProtocolVersion = "1.0"
 type Server struct {
 	initialized bool
 	shutdown    bool
+	jniSnapshot *jniSnapshot
+}
+
+type jniSnapshot struct {
+	root      string
+	signature [32]byte
+	index     jni.Index
 }
 
 func (server *Server) IsShutdown() bool {
@@ -156,7 +165,7 @@ func (server *Server) jniPeers(request jsonrpc.Request) jsonrpc.Response {
 	if len(diagnostics) > 0 {
 		return jsonrpc.Success(request.ID, JNIPeersResult{Peers: []jni.Link{}, Diagnostics: diagnostics})
 	}
-	index := jni.BuildIndex(javaFiles, cppFiles)
+	index := server.buildJNIIndex(params.WorkspaceViewRoot, javaFiles, cppFiles)
 	peers := make([]jni.Link, 0)
 	if params.ClassName != "" || params.MethodName != "" {
 		peers = append(peers, index.JavaPeers(params.ClassName, params.MethodName)...)
@@ -181,6 +190,39 @@ func (server *Server) jniPeers(request jsonrpc.Request) jsonrpc.Response {
 		peers = filterJNIPeersByPath(peers, current)
 	}
 	return jsonrpc.Success(request.ID, JNIPeersResult{Peers: peers, Diagnostics: index.Diagnostics})
+}
+
+func (server *Server) buildJNIIndex(root string, javaFiles, cppFiles map[model.RepoPath]string) jni.Index {
+	signature := hashJNISources(javaFiles, cppFiles)
+	if server.jniSnapshot != nil && server.jniSnapshot.root == root && server.jniSnapshot.signature == signature {
+		return server.jniSnapshot.index
+	}
+	index := jni.BuildIndex(javaFiles, cppFiles)
+	if root != "" {
+		server.jniSnapshot = &jniSnapshot{root: root, signature: signature, index: index}
+	}
+	return index
+}
+
+func hashJNISources(javaFiles, cppFiles map[model.RepoPath]string) [32]byte {
+	hash := sha256.New()
+	keys := make([]string, 0, len(javaFiles)+len(cppFiles))
+	for path := range javaFiles {
+		keys = append(keys, "java:"+string(path))
+	}
+	for path := range cppFiles {
+		keys = append(keys, "cpp:"+string(path))
+	}
+	sort.Strings(keys)
+	for _, key := range keys {
+		_, _ = hash.Write([]byte(key))
+		if strings.HasPrefix(key, "java:") {
+			_, _ = hash.Write([]byte(javaFiles[model.RepoPath(strings.TrimPrefix(key, "java:"))]))
+		} else {
+			_, _ = hash.Write([]byte(cppFiles[model.RepoPath(strings.TrimPrefix(key, "cpp:"))]))
+		}
+	}
+	return sha256.Sum256(hash.Sum(nil))
 }
 
 func filterJNIPeersByPath(peers []jni.Link, current model.RepoPath) []jni.Link {
@@ -215,16 +257,16 @@ func scanJNIWorkspace(root string) (map[model.RepoPath]string, map[model.RepoPat
 			Stage: "jni-workspace", Message: message,
 		}}
 	}
-	visited := make(map[string]bool)
-	var walk func(string, string) error
-	walk = func(current, relative string) error {
+	var walk func(string, string, map[string]bool) error
+	walk = func(current, relative string, ancestors map[string]bool) error {
 		real, evalErr := filepath.EvalSymlinks(current)
 		if evalErr == nil {
 			real = filepath.Clean(real)
-			if visited[real] {
+			if ancestors[real] {
 				return nil
 			}
-			visited[real] = true
+			ancestors = cloneStringSet(ancestors)
+			ancestors[real] = true
 		}
 		entries, readErr := os.ReadDir(current)
 		if readErr != nil {
@@ -242,7 +284,7 @@ func scanJNIWorkspace(root string) (map[model.RepoPath]string, map[model.RepoPat
 				continue
 			}
 			if info.IsDir() {
-				if err := walk(child, childRelative); err != nil {
+				if err := walk(child, childRelative, ancestors); err != nil {
 					diagnostics = append(diagnostics, jniWorkspaceDiagnostic("JNI_WORKSPACE_READ", err.Error()))
 				}
 				continue
@@ -269,11 +311,19 @@ func scanJNIWorkspace(root string) (map[model.RepoPath]string, map[model.RepoPat
 		}
 		return nil
 	}
-	err = walk(absolute, "")
+	err = walk(absolute, "", map[string]bool{})
 	if err != nil {
 		diagnostics = append(diagnostics, jniWorkspaceDiagnostic("JNI_WORKSPACE_READ", err.Error()))
 	}
 	return javaFiles, cppFiles, diagnostics
+}
+
+func cloneStringSet(values map[string]bool) map[string]bool {
+	clone := make(map[string]bool, len(values)+1)
+	for value := range values {
+		clone[value] = true
+	}
+	return clone
 }
 
 func isJNIExcluded(relative string) bool {

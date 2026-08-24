@@ -126,7 +126,11 @@ Workspace View 内扫描 Java/Kotlin/C/C++，跳过 `.git`、`.repo`、`out` 和
 受控客户端或远程桥接，协议仍接受显式 `javaFiles/cppFiles`，但客户端不应把整棵
 focused view 序列化进普通导航请求。不读取客户端不可见的 canonical root，也不要求
 `out`。JetBrains 和 VS Code 只消费同一个 peer schema，不各自复制 JNI 解析。
-首版按需扫描；长期 snapshot、文件指纹和增量失效属于后续 index slice。
+daemon 会话内按规范化 Workspace View Root 保存 JNI snapshot。每次请求遍历可见
+候选文件并按 view-relative path 与内容生成指纹；指纹未变时复用已经构建的
+`core/jni.Index`，变化时整体重建。snapshot 不写磁盘，也不跨进程恢复。目录遍历只
+阻止当前祖先链上的 symlink cycle；指向同一物理目录的两个合法 view alias 保留为
+不同 RepoPath。内容 hash、单文件增量更新和持久 cache 属于后续 index slice。
 
 后续索引 slice：
 
