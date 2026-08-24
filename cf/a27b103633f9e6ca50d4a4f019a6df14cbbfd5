@@ -1,0 +1,38 @@
+clients/vscode/src/navigation/repo_path.ts
+  s_0fcc3f909ad4ee::t_49390f8febe5ec 1-28
+clients/vscode/package.json
+  s_0fcc3f909ad4ee::t_08a4f27433e1bc 49
+clients/vscode/src/navigation/jni.ts
+  s_0fcc3f909ad4ee::t_46f1f7e42af36b 21-24
+  s_0fcc3f909ad4ee::t_545be0fba8e9de 13
+clients/vscode/src/navigation/paths.ts
+  s_0fcc3f909ad4ee::t_49390f8febe5ec 3,11,15-16
+  s_0fcc3f909ad4ee::t_46f1f7e42af36b 14
+docs/roadmap/current-state.md
+  s_0fcc3f909ad4ee::t_5813902854790d 9
+clients/vscode/src/engine/client.ts
+  s_0fcc3f909ad4ee::t_545be0fba8e9de 21
+clients/vscode/src/navigation/paths.test.ts
+  s_0fcc3f909ad4ee::t_46f1f7e42af36b 1,3,5-19,35
+  s_0fcc3f909ad4ee::t_49390f8febe5ec 2,4,20-34
+docs/roadmap/delivery-plan.md
+  s_0fcc3f909ad4ee::t_5813902854790d 50
+docs/design/ide-client-and-navigation-design.md
+  s_0fcc3f909ad4ee::t_14f2aa38087c0f 197-201
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "cfa27b103633f9e6ca50d4a4f019a6df14cbbfd5",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
