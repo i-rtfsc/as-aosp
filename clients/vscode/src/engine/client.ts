@@ -18,7 +18,7 @@ export interface AidlResolveResult {
 
 export interface JniPeersResult {
   peers: Array<{
-    java: { path: string };
+    java: { path: string; range: { start: number } };
     native: { path: string; range: { start: number } };
   }>;
   diagnostics: unknown[];

@@ -194,6 +194,11 @@ extension 不实现 AIDL/JNI parser。AIDL DefinitionProvider 和 JNI command �
 销毁，不把绝对路径写入共享协议之外的 fixture。engine client 启动失败必须清理
 半启动进程；异常退出后下一次命令允许重新启动。
 
+VS Code 路径 adapter 必须先验证 engine 返回的 RepoPath：拒绝绝对路径、Windows
+盘符、UNC、空路径、`.`、`..` 和任何 escaping segment，再按当前平台路径 API 映射
+到 Workspace View。测试同时使用 `path.posix` 与 `path.win32`，不能只在开发机平台
+上验证斜杠。固定排除目录不能成为导航输入或目标。
+
 ## 4. AIDL navigation
 
 engine 返回 `RepoPath + range + origin + confidence`。有 out 时依据 AIDL metadata/generated path；无 out 时依据 package/import/type 规则并标记 `inferred`。

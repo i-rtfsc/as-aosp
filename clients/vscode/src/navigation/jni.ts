@@ -10,7 +10,7 @@ export async function goToJniPeer(engine: EngineClient): Promise<void> {
   const result = await engine.jniPeers({ workspaceViewRoot: root, currentPath });
   const targets = result.peers.flatMap((peer) => {
     if (peer.java.path === currentPath) return [{ path: peer.native.path, offset: peer.native.range.start }];
-    if (peer.native.path === currentPath) return [{ path: peer.java.path, offset: 0 }];
+    if (peer.native.path === currentPath) return [{ path: peer.java.path, offset: peer.java.range.start }];
     return [];
   });
   if (targets.length !== 1) {
@@ -18,6 +18,10 @@ export async function goToJniPeer(engine: EngineClient): Promise<void> {
     return;
   }
   const target = targetUri(root, targets[0].path);
+  if (!target) {
+    void vscode.window.showWarningMessage("JNI peer path is outside the Workspace View.");
+    return;
+  }
   const document = await vscode.workspace.openTextDocument(target);
   const position = document.positionAt(Math.min(targets[0].offset, document.getText().length));
   await vscode.window.showTextDocument(document, { selection: new vscode.Range(position, position) });

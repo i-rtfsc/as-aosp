@@ -1,5 +1,6 @@
 import * as path from "node:path";
 import * as vscode from "vscode";
+import { resolveRepoTarget, toRepoPath } from "./repo_path";
 
 export function workspaceViewRoot(): string | undefined {
   const configured = vscode.workspace.getConfiguration("aospIde").get<string>("workspaceViewRoot");
@@ -7,11 +8,10 @@ export function workspaceViewRoot(): string | undefined {
 }
 
 export function repoPath(root: string, file: vscode.Uri): string | undefined {
-  const relative = path.relative(root, file.fsPath);
-  if (!relative || relative.startsWith("..") || path.isAbsolute(relative)) return undefined;
-  return relative.split(path.sep).join("/");
+  return toRepoPath(path, root, file.fsPath);
 }
 
-export function targetUri(root: string, repo: string): vscode.Uri {
-  return vscode.Uri.file(path.resolve(root, ...repo.split("/")));
+export function targetUri(root: string, repo: string): vscode.Uri | undefined {
+  const target = resolveRepoTarget(path, root, repo);
+  return target ? vscode.Uri.file(target) : undefined;
 }
