@@ -331,6 +331,13 @@ func TestServerMapsSeparatedAndLongestCompDBArguments(t *testing.T) {
 	}
 }
 
+func TestResponseFileTokenizerPreservesQuotedPaths(t *testing.T) {
+	parts := tokenizeResponseFile(`-I "/build/include with spaces" --sysroot='/build/sys root' escaped\\ path`)
+	if len(parts) != 5 || parts[1] != "/build/include with spaces" || parts[2] != "--sysroot=/build/sys root" || parts[3] != "escaped\\" || parts[4] != "path" {
+		t.Fatalf("parts=%q", parts)
+	}
+}
+
 func TestServerUpgradesVisibleAIDLGeneratedJavaPeer(t *testing.T) {
 	root := t.TempDir()
 	writeTestFile(t, root, "demo/IFoo.aidl", "package demo; interface IFoo {}")

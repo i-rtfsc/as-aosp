@@ -108,7 +108,7 @@ func mapCompDBArguments(arguments []string, responseFiles map[string]string, map
 		if strings.HasPrefix(value, "@") {
 			mapped, next := mapCompDBPath(strings.TrimPrefix(value, "@"), mappings, diagnostics)
 			if data, err := os.ReadFile(strings.TrimPrefix(value, "@")); err == nil {
-				parts := strings.Fields(string(data))
+				parts := tokenizeResponseFile(string(data))
 				mappedParts, _, nestedDiagnostics := mapCompDBArguments(parts, responseFiles, mappings, next)
 				next = nestedDiagnostics
 				responseFiles[mapped] = strings.Join(mappedParts, "\n") + "\n"
@@ -127,4 +127,51 @@ func mapCompDBArguments(arguments []string, responseFiles map[string]string, map
 		}
 	}
 	return result, responseFiles, diagnostics
+}
+
+func tokenizeResponseFile(value string) []string {
+	result := make([]string, 0)
+	current := strings.Builder{}
+	quoted := byte(0)
+	escaped := false
+	flush := func() {
+		if current.Len() > 0 {
+			result = append(result, current.String())
+			current.Reset()
+		}
+	}
+	for index := 0; index < len(value); index++ {
+		ch := value[index]
+		if escaped {
+			current.WriteByte(ch)
+			escaped = false
+			continue
+		}
+		if ch == '\\' {
+			escaped = true
+			continue
+		}
+		if quoted != 0 {
+			if ch == quoted {
+				quoted = 0
+			} else {
+				current.WriteByte(ch)
+			}
+			continue
+		}
+		if ch == '\'' || ch == '"' {
+			quoted = ch
+			continue
+		}
+		if ch == ' ' || ch == '\t' || ch == '\r' || ch == '\n' {
+			flush()
+			continue
+		}
+		current.WriteByte(ch)
+	}
+	if escaped {
+		current.WriteByte('\\')
+	}
+	flush()
+	return result
 }
