@@ -28,6 +28,10 @@ internal class EngineRpcClient(
         return request(method = "aosp/jni/peers", params = params)
     }
 
+    fun aidlResolve(params: String): ByteArray {
+        return request(method = "aosp/aidl/resolve", params = params)
+    }
+
     fun request(method: String, params: String): ByteArray {
         val id = nextId.getAndIncrement()
         val payload = "{" +
