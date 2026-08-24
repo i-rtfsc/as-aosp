@@ -1,0 +1,41 @@
+clients/vscode/src/navigation/aidl.ts
+  s_0fcc3f909ad4ee::t_46f1f7e42af36b 22
+clients/vscode/src/navigation/aidl_peers.ts
+  s_0fcc3f909ad4ee::t_d325fb921202ec 4,6
+  s_0fcc3f909ad4ee::t_77d7cf70a12d21 7,23-24,28
+  s_0fcc3f909ad4ee::t_c6f1ea37b98f37 1-3,5,8-22,25-27,29-33
+clients/vscode/src/navigation/aidl_peer_selection.ts
+  s_0fcc3f909ad4ee::t_d325fb921202ec 1-10,12-15
+  s_0fcc3f909ad4ee::t_91c6cb30e2f3f1 11
+clients/vscode/src/engine/client.ts
+  s_0fcc3f909ad4ee::t_c6f1ea37b98f37 27-35,102-103
+  s_0fcc3f909ad4ee::t_e427af1aeccce7 104-105
+clients/vscode/src/extension.ts
+  s_0fcc3f909ad4ee::t_c6f1ea37b98f37 4,24-26
+  s_0fcc3f909ad4ee::t_2399e07d16e1ff 27
+clients/vscode/src/navigation/aidl_peers.test.ts
+  s_0fcc3f909ad4ee::t_d325fb921202ec 3
+  s_0fcc3f909ad4ee::t_77d7cf70a12d21 1-2,4-18
+docs/roadmap/current-state.md
+  s_0fcc3f909ad4ee::t_c6f1ea37b98f37 26
+docs/roadmap/delivery-plan.md
+  s_0fcc3f909ad4ee::t_c6f1ea37b98f37 50
+clients/vscode/package.json
+  s_0fcc3f909ad4ee::t_c6f1ea37b98f37 14-15,38-41
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "67dcb238a0f2fce34d106c5b81d5306d6d5b4175",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
