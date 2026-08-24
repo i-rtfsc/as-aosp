@@ -144,13 +144,25 @@ func declarationReferences(path model.RepoPath, declaration Declaration, name st
 		}
 		if typeName == name || shortName == name || strings.HasSuffix(typeName, "."+name) ||
 			strings.HasSuffix(name, "."+shortName) {
-			result = append(result, Reference{Name: name, Path: path, Range: sourceRange, Origin: "member", Confidence: "inferred"})
+			confidence := "exact"
+			if sourceRange.End.Offset <= sourceRange.Start.Offset {
+				confidence = "inferred"
+			}
+			result = append(result, Reference{Name: name, Path: path, Range: sourceRange, Origin: "member", Confidence: confidence})
 		}
 	}
 	for _, member := range declaration.Members {
-		add(member.Type, member.Range)
+		memberRange := member.TypeRange
+		if memberRange.End.Offset <= memberRange.Start.Offset {
+			memberRange = member.Range
+		}
+		add(member.Type, memberRange)
 		for _, parameter := range member.Parameters {
-			add(parameter.Type, parameter.Range)
+			parameterRange := parameter.TypeRange
+			if parameterRange.End.Offset <= parameterRange.Start.Offset {
+				parameterRange = parameter.Range
+			}
+			add(parameter.Type, parameterRange)
 		}
 	}
 	for _, nested := range declaration.Nested {

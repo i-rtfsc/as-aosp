@@ -162,9 +162,9 @@ aosp/aidl/references
 ```
 
 请求携带 `workspaceViewRoot`、当前 `currentPath` 和 `name`。engine 先解析目标
-类型，再扫描可见 AIDL 的 import、返回类型、参数类型和字段类型。首版返回所属
-声明的 source range，`confidence` 为 `inferred`；后续 lexer/AST token range 接入
-后可缩小到具体类型 token，不改变 references DTO。
+类型，再扫描可见 AIDL 的 import、返回类型、参数类型和字段类型。parser 保存
+`typeRange` 时返回具体类型 token，`confidence` 为 `exact`；无法恢复 token span 时
+才降级到所属声明 range 和 `inferred`，不改变 references DTO。
 
 后续索引 slice：
 

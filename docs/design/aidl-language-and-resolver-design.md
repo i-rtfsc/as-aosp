@@ -54,6 +54,10 @@ Symbol
   confidence: exact | inferred
 ```
 
+`Member` 与 `Parameter` 除整体声明 range 外还保存 `typeRange`。references 必须返回
+具体类型 token（包括限定名、泛型和数组类型的完整 type span），不能长期用整个
+method/field 声明代替。parser 无法恢复精确 token 时才降级为 `inferred`。
+
 symbol key 使用 `package + name`，不使用本机绝对路径。
 
 ## 4. Resolver 规则

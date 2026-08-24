@@ -39,6 +39,7 @@ type Parameter struct {
 	Type      string      `json:"type"`
 	Direction string      `json:"direction,omitempty"`
 	Range     SourceRange `json:"range"`
+	TypeRange SourceRange `json:"typeRange"`
 }
 
 type Member struct {
@@ -47,6 +48,7 @@ type Member struct {
 	Type       string      `json:"type,omitempty"`
 	Parameters []Parameter `json:"parameters,omitempty"`
 	Range      SourceRange `json:"range"`
+	TypeRange  SourceRange `json:"typeRange,omitempty"`
 }
 
 type Declaration struct {
@@ -235,7 +237,7 @@ func (p *parser) parseMember(kind DeclarationKind) (Member, bool) {
 	if p.peek().Text == "oneway" || p.peek().Text == "async" {
 		p.consume()
 	}
-	typeName := p.parseType()
+	typeName, typeRange := p.parseType()
 	nameToken := p.peek()
 	if typeName == "" || nameToken.Kind != TokenIdentifier {
 		p.addDiagnostic("AIDL_UNEXPECTED_TOKEN", "member type or name is missing", start)
@@ -244,7 +246,7 @@ func (p *parser) parseMember(kind DeclarationKind) (Member, bool) {
 	}
 	name := p.consume().Text
 	if p.consumeText("(") {
-		member := Member{Kind: MemberMethod, Name: name, Type: typeName, Parameters: make([]Parameter, 0), Range: SourceRange{Start: start}}
+		member := Member{Kind: MemberMethod, Name: name, Type: typeName, TypeRange: typeRange, Parameters: make([]Parameter, 0), Range: SourceRange{Start: start}}
 		for !p.atEOF() && p.peek().Text != ")" {
 			p.skipAnnotations()
 			parameterStart := p.peek().Start
@@ -253,7 +255,7 @@ func (p *parser) parseMember(kind DeclarationKind) (Member, bool) {
 				direction = p.consume().Text
 			}
 			p.skipAnnotations()
-			parameterType := p.parseType()
+			parameterType, parameterTypeRange := p.parseType()
 			parameterName := p.peek()
 			if parameterType == "" || parameterName.Kind != TokenIdentifier {
 				p.addDiagnostic("AIDL_UNEXPECTED_TOKEN", "method parameter type or name is missing", parameterStart)
@@ -261,7 +263,7 @@ func (p *parser) parseMember(kind DeclarationKind) (Member, bool) {
 				continue
 			}
 			p.consume()
-			member.Parameters = append(member.Parameters, Parameter{Name: parameterName.Text, Type: parameterType, Direction: direction, Range: SourceRange{Start: parameterStart, End: parameterName.End}})
+			member.Parameters = append(member.Parameters, Parameter{Name: parameterName.Text, Type: parameterType, Direction: direction, Range: SourceRange{Start: parameterStart, End: parameterName.End}, TypeRange: parameterTypeRange})
 			if !p.consumeText(",") && p.peek().Text != ")" {
 				p.addDiagnostic("AIDL_UNEXPECTED_TOKEN", "method parameters must be comma separated", p.peek().Start)
 				p.recoverParameter()
@@ -278,7 +280,7 @@ func (p *parser) parseMember(kind DeclarationKind) (Member, bool) {
 		}
 		return member, true
 	}
-	member := Member{Kind: MemberField, Name: name, Type: typeName, Range: SourceRange{Start: start, End: nameToken.End}}
+	member := Member{Kind: MemberField, Name: name, Type: typeName, TypeRange: typeRange, Range: SourceRange{Start: start, End: nameToken.End}}
 	if isConstant {
 		member.Kind = MemberValue
 	}
@@ -291,19 +293,23 @@ func (p *parser) parseMember(kind DeclarationKind) (Member, bool) {
 	return member, true
 }
 
-func (p *parser) parseType() string {
+func (p *parser) parseType() (string, SourceRange) {
 	var parts []string
 	if p.peek().Kind != TokenIdentifier {
-		return ""
+		return "", SourceRange{}
 	}
-	parts = append(parts, p.consume().Text)
+	first := p.consume()
+	parts = append(parts, first.Text)
+	last := first
 	depth := 0
 	for !p.atEOF() {
 		text := p.peek().Text
 		if text == "." {
-			parts = append(parts, p.consume().Text)
+			last = p.consume()
+			parts = append(parts, last.Text)
 			if p.peek().Kind == TokenIdentifier {
-				parts = append(parts, p.consume().Text)
+				last = p.consume()
+				parts = append(parts, last.Text)
 			}
 			continue
 		}
@@ -314,16 +320,18 @@ func (p *parser) parseType() string {
 			if text == ">" && depth > 0 {
 				depth--
 			}
-			parts = append(parts, p.consume().Text)
+			last = p.consume()
+			parts = append(parts, last.Text)
 			continue
 		}
 		if depth > 0 && p.peek().Kind == TokenIdentifier {
-			parts = append(parts, p.consume().Text)
+			last = p.consume()
+			parts = append(parts, last.Text)
 			continue
 		}
 		break
 	}
-	return strings.Join(parts, "")
+	return strings.Join(parts, ""), SourceRange{Start: first.Start, End: last.End}
 }
 
 func (p *parser) parseQualifiedName() string {

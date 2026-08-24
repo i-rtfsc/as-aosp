@@ -46,4 +46,7 @@ func TestReferencesFindImportsAndMemberTypes(t *testing.T) {
 	if len(references) != 2 {
 		t.Fatalf("references=%+v", references)
 	}
+	if references[1].Confidence != "exact" || references[1].Range.End.Offset-references[1].Range.Start.Offset != len("IFoo") {
+		t.Fatalf("member reference=%+v", references[1])
+	}
 }
