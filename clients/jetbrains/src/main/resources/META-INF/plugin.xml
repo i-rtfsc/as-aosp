@@ -7,6 +7,8 @@
     ]]></description>
     <depends>com.intellij.modules.platform</depends>
     <extensions defaultExtensionNs="com.intellij">
+        <fileType name="AIDL" language="AIDL" implementationClass="com.rtfsc.aosp.aidl.AidlFileType" extensions="aidl"/>
+        <gotoDeclarationHandler language="AIDL" implementationClass="com.rtfsc.aosp.aidl.AidlGotoDeclarationHandler"/>
         <projectConfigurable instance="com.rtfsc.aosp.profile.ProfileConfigurable"/>
         <projectService serviceImplementation="com.rtfsc.aosp.project.FocusedRootsService"/>
     </extensions>

@@ -184,7 +184,9 @@ engine 返回 `RepoPath + range + origin + confidence`。有 out 时依据 AIDL 
 首个 JetBrains 切片先注册 `.aidl` `LanguageFileType`，并使用
 `GotoDeclarationHandler` 调用项目内 source-only resolver。它不把 AIDL compiler
 或完整 PSI parser 作为插件启动依赖：handler 在当前文件读取 package、import 和
-声明名，再通过 `FilenameIndex` 找候选文件，最后返回目标文件中的声明元素。
+声明名，再通过 `FilenameIndex` 找候选文件，最后返回目标 AIDL 文件。由于首版
+使用 Plain Text PSI，目标是文件级导航；自定义 AIDL parser/PSI 接入后再缩小到
+声明 token，并保持同一 resolver 和候选排序。
 
 这个边界先保证无 `out`、软链接 view 和 focused source roots 都能工作；候选按
 完整 import、当前 package、同名声明排序，多候选时不猜测。后续再把同一 resolver
