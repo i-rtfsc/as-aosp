@@ -1,0 +1,58 @@
+{
+  "name": "aosp-ide-vscode",
+  "displayName": "AOSP IDE",
+  "description": "Focused AOSP navigation and cross-language indexing.",
+  "version": "0.1.0-dev",
+  "publisher": "rtfsc",
+  "license": "Apache-2.0",
+  "engines": {
+    "vscode": ">=1.90.0"
+  },
+  "categories": ["Programming Languages", "Other"],
+  "activationEvents": [
+    "onLanguage:aidl",
+    "onCommand:aospIde.goToJniPeer"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "configuration": {
+      "title": "AOSP IDE",
+      "properties": {
+        "aospIde.engineExecutable": {
+          "type": "string",
+          "default": "aosp-index",
+          "description": "Path to the aosp-index executable."
+        },
+        "aospIde.workspaceViewRoot": {
+          "type": "string",
+          "default": "",
+          "description": "Workspace View root containing selected AOSP repositories."
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "aospIde.goToJniPeer",
+        "title": "AOSP: Go to JNI Peer"
+      }
+    ],
+    "languages": [
+      {
+        "id": "aidl",
+        "aliases": ["AIDL"],
+        "extensions": [".aidl"]
+      }
+    ]
+  },
+  "scripts": {
+    "compile": "tsc -p ./tsconfig.json",
+    "check": "npm run compile && node --test out/engine/frame.test.js",
+    "package": "npm run compile && vsce package --no-dependencies"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/vscode": "^1.90.0",
+    "typescript": "^5.6.0",
+    "@vscode/vsce": "^3.2.0"
+  }
+}

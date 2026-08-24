@@ -6,7 +6,7 @@
 
 - `dev-ide` 分支已切换为新方案仓库边界；旧 Gradle/CMake 实现在 `aosp` 分支。
 - 产品可行性、详细设计、拓扑和关键决策文档已存在。
-- Phase 0 已有 Go model、topology/pathmap、metadata readers、ModuleGraph、AIDL/JNI source index 和 CLI；JetBrains plugin bootstrap 已可构建，VS Code extension 正进入首个客户端切片。
+- Phase 0 已有 Go model、topology/pathmap、metadata readers、ModuleGraph、AIDL/JNI source index 和 CLI；JetBrains plugin bootstrap 已可构建，VS Code extension 首个 TypeScript client slice 已可编译和运行 framing fixture。
 - AOSP 源码研究已覆盖 Soong IdeInfo、Java/CC metadata、compdb、AIDL 和 JNI 模式。
 
 ## 2. Partial
