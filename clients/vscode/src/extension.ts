@@ -5,11 +5,13 @@ import { goToAidlGeneratedPeer } from "./navigation/aidl_peers";
 import { AidlReferenceProvider } from "./navigation/aidl_references";
 import { goToJniPeer, JniDefinitionProvider } from "./navigation/jni";
 import { refreshCompdbOverlay } from "./navigation/compdb";
+import { createAospStatusBar } from "./status";
 
 export function activate(context: vscode.ExtensionContext): void {
   const engine = new EngineClient();
   const output = vscode.window.createOutputChannel("AOSP IDE");
   context.subscriptions.push(output);
+  context.subscriptions.push(createAospStatusBar(engine, output));
   const ensureEngine = async (): Promise<void> => {
     const executable = vscode.workspace.getConfiguration("aospIde").get<string>("engineExecutable") || "aosp-index";
     await engine.start(executable);
@@ -46,6 +48,14 @@ export function activate(context: vscode.ExtensionContext): void {
       await ensureEngine();
       output.show(true);
       await refreshCompdbOverlay(engine, output);
+    }),
+    vscode.commands.registerCommand("aospIde.showStatus", () => {
+      const config = vscode.workspace.getConfiguration("aospIde");
+      output.appendLine(`engine: ${config.get<string>("engineExecutable") || "aosp-index"}`);
+      output.appendLine(`workspaceViewRoot: ${config.get<string>("workspaceViewRoot") || "<workspace>"}`);
+      output.appendLine(`metadataRoot: ${config.get<string>("metadataRoot") || "<unset>"}`);
+      output.appendLine(`status: ${engine.status.state}${engine.status.error ? ` (${engine.status.error})` : ""}`);
+      output.show(true);
     }),
     vscode.workspace.onDidChangeConfiguration((event) => {
       if (event.affectsConfiguration("aospIde.engineExecutable") ||

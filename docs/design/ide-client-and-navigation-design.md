@@ -254,6 +254,10 @@ extension activation、AIDL language registration、definition/reference provide
 commands。默认 `make test-vscode` 不下载 VS Code runtime；离线 CI 仍由 TypeScript/
 framing/navigation fixtures 提供确定性 gate。
 
+VS Code 状态栏只消费 `EngineClient` 的显式状态：`stopped`、`starting`、`running`、
+`error`。状态栏点击执行 `AOSP: Show Status`，输出当前 engine executable、Workspace
+View、metadata root 和最近错误；UI 不通过子进程对象猜测状态。
+
 ## 5. JNI navigation
 
 支持：

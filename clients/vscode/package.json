@@ -14,6 +14,7 @@
     "onCommand:aospIde.goToJniPeer",
     "onCommand:aospIde.goToAidlGeneratedPeer",
     "onCommand:aospIde.refreshCompdbOverlay"
+    ,"onCommand:aospIde.showStatus"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -55,6 +56,10 @@
       {
         "command": "aospIde.refreshCompdbOverlay",
         "title": "AOSP: Refresh clangd Compilation Database"
+      },
+      {
+        "command": "aospIde.showStatus",
+        "title": "AOSP: Show Status"
       }
     ],
     "languages": [
