@@ -179,6 +179,18 @@ Workspace Model bridge 使用同一个 `WorkspaceRootPlan`，不会重复扫描�
 
 engine 返回 `RepoPath + range + origin + confidence`。有 out 时依据 AIDL metadata/generated path；无 out 时依据 package/import/type 规则并标记 `inferred`。
 
+### 4.1 JetBrains 首个实现切片
+
+首个 JetBrains 切片先注册 `.aidl` `LanguageFileType`，并使用
+`GotoDeclarationHandler` 调用项目内 source-only resolver。它不把 AIDL compiler
+或完整 PSI parser 作为插件启动依赖：handler 在当前文件读取 package、import 和
+声明名，再通过 `FilenameIndex` 找候选文件，最后返回目标文件中的声明元素。
+
+这个边界先保证无 `out`、软链接 view 和 focused source roots 都能工作；候选按
+完整 import、当前 package、同名声明排序，多候选时不猜测。后续再把同一 resolver
+接到 AIDL PSI/reference、Find Usages 和 engine build-backed generated peers，
+不改变 `RepoPath` 与 confidence 语义。
+
 ## 5. JNI navigation
 
 支持：

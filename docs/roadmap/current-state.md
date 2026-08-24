@@ -36,7 +36,6 @@
 - 设计入口：`docs/aosp-ide-plugin-design.md`；
 - 规范化设计：`docs/design/`；
 - Phase 0 计划：`docs/roadmap/delivery-plan.md`；
-- 代码入口：`cmd/aosp-index`、`core/model`、`core/topology`、`core/pathmap`、`core/metadata`、`core/graph`、`core/generated`、`core/aidl`、`core/index`；
 - 代码入口：`cmd/aosp-index`、`core/model`、`core/topology`、`core/pathmap`、`core/metadata`、`core/graph`、`core/generated`、`core/aidl`、`core/jni`、`core/index`；
 - JNI fixture 通过 `make check`；只读 `frameworks/base/core/java` 与 `core/jni` 探测得到 1126 个 Java/Kotlin native 符号、2686 个 native 符号、988 个注册项、673 条链接，其中 561 条 exact、112 条 inferred。该结果不证明真实 IDE、Windows 或完整 AOSP 兼容。
 - JetBrains bootstrap、EngineProcess、profile state 和 focused adapter 已使用 JDK 21 与本机 IntelliJ IDEA 2025.2.4 SDK 通过 `test` 与 `buildPlugin`，包含真实 `BasePlatformTestCase` fixture；生成 `aosp-ide-jetbrains-0.1.0-dev.zip`，且 zip 不携带 Kotlin stdlib。251 baseline 的下载式构建和 Android Studio verifier 尚未闭合。
