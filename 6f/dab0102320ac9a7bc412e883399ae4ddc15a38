@@ -1,0 +1,43 @@
+docs/roadmap/current-state.md
+  s_0fcc3f909ad4ee::t_5ca88c0b0b4b79 14,27
+docs/design/protocol-and-profile-design.md
+  s_5f30dac179bcb2::t_c11669fe73c928 116
+  s_0fcc3f909ad4ee::t_58f76b6bc50673 31-32,80,107-114
+  s_0fcc3f909ad4ee::t_9f73736e8c4bab 115
+docs/roadmap/delivery-plan.md
+  s_0fcc3f909ad4ee::t_5ca88c0b0b4b79 25
+docs/roadmap/active-execution-plan.md
+  s_0fcc3f909ad4ee::t_5ca88c0b0b4b79 9
+docs/architecture/source-and-module-boundaries.md
+  s_0fcc3f909ad4ee::t_58f76b6bc50673 58
+docs/architecture/system-architecture.md
+  s_0fcc3f909ad4ee::t_58f76b6bc50673 44
+docs/aosp-ide-plugin-design.md
+  s_0fcc3f909ad4ee::t_58f76b6bc50673 15,49
+docs/design/ide-client-and-navigation-design.md
+  s_0fcc3f909ad4ee::t_58f76b6bc50673 86
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "6fdab0102320ac9a7bc412e883399ae4ddc15a38",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": null
+    },
+    "s_5f30dac179bcb2": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "019ffe38-b3cd-77e3-8987-f48bc62a086c",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
