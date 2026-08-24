@@ -1,0 +1,37 @@
+docs/design/ide-client-and-navigation-design.md
+  s_0fcc3f909ad4ee::t_517cc00fe225da 238-242
+clients/vscode/package.json
+  s_0fcc3f909ad4ee::t_4d4db492ffae4a 55
+  s_0fcc3f909ad4ee::t_6c9fc2cb005a32 62-63
+docs/roadmap/delivery-plan.md
+  s_0fcc3f909ad4ee::t_517cc00fe225da 50
+clients/vscode/test/suite/extension.test.js
+  s_0fcc3f909ad4ee::t_4d4db492ffae4a 1-8,12-13
+  s_0fcc3f909ad4ee::t_ff6f88df8dc1a6 9-11
+docs/engineering/build-and-test-guide.md
+  s_0fcc3f909ad4ee::t_df8b86de4518d9 19
+docs/roadmap/current-state.md
+  s_0fcc3f909ad4ee::t_df8b86de4518d9 33
+  s_0fcc3f909ad4ee::t_517cc00fe225da 25
+clients/vscode/test/run-host-test.js
+  s_0fcc3f909ad4ee::t_ff6f88df8dc1a6 7
+  s_0fcc3f909ad4ee::t_4d4db492ffae4a 1-6,8-15
+clients/vscode/package-lock.json
+  s_0fcc3f909ad4ee::t_5d32851a1d7f00 14,600-616,1176-1204,1258-1264,1738-1750,2041-2047,2066,2144-2156,2167-2179,2196-2202,2314-2359,2406-2415,2499-2541,2660-2672,2862-2877,2897-2958,2972-2978,3176-3182,3345-3361,3483-3489,3566-3578,3695-3707,4095
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "5db13ca710145f0d46838141b140ef90b0cc44b5",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
