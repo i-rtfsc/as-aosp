@@ -193,10 +193,11 @@ engine 返回 `RepoPath + range + origin + confidence`。有 out 时依据 AIDL 
 接到 AIDL PSI/reference、Find Usages 和 engine build-backed generated peers，
 不改变 `RepoPath` 与 confidence 语义。
 
-下一切片启用 `aosp/aidl/resolve`。JetBrains handler 优先把 Workspace View Root、
-当前 RepoPath 和光标 token 交给 engine，使用返回的 source range 打开目标；engine
-不可用时保留现有文件级 source-only fallback。Plain Text PSI 仍只能返回文件元素，
-因此精确 range 先用于 editor navigation，完整 declaration PSI 留到 parser definition。
+`aosp/aidl/resolve` 已启用，但 JetBrains 的同步 `GotoDeclarationHandler` 不能阻塞 EDT
+等待进程启动或 Workspace View 扫描，因此 handler 保留本地文件级 fallback。精确
+engine range 由异步 `Go to AIDL Definition` action 承载；后台任务完成后再回到 UI
+线程打开目标。Plain Text PSI 仍只能返回文件元素，完整 declaration PSI 留到 parser
+definition。
 
 ## 5. JNI navigation
 
@@ -212,7 +213,7 @@ engine 返回 `RepoPath + range + origin + confidence`。有 out 时依据 AIDL 
 
 ### 5.1 JetBrains 首个实现切片
 
-JetBrains 提供 `Go to JNI Peer` action。action 只发送 profile 中的
+JetBrains 提供异步 `Go to JNI Peer` action。action 只发送 profile 中的
 `workspaceViewRoot` 和当前 `RepoPath`，通过 `aosp/jni/peers` 让共享 engine 扫描
 focused view，再用返回的 `RepoPath + byte range` 选择当前文件对应的唯一 peer 并
 打开目标。没有 engine、没有唯一 peer 或只有 `unresolved` 时显示诊断，不用 Kotlin
@@ -221,6 +222,10 @@ focused view，再用返回的 `RepoPath + byte range` 选择当前文件对应�
 engine 在同一 daemon 会话内缓存 Workspace View 的 JNI snapshot。JetBrains action
 不负责缓存失效，也不根据 canonical real path 合并 symlink alias；所有目标仍以
 用户打开的 view-relative RepoPath 返回。
+
+所有 engine 启动、Workspace View 扫描和 RPC 等待必须在 background task 中执行；
+只有 warning dialog 和 editor navigation 回到 UI 线程。客户端不能在 EDT 上等待
+daemon 或读取大目录。
 
 首版不依赖 Java 或 C++ PSI 的私有实现，也不要求 `out`。后续可在 Java native、
 Kotlin external、`Java_` export 和 `JNINativeMethod` 上增加 gutter，但 gutter 与

@@ -10,10 +10,6 @@ import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
 import com.intellij.psi.search.FilenameIndex
 import com.intellij.psi.search.GlobalSearchScope
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.rtfsc.aosp.engine.ProjectEngineService
-import com.rtfsc.aosp.profile.EngineProfileSettings
-import java.nio.file.Path
 
 private data class AidlDeclaration(
     val qualifiedName: String,
@@ -29,7 +25,6 @@ private object AidlSourceResolver {
     fun resolve(source: PsiFile, offset: Int): PsiElement? {
         val sourceText = source.text
         val token = identifierAt(sourceText, offset) ?: return null
-        resolveWithEngine(source, token)?.let { return it }
         val packageName = packagePattern.find(sourceText)?.groupValues?.get(1).orEmpty()
         val imports = importPattern.findAll(sourceText).map { it.groupValues[1] }.toList()
         val project = source.project
@@ -62,40 +57,6 @@ private object AidlSourceResolver {
         val target = ordered.single()
         val psiFile = PsiManager.getInstance(project).findFile(target.file) ?: return null
         return psiFile.findElementAt(target.declaration.nameStart)
-    }
-
-    private fun resolveWithEngine(source: PsiFile, token: String): PsiElement? {
-        val project = source.project
-        val settings = project.getService(EngineProfileSettings::class.java).current
-        if (settings.engineExecutable.isBlank() || settings.workspaceViewRoot.isBlank()) return null
-        val root = runCatching { Path.of(settings.workspaceViewRoot).toAbsolutePath().normalize() }.getOrNull() ?: return null
-        val currentPath = runCatching {
-            val filePath = source.virtualFile.toNioPath().toAbsolutePath().normalize()
-            if (!filePath.startsWith(root)) return null
-            root.relativize(filePath).toString().replace('\\', '/')
-        }.getOrNull() ?: return null
-        val request = ObjectMapper().createObjectNode().apply {
-            put("workspaceViewRoot", root.toString())
-            put("currentPath", currentPath)
-            put("name", token)
-        }
-        val response = runCatching {
-            project.getService(ProjectEngineService::class.java).aidlResolve(request.toString())
-        }.getOrNull() ?: return null
-        val resolution = runCatching { ObjectMapper().readTree(response).path("result").path("resolution") }.getOrNull()
-            ?: return null
-        if (resolution.path("state").asText() != "found") return null
-        val symbols = resolution.path("symbols")
-        if (!symbols.isArray || symbols.size() != 1) return null
-        val symbol = symbols.single()
-        val targetPath = symbol.path("path").asText()
-        val targetFile = root.resolve(targetPath).normalize().toFile()
-        val targetVirtual = com.intellij.openapi.vfs.LocalFileSystem.getInstance()
-            .refreshAndFindFileByIoFile(targetFile) ?: return null
-        val targetPsi = PsiManager.getInstance(project).findFile(targetVirtual) ?: return null
-        val offset = symbol.path("range").path("start").path("offset").asInt(-1)
-        if (offset < 0) return targetPsi
-        return targetPsi.findElementAt(offset) ?: targetPsi
     }
 
     private data class AidlTarget(

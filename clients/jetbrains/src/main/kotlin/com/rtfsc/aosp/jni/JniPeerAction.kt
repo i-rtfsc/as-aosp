@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.fileEditor.OpenFileDescriptor
+import com.intellij.openapi.progress.ProgressIndicator
+import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.vfs.LocalFileSystem
@@ -44,23 +46,36 @@ class JniPeerAction : AnAction("Go to JNI Peer") {
             put("workspaceViewRoot", root.toString())
             put("currentPath", currentPath)
         }
-        val response = try {
-            project.getService(ProjectEngineService::class.java).jniPeers(request.toString())
-        } catch (failure: Throwable) {
-            showError(project, "JNI engine query failed: ${failure.message ?: failure.javaClass.simpleName}")
-            return
-        }
-        val target = selectTarget(objectMapper.readTree(response), currentPath) ?: run {
-            showError(project, "No JNI peer was found for this file.")
-            return
-        }
-        val virtualTarget = findVisibleFile(project, root, target.path)
-        if (virtualTarget == null) {
-            showError(project, "JNI peer is not visible: ${target.path}")
-            return
-        }
-        val offset = byteOffsetToCharOffset(virtualTarget, target.start)
-        OpenFileDescriptor(project, virtualTarget, offset).navigate(true)
+        object : Task.Backgroundable(project, "Find JNI Peer", true) {
+            private var target: Target? = null
+            private var failureMessage: String? = null
+
+            override fun run(indicator: ProgressIndicator) {
+                indicator.text = "Scanning focused AOSP sources"
+                val response = try {
+                    project.getService(ProjectEngineService::class.java).jniPeers(request.toString())
+                } catch (failure: Throwable) {
+                    failureMessage = "JNI engine query failed: ${failure.message ?: failure.javaClass.simpleName}"
+                    return
+                }
+                target = selectTarget(objectMapper.readTree(response), currentPath)
+                if (target == null) failureMessage = "No unique JNI peer was found for this file."
+            }
+
+            override fun onSuccess() {
+                val resolved = target ?: run {
+                    showError(project, failureMessage ?: "JNI peer query failed.")
+                    return
+                }
+                val virtualTarget = findVisibleFile(project, root, resolved.path)
+                if (virtualTarget == null) {
+                    showError(project, "JNI peer is not visible: ${resolved.path}")
+                    return
+                }
+                val offset = byteOffsetToCharOffset(virtualTarget, resolved.start)
+                OpenFileDescriptor(project, virtualTarget, offset).navigate(true)
+            }
+        }.queue()
     }
 
     private fun repoPath(root: Path, file: VirtualFile): String? {
