@@ -1,0 +1,32 @@
+protocol/aosp/aidl.go
+  s_0fcc3f909ad4ee::t_75165115973c96 4-6,37,55,64-68,80-85,88-100
+  s_0fcc3f909ad4ee::t_86c267b8ecbdb1 101
+docs/roadmap/delivery-plan.md
+  s_0fcc3f909ad4ee::t_e937aa9712e243 36
+docs/design/protocol-and-profile-design.md
+  s_0fcc3f909ad4ee::t_e937aa9712e243 87
+docs/roadmap/current-state.md
+  s_0fcc3f909ad4ee::t_e937aa9712e243 27
+protocol/aosp/server.go
+  s_0fcc3f909ad4ee::t_299763797c9bbf 22-24
+  s_0fcc3f909ad4ee::t_ff4f8576e60395 12,25,34-38
+  s_0fcc3f909ad4ee::t_6bfa91567c1d2d 39-40
+protocol/aosp/server_test.go
+  s_0fcc3f909ad4ee::t_0a5d47aba3b039 239-260
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "f81e704202ca642ec7eefdb654692a824d8e29cd",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
