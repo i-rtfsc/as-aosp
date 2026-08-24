@@ -175,6 +175,24 @@ Workspace Model bridge 使用同一个 `WorkspaceRootPlan`，不会重复扫描�
 - JNI 使用 command/Definition provider；
 - Java/Kotlin 依赖用户已有 language server。
 
+### 3.1 首个 VS Code 实现切片
+
+`clients/vscode/` 使用 TypeScript，目录固定为：
+
+```text
+src/extension.ts          activation、commands 和 DefinitionProvider
+src/engine/frame.ts       Content-Length framing
+src/engine/client.ts      aosp-index 生命周期和 typed requests
+src/navigation/paths.ts   Workspace View 与 RepoPath 映射
+src/navigation/aidl.ts    AIDL definition 请求和目标打开
+src/navigation/jni.ts     JNI peer command 和目标打开
+```
+
+extension 不实现 AIDL/JNI parser。AIDL DefinitionProvider 和 JNI command 都只发送
+当前 `workspaceViewRoot + currentPath (+ name)`，由统一 engine 扫描 view 并返回
+`RepoPath + range`。engine 进程由 workspace extension host 管理，退出或配置改变时
+销毁，不把绝对路径写入共享协议之外的 fixture。
+
 ## 4. AIDL navigation
 
 engine 返回 `RepoPath + range + origin + confidence`。有 out 时依据 AIDL metadata/generated path；无 out 时依据 package/import/type 规则并标记 `inferred`。
