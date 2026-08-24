@@ -14,6 +14,7 @@ class AidlGotoDeclarationPlatformTest : BasePlatformTestCase() {
             "Client.aidl",
             "package android.client; import android.demo.IFoo; interface Client { IFoo value(); }",
         )
+        myFixture.doHighlighting()
         assertEquals(AidlFileType, source.virtualFile.fileType)
 
         val offset = source.text.indexOf("IFoo value")
