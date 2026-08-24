@@ -21,6 +21,8 @@ private data class SourceSet(
     val cppFiles: Map<String, String>,
 )
 
+private val excludedSegments = setOf(".git", ".repo", "out", ".aosp-ide")
+
 class JniPeerAction : AnAction("Go to JNI Peer") {
     private val objectMapper = ObjectMapper()
 
@@ -87,7 +89,9 @@ class JniPeerAction : AnAction("Go to JNI Peer") {
     private fun repoPath(root: Path, file: VirtualFile): String? {
         val path = runCatching { file.toNioPath().toAbsolutePath().normalize() }.getOrNull() ?: return null
         if (!path.startsWith(root) || path == root) return null
-        return root.relativize(path).toString().replace('\\', '/')
+        val relative = root.relativize(path)
+        if (relative.any { segment -> segment.toString() in excludedSegments }) return null
+        return relative.toString().replace('\\', '/')
     }
 
     private fun findVisibleFile(project: Project, root: Path, repoPath: String): VirtualFile? {
@@ -106,17 +110,21 @@ class JniPeerAction : AnAction("Go to JNI Peer") {
     private fun selectTarget(response: JsonNode, currentPath: String): Target? {
         val result = response.path("result")
         if (result.isMissingNode || result.path("diagnostics").any()) return null
-        return result.path("peers").firstOrNull { peer ->
+        val targets = buildList {
+            result.path("peers").filter { peer ->
             peer.path("java").path("path").asText() == currentPath
-        }?.let { peer ->
-            val native = peer.path("native")
-            Target(native.path("path").asText(), native.path("range").path("start").asInt())
-        } ?: result.path("peers").firstOrNull { peer ->
+            }.forEach { peer ->
+                val native = peer.path("native")
+                add(Target(native.path("path").asText(), native.path("range").path("start").asInt()))
+            }
+            result.path("peers").filter { peer ->
             peer.path("native").path("path").asText() == currentPath
-        }?.let { peer ->
-            val java = peer.path("java")
-            Target(java.path("path").asText(), java.path("range").path("start").asInt())
-        }
+            }.forEach { peer ->
+                val java = peer.path("java")
+                add(Target(java.path("path").asText(), java.path("range").path("start").asInt()))
+            }
+        }.distinct()
+        return targets.singleOrNull()
     }
 
     private fun byteOffsetToCharOffset(file: VirtualFile, byteOffset: Int): Int {

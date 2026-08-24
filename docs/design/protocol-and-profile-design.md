@@ -85,7 +85,7 @@ created -> initialized -> shutdown-requested -> exited
     "topologyDiscovery": true,
     "topologyValidation": true,
     "aidlNavigation": false,
-    "jniNavigation": false
+    "jniNavigation": true
   }
 }
 ```
