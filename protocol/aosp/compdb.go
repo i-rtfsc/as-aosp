@@ -16,8 +16,9 @@ type CompDBOverlayParams struct {
 	PathMappings      []model.PathMapping `json:"pathMappings,omitempty"`
 }
 type CompDBOverlayResult struct {
-	Entries     []CompDBOverlayEntry `json:"entries"`
-	Diagnostics []model.Diagnostic   `json:"diagnostics"`
+	Entries       []CompDBOverlayEntry `json:"entries"`
+	ResponseFiles map[string]string    `json:"responseFiles,omitempty"`
+	Diagnostics   []model.Diagnostic   `json:"diagnostics"`
 }
 type CompDBOverlayEntry struct {
 	Directory string   `json:"directory"`
@@ -44,13 +45,14 @@ func (server *Server) compdbOverlay(request jsonrpc.Request) jsonrpc.Response {
 		return jsonrpc.Success(request.ID, CompDBOverlayResult{Diagnostics: []model.Diagnostic{{Code: "COMPDB_PARSE_FAILED", Severity: model.SeverityError, Stage: "compdb-rpc", Message: err.Error()}}})
 	}
 	diagnostics := make([]model.Diagnostic, 0)
+	responseFiles := make(map[string]string)
 	for index := range entries {
 		entries[index].Directory, diagnostics = mapCompDBPath(entries[index].Directory, params.PathMappings, diagnostics)
 		entries[index].File, diagnostics = mapCompDBPath(entries[index].File, params.PathMappings, diagnostics)
 		entries[index].Output, diagnostics = mapCompDBPath(entries[index].Output, params.PathMappings, diagnostics)
-		entries[index].Arguments, diagnostics = mapCompDBArguments(entries[index].Arguments, params.PathMappings, diagnostics)
+		entries[index].Arguments, responseFiles, diagnostics = mapCompDBArguments(entries[index].Arguments, responseFiles, params.PathMappings, diagnostics)
 	}
-	return jsonrpc.Success(request.ID, CompDBOverlayResult{Entries: entries, Diagnostics: diagnostics})
+	return jsonrpc.Success(request.ID, CompDBOverlayResult{Entries: entries, ResponseFiles: responseFiles, Diagnostics: diagnostics})
 }
 
 func readCompDB(root string) ([]byte, error) {
@@ -93,7 +95,7 @@ func isCompDBAbsolute(value string) bool {
 		(len(value) >= 3 && value[1] == ':' && value[2] == '/')
 }
 
-func mapCompDBArguments(arguments []string, mappings []model.PathMapping, diagnostics []model.Diagnostic) ([]string, []model.Diagnostic) {
+func mapCompDBArguments(arguments []string, responseFiles map[string]string, mappings []model.PathMapping, diagnostics []model.Diagnostic) ([]string, map[string]string, []model.Diagnostic) {
 	result := append([]string(nil), arguments...)
 	separate := map[string]bool{"-I": true, "-isystem": true, "--sysroot": true, "-include": true}
 	for index := 0; index < len(result); index++ {
@@ -105,6 +107,14 @@ func mapCompDBArguments(arguments []string, mappings []model.PathMapping, diagno
 		}
 		if strings.HasPrefix(value, "@") {
 			mapped, next := mapCompDBPath(strings.TrimPrefix(value, "@"), mappings, diagnostics)
+			if data, err := os.ReadFile(strings.TrimPrefix(value, "@")); err == nil {
+				parts := strings.Fields(string(data))
+				mappedParts, _, nestedDiagnostics := mapCompDBArguments(parts, responseFiles, mappings, next)
+				next = nestedDiagnostics
+				responseFiles[mapped] = strings.Join(mappedParts, "\n") + "\n"
+			} else {
+				next = append(next, model.Diagnostic{Code: "COMPDB_RESPONSE_READ_FAILED", Severity: model.SeverityWarning, Stage: "compdb-rpc", Message: "response file could not be read: " + strings.TrimPrefix(value, "@")})
+			}
 			result[index], diagnostics = "@"+mapped, next
 			continue
 		}
@@ -116,5 +126,5 @@ func mapCompDBArguments(arguments []string, mappings []model.PathMapping, diagno
 			}
 		}
 	}
-	return result, diagnostics
+	return result, responseFiles, diagnostics
 }

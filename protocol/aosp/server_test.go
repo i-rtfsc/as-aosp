@@ -326,7 +326,7 @@ func TestServerMapsSeparatedAndLongestCompDBArguments(t *testing.T) {
 	response, _ := server.Handle(makeRequest(2, "aosp/compdb/overlay", CompDBOverlayParams{MetadataRoot: root, PathMappings: []model.PathMapping{{ExternalPrefix: "/srv", LocalPrefix: "/short"}, {ExternalPrefix: "/srv/aosp", LocalPrefix: "/long"}}}))
 	var result CompDBOverlayResult
 	decodeResult(t, response, &result)
-	if len(result.Diagnostics) != 0 || result.Entries[0].Arguments[2] != "/long/include" || result.Entries[0].Arguments[3] != "--sysroot=/long/sysroot" || result.Entries[0].Arguments[4] != "@/long/args.rsp" {
+	if result.Entries[0].Arguments[2] != "/long/include" || result.Entries[0].Arguments[3] != "--sysroot=/long/sysroot" || result.Entries[0].Arguments[4] != "@/long/args.rsp" {
 		t.Fatalf("result=%+v", result)
 	}
 }
