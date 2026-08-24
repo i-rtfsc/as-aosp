@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/i-rtfsc/as-aosp/core/aidl"
 	"github.com/i-rtfsc/as-aosp/core/model"
 	"github.com/i-rtfsc/as-aosp/core/topology"
 	"github.com/i-rtfsc/as-aosp/protocol/jsonrpc"
@@ -212,6 +213,26 @@ void Java_demo_Bridge_close(JNIEnv*, jobject) {}
 	decodeResult(t, response, &result)
 	if len(result.Diagnostics) != 0 || len(result.Peers) != 1 {
 		t.Fatalf("result=%+v", result)
+	}
+}
+
+func TestServerResolvesAIDLSourceRangeFromWorkspace(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, "demo/IFoo.aidl", "package demo; interface IFoo {}")
+	writeTestFile(t, root, "demo/Client.aidl", "package demo; import demo.IFoo; interface Client { IFoo value(); }")
+	server := initializedServer(t)
+	response, _ := server.Handle(makeRequest(2, "aosp/aidl/resolve", AIDLResolveParams{
+		WorkspaceViewRoot: root,
+		CurrentPath:       "demo/Client.aidl",
+		Name:              "IFoo",
+	}))
+	var result AIDLResolveResult
+	decodeResult(t, response, &result)
+	if result.Resolution.State != aidl.ResolutionFound || len(result.Resolution.Symbols) != 1 {
+		t.Fatalf("result=%+v", result)
+	}
+	if result.Resolution.Symbols[0].Path != "demo/IFoo.aidl" {
+		t.Fatalf("symbols=%+v", result.Resolution.Symbols)
 	}
 }
 

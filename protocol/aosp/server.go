@@ -114,6 +114,8 @@ func (server *Server) Handle(request jsonrpc.Request) (jsonrpc.Response, bool) {
 		response = server.topologyValidate(request)
 	case "aosp/jni/peers":
 		response = server.jniPeers(request)
+	case "aosp/aidl/resolve":
+		response = server.aidlResolve(request)
 	default:
 		response = jsonrpc.Failure(request.ID, jsonrpc.MethodNotFound(request.Method))
 	}
@@ -139,6 +141,7 @@ func (server *Server) initialize(request jsonrpc.Request) (jsonrpc.Response, boo
 			ProfileValidation:  true,
 			TopologyDiscovery:  true,
 			TopologyValidation: true,
+			AIDLNavigation:     true,
 			JNINavigation:      true,
 		},
 	}), !request.IsNotification()

@@ -132,6 +132,17 @@ daemon 会话内按规范化 Workspace View Root 保存 JNI snapshot。每次请
 阻止当前祖先链上的 symlink cycle；指向同一物理目录的两个合法 view alias 保留为
 不同 RepoPath。内容 hash、单文件增量更新和持久 cache 属于后续 index slice。
 
+首个 AIDL resolve slice：
+
+```text
+aosp/aidl/resolve
+```
+
+请求携带 `workspaceViewRoot`、当前 AIDL `currentPath` 和光标处的 `name`。engine
+只扫描 Workspace View 内可见的 `.aidl`，使用 `core/aidl` 的 package/import/type
+resolver 返回 `Resolution` 与精确 source range；固定排除目录和 symlink cycle 规则
+与 JNI workspace 扫描一致。首版不返回 generated peers，也不启用 references。
+
 后续索引 slice：
 
 ```text
@@ -139,7 +150,6 @@ aosp/index/status
 aosp/index/rebuild
 aosp/definition
 aosp/references
-aosp/aidl/resolve
 aosp/path/explain
 aosp/diagnostics/list
 ```

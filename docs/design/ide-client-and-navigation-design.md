@@ -193,6 +193,11 @@ engine 返回 `RepoPath + range + origin + confidence`。有 out 时依据 AIDL 
 接到 AIDL PSI/reference、Find Usages 和 engine build-backed generated peers，
 不改变 `RepoPath` 与 confidence 语义。
 
+下一切片启用 `aosp/aidl/resolve`。JetBrains handler 优先把 Workspace View Root、
+当前 RepoPath 和光标 token 交给 engine，使用返回的 source range 打开目标；engine
+不可用时保留现有文件级 source-only fallback。Plain Text PSI 仍只能返回文件元素，
+因此精确 range 先用于 editor navigation，完整 declaration PSI 留到 parser definition。
+
 ## 5. JNI navigation
 
 支持：
