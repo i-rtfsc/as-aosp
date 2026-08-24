@@ -51,6 +51,13 @@
 
 ## P2：外部环境
 
+### AOSP-IDE-PACKAGING-01
+
+- 目标：跨平台 engine、JetBrains ZIP 和 VS Code VSIX 本地产物。
+- 当前切片：六平台 Go 交叉编译与统一 `dist/` 目录。
+- 下一验收：SHA-256 manifest、签名、公证和 marketplace verifier。
+- 负能力：首版插件包不内嵌全部平台 engine。
+
 ### AOSP-IDE-REMOTE-01
 
 - 目标：Linux remote-execution bridge。
