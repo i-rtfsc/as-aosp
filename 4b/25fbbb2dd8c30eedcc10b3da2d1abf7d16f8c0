@@ -1,0 +1,29 @@
+protocol/aosp/server.go
+  s_0fcc3f909ad4ee::t_49cabdb9ce206f 6-7,67-68
+  s_0fcc3f909ad4ee::t_64bb82d7619dee 219-225,227,229,231-268,271-272
+  s_0fcc3f909ad4ee::t_0678cddc107853 69-73
+  s_0fcc3f909ad4ee::t_5d3a26fe8aa8fb 146-155,170-182,186-218,226,228,230,269-270,273-299
+  s_0fcc3f909ad4ee::t_53e32ef3b1b5b3 300
+docs/design/protocol-and-profile-design.md
+  s_0fcc3f909ad4ee::t_bbbae8d9879616 123-129
+docs/design/ide-client-and-navigation-design.md
+  s_0fcc3f909ad4ee::t_bbbae8d9879616 210-214
+protocol/aosp/server_test.go
+  s_0fcc3f909ad4ee::t_aeeede75340d9d 6,139-193,227-237
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "4b25fbbb2dd8c30eedcc10b3da2d1abf7d16f8c0",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
