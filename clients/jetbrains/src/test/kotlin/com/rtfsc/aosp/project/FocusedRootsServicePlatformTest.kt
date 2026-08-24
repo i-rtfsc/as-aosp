@@ -1,6 +1,7 @@
 package com.rtfsc.aosp.project
 
 import com.intellij.openapi.roots.ModuleRootManager
+import com.intellij.openapi.module.ModuleManager
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import com.rtfsc.aosp.profile.EngineProfileSettings
 import org.junit.Assert.assertEquals
@@ -29,5 +30,25 @@ class FocusedRootsServicePlatformTest : BasePlatformTestCase() {
         assertTrue(viewEntry.excludeFolderUrls.any { it.endsWith("/.git") })
         assertTrue(viewEntry.excludeFolderUrls.any { it.endsWith("/.repo") })
         assertTrue(viewEntry.excludeFolderUrls.any { it.endsWith("/out") })
+    }
+
+    fun testRootCommitUpdatesWorkspaceModelBridgeState() {
+        val viewRoot = Files.createTempDirectory("aosp-focused-service")
+        val settings = project.getService(EngineProfileSettings::class.java)
+        settings.update {
+            it.profileId = "service-platform-test"
+            it.workspaceViewRoot = viewRoot.toString()
+        }
+
+        val moduleManager = ModuleManager.getInstance(project)
+        val before = moduleManager.modificationCount
+        val plan = WorkspaceRootPlanner.plan(settings.current)
+        FocusedRootsApplier.apply(getModule(), plan)
+
+        assertTrue(plan.isUsable)
+        assertTrue(moduleManager.modificationCount > before)
+        assertTrue(ModuleRootManager.getInstance(getModule()).contentEntries.any { entry ->
+            entry.url.endsWith(viewRoot.fileName.toString())
+        })
     }
 }
