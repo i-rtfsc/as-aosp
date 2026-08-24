@@ -36,6 +36,10 @@ internal class EngineRpcClient(
         return request(method = "aosp/aidl/peers", params = params)
     }
 
+    fun aidlReferences(params: String): ByteArray {
+        return request(method = "aosp/aidl/references", params = params)
+    }
+
     fun request(method: String, params: String): ByteArray {
         val id = nextId.getAndIncrement()
         val payload = "{" +

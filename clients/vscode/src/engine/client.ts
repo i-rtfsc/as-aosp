@@ -33,6 +33,11 @@ export interface AidlPeersResult {
   diagnostics: unknown[];
 }
 
+export interface AidlReferencesResult {
+  references: Array<{ path: string; range: { start: { offset: number }; end: { offset: number } } }>;
+  diagnostics: unknown[];
+}
+
 export class EngineClient {
   private process?: ChildProcessWithoutNullStreams;
   private startPromise?: Promise<void>;
@@ -101,6 +106,10 @@ export class EngineClient {
 
   async aidlPeers(params: { workspaceViewRoot: string; currentPath: string; name: string }): Promise<AidlPeersResult> {
     return this.request("aosp/aidl/peers", params);
+  }
+
+  async aidlReferences(params: { workspaceViewRoot: string; currentPath: string; name: string }): Promise<AidlReferencesResult> {
+    return this.request("aosp/aidl/references", params);
   }
 
   private request(method: string, params: unknown): Promise<any> {

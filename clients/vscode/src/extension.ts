@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import { EngineClient } from "./engine/client";
 import { AidlDefinitionProvider } from "./navigation/aidl";
 import { goToAidlGeneratedPeer } from "./navigation/aidl_peers";
+import { AidlReferenceProvider } from "./navigation/aidl_references";
 import { goToJniPeer } from "./navigation/jni";
 
 export function activate(context: vscode.ExtensionContext): void {
@@ -15,6 +16,12 @@ export function activate(context: vscode.ExtensionContext): void {
       provideDefinition: async (...args) => {
         await ensureEngine();
         return new AidlDefinitionProvider(engine).provideDefinition(...args);
+      },
+    }),
+    vscode.languages.registerReferenceProvider({ language: "aidl" }, {
+      provideReferences: async (...args) => {
+        await ensureEngine();
+        return new AidlReferenceProvider(engine).provideReferences(...args);
       },
     }),
     vscode.commands.registerCommand("aospIde.goToJniPeer", async () => {

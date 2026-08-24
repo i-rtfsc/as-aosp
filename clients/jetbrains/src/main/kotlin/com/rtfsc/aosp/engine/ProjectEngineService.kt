@@ -37,6 +37,11 @@ internal class ProjectEngineService(
         return engineProcess.request("aosp/aidl/peers", params)
     }
 
+    fun aidlReferences(params: String): ByteArray {
+        if (!engineProcess.isRunning) start()
+        return engineProcess.request("aosp/aidl/references", params)
+    }
+
     override fun dispose() {
         stop()
     }

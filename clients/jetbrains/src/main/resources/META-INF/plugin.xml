@@ -19,6 +19,9 @@
         <action id="com.rtfsc.aosp.aidlPeer" class="com.rtfsc.aosp.aidl.AidlPeerAction" text="Go to AIDL Generated Peer">
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
         </action>
+        <action id="com.rtfsc.aosp.aidlReferences" class="com.rtfsc.aosp.aidl.AidlReferencesAction" text="Find AIDL Usages">
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+        </action>
         <action id="com.rtfsc.aosp.jniPeer" class="com.rtfsc.aosp.jni.JniPeerAction" text="Go to JNI Peer">
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
         </action>
