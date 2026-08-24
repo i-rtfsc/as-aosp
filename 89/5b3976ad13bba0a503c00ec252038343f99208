@@ -1,0 +1,21 @@
+clients/jetbrains/src/test/kotlin/com/rtfsc/aosp/aidl/AidlGotoDeclarationPlatformTest.kt
+  s_0fcc3f909ad4ee::t_7334e2eb323f17 17
+docs/roadmap/current-state.md
+  s_0fcc3f909ad4ee::t_d5b112750c2880 26
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "895b3976ad13bba0a503c00ec252038343f99208",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
