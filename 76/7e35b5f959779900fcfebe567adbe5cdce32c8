@@ -1,0 +1,30 @@
+clients/jetbrains/src/main/resources/META-INF/plugin.xml
+  s_0fcc3f909ad4ee::t_2db4dc06606f4b 16-18
+docs/roadmap/current-state.md
+  s_0fcc3f909ad4ee::t_00edc7d4668aed 26
+docs/roadmap/delivery-plan.md
+  s_0fcc3f909ad4ee::t_de338554d6335f 43
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/aidl/AidlDefinitionAction.kt
+  s_0fcc3f909ad4ee::t_2db4dc06606f4b 1-129
+docs/design/ide-client-and-navigation-design.md
+  s_0fcc3f909ad4ee::t_ada0bc09c57845 196-200,216,226-228
+  s_0fcc3f909ad4ee::t_d8629a8227abcf 229
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/jni/JniPeerAction.kt
+  s_0fcc3f909ad4ee::t_13c66cb3dcea39 8-9,49-78
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "767e35b5f959779900fcfebe567adbe5cdce32c8",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
