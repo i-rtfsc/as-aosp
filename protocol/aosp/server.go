@@ -126,6 +126,8 @@ func (server *Server) Handle(request jsonrpc.Request) (jsonrpc.Response, bool) {
 		response = server.aidlResolve(request)
 	case "aosp/aidl/peers":
 		response = server.aidlPeers(request)
+	case "aosp/aidl/references":
+		response = server.aidlReferences(request)
 	default:
 		response = jsonrpc.Failure(request.ID, jsonrpc.MethodNotFound(request.Method))
 	}

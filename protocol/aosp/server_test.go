@@ -279,6 +279,19 @@ func TestServerReturnsAIDLGeneratedPeersWithInferredFallback(t *testing.T) {
 	}
 }
 
+func TestServerReturnsAIDLReferences(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, "demo/IFoo.aidl", "package demo; interface IFoo {}")
+	writeTestFile(t, root, "demo/Client.aidl", "package demo; import demo.IFoo; interface Client { IFoo value(); }")
+	server := initializedServer(t)
+	response, _ := server.Handle(makeRequest(2, "aosp/aidl/references", AIDLReferencesParams{WorkspaceViewRoot: root, CurrentPath: "demo/IFoo.aidl", Name: "demo.IFoo"}))
+	var result AIDLReferencesResult
+	decodeResult(t, response, &result)
+	if len(result.Diagnostics) != 0 || len(result.References) != 2 {
+		t.Fatalf("result=%+v", result)
+	}
+}
+
 func TestServerUpgradesVisibleAIDLGeneratedJavaPeer(t *testing.T) {
 	root := t.TempDir()
 	writeTestFile(t, root, "demo/IFoo.aidl", "package demo; interface IFoo {}")

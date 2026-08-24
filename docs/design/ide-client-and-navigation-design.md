@@ -226,6 +226,10 @@ definition。
 `aosp/aidl/peers` 负责 AIDL 到 generated Java/C++/NDK 的异步跳转。首版 UI 显示并打开
 唯一可见 peer；`inferred` 候选如果当前 view 中不存在则只显示诊断，不自动创建文件。
 
+`aosp/aidl/references` 首先接入 VS Code `ReferenceProvider` 和 JetBrains 异步
+`Find AIDL Usages` action。首版 range 是所属 import/member 声明范围，客户端显示
+这些 source locations；不会声称已经具备 token-level PSI。
+
 ## 5. JNI navigation
 
 支持：

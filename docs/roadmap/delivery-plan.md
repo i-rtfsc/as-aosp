@@ -33,7 +33,7 @@
 - 技术前置：CORE-01、METADATA-01。
 - 状态：Partial；Go core 与 `aosp-index jni` source-only fixture 已交付。
 - 已验收：Java/Kotlin declaration、静态导出、常见注册表、描述符校验、exact/inferred/unresolved 结果和 Java/C++ 双向查询。
-- 下一验收：接入 VS Code adapter，并补充 `aosp/aidl/peers` generated peers、复杂宏、`RegisterNatives` 变量流和真实多平台路径测试。
+- 下一验收：接入 VS Code adapter，并补充 `aosp/aidl/references`、复杂宏、`RegisterNatives` 变量流和真实多平台路径测试。
 
 ### AOSP-IDE-JB-01
 

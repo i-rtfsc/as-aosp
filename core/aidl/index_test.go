@@ -37,3 +37,13 @@ func TestIndexAddsNestedDeclarationSymbols(t *testing.T) {
 		t.Fatalf("resolution: %+v", resolution)
 	}
 }
+
+func TestReferencesFindImportsAndMemberTypes(t *testing.T) {
+	index := NewIndex()
+	index.Add(Parse("demo/IFoo.aidl", "package demo; interface IFoo {}"))
+	index.Add(Parse("demo/Client.aidl", "package demo; import demo.IFoo; interface Client { IFoo value(); }"))
+	references := index.References("demo.IFoo")
+	if len(references) != 2 {
+		t.Fatalf("references=%+v", references)
+	}
+}

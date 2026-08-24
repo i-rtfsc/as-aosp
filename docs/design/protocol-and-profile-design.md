@@ -155,6 +155,17 @@ source declaration，再调用 `core/aidl.GeneratedPeers` 生成 Java/C++/NDK �
 `inferred`，不声明 generated 文件一定存在。srcjar/out metadata 接入后沿用同一
 `GeneratedPeer` schema，不改变客户端路径和 confidence 语义。
 
+首个 AIDL references slice：
+
+```text
+aosp/aidl/references
+```
+
+请求携带 `workspaceViewRoot`、当前 `currentPath` 和 `name`。engine 先解析目标
+类型，再扫描可见 AIDL 的 import、返回类型、参数类型和字段类型。首版返回所属
+声明的 source range，`confidence` 为 `inferred`；后续 lexer/AST token range 接入
+后可缩小到具体类型 token，不改变 references DTO。
+
 后续索引 slice：
 
 ```text

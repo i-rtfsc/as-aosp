@@ -106,6 +106,59 @@ type Resolution struct {
 	Symbols []Symbol        `json:"symbols,omitempty"`
 }
 
+type Reference struct {
+	Name       string         `json:"name"`
+	Path       model.RepoPath `json:"path"`
+	Range      SourceRange    `json:"range"`
+	Origin     string         `json:"origin"`
+	Confidence string         `json:"confidence"`
+}
+
+func (index *Index) References(name string) []Reference {
+	result := make([]Reference, 0)
+	for _, document := range index.Documents {
+		for _, item := range document.Imports {
+			if item.Name == name || strings.HasSuffix(item.Name, "."+name) {
+				result = append(result, Reference{Name: name, Path: document.Path, Range: item.Range, Origin: "import", Confidence: "inferred"})
+			}
+		}
+		for _, declaration := range document.Declarations {
+			result = append(result, declarationReferences(document.Path, declaration, name)...)
+		}
+	}
+	sort.Slice(result, func(i, j int) bool {
+		if result[i].Path != result[j].Path {
+			return result[i].Path < result[j].Path
+		}
+		return result[i].Range.Start.Offset < result[j].Range.Start.Offset
+	})
+	return result
+}
+
+func declarationReferences(path model.RepoPath, declaration Declaration, name string) []Reference {
+	result := make([]Reference, 0)
+	add := func(typeName string, sourceRange SourceRange) {
+		shortName := typeName
+		if index := strings.LastIndexByte(shortName, '.'); index >= 0 {
+			shortName = shortName[index+1:]
+		}
+		if typeName == name || shortName == name || strings.HasSuffix(typeName, "."+name) ||
+			strings.HasSuffix(name, "."+shortName) {
+			result = append(result, Reference{Name: name, Path: path, Range: sourceRange, Origin: "member", Confidence: "inferred"})
+		}
+	}
+	for _, member := range declaration.Members {
+		add(member.Type, member.Range)
+		for _, parameter := range member.Parameters {
+			add(parameter.Type, parameter.Range)
+		}
+	}
+	for _, nested := range declaration.Nested {
+		result = append(result, declarationReferences(path, nested, name)...)
+	}
+	return result
+}
+
 func (index *Index) add(symbol Symbol) {
 	values := index.Symbols[symbol.CanonicalName]
 	for _, existing := range values {
