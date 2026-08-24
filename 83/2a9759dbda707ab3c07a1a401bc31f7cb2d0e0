@@ -1,0 +1,43 @@
+Makefile
+  s_0fcc3f909ad4ee::t_7cd5765d12db8e 1,4,21-23,45
+clients/vscode/package.json
+  s_0fcc3f909ad4ee::t_b1f54e0ab4cffb 1-48,50-58
+  s_0fcc3f909ad4ee::t_19a37e914f06a2 49
+clients/vscode/src/navigation/aidl.ts
+  s_0fcc3f909ad4ee::t_b1f54e0ab4cffb 1-7,13-26
+  s_0fcc3f909ad4ee::t_49d5b4908e12c8 8-12
+clients/vscode/src/navigation/paths.ts
+  s_0fcc3f909ad4ee::t_b1f54e0ab4cffb 1-17
+docs/roadmap/current-state.md
+  s_0fcc3f909ad4ee::t_7cd5765d12db8e 9
+clients/vscode/tsconfig.json
+  s_0fcc3f909ad4ee::t_b1f54e0ab4cffb 1-14
+clients/vscode/src/engine/frame.ts
+  s_0fcc3f909ad4ee::t_b1f54e0ab4cffb 1-30
+clients/vscode/src/extension.ts
+  s_0fcc3f909ad4ee::t_b1f54e0ab4cffb 1-27
+clients/vscode/package-lock.json
+  s_0fcc3f909ad4ee::t_ad2440c057582d 1-3865
+clients/vscode/src/engine/frame.test.ts
+  s_0fcc3f909ad4ee::t_19a37e914f06a2 1-17
+clients/vscode/src/navigation/jni.ts
+  s_0fcc3f909ad4ee::t_b1f54e0ab4cffb 1-24
+clients/vscode/src/engine/client.ts
+  s_0fcc3f909ad4ee::t_b1f54e0ab4cffb 1-84
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "832a9759dbda707ab3c07a1a401bc31f7cb2d0e0",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
