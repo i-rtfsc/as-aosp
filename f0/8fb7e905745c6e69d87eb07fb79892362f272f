@@ -1,0 +1,33 @@
+docs/design/ide-client-and-navigation-design.md
+  s_0fcc3f909ad4ee::t_d73990476a4cdf 210-213
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/jni/JniPeerAction.kt
+  s_0fcc3f909ad4ee::t_6f61c59941a175 61,91-103
+  s_0fcc3f909ad4ee::t_2d9fd5e3219d4d 1-24,27-46,50-56,58-60,62-90,104-137
+  s_0fcc3f909ad4ee::t_2c71a414751e71 25-26,47-49,57
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/engine/ProjectEngineService.kt
+  s_0fcc3f909ad4ee::t_2d9fd5e3219d4d 25-29
+clients/jetbrains/src/main/resources/META-INF/plugin.xml
+  s_0fcc3f909ad4ee::t_2d9fd5e3219d4d 15-19
+docs/roadmap/delivery-plan.md
+  s_0fcc3f909ad4ee::t_d73990476a4cdf 36
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/engine/EngineRpcClient.kt
+  s_0fcc3f909ad4ee::t_2d9fd5e3219d4d 27-30
+docs/roadmap/current-state.md
+  s_0fcc3f909ad4ee::t_d73990476a4cdf 26-27
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "f08fb7e905745c6e69d87eb07fb79892362f272f",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
