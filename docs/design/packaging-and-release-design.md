@@ -30,7 +30,8 @@ Go core 当前不依赖 CGO，因此同一源码可以交叉编译。插件包�
 - 首版不声称代码签名、公证、JetBrains Marketplace 或 VS Code Marketplace 已完成；
 - VSIX 使用 `.vscodeignore` 排除 TypeScript 源码、测试、node_modules 和 source map；
 - 每次本地打包生成 `dist/manifest.sha256` 和 `dist/manifest.json`。JSON manifest 包含
-  version、client/engine kind、相对路径和 SHA-256；两个 manifest 都不包含自身，
+version、client/engine kind、相对路径和 SHA-256；engine 条目还包含显式 os、arch 和
+executable 文件名。两个 manifest 都不包含自身，
   签名设计另行评审。
 
 ## 4. Acceptance

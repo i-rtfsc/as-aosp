@@ -15,7 +15,15 @@ for (const kind of ["engine", "jetbrains", "vscode"]) {
       else {
         const relative = path.relative(root, absolute).split(path.sep).join("/");
         const sha256 = crypto.createHash("sha256").update(fs.readFileSync(absolute)).digest("hex");
-        artifacts.push({ path: relative, kind, sha256 });
+        const artifact = { path: relative, kind, sha256 };
+        if (kind === "engine") {
+          const target = relative.split("/")[1];
+          const separator = target.lastIndexOf("-");
+          artifact.os = target.slice(0, separator);
+          artifact.arch = target.slice(separator + 1);
+          artifact.executable = relative.endsWith(".exe") ? "aosp-index.exe" : "aosp-index";
+        }
+        artifacts.push(artifact);
       }
     }
   }
