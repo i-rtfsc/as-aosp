@@ -1,0 +1,32 @@
+clients/jetbrains/src/test/kotlin/com/rtfsc/aosp/engine/EngineProcessTest.kt
+  s_0fcc3f909ad4ee::t_e2514d23b07f42 25
+  s_0fcc3f909ad4ee::t_22a4951688c954 19,36,51
+clients/jetbrains/src/test/kotlin/com/rtfsc/aosp/profile/EngineProfileSettingsTest.kt
+  s_0fcc3f909ad4ee::t_e2514d23b07f42 14,21
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/engine/EngineCommand.kt
+  s_0fcc3f909ad4ee::t_5ca88c0b0b4b79 1-11
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/engine/EngineProcess.kt
+  s_0fcc3f909ad4ee::t_e2514d23b07f42 85,95
+clients/jetbrains/src/test/kotlin/com/rtfsc/aosp/engine/EngineCommandTest.kt
+  s_0fcc3f909ad4ee::t_5ca88c0b0b4b79 1-11
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/profile/ProfileConfigurable.kt
+  s_0fcc3f909ad4ee::t_5ca88c0b0b4b79 14,128
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/engine/ProjectEngineService.kt
+  s_0fcc3f909ad4ee::t_5ca88c0b0b4b79 18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "d4ade0232ac8a0d2916ba6192eb9a5f14a988b6c",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
