@@ -1,0 +1,43 @@
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/engine/EngineRpcClient.kt
+  s_0fcc3f909ad4ee::t_ce9a478b3315e4 39-42
+clients/vscode/src/engine/client.ts
+  s_0fcc3f909ad4ee::t_ce9a478b3315e4 36-40,111-112
+  s_5f30dac179bcb2::t_abb36f0be848df 113-114
+clients/vscode/src/navigation/aidl_references.ts
+  s_0fcc3f909ad4ee::t_2b4bcc246a5f42 14,16-23
+  s_0fcc3f909ad4ee::t_ce9a478b3315e4 1-7,9-13,15,24-25
+  s_0fcc3f909ad4ee::t_e5aa06fd35fee2 8
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/engine/ProjectEngineService.kt
+  s_0fcc3f909ad4ee::t_ce9a478b3315e4 40-44
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/aidl/AidlReferencesAction.kt
+  s_0fcc3f909ad4ee::t_ce9a478b3315e4 1-38
+clients/jetbrains/src/main/resources/META-INF/plugin.xml
+  s_0fcc3f909ad4ee::t_ce9a478b3315e4 22-24
+clients/vscode/src/extension.ts
+  s_0fcc3f909ad4ee::t_ce9a478b3315e4 5,21-24
+  s_5f30dac179bcb2::t_23e94d6d75903a 25-26
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "264532694782e5b108e5f3aa09700b2079560971",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    },
+    "s_5f30dac179bcb2": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "019ffe38-b3cd-77e3-8987-f48bc62a086c",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
