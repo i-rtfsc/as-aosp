@@ -16,11 +16,6 @@ import com.rtfsc.aosp.profile.EngineProfileSettings
 import java.nio.charset.StandardCharsets
 import java.nio.file.Path
 
-private data class SourceSet(
-    val javaFiles: Map<String, String>,
-    val cppFiles: Map<String, String>,
-)
-
 private val excludedSegments = setOf(".git", ".repo", "out", ".aosp-ide")
 
 class JniPeerAction : AnAction("Go to JNI Peer") {
@@ -45,10 +40,9 @@ class JniPeerAction : AnAction("Go to JNI Peer") {
             showError(project, "The current file is outside the configured Workspace View Root.")
             return
         }
-        val sources = collectSources(project, root)
         val request = objectMapper.createObjectNode().apply {
-            set<JsonNode>("javaFiles", objectMapper.valueToTree(sources.javaFiles))
-            set<JsonNode>("cppFiles", objectMapper.valueToTree(sources.cppFiles))
+            put("workspaceViewRoot", root.toString())
+            put("currentPath", currentPath)
         }
         val response = try {
             project.getService(ProjectEngineService::class.java).jniPeers(request.toString())
@@ -67,23 +61,6 @@ class JniPeerAction : AnAction("Go to JNI Peer") {
         }
         val offset = byteOffsetToCharOffset(virtualTarget, target.start)
         OpenFileDescriptor(project, virtualTarget, offset).navigate(true)
-    }
-
-    private fun collectSources(project: Project, root: Path): SourceSet {
-        val java = linkedMapOf<String, String>()
-        val cpp = linkedMapOf<String, String>()
-        val extensions = listOf("java", "kt", "c", "cc", "cpp", "cxx", "h", "hh", "hpp")
-        extensions.forEach { extension ->
-            FilenameIndex.getAllFilesByExt(project, extension, GlobalSearchScope.projectScope(project))
-                .forEach { file ->
-                    val path = repoPath(root, file) ?: return@forEach
-                    val source = runCatching {
-                        String(file.contentsToByteArray(), StandardCharsets.UTF_8)
-                    }.getOrNull() ?: return@forEach
-                    if (extension == "java" || extension == "kt") java[path] = source else cpp[path] = source
-                }
-        }
-        return SourceSet(java, cpp)
     }
 
     private fun repoPath(root: Path, file: VirtualFile): String? {
