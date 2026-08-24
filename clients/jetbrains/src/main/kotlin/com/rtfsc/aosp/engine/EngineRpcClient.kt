@@ -24,6 +24,10 @@ internal class EngineRpcClient(
         return request(method = "aosp/shutdown", params = "null")
     }
 
+    fun jniPeers(params: String): ByteArray {
+        return request(method = "aosp/jni/peers", params = params)
+    }
+
     fun request(method: String, params: String): ByteArray {
         val id = nextId.getAndIncrement()
         val payload = "{" +

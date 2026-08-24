@@ -12,4 +12,9 @@
         <projectConfigurable instance="com.rtfsc.aosp.profile.ProfileConfigurable"/>
         <projectService serviceImplementation="com.rtfsc.aosp.project.FocusedRootsService"/>
     </extensions>
+    <actions>
+        <action id="com.rtfsc.aosp.jniPeer" class="com.rtfsc.aosp.jni.JniPeerAction" text="Go to JNI Peer">
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+        </action>
+    </actions>
 </idea-plugin>

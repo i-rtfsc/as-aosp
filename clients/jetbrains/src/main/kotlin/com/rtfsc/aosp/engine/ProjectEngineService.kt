@@ -22,6 +22,11 @@ internal class ProjectEngineService(
         engineProcess.stop()
     }
 
+    fun jniPeers(params: String): ByteArray {
+        if (!engineProcess.isRunning) start()
+        return engineProcess.request("aosp/jni/peers", params)
+    }
+
     override fun dispose() {
         stop()
     }
