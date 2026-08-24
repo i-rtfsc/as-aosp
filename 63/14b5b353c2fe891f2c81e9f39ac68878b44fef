@@ -1,0 +1,24 @@
+protocol/aosp/compdb.go
+  s_0fcc3f909ad4ee::t_892b7d34829864 137-142,145-153,155-163,166-169,171-173
+  s_0fcc3f909ad4ee::t_12ee527674a2a7 111,131-136,143-144,154,164-165,170,174-176
+  s_0fcc3f909ad4ee::t_752546fc8dc109 177
+protocol/aosp/server_test.go
+  s_0fcc3f909ad4ee::t_12ee527674a2a7 334-335,337-340
+  s_0fcc3f909ad4ee::t_4c3d8c060676fa 336
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "6314b5b353c2fe891f2c81e9f39ac68878b44fef",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
