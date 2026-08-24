@@ -1,0 +1,29 @@
+clients/vscode/src/navigation/compdb_paths.ts
+  s_0fcc3f909ad4ee::t_ee71bb238f45e5 1-8
+clients/vscode/src/navigation/compdb.test.ts
+  s_0fcc3f909ad4ee::t_45fc8f9eb0802c 1-2,4-9
+  s_0fcc3f909ad4ee::t_ee71bb238f45e5 3
+docs/roadmap/current-state.md
+  s_0fcc3f909ad4ee::t_8a7c97bc09f512 26
+docs/design/ide-client-and-navigation-design.md
+  s_0fcc3f909ad4ee::t_8a7c97bc09f512 246-247
+clients/vscode/src/navigation/compdb.ts
+  s_0fcc3f909ad4ee::t_45fc8f9eb0802c 28-33
+  s_0fcc3f909ad4ee::t_ee71bb238f45e5 6
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "ce05320943c0a6060cded63571f97e7cc4a52957",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
