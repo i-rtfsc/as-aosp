@@ -24,6 +24,9 @@ test-vscode:
 package:
 	bash packaging/build.sh
 
+verify-package:
+	bash packaging/verify.sh
+
 vet:
 	go vet ./core/... ./protocol/... ./cmd/...
 

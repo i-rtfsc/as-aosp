@@ -27,7 +27,14 @@ done
   cd "$repo_root/clients/vscode"
   npm ci
   npm run package
-  cp ./*.vsix "$dist_root/vscode/"
+cp ./*.vsix "$dist_root/vscode/"
+)
+
+(
+  cd "$dist_root"
+  find engine jetbrains vscode -type f -print | LC_ALL=C sort | while read -r file; do
+    shasum -a 256 "$file"
+  done > manifest.sha256
 )
 
 printf 'AOSP IDE %s packaging complete\n' "$version"
