@@ -1,0 +1,21 @@
+clients/vscode/src/engine/client.ts
+  s_0fcc3f909ad4ee::t_7513c03dc43fd2 43
+clients/vscode/src/navigation/compdb.ts
+  s_0fcc3f909ad4ee::t_7513c03dc43fd2 24-29
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "d6436d7274612acf51ed251da6b51161de02593a",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
