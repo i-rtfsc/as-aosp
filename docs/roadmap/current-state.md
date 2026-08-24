@@ -11,7 +11,7 @@
 
 ## 2. Partial
 
-- 根目录、Makefile、Phase 0 CLI、首版 stdio JSON-RPC daemon 和 JetBrains 251 bootstrap 已完成；Workspace Model、语言适配和远程执行入口尚未实现。
+- 根目录、Makefile、Phase 0 CLI、首版 stdio JSON-RPC daemon 和 JetBrains 251 bootstrap 已完成；Workspace Model、语言适配和远程执行入口尚未实现，ModuleRootModel focused adapter 已具备。
 - WorkspaceTopology、PathMapper、SourceMount 和四类 metadata reader 已有初始实现，但真实 AOSP schema 覆盖、路径映射接线和完整 topology 发现仍未闭合。
 - AIDL source parser/index、owning module、srcjar entry 和 Java/C++/NDK build-backed peers 已接入 ModuleGraph；JNI source-only index 与 profile/topology RPC 已接入 CLI/daemon，IDE adapters 尚未闭合。
 
@@ -39,4 +39,4 @@
 - 代码入口：`cmd/aosp-index`、`core/model`、`core/topology`、`core/pathmap`、`core/metadata`、`core/graph`、`core/generated`、`core/aidl`、`core/index`；
 - 代码入口：`cmd/aosp-index`、`core/model`、`core/topology`、`core/pathmap`、`core/metadata`、`core/graph`、`core/generated`、`core/aidl`、`core/jni`、`core/index`；
 - JNI fixture 通过 `make check`；只读 `frameworks/base/core/java` 与 `core/jni` 探测得到 1126 个 Java/Kotlin native 符号、2686 个 native 符号、988 个注册项、673 条链接，其中 561 条 exact、112 条 inferred。该结果不证明真实 IDE、Windows 或完整 AOSP 兼容。
-- JetBrains bootstrap、EngineProcess 和 profile state 已使用 JDK 21 与本机 IntelliJ IDEA 2025.2.4 SDK 通过 `test` 与 `buildPlugin`，生成 `aosp-ide-jetbrains-0.1.0-dev.zip`；251 baseline 的下载式构建和 Android Studio verifier 尚未闭合。
+- JetBrains bootstrap、EngineProcess、profile state 和 focused adapter 已使用 JDK 21 与本机 IntelliJ IDEA 2025.2.4 SDK 通过 `test` 与 `buildPlugin`，包含真实 `BasePlatformTestCase` fixture；生成 `aosp-ide-jetbrains-0.1.0-dev.zip`，且 zip 不携带 Kotlin stdlib。251 baseline 的下载式构建和 Android Studio verifier 尚未闭合。

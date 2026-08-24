@@ -74,8 +74,9 @@ clients/jetbrains/
 - initialize/shutdown RPC client；
 - 不启动外部进程的 framing/client unit tests。
 
-`EngineProcess` 和 project-local profile state 已进入实现；profile UI、Workspace Model、AIDL/JNI
-actions 仍在后续 slice。首版不把本机绝对路径写入仓库，也不内置尚未构建的 engine binary。
+`EngineProcess`、project-local profile state、profile UI 和 focused root ModuleRootModel adapter
+已进入实现；Workspace Model、AIDL/JNI actions 仍在后续 slice。首版不把本机绝对路径写入仓库，
+也不内置尚未构建的 engine binary。
 
 ### 2.3 Engine process contract
 
@@ -158,6 +159,9 @@ planner 只规范化用户明确填写的相对路径和固定排除目录，不
 
 Apply Focused Roots 是显式操作，失败只保留诊断，不修改 profile state。后续可把同一 plan
 接到 Workspace Model；当前 adapter 使用 IntelliJ ModuleRootModel 证明 focused view 边界。
+平台 fixture 使用 `BasePlatformTestCase` 验证 content entry、source folder 和固定排除目录。
+
+插件不打包 Kotlin stdlib，运行时使用目标 IDE 自带 Kotlin runtime，避免覆盖平台 API。
 
 ## 3. VS Code
 

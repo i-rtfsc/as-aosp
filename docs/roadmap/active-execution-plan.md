@@ -20,8 +20,8 @@
 6. 实现 focused source root planner 和非持久投影模块。
 7. 后续替换为 Workspace Model focused source roots。
 
-当前验收：`make test-jetbrains`、EngineProcess lifecycle fixture、profile state fixture 和 focused root planner fixture 已通过。
-下一验收：真实 IDE fixture 验证非持久模块、source roots 和排除目录投影。
+当前验收：`make test-jetbrains`、EngineProcess lifecycle fixture、profile state fixture、focused root planner fixture 和真实平台 root projection fixture 已通过。
+下一验收：Workspace Model adapter、AIDL PSI 和 JNI actions。
 
 ## 3. 开发约束
 
