@@ -3,6 +3,7 @@ package aosp
 import (
 	"encoding/json"
 	"os"
+	"path/filepath"
 	"testing"
 
 	"github.com/i-rtfsc/as-aosp/core/model"
@@ -135,6 +136,61 @@ int registerMethods(JNIEnv* env) {
 	}
 }
 
+func TestServerScansWorkspaceViewAndFiltersCurrentPath(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, "frameworks/base/demo/Bridge.java",
+		"package demo; class Bridge { native void close(); }")
+	writeTestFile(t, root, "frameworks/base/demo/bridge.cpp", `
+static const JNINativeMethod methods[] = {
+  {"close", "()V", (void*)closeNative},
+};
+int registerMethods(JNIEnv* env) {
+  return RegisterMethodsOrDie(env, "demo/Bridge", methods, 1);
+}`)
+	writeTestFile(t, root, "out/generated/ignored.cpp",
+		"void Java_demo_Bridge_close(JNIEnv*, jobject) {}")
+
+	server := initializedServer(t)
+	response, _ := server.Handle(makeRequest(2, "aosp/jni/peers", JNIPeersParams{
+		WorkspaceViewRoot: root,
+		CurrentPath:       "frameworks/base/demo/Bridge.java",
+	}))
+	var result JNIPeersResult
+	decodeResult(t, response, &result)
+	if len(result.Diagnostics) != 0 || len(result.Peers) != 1 {
+		t.Fatalf("result=%+v", result)
+	}
+	if result.Peers[0].Native.Path != "frameworks/base/demo/bridge.cpp" {
+		t.Fatalf("peers=%+v", result.Peers)
+	}
+}
+
+func TestServerScansSymlinkedWorkspaceDirectory(t *testing.T) {
+	if os.PathSeparator == '\\' {
+		t.Skip("symlink fixture requires platform permission on Windows")
+	}
+	root := t.TempDir()
+	target := t.TempDir()
+	writeTestFile(t, target, "demo/Bridge.java",
+		"package demo; class Bridge { native void close(); }")
+	writeTestFile(t, target, "demo/bridge.cpp", `
+void Java_demo_Bridge_close(JNIEnv*, jobject) {}
+`)
+	if err := os.Symlink(filepath.Join(target, "demo"), filepath.Join(root, "demo")); err != nil {
+		t.Fatal(err)
+	}
+	server := initializedServer(t)
+	response, _ := server.Handle(makeRequest(2, "aosp/jni/peers", JNIPeersParams{
+		WorkspaceViewRoot: root,
+		CurrentPath:       "demo/Bridge.java",
+	}))
+	var result JNIPeersResult
+	decodeResult(t, response, &result)
+	if len(result.Diagnostics) != 0 || len(result.Peers) != 1 {
+		t.Fatalf("result=%+v", result)
+	}
+}
+
 func TestServerRejectsAbsoluteJNIPaths(t *testing.T) {
 	server := initializedServer(t)
 	response, _ := server.Handle(makeRequest(2, "aosp/jni/peers", JNIPeersParams{
@@ -166,5 +222,16 @@ func decodeResult(t *testing.T, response jsonrpc.Response, target any) {
 	}
 	if err := json.Unmarshal(response.Result, target); err != nil {
 		t.Fatalf("decode result: %v", err)
+	}
+}
+
+func writeTestFile(t *testing.T, root, relative, content string) {
+	t.Helper()
+	path := filepath.Join(root, filepath.FromSlash(relative))
+	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(path, []byte(content), 0o644); err != nil {
+		t.Fatal(err)
 	}
 }

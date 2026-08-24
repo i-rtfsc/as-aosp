@@ -120,11 +120,13 @@ aosp-index serve --stdio
 aosp/jni/peers
 ```
 
-请求携带当前 source 的 `RepoPath`、`language` 和 `content`，以及同一 focused
-view 中可见的候选 source documents。engine 使用 `core/jni` 建立临时 source-only
-index，返回 `Link[]`；不读取客户端不可见的 canonical root，也不要求 `out`。
-JetBrains 和 VS Code 只消费同一个 peer schema，不各自复制 descriptor、静态导出
-或动态注册解析。首版是按需查询，长期 snapshot 和增量失效属于后续 index slice。
+请求优先携带 `workspaceViewRoot + currentPath`。engine 只在这个用户明确配置的
+Workspace View 内扫描 Java/Kotlin/C/C++，跳过 `.git`、`.repo`、`out` 和
+`.aosp-ide`，使用 `core/jni` 建立 source-only index 并返回 `Link[]`。为支持
+受控客户端或远程桥接，协议仍接受显式 `javaFiles/cppFiles`，但客户端不应把整棵
+focused view 序列化进普通导航请求。不读取客户端不可见的 canonical root，也不要求
+`out`。JetBrains 和 VS Code 只消费同一个 peer schema，不各自复制 JNI 解析。
+首版按需扫描；长期 snapshot、文件指纹和增量失效属于后续 index slice。
 
 后续索引 slice：
 

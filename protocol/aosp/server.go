@@ -3,6 +3,8 @@ package aosp
 import (
 	"encoding/json"
 	"fmt"
+	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 
@@ -62,11 +64,13 @@ type TopologyResult struct {
 }
 
 type JNIPeersParams struct {
-	JavaFiles    map[string]string `json:"javaFiles,omitempty"`
-	CppFiles     map[string]string `json:"cppFiles,omitempty"`
-	ClassName    string            `json:"className,omitempty"`
-	MethodName   string            `json:"methodName,omitempty"`
-	FunctionName string            `json:"functionName,omitempty"`
+	WorkspaceViewRoot string            `json:"workspaceViewRoot,omitempty"`
+	CurrentPath       string            `json:"currentPath,omitempty"`
+	JavaFiles         map[string]string `json:"javaFiles,omitempty"`
+	CppFiles          map[string]string `json:"cppFiles,omitempty"`
+	ClassName         string            `json:"className,omitempty"`
+	MethodName        string            `json:"methodName,omitempty"`
+	FunctionName      string            `json:"functionName,omitempty"`
 }
 
 type JNIPeersResult struct {
@@ -139,6 +143,16 @@ func (server *Server) jniPeers(request jsonrpc.Request) jsonrpc.Response {
 	javaFiles, diagnostics := normalizeJNIInputs(params.JavaFiles, "java")
 	cppFiles, cppDiagnostics := normalizeJNIInputs(params.CppFiles, "cpp")
 	diagnostics = append(diagnostics, cppDiagnostics...)
+	if strings.TrimSpace(params.WorkspaceViewRoot) != "" {
+		workspaceJava, workspaceCpp, workspaceDiagnostics := scanJNIWorkspace(params.WorkspaceViewRoot)
+		diagnostics = append(diagnostics, workspaceDiagnostics...)
+		for path, source := range workspaceJava {
+			javaFiles[path] = source
+		}
+		for path, source := range workspaceCpp {
+			cppFiles[path] = source
+		}
+	}
 	if len(diagnostics) > 0 {
 		return jsonrpc.Success(request.ID, JNIPeersResult{Peers: []jni.Link{}, Diagnostics: diagnostics})
 	}
@@ -153,7 +167,135 @@ func (server *Server) jniPeers(request jsonrpc.Request) jsonrpc.Response {
 	if params.ClassName == "" && params.MethodName == "" && params.FunctionName == "" {
 		peers = append(peers, index.Links...)
 	}
+	if params.CurrentPath != "" {
+		current, err := model.NormalizeRepoPath(params.CurrentPath)
+		if err != nil {
+			return jsonrpc.Success(request.ID, JNIPeersResult{
+				Peers: []jni.Link{},
+				Diagnostics: []model.Diagnostic{{
+					Code: "JNI_INVALID_REPO_PATH", Severity: model.SeverityError,
+					Stage: "jni-rpc", Message: "current path is invalid: " + params.CurrentPath,
+				}},
+			})
+		}
+		peers = filterJNIPeersByPath(peers, current)
+	}
 	return jsonrpc.Success(request.ID, JNIPeersResult{Peers: peers, Diagnostics: index.Diagnostics})
+}
+
+func filterJNIPeersByPath(peers []jni.Link, current model.RepoPath) []jni.Link {
+	result := make([]jni.Link, 0)
+	for _, peer := range peers {
+		if peer.Java.Path == current || peer.Native.Path == current {
+			result = append(result, peer)
+		}
+	}
+	return result
+}
+
+func scanJNIWorkspace(root string) (map[model.RepoPath]string, map[model.RepoPath]string, []model.Diagnostic) {
+	javaFiles := make(map[model.RepoPath]string)
+	cppFiles := make(map[model.RepoPath]string)
+	diagnostics := make([]model.Diagnostic, 0)
+	absolute, err := filepath.Abs(root)
+	if err != nil {
+		return javaFiles, cppFiles, []model.Diagnostic{{
+			Code: "JNI_WORKSPACE_INVALID", Severity: model.SeverityError,
+			Stage: "jni-workspace", Message: err.Error(),
+		}}
+	}
+	info, err := os.Stat(absolute)
+	if err != nil || !info.IsDir() {
+		message := "workspace view root is not a directory"
+		if err != nil {
+			message = err.Error()
+		}
+		return javaFiles, cppFiles, []model.Diagnostic{{
+			Code: "JNI_WORKSPACE_INVALID", Severity: model.SeverityError,
+			Stage: "jni-workspace", Message: message,
+		}}
+	}
+	visited := make(map[string]bool)
+	var walk func(string, string) error
+	walk = func(current, relative string) error {
+		real, evalErr := filepath.EvalSymlinks(current)
+		if evalErr == nil {
+			real = filepath.Clean(real)
+			if visited[real] {
+				return nil
+			}
+			visited[real] = true
+		}
+		entries, readErr := os.ReadDir(current)
+		if readErr != nil {
+			return readErr
+		}
+		for _, entry := range entries {
+			childRelative := filepath.Join(relative, entry.Name())
+			if isJNIExcluded(childRelative) {
+				continue
+			}
+			child := filepath.Join(current, entry.Name())
+			info, statErr := os.Stat(child)
+			if statErr != nil {
+				diagnostics = append(diagnostics, jniWorkspaceDiagnostic("JNI_WORKSPACE_READ", statErr.Error()))
+				continue
+			}
+			if info.IsDir() {
+				if err := walk(child, childRelative); err != nil {
+					diagnostics = append(diagnostics, jniWorkspaceDiagnostic("JNI_WORKSPACE_READ", err.Error()))
+				}
+				continue
+			}
+			extension := strings.ToLower(filepath.Ext(entry.Name()))
+			if !isJNISourceExtension(extension) {
+				continue
+			}
+			source, readErr := os.ReadFile(child)
+			if readErr != nil {
+				diagnostics = append(diagnostics, jniWorkspaceDiagnostic("JNI_WORKSPACE_READ", readErr.Error()))
+				continue
+			}
+			repoPath, pathErr := model.NormalizeRepoPath(filepath.ToSlash(childRelative))
+			if pathErr != nil {
+				diagnostics = append(diagnostics, jniWorkspaceDiagnostic("JNI_INVALID_REPO_PATH", pathErr.Error()))
+				continue
+			}
+			if extension == ".java" || extension == ".kt" {
+				javaFiles[repoPath] = string(source)
+			} else {
+				cppFiles[repoPath] = string(source)
+			}
+		}
+		return nil
+	}
+	err = walk(absolute, "")
+	if err != nil {
+		diagnostics = append(diagnostics, jniWorkspaceDiagnostic("JNI_WORKSPACE_READ", err.Error()))
+	}
+	return javaFiles, cppFiles, diagnostics
+}
+
+func isJNIExcluded(relative string) bool {
+	for _, part := range strings.Split(filepath.ToSlash(relative), "/") {
+		if part == ".git" || part == ".repo" || part == "out" || part == ".aosp-ide" {
+			return true
+		}
+	}
+	return false
+}
+
+func isJNISourceExtension(extension string) bool {
+	switch extension {
+	case ".java", ".kt", ".c", ".cc", ".cpp", ".cxx", ".h", ".hh", ".hpp":
+		return true
+	default:
+		return false
+	}
+}
+
+func jniWorkspaceDiagnostic(code, message string) model.Diagnostic {
+	return model.Diagnostic{Code: code, Severity: model.SeverityWarning, Stage: "jni-workspace", Message: message}
 }
 
 func normalizeJNIInputs(inputs map[string]string, language string) (map[model.RepoPath]string, []model.Diagnostic) {
