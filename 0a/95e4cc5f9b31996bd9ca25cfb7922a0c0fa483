@@ -1,0 +1,38 @@
+protocol/aosp/server_test.go
+  s_0fcc3f909ad4ee::t_ee0172b12d6685 267-268,289-290
+  s_0fcc3f909ad4ee::t_b8b69c36b2903f 261-266,269-288,291-304
+protocol/aosp/aidl_peers.go
+  s_0fcc3f909ad4ee::t_b8b69c36b2903f 1-71
+protocol/aosp/server.go
+  s_0fcc3f909ad4ee::t_b8b69c36b2903f 127-128
+docs/roadmap/delivery-plan.md
+  s_0fcc3f909ad4ee::t_130bbb0a3995a0 36
+docs/design/protocol-and-profile-design.md
+  s_0fcc3f909ad4ee::t_130bbb0a3995a0 146-157
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/engine/EngineRpcClient.kt
+  s_0fcc3f909ad4ee::t_a48eea14645b93 35-38
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/engine/ProjectEngineService.kt
+  s_0fcc3f909ad4ee::t_a48eea14645b93 35-39
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/aidl/AidlPeerAction.kt
+  s_0fcc3f909ad4ee::t_a48eea14645b93 1-91
+clients/jetbrains/src/main/resources/META-INF/plugin.xml
+  s_0fcc3f909ad4ee::t_a48eea14645b93 19-21
+docs/design/ide-client-and-navigation-design.md
+  s_0fcc3f909ad4ee::t_130bbb0a3995a0 226-228
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "0a95e4cc5f9b31996bd9ca25cfb7922a0c0fa483",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
