@@ -3,7 +3,7 @@ import { EngineClient } from "./engine/client";
 import { AidlDefinitionProvider } from "./navigation/aidl";
 import { goToAidlGeneratedPeer } from "./navigation/aidl_peers";
 import { AidlReferenceProvider } from "./navigation/aidl_references";
-import { goToJniPeer } from "./navigation/jni";
+import { goToJniPeer, JniDefinitionProvider } from "./navigation/jni";
 
 export function activate(context: vscode.ExtensionContext): void {
   const engine = new EngineClient();
@@ -24,6 +24,13 @@ export function activate(context: vscode.ExtensionContext): void {
         return new AidlReferenceProvider(engine).provideReferences(...args);
       },
     }),
+    vscode.languages.registerDefinitionProvider(
+      ["java", "kotlin", "c", "cpp", "objective-c", "objective-cpp"].map((language) => ({ language })), {
+      provideDefinition: async (document, position, token) => {
+        await ensureEngine();
+        return new JniDefinitionProvider(engine).provideDefinition(document, position, token);
+      },
+      }),
     vscode.commands.registerCommand("aospIde.goToJniPeer", async () => {
       await ensureEngine();
       await goToJniPeer(engine);

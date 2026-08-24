@@ -230,6 +230,11 @@ definition。
 `Find AIDL Usages` action。首版 range 是所属 import/member 声明范围，客户端显示
 这些 source locations；不会声称已经具备 token-level PSI。
 
+VS Code JNI 首个 DefinitionProvider 只消费 `aosp/jni/peers` 的唯一 link。Java/Kotlin
+或 C/C++ 文件位于 link 的一侧时，provider 返回另一侧的 `RepoPath + byte range`；
+多候选、`inferred`/`unresolved` 或 Workspace View 外目标返回空，让 Java/Kotlin
+language server 和 clangd 继续拥有本语言定义权威。
+
 ## 5. JNI navigation
 
 支持：
