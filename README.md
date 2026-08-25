@@ -15,8 +15,12 @@ The current repository root is the new project root. The historical Gradle/CMake
 
 ## Design
 
-- [Feasibility report](docs/aosp-ide-plugin-feasibility-report.md)
-- [Detailed design](docs/aosp-ide-plugin-design.md)
+The active design is split by responsibility. Start with the
+[documentation center](docs/README.md), then read the current architecture,
+decisions, design contracts, and roadmap entries.
+
+The original feasibility report and monolithic design are retained in
+[`docs/archive/`](docs/archive/README.md) for historical context only.
 - [Contributing guide](CONTRIBUTING.md)
 
 Implementation will follow the directory boundaries defined in the detailed design. Remote build support, if added later, will live under remote-execution/; the project does not use that ambiguous term as a component or directory name.

@@ -33,7 +33,7 @@
 | 构建、测试、文件和文档规则 | `engineering/` |
 | 当前代码事实与负能力 | `roadmap/current-state.md` |
 | 未完成任务、顺序和验收 | `roadmap/` |
-| 初始调查与完整提案背景 | 根目录两份 feasibility/design 报告 |
+| 初始调查与完整提案背景 | `archive/`，仅用于历史追溯 |
 
 代码事实以当前源码和通过工程入口执行的测试为准。`Target` 设计不能写成 `Current` 能力。
 
@@ -55,6 +55,7 @@
 - `decisions/`：已接受取舍和被拒方案。
 - `engineering/`：开发、构建、测试和文档规则。
 - `roadmap/`：Current、Gap、任务顺序和验收。
+- `archive/`：已被当前设计和代码事实取代的历史材料。
 
 ## 5. 当前重要决策
 

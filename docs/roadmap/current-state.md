@@ -37,8 +37,8 @@
 
 ## 5. Evidence
 
-- 设计入口：`docs/aosp-ide-plugin-design.md`；
-- 规范化设计：`docs/design/`；
+- 设计入口：`docs/README.md`；
+- 规范化设计：`docs/architecture/`、`docs/design/`、`docs/decisions/`；
 - Phase 0 计划：`docs/roadmap/delivery-plan.md`；
 - 代码入口：`cmd/aosp-index`、`core/model`、`core/topology`、`core/pathmap`、`core/metadata`、`core/graph`、`core/generated`、`core/aidl`、`core/jni`、`core/index`；
 - JNI fixture 通过 `make check`；只读 `frameworks/base/core/java` 与 `core/jni` 探测得到 1126 个 Java/Kotlin native 符号、2686 个 native 符号、988 个注册项、673 条链接，其中 561 条 exact、112 条 inferred。该结果不证明真实 IDE、Windows 或完整 AOSP 兼容。
