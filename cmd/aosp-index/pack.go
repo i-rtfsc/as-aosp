@@ -1,6 +1,7 @@
 package main
 
 import (
+	"archive/zip"
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
@@ -64,8 +65,8 @@ func exportPack(aospRoot, outRoot, destination string, native bool, modules []st
 		coreFiles = append(coreFiles, "module_bp_cc_deps.json", filepath.Join("development", "ide", "compdb", "compile_commands.json"))
 	}
 	for _, relative := range coreFiles {
-		source := filepath.Join(outRoot, relative)
-		if _, err := os.Stat(source); err != nil {
+		source, ok := findPackMetadata(outRoot, relative)
+		if !ok {
 			continue
 		}
 		target := filepath.Join(tmp, relative)
@@ -85,11 +86,20 @@ func exportPack(aospRoot, outRoot, destination string, native bool, modules []st
 		if relErr != nil {
 			return relErr
 		}
-		target := filepath.Join(tmp, "generated", "srcjars", filepath.Base(pathName))
+		intermediateRelative, relErr := filepath.Rel(filepath.Join(outRoot, "soong", ".intermediates"), pathName)
+		if relErr != nil {
+			return relErr
+		}
+		packPath := filepath.Join("generated", "srcjars", intermediateRelative)
+		target := filepath.Join(tmp, packPath)
 		if err := copyFile(pathName, target); err != nil {
 			return err
 		}
-		generatedManifest = append(generatedManifest, map[string]any{"source": filepath.ToSlash(relative), "path": filepath.ToSlash(filepath.Join("generated", "srcjars", filepath.Base(pathName)))})
+		entries, zipErr := srcJarEntries(pathName)
+		if zipErr != nil {
+			return zipErr
+		}
+		generatedManifest = append(generatedManifest, map[string]any{"source": filepath.ToSlash(relative), "path": filepath.ToSlash(packPath), "entries": entries})
 		return nil
 	})
 	if err != nil && !os.IsNotExist(err) {
@@ -109,6 +119,9 @@ func exportPack(aospRoot, outRoot, destination string, native bool, modules []st
 	}
 	manifest.Files = len(files)
 	for _, file := range files {
+		if file == "manifest.json" {
+			continue
+		}
 		info, _ := os.Stat(filepath.Join(tmp, file))
 		if info != nil {
 			manifest.Bytes += info.Size()
@@ -132,6 +145,38 @@ func exportPack(aospRoot, outRoot, destination string, native bool, modules []st
 	}
 	_ = os.RemoveAll(destination)
 	return os.Rename(tmp, destination)
+}
+
+func findPackMetadata(outRoot, relative string) (string, bool) {
+	candidates := []string{filepath.Join(outRoot, relative), filepath.Join(outRoot, "soong", relative)}
+	if relative == "module-info.json" {
+		matches, _ := filepath.Glob(filepath.Join(outRoot, "target", "product", "*", "module-info.json"))
+		candidates = append(candidates, matches...)
+	}
+	for _, candidate := range candidates {
+		if info, err := os.Stat(candidate); err == nil && !info.IsDir() {
+			return candidate, true
+		}
+	}
+	return "", false
+}
+
+func srcJarEntries(pathName string) ([]string, error) {
+	reader, err := zip.OpenReader(pathName)
+	if err != nil {
+		return nil, err
+	}
+	defer reader.Close()
+	entries := make([]string, 0, len(reader.File))
+	for _, file := range reader.File {
+		name := strings.TrimPrefix(strings.ReplaceAll(file.Name, "\\", "/"), "/")
+		if name == "" || strings.Contains(name, "../") {
+			continue
+		}
+		entries = append(entries, name)
+	}
+	sort.Strings(entries)
+	return entries, nil
 }
 
 func copyFile(source, target string) error {

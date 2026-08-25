@@ -18,7 +18,7 @@ func TestExportPackIncludesCoreMetadataAndSrcjarsByDefault(t *testing.T) {
 	if err := exportPack(root, out, destination, false, nil); err != nil {
 		t.Fatal(err)
 	}
-	for _, relative := range []string{"manifest.json", "checksums.sha256", "module-info.json", "module_bp_java_deps.json", filepath.Join("generated", "manifest.json"), filepath.Join("generated", "srcjars", "framework.srcjar")} {
+	for _, relative := range []string{"manifest.json", "checksums.sha256", "module-info.json", "module_bp_java_deps.json", filepath.Join("generated", "manifest.json"), filepath.Join("generated", "srcjars", "framework", "gen", "framework.srcjar")} {
 		if _, err := os.Stat(filepath.Join(destination, relative)); err != nil {
 			t.Fatalf("missing %s: %v", relative, err)
 		}
@@ -27,6 +27,26 @@ func TestExportPackIncludesCoreMetadataAndSrcjarsByDefault(t *testing.T) {
 	data, _ := os.ReadFile(filepath.Join(destination, "manifest.json"))
 	if err := json.Unmarshal(data, &manifest); err != nil || len(manifest.Packs) != 1 || manifest.Packs[0] != "core" {
 		t.Fatalf("manifest=%+v err=%v", manifest, err)
+	}
+	var generated []struct {
+		Entries []string `json:"entries"`
+	}
+	data, _ = os.ReadFile(filepath.Join(destination, "generated", "manifest.json"))
+	if err := json.Unmarshal(data, &generated); err != nil || len(generated) != 1 || len(generated[0].Entries) != 1 {
+		t.Fatalf("generated=%+v err=%v", generated, err)
+	}
+}
+
+func TestExportPackReadsSoongMetadataCandidate(t *testing.T) {
+	root := t.TempDir()
+	out := filepath.Join(root, "out")
+	writePackFixture(t, filepath.Join(out, "soong", "module_bp_java_deps.json"), `{}`)
+	destination := filepath.Join(root, "pack")
+	if err := exportPack(root, out, destination, false, nil); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := os.Stat(filepath.Join(destination, "module_bp_java_deps.json")); err != nil {
+		t.Fatal(err)
 	}
 }
 
