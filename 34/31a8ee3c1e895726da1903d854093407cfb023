@@ -1,0 +1,30 @@
+docs/design/protocol-and-profile-design.md
+  s_0fcc3f909ad4ee::t_2c16f25d98a996 87,108-124
+  s_e9dd769d815b63::t_393d6f2c5c5544 125
+docs/roadmap/build-facts-migration-plan.md
+  s_0fcc3f909ad4ee::t_2c16f25d98a996 11
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "3431a8ee3c1e895726da1903d854093407cfb023",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    },
+    "s_e9dd769d815b63": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a03183-9fdd-7f72-b2c6-acb6e5382f11",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
