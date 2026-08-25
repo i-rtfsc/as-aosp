@@ -1,0 +1,29 @@
+core/modules/catalog.go
+  s_0fcc3f909ad4ee::t_b2c922097c2875 24-26,31-32,46-47,56-57,71-89,92-137
+  s_0fcc3f909ad4ee::t_c1b76820df0fcd 1-23,27-30,33-45,48-55,58-70,90-91
+core/modules/catalog_test.go
+  s_0fcc3f909ad4ee::t_b2c922097c2875 5,9-14,18-22
+  s_0fcc3f909ad4ee::t_c1b76820df0fcd 1-4,6-8,15-17,23
+docs/architecture/source-and-module-boundaries.md
+  s_0fcc3f909ad4ee::t_dbfb3739a53b98 28
+docs/roadmap/build-facts-migration-plan.md
+  s_0fcc3f909ad4ee::t_dbfb3739a53b98 7
+docs/roadmap/current-state.md
+  s_0fcc3f909ad4ee::t_dbfb3739a53b98 19
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "7cb05257ced9506a79cab11669f934bf4004557c",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
