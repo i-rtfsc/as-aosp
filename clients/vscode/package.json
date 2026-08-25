@@ -74,7 +74,7 @@
     "compile": "tsc -p ./tsconfig.json",
     "check": "npm run compile && node --test out/engine/*.test.js out/navigation/*.test.js",
     "host-test": "npm run compile && node ./test/run-host-test.js",
-    "package": "npm run compile && vsce package --no-dependencies"
+    "package": "npm run compile && vsce package --no-dependencies --allow-missing-repository --skip-license"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",

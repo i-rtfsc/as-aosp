@@ -33,5 +33,7 @@ cp -R "$repo_root/clients/vscode/out/." "$stage/out/"
 CGO_ENABLED=0 GOOS="$platform" GOARCH="$arch" go build -trimpath -o "$stage/engine/$target/$engine_name" "$repo_root/cmd/aosp-index"
 chmod +x "$stage/engine/$target/$engine_name" 2>/dev/null || true
 mkdir -p "$repo_root/dist/vscode"
-(cd "$stage" && npx --prefix "$repo_root/clients/vscode" vsce package --no-dependencies --out "$repo_root/dist/vscode/aosp-ide-vscode-$version-$target.vsix")
+(cd "$stage" && npx --prefix "$repo_root/clients/vscode" vsce package --no-dependencies \
+  --allow-missing-repository --skip-license \
+  --out "$repo_root/dist/vscode/aosp-ide-vscode-$version-$target.vsix")
 printf '%s\n' "$repo_root/dist/vscode/aosp-ide-vscode-$version-$target.vsix"
