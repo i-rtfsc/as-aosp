@@ -151,6 +151,17 @@ aosp/generated/materialize
 srcjar，并返回已发布的 source roots 与 diagnostics。结果不写入 AOSP 源码
 或 out；重复请求复用相同 hash 目录。
 
+Metadata Pack identity 查询：
+
+```text
+aosp/pack/info
+```
+
+请求携带 `metadataPackRoot`，返回 schema、原始 `aospRoot`、原始 `outRoot` 和
+pack kinds。客户端只有在 ExternalPath 位于 manifest 原始 outRoot 前缀下时，
+才能把其相对后缀重定位到 profile 的本机 `outRoot`。普通字符串替换、basename
+匹配或跨 root 猜测都不允许。
+
 进程入口统一为一个跨平台二进制：
 
 ```text
