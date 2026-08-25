@@ -1,0 +1,21 @@
+docs/design/protocol-and-profile-design.md
+  s_0fcc3f909ad4ee::t_970fa5755f82c3 126-142
+docs/roadmap/build-facts-migration-plan.md
+  s_0fcc3f909ad4ee::t_970fa5755f82c3 27
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "3d67f78f4920a924b97530131d16942a6430a1b0",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
