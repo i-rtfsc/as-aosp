@@ -1,4 +1,6 @@
 import * as vscode from "vscode";
+import * as fs from "node:fs";
+import * as path from "node:path";
 import { EngineClient } from "../engine/client";
 import { resolveRepoProjectionPath } from "./java_projection_paths";
 
@@ -15,6 +17,7 @@ export async function applyJavaProjection(
   workspaceRoot: string,
   metadataPackRoot: string,
   cacheRoot: string,
+  outRoot = "",
 ): Promise<JavaProjectionSummary> {
   const generated = await engine.materializeGenerated(metadataPackRoot, cacheRoot);
   const catalog = await engine.modulesCatalog(metadataPackRoot);
@@ -33,7 +36,7 @@ export async function applyJavaProjection(
       else skipped++;
     }
     for (const ref of [...(module.jars ?? []), ...(module.srcjars ?? [])]) {
-      const pathName = resolveLocalPath(metadataPackRoot, ref);
+      const pathName = resolveLocalPath(metadataPackRoot, outRoot, ref);
       if (pathName) referencedLibraries.add(pathName);
       else skipped++;
     }
@@ -52,9 +55,16 @@ function resolveRepoPath(workspaceRoot: string, ref: PathRef): string | undefine
   return resolveRepoProjectionPath(workspaceRoot, ref);
 }
 
-function resolveLocalPath(packRoot: string, ref: PathRef): string | undefined {
-  if (ref.kind !== "repo-relative" && ref.kind !== "generated") return undefined;
-  if (!ref.raw || ref.raw.includes("..")) return undefined;
-  const candidate = vscode.Uri.joinPath(vscode.Uri.file(packRoot), ...ref.raw.replaceAll("\\", "/").split("/")).fsPath;
-  return candidate;
+function resolveLocalPath(packRoot: string, outRoot: string, ref: PathRef): string | undefined {
+  let candidate: string | undefined;
+  if (ref.kind === "external-absolute" && ref.raw) candidate = ref.raw;
+  if ((ref.kind === "repo-relative" || ref.kind === "generated") && ref.raw && !ref.raw.includes("..")) {
+    candidate = path.join(packRoot, ...ref.raw.replaceAll("\\", "/").split("/"));
+  }
+  if (candidate && fs.existsSync(candidate)) return candidate;
+  if (outRoot && ref.raw && !ref.raw.includes("..")) {
+    const fallback = path.join(outRoot, ...ref.raw.replaceAll("\\", "/").split("/"));
+    if (fs.existsSync(fallback)) return fallback;
+  }
+  return undefined;
 }

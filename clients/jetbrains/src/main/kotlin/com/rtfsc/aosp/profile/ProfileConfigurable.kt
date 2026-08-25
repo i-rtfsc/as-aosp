@@ -198,7 +198,8 @@ internal class ProfileConfigurable(
                 indicator.text = "Loading module catalog and generated sources"
                 val result = project.getService(FocusedRootsService::class.java).applyBuildFacts()
                 message = "Applied ${result.sourceRoots.size} source root(s), " +
-                    "${result.generatedRoots.size} generated root(s), skipped ${result.skipped}."
+                    "${result.generatedRoots.size} generated root(s), " +
+                    "${result.libraries.size} library(s), skipped ${result.skipped}."
                 if (result.diagnostics.isNotEmpty()) {
                     message += " Diagnostics: ${result.diagnostics.size}."
                 }

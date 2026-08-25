@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.intellij.openapi.application.WriteAction
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.roots.ModuleRootManager
+import com.intellij.openapi.roots.OrderRootType
+import com.intellij.openapi.vfs.LocalFileSystem
 import com.rtfsc.aosp.engine.ProjectEngineService
 import com.rtfsc.aosp.profile.EngineProfileState
 import java.nio.file.Files
@@ -14,6 +16,7 @@ import java.nio.file.Paths
 internal data class BuildFactsProjectionResult(
     val sourceRoots: List<Path>,
     val generatedRoots: List<Path>,
+    val libraries: List<Path>,
     val skipped: Int,
     val diagnostics: List<String>,
 )
@@ -29,7 +32,7 @@ internal object BuildFactsProjection {
     ): BuildFactsProjectionResult {
         val packRoot = state.metadataPackRoot.trim()
         if (packRoot.isEmpty()) {
-            return BuildFactsProjectionResult(emptyList(), emptyList(), 0, listOf("Metadata Pack Root is required."))
+            return BuildFactsProjectionResult(emptyList(), emptyList(), emptyList(), 0, listOf("Metadata Pack Root is required."))
         }
         val catalogParams = mapper.writeValueAsString(mapOf("metadataPackRoot" to packRoot))
         val catalog = mapper.readTree(engine.modulesCatalog(catalogParams)).path("result")
@@ -40,11 +43,13 @@ internal object BuildFactsProjection {
         val closure = mapper.readTree(engine.modulesClosure(params)).path("result")
         collectDiagnostics(closure.path("diagnostics"), diagnostics)
         val sourceRoots = linkedSetOf<Path>()
+        val libraries = linkedSetOf<Path>()
         val skipped = intArrayOf(0)
         val workspaceRoot = Paths.get(state.workspaceViewRoot).toAbsolutePath().normalize()
         for (item in closure.path("modules")) {
             collectRepoRoots(item.path("sourceRoots"), workspaceRoot, sourceRoots, skipped)
             collectRepoRoots(item.path("sources"), workspaceRoot, sourceRoots, skipped)
+            collectLibraries(item.path("jars"), workspaceRoot, packRoot, state.outRoot, libraries, skipped)
         }
         val generatedParams = mapper.writeValueAsString(
             mapOf("metadataPackRoot" to packRoot, "cacheRoot" to cacheRoot.toString()),
@@ -55,8 +60,8 @@ internal object BuildFactsProjection {
             node.path("root").asText().takeIf { it.isNotBlank() }?.let(Paths::get)
         }.filter { Files.isDirectory(it) }
         sourceRoots.addAll(generatedRoots)
-        applySourceRoots(module, sourceRoots.toList())
-        return BuildFactsProjectionResult(sourceRoots.toList(), generatedRoots, skipped[0], diagnostics)
+        applyProjection(module, sourceRoots.toList(), libraries.toList())
+        return BuildFactsProjectionResult(sourceRoots.toList(), generatedRoots, libraries.toList(), skipped[0], diagnostics)
     }
 
     private fun collectRepoRoots(
@@ -80,13 +85,48 @@ internal object BuildFactsProjection {
         }
     }
 
-    private fun applySourceRoots(module: Module, roots: List<Path>) {
+    private fun collectLibraries(
+        refs: JsonNode,
+        workspaceRoot: Path,
+        packRoot: String,
+        outRoot: String,
+        libraries: MutableSet<Path>,
+        skipped: IntArray,
+    ) {
+        for (ref in refs) {
+            val kind = ref.path("kind").asText()
+            val raw = ref.path("raw").asText()
+            val candidate = when (kind) {
+                "repo-relative" -> workspaceRoot.resolve(ref.path("repoPath").asText().replace('/', java.io.File.separatorChar))
+                "generated" -> Paths.get(packRoot).resolve(raw.replace('/', java.io.File.separatorChar))
+                "external-absolute" -> Paths.get(raw)
+                else -> null
+            }?.normalize()
+            if (candidate != null && Files.isRegularFile(candidate) && candidate.toString().endsWith(".jar")) {
+                libraries.add(candidate)
+            } else if (outRoot.isNotBlank() || raw.isNotBlank()) {
+                skipped[0]++
+            }
+        }
+    }
+
+    private fun applyProjection(module: Module, roots: List<Path>, libraries: List<Path>) {
         WriteAction.compute<Unit, RuntimeException> {
             val model = ModuleRootManager.getInstance(module).modifiableModel
             model.clear()
             roots.distinct().forEach { root ->
                 val content = model.addContentEntry(root.toString())
                 content.addSourceFolder(root.toString(), false)
+            }
+            val libraryTable = model.moduleLibraryTable
+            libraries.distinct().forEach { libraryPath ->
+                val library = libraryTable.createLibrary("AOSP ${libraryPath.fileName}")
+                val libraryModel = library.modifiableModel
+                val file = LocalFileSystem.getInstance().refreshAndFindFileByPath(libraryPath.toString())
+                if (file != null) {
+                    libraryModel.addRoot(file, OrderRootType.CLASSES)
+                }
+                libraryModel.commit()
             }
             model.commit()
         }

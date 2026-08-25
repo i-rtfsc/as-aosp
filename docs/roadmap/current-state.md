@@ -37,8 +37,8 @@
   安全解压到 engine cache；构建机绝对路径不会写入本机配置，完整 Java LS classpath
   仍未闭合。
 - JetBrains 配置页已增加 `Apply Build Facts`，会把 engine 返回的可见 RepoPath
-  source roots 和 generated cache roots 投影到非持久 focused module；libraries 和
-  完整 Workspace Model module closure 仍未闭合。
+  source roots、generated cache roots 和本机存在的 jar libraries 投影到非持久
+  focused module；完整 Workspace Model module closure 仍未闭合。
 - 当前 JNI 只覆盖 Java/Kotlin declaration、静态导出、常见 `JNINativeMethod` 注册表和有限注册调用；复杂宏、运行时 class 解析和完整 C++ 语义仍未覆盖；
 - 当前已有本地六平台 engine/JetBrains ZIP/VS Code VSIX 打包入口，以及 VS Code 显式/bundled/PATH engine 选择逻辑；尚未完成把 bundled engine 嵌入 VSIX、签名、公证、发布版下载和 marketplace verifier；
 - 当前没有任何远程执行服务；
