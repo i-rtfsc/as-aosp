@@ -1,0 +1,31 @@
+docs/roadmap/current-state.md
+  s_0fcc3f909ad4ee::t_d708fbbeba86c1 18
+docs/README.md
+  s_0fcc3f909ad4ee::t_d5cbd28ee5bb04 23
+docs/roadmap/build-facts-migration-plan.md
+  s_0fcc3f909ad4ee::t_d708fbbeba86c1 15
+docs/engineering/aosp-index-cli-guide.md
+  s_0fcc3f909ad4ee::t_d5cbd28ee5bb04 1-134
+cmd/aosp-index/pack.go
+  s_0fcc3f909ad4ee::t_e3d88437dfb33e 32-34,159-164,169-187,189-199
+  s_0fcc3f909ad4ee::t_d532a36b6c212c 10,29-31,155-158,165-168,188,200-202
+  s_0fcc3f909ad4ee::t_f2fddab70d0cd4 203
+Makefile
+  s_0fcc3f909ad4ee::t_d708fbbeba86c1 1,54-56,63
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "c5a386362d6032edec0e08b24ae3fa3450153914",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
