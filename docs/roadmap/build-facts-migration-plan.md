@@ -4,7 +4,7 @@
 
 ## Phase 1：ModuleCatalog
 
-- 复用现有 metadata readers；
+- 复用现有 metadata readers；首个 `core/modules` ModuleCatalog slice 已实现；
 - 定义 `ModuleCatalog`、SourceRoot、GeneratedSource、Classpath、NativeCompileUnit；
 - module-info/Java deps/CC deps 合并为稳定模块 facts；
 - 增加 module ownership、source root 和 dependency closure 查询；

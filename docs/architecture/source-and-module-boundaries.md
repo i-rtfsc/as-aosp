@@ -25,6 +25,7 @@
 | `core/topology` | Workspace View、SourceMount、provider priority、cycle/conflict |
 | `core/pathmap` | View/Local/External 与 RepoPath 转换 |
 | `core/metadata` | Soong JSON、module-info、compdb 和 ide_query reader |
+| `core/modules` | ModuleCatalog、source roots、generated/classpath facts 和 dependency closure |
 | `core/buildfiles` | Android.bp/Android.mk fallback scanner |
 | `core/generated` | srcjar、generated file cache 和 depfile |
 | `core/aidl` | AIDL parser、resolver 和 generated mapping |
