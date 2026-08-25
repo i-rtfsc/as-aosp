@@ -1,0 +1,27 @@
+clients/vscode/src/extension.ts
+  s_0fcc3f909ad4ee::t_25dab7f0f890ff 53
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/profile/ProfileConfigurable.kt
+  s_0fcc3f909ad4ee::t_51d8c8f1969eb4 201-202
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/project/BuildFactsProjection.kt
+  s_0fcc3f909ad4ee::t_f3d2f609259ad7 8-9,19,35,46,52,63-64,88-113,121-130
+clients/vscode/src/navigation/java_projection.ts
+  s_0fcc3f909ad4ee::t_25dab7f0f890ff 2-3,20,39,58-69
+docs/roadmap/current-state.md
+  s_0fcc3f909ad4ee::t_51d8c8f1969eb4 40-41
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "e3640317299a7db725e11685d7314eaaad27453d",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
