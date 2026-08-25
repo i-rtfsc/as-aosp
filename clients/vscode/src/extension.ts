@@ -8,11 +8,14 @@ import { refreshCompdbOverlay } from "./navigation/compdb";
 import { createAospStatusBar } from "./status";
 import { resolveEngineExecutable } from "./engine/resolve";
 import { openProfilePanel } from "./ui/profile_panel";
+import { OverviewProvider, detectOut } from "./ui/overview";
 
 export function activate(context: vscode.ExtensionContext): void {
   const engine = new EngineClient();
   const output = vscode.window.createOutputChannel("AOSP IDE");
+  const overview = new OverviewProvider(context);
   context.subscriptions.push(output);
+  context.subscriptions.push(vscode.window.registerTreeDataProvider("aospIde.overview", overview));
   context.subscriptions.push(createAospStatusBar(engine, output));
   const ensureEngine = async (): Promise<void> => {
     const configured = vscode.workspace.getConfiguration("aospIde").get<string>("engineExecutable");
@@ -60,7 +63,7 @@ export function activate(context: vscode.ExtensionContext): void {
       output.appendLine(`status: ${engine.status.state}${engine.status.error ? ` (${engine.status.error})` : ""}`);
       output.show(true);
     }),
-    vscode.commands.registerCommand("aospIde.openProfile", () => openProfilePanel(context)),
+    vscode.commands.registerCommand("aospIde.openProfile", async () => openProfilePanel(context)),
     vscode.workspace.onDidChangeConfiguration((event) => {
       if (event.affectsConfiguration("aospIde.engineExecutable") ||
         event.affectsConfiguration("aospIde.workspaceViewRoot") ||
@@ -73,7 +76,13 @@ export function activate(context: vscode.ExtensionContext): void {
   );
   const configuredRoot = vscode.workspace.getConfiguration("aospIde").get<string>("workspaceViewRoot")?.trim();
   if (vscode.workspace.workspaceFolders?.length && !configuredRoot) {
-    setTimeout(() => openProfilePanel(context), 300);
+    const root = vscode.workspace.workspaceFolders[0].uri.fsPath;
+    void detectOut(root).then(async (detection) => {
+      if (detection.root && !vscode.workspace.getConfiguration("aospIde").get<string>("metadataRoot")?.trim()) {
+        await vscode.workspace.getConfiguration("aospIde").update("metadataRoot", detection.root, vscode.ConfigurationTarget.Workspace);
+      }
+      setTimeout(() => openProfilePanel(context), 300);
+    });
   }
 }
 

@@ -20,6 +20,8 @@
   ],
   "main": "./out/extension.js",
   "contributes": {
+    "viewsContainers": { "activitybar": [{ "id": "aospIde", "title": "AOSP IDE", "icon": "resources/aosp-ide.svg" }] },
+    "views": { "aospIde": [{ "id": "aospIde.overview", "name": "Overview" }] },
     "configuration": {
       "title": "AOSP IDE",
       "properties": {
