@@ -49,6 +49,18 @@ export interface ModulesCatalogResult {
   diagnostics: unknown[];
 }
 
+export interface IndexSnapshot {
+  profileId?: string;
+  state: string;
+  stage: string;
+  completedStages: string[];
+  totalStages: number;
+  progress: number;
+  moduleCount: number;
+  generatedCount: number;
+  diagnostics: unknown[];
+}
+
 export class EngineClient {
   private process?: ChildProcessWithoutNullStreams;
   private startPromise?: Promise<void>;
@@ -141,6 +153,14 @@ export class EngineClient {
 
   async modulesCatalog(metadataPackRoot: string): Promise<ModulesCatalogResult> {
     return this.request("aosp/modules/catalog", { metadataPackRoot });
+  }
+
+  async startIndex(profile: unknown, rebuild = false): Promise<IndexSnapshot> {
+    return this.request(rebuild ? "aosp/index/rebuild" : "aosp/index/start", { profile });
+  }
+
+  async indexStatus(): Promise<IndexSnapshot> {
+    return this.request("aosp/index/status", null);
   }
 
   private request(method: string, params: unknown): Promise<any> {

@@ -29,6 +29,26 @@ export function activate(context: vscode.ExtensionContext): void {
       generated: result.modules.reduce((total, module) => total + module.generated, 0),
       diagnostics: result.diagnostics.length,
     };
+  }, async (rebuild) => {
+    const config = vscode.workspace.getConfiguration("aospIde");
+    const profile = {
+      schemaVersion: 1,
+      id: vscode.workspace.name || "vscode-workspace",
+      workspaceViewRoot: config.get<string>("workspaceViewRoot") || vscode.workspace.workspaceFolders?.[0]?.uri.fsPath || "",
+      outRoot: config.get<string>("metadataRoot") || "",
+      metadataPackRoot: config.get<string>("metadataPackRoot") || "",
+      pathMappings: config.get<unknown[]>("pathMappings") || [],
+      buildIntegration: { mode: "read-only" },
+    };
+    const status = await engine.startIndex(profile, rebuild);
+    return {
+      state: status.state,
+      stage: status.stage,
+      progress: status.progress,
+      modules: status.moduleCount,
+      generated: status.generatedCount,
+      diagnostics: status.diagnostics.length,
+    };
   });
   context.subscriptions.push(vscode.window.registerWebviewViewProvider("aospWorkspace.setup", profileView));
   context.subscriptions.push(createAospStatusBar(engine, output));

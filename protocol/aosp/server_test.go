@@ -5,8 +5,10 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
+	"time"
 
 	"github.com/i-rtfsc/as-aosp/core/aidl"
+	"github.com/i-rtfsc/as-aosp/core/metadata"
 	"github.com/i-rtfsc/as-aosp/core/model"
 	coremodules "github.com/i-rtfsc/as-aosp/core/modules"
 	"github.com/i-rtfsc/as-aosp/core/topology"
@@ -96,6 +98,61 @@ func TestServerReportsMissingModulePack(t *testing.T) {
 	if len(result.Diagnostics) != 1 || result.Diagnostics[0].Code != "METADATA_PACK_ROOT_MISSING" {
 		t.Fatalf("result=%+v", result)
 	}
+}
+
+func TestServerBuildsIndexStatusFromMetadataPack(t *testing.T) {
+	root := t.TempDir()
+	pathName := filepath.Join(root, "modules", "catalog.json")
+	if err := os.MkdirAll(filepath.Dir(pathName), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	catalog := coremodules.Catalog{Modules: map[string]coremodules.Module{
+		"framework": {
+			Name: "framework", SrcJars: []metadata.PathRef{metadata.NewPathRef("out/framework.srcjar")},
+		},
+	}}
+	data, _ := json.Marshal(catalog)
+	if err := os.WriteFile(pathName, data, 0o644); err != nil {
+		t.Fatal(err)
+	}
+	server := initializedServer(t)
+	response, _ := server.Handle(makeRequest(2, "aosp/index/start", IndexStartParams{
+		Profile: model.Profile{ID: "framework", MetadataPackRoot: root},
+	}))
+	if response.Error != nil {
+		t.Fatalf("start=%+v", response)
+	}
+	result := waitForIndexState(t, server, "ready")
+	if result.ModuleCount != 1 || result.GeneratedCount != 1 || result.Progress != 100 {
+		t.Fatalf("result=%+v", result)
+	}
+}
+
+func TestServerKeepsMissingPackIndexPartial(t *testing.T) {
+	server := initializedServer(t)
+	server.Handle(makeRequest(2, "aosp/index/start", IndexStartParams{
+		Profile: model.Profile{ID: "source-only"},
+	}))
+	result := waitForIndexState(t, server, "partial")
+	if result.Progress != 100 || len(result.Diagnostics) == 0 || result.ModuleCount != 0 {
+		t.Fatalf("result=%+v", result)
+	}
+}
+
+func waitForIndexState(t *testing.T, server *Server, expected string) IndexSnapshot {
+	t.Helper()
+	deadline := time.Now().Add(2 * time.Second)
+	for time.Now().Before(deadline) {
+		response, _ := server.Handle(makeRequest(9, "aosp/index/status", nil))
+		var result IndexSnapshot
+		decodeResult(t, response, &result)
+		if result.State == expected {
+			return result
+		}
+		time.Sleep(time.Millisecond)
+	}
+	t.Fatalf("index did not reach state %q", expected)
+	return IndexSnapshot{}
 }
 
 func TestServerRejectsIncompatibleVersion(t *testing.T) {

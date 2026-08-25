@@ -24,6 +24,7 @@ type Server struct {
 	jniSnapshot           *jniSnapshot
 	aidlSnapshot          *aidlSnapshot
 	moduleCatalogSnapshot *moduleCatalogSnapshot
+	coordinator           *indexCoordinator
 }
 
 type jniSnapshot struct {
@@ -65,6 +66,7 @@ type Capabilities struct {
 	AIDLNavigation     bool `json:"aidlNavigation"`
 	JNINavigation      bool `json:"jniNavigation"`
 	ModuleCatalog      bool `json:"moduleCatalog"`
+	IndexCoordinator   bool `json:"indexCoordinator"`
 }
 
 type ProfileResult struct {
@@ -138,6 +140,14 @@ func (server *Server) Handle(request jsonrpc.Request) (jsonrpc.Response, bool) {
 		response = server.moduleGet(request)
 	case "aosp/modules/closure":
 		response = server.modulesClosure(request)
+	case "aosp/index/start":
+		response = server.indexStart(request, false)
+	case "aosp/index/rebuild":
+		response = server.indexStart(request, true)
+	case "aosp/index/status":
+		response = server.indexStatus(request)
+	case "aosp/index/cancel":
+		response = server.indexCancel(request)
 	default:
 		response = jsonrpc.Failure(request.ID, jsonrpc.MethodNotFound(request.Method))
 	}
@@ -166,6 +176,7 @@ func (server *Server) initialize(request jsonrpc.Request) (jsonrpc.Response, boo
 			AIDLNavigation:     true,
 			JNINavigation:      true,
 			ModuleCatalog:      true,
+			IndexCoordinator:   true,
 		},
 	}), !request.IsNotification()
 }
