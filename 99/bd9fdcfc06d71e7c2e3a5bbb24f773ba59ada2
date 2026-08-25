@@ -1,0 +1,41 @@
+clients/vscode/src/navigation/java_projection.ts
+  s_0fcc3f909ad4ee::t_715a07716b29c6 3,49
+  s_0fcc3f909ad4ee::t_4a237d358f1719 5
+  s_0fcc3f909ad4ee::t_6313aa0610bdd9 2
+  s_0fcc3f909ad4ee::t_54c27b65815366 1,4,6-48,52-57
+  s_0fcc3f909ad4ee::t_61262e8dc36d57 50-51
+clients/vscode/src/extension.ts
+  s_0fcc3f909ad4ee::t_54c27b65815366 13,45-66
+clients/vscode/src/navigation/java_projection_paths.ts
+  s_0fcc3f909ad4ee::t_715a07716b29c6 1-11
+clients/vscode/src/navigation/java_projection.test.ts
+  s_0fcc3f909ad4ee::t_61262e8dc36d57 1-2,4-17
+  s_0fcc3f909ad4ee::t_715a07716b29c6 3
+clients/vscode/src/engine/client.ts
+  s_0fcc3f909ad4ee::t_54c27b65815366 52-65,172-173
+  s_5f30dac179bcb2::t_732fb1c6f60126 174-175
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "99bd9fdcfc06d71e7c2e3a5bbb24f773ba59ada2",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    },
+    "s_5f30dac179bcb2": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "019ffe38-b3cd-77e3-8987-f48bc62a086c",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
