@@ -84,6 +84,7 @@ created -> initialized -> shutdown-requested -> exited
     "profileValidation": true,
     "topologyDiscovery": true,
     "topologyValidation": true,
+    "moduleCatalog": true,
     "aidlNavigation": true,
     "jniNavigation": true
   }
@@ -103,6 +104,24 @@ aosp/profile/validate
 aosp/topology/discover
 aosp/topology/validate
 ```
+
+Build-Facts ModuleCatalog 查询 slice：
+
+```text
+aosp/modules/catalog
+aosp/modules/get
+aosp/modules/closure
+```
+
+三个方法都显式携带 `metadataPackRoot`，不依赖 daemon 当前工作目录或
+进程级全局 profile。`catalog` 返回按模块名排序的摘要，供 UI 选择模块和
+显示规模；`get` 返回一个模块的完整 facts；`closure` 返回选中模块及其传递
+依赖的完整模块列表，顺序按模块名稳定排序。
+
+Metadata Pack 缺失、catalog JSON 损坏或模块不存在属于业务诊断，结果仍是
+成功的 JSON-RPC response。服务端不得回退扫描整个 Workspace View 来伪造
+Build-Facts 结果。首版每次请求按 pack catalog 文件的路径、大小和修改时间
+判断是否复用 daemon 内存快照；pack 被原子替换后必须重新加载。
 
 进程入口统一为一个跨平台二进制：
 

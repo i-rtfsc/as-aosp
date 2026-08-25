@@ -8,6 +8,7 @@
 - 定义 `ModuleCatalog`、SourceRoot、GeneratedSource、Classpath、NativeCompileUnit；
 - module-info/Java deps/CC deps 合并为稳定模块 facts；
 - 增加 module ownership、source root 和 dependency closure 查询；
+- 通过 `aosp/modules/catalog|get|closure` 向两个 IDE 客户端提供统一查询；
 - 验收：framework fixture 能回答 `android.os.*` 所属 source root/module。
 
 ## Phase 2：Metadata Pack export/import
