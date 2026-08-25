@@ -1,0 +1,38 @@
+clients/vscode/src/extension.ts
+  s_0fcc3f909ad4ee::t_2dd161cdb43a93 69,78
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/profile/ProfileJson.kt
+  s_0fcc3f909ad4ee::t_2dd161cdb43a93 22
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/profile/ProfileConfigurable.kt
+  s_0fcc3f909ad4ee::t_2dd161cdb43a93 34,45,58,82,94,109
+core/model/profile.go
+  s_0fcc3f909ad4ee::t_61a533cf770696 9
+clients/vscode/src/engine/client.ts
+  s_0fcc3f909ad4ee::t_2dd161cdb43a93 47-51,142-143
+  s_0fcc3f909ad4ee::t_879a4844557a7d 144-145
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/profile/EngineProfileState.kt
+  s_0fcc3f909ad4ee::t_2dd161cdb43a93 9
+clients/vscode/src/ui/profile_panel.ts
+  s_0fcc3f909ad4ee::t_2dd161cdb43a93 18,35,51,66,87,91
+clients/vscode/package.json
+  s_0fcc3f909ad4ee::t_2dd161cdb43a93 45-49
+docs/design/protocol-and-profile-design.md
+  s_0fcc3f909ad4ee::t_61a533cf770696 10
+docs/design/profile-ui-and-multi-project-design.md
+  s_0fcc3f909ad4ee::t_61a533cf770696 14
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "b539df44051334cbb24833c2cdbea4f137b3a646",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
