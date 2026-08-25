@@ -25,6 +25,11 @@ manifest 签名和下载信任模型完成前，客户端不自动联网下载�
 正在运行的 executable。默认位置为 macOS `~/Library/Application Support/AOSP IDE`、
 Linux `~/.local/share/aosp-ide`、Windows `%LOCALAPPDATA%/AOSP IDE`。
 
+本机开发安装使用 `make install-vscode`：脚本自动识别当前 OS/架构、构建对应 engine、
+生成只包含当前平台 engine 的 VSIX，并调用 `code --install-extension` 安装。用户安装
+后只需打开 Workspace View，不需要手动复制 `engines/aosp-index` 或配置 executable；公共 engine 入口仍
+保留给跨 IDE 复用和开发者自定义场景。
+
 ## 2. 客户端复用
 
 - JetBrains 使用同一 Kotlin 源码和插件 ZIP，IDE/JVM 提供平台抽象；
