@@ -1,0 +1,31 @@
+Makefile
+  s_0fcc3f909ad4ee::t_9f74f9600350dd 1,51-53,60
+cmd/aosp-index/pack_test.go
+  s_0fcc3f909ad4ee::t_f5d8ebccf6da57 18-20,22-24,28-30,34-35,39-46,49-75
+  s_0fcc3f909ad4ee::t_1020aa88748e7a 1-17,21,25-27,31-33,36-38,47-48
+cmd/aosp-index/main.go
+  s_0fcc3f909ad4ee::t_6962f73f1d5386 49-50
+docs/roadmap/current-state.md
+  s_0fcc3f909ad4ee::t_9f74f9600350dd 17
+cmd/aosp-index/pack.go
+  s_0fcc3f909ad4ee::t_6962f73f1d5386 1-46,49-52,56,60-61,66-67,71,75-77,88,92-94,110,133-136
+  s_0fcc3f909ad4ee::t_f0cbd7b960335c 47-48,53-55,57-59,62-65,68-70,72-74,78-87,89-91,95-109,111-132,137-180
+docs/roadmap/build-facts-migration-plan.md
+  s_0fcc3f909ad4ee::t_e401fbfa80cca6 15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "7109baa33676e5bb9dff0569a162eab6e0557568",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.5"
+      },
+      "human_author": null
+    }
+  }
+}
