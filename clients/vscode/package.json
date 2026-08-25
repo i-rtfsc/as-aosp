@@ -1,6 +1,6 @@
 {
   "name": "aosp-ide-vscode",
-  "displayName": "AOSP IDE",
+  "displayName": "AOSP Workspace",
   "description": "Focused AOSP navigation and cross-language indexing.",
   "version": "0.1.0-dev",
   "publisher": "rtfsc",
@@ -20,10 +20,10 @@
   ],
   "main": "./out/extension.js",
   "contributes": {
-    "viewsContainers": { "activitybar": [{ "id": "aospIde", "title": "AOSP IDE", "icon": "resources/aosp-ide.svg" }] },
-    "views": { "aospIde": [{ "id": "aospIde.overview", "name": "AOSP Workspace" }, { "id": "aospIde.profile", "name": "Profile" }] },
+    "viewsContainers": { "activitybar": [{ "id": "aospWorkspace", "title": "AOSP Workspace", "icon": "resources/aosp-ide.svg" }] },
+    "views": { "aospWorkspace": [{ "id": "aospWorkspace.profile", "name": "Workspace Setup" }] },
     "configuration": {
-      "title": "AOSP IDE",
+      "title": "AOSP Workspace",
       "properties": {
         "aospIde.engineExecutable": {
           "type": "string",
