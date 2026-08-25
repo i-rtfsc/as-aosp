@@ -1,0 +1,21 @@
+clients/vscode/package.json
+  s_0fcc3f909ad4ee::t_70b61ca0e4ffc1 26
+docs/design/profile-ui-and-multi-project-design.md
+  s_0fcc3f909ad4ee::t_a85fe9c30df338 43
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "3dc73f0a212682dd08ed42e4b9e7c16c67ccfc3f",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
