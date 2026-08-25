@@ -148,6 +148,8 @@ func (server *Server) Handle(request jsonrpc.Request) (jsonrpc.Response, bool) {
 		response = server.indexStatus(request)
 	case "aosp/index/cancel":
 		response = server.indexCancel(request)
+	case "aosp/generated/materialize":
+		response = server.generatedMaterialize(request)
 	default:
 		response = jsonrpc.Failure(request.ID, jsonrpc.MethodNotFound(request.Method))
 	}

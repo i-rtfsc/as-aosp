@@ -75,6 +75,11 @@ export interface IndexSnapshot {
   diagnostics: unknown[];
 }
 
+export interface GeneratedMaterializeResult {
+  sourceRoots: Array<{ archive: string; root: string; hash: string; entries: number }>;
+  diagnostics: unknown[];
+}
+
 export class EngineClient {
   private process?: ChildProcessWithoutNullStreams;
   private startPromise?: Promise<void>;
@@ -179,6 +184,10 @@ export class EngineClient {
 
   async indexStatus(): Promise<IndexSnapshot> {
     return this.request("aosp/index/status", null);
+  }
+
+  async materializeGenerated(metadataPackRoot: string, cacheRoot: string): Promise<GeneratedMaterializeResult> {
+    return this.request("aosp/generated/materialize", { metadataPackRoot, cacheRoot });
   }
 
   private request(method: string, params: unknown): Promise<any> {

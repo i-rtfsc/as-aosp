@@ -1,6 +1,7 @@
 package aosp
 
 import (
+	"archive/zip"
 	"encoding/json"
 	"os"
 	"path/filepath"
@@ -136,6 +137,54 @@ func TestServerKeepsMissingPackIndexPartial(t *testing.T) {
 	result := waitForIndexState(t, server, "partial")
 	if result.Progress != 100 || len(result.Diagnostics) == 0 || result.ModuleCount != 0 {
 		t.Fatalf("result=%+v", result)
+	}
+}
+
+func TestServerMaterializesPackSrcJars(t *testing.T) {
+	pack := t.TempDir()
+	archive := filepath.Join(pack, "generated", "srcjars", "framework.srcjar")
+	if err := os.MkdirAll(filepath.Dir(archive), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	writeProtocolSrcJar(t, archive, "android/os/Build.java", "package android.os; class Build {}")
+	manifest, _ := json.Marshal([]map[string]string{{"path": "generated/srcjars/framework.srcjar"}})
+	if err := os.WriteFile(filepath.Join(pack, "generated", "manifest.json"), manifest, 0o644); err != nil {
+		t.Fatal(err)
+	}
+	server := initializedServer(t)
+	cache := t.TempDir()
+	response, _ := server.Handle(makeRequest(2, "aosp/generated/materialize", GeneratedMaterializeParams{
+		MetadataPackRoot: pack, CacheRoot: cache,
+	}))
+	var result GeneratedMaterializeResult
+	decodeResult(t, response, &result)
+	if len(result.Diagnostics) != 0 || len(result.SourceRoots) != 1 || result.SourceRoots[0].Entries != 1 {
+		t.Fatalf("result=%+v", result)
+	}
+	if _, err := os.Stat(filepath.Join(result.SourceRoots[0].Root, "entries", "android", "os", "Build.java")); err != nil {
+		t.Fatalf("materialized source missing: %v", err)
+	}
+}
+
+func writeProtocolSrcJar(t *testing.T, pathName, entry, source string) {
+	t.Helper()
+	file, err := os.Create(pathName)
+	if err != nil {
+		t.Fatal(err)
+	}
+	archive := zip.NewWriter(file)
+	writer, err := archive.Create(entry)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := writer.Write([]byte(source)); err != nil {
+		t.Fatal(err)
+	}
+	if err := archive.Close(); err != nil {
+		t.Fatal(err)
+	}
+	if err := file.Close(); err != nil {
+		t.Fatal(err)
 	}
 }
 

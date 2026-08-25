@@ -50,7 +50,7 @@ export function activate(context: vscode.ExtensionContext): void {
           if (current.state === "ready" || current.state === "partial") {
             const packRoot = profile.metadataPackRoot;
             if (packRoot && profile.workspaceViewRoot) {
-              await applyJavaProjection(engine, profile.workspaceViewRoot, packRoot);
+              await applyJavaProjection(engine, profile.workspaceViewRoot, packRoot, context.globalStorageUri.fsPath);
             }
           }
           return {

@@ -14,7 +14,9 @@ export async function applyJavaProjection(
   engine: EngineClient,
   workspaceRoot: string,
   metadataPackRoot: string,
+  cacheRoot: string,
 ): Promise<JavaProjectionSummary> {
+  const generated = await engine.materializeGenerated(metadataPackRoot, cacheRoot);
   const catalog = await engine.modulesCatalog(metadataPackRoot);
   const closure = await engine.modulesClosure(
     metadataPackRoot,
@@ -22,7 +24,8 @@ export async function applyJavaProjection(
   );
   const sourcePaths = new Set<string>();
   const referencedLibraries = new Set<string>();
-  let skipped = closure.diagnostics.length;
+  let skipped = closure.diagnostics.length + generated.diagnostics.length;
+  for (const sourceRoot of generated.sourceRoots) sourcePaths.add(sourceRoot.root);
   for (const module of closure.modules) {
     for (const ref of [...(module.sourceRoots ?? []), ...(module.sources ?? [])]) {
       const pathName = resolveRepoPath(workspaceRoot, ref);
