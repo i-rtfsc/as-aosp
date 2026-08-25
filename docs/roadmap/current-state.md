@@ -14,7 +14,7 @@
 - 根目录、Makefile、Phase 0 CLI、`aosp-index serve --stdio`、JetBrains 251 bootstrap 和 VS Code TypeScript bootstrap 已完成；ModuleRootModel/Workspace Model bridge、首个 clangd compdb overlay 和 VS Code engine status UI 已具备，完整 AIDL PSI 和远程执行入口尚未实现。
 - WorkspaceTopology、PathMapper、SourceMount 和四类 metadata reader 已有初始实现，但真实 AOSP schema 覆盖、路径映射接线和完整 topology 发现仍未闭合。
 - AIDL source parser/index、exact type ranges、references、generated peers 和 JNI source-only links 已接入 daemon；JetBrains/VS Code adapters 已有首个导航切片，但真实 IDE host、Android Studio verifier 和完整语言 UI 尚未闭合。
-- Metadata Pack 首个 export slice 已实现：默认 Core JSON + Java/AIDL generated srcjar，`--native` 附加 CC/compdb；ModuleCatalog、pack import 和 IDE project projection 尚未实现。
+- Metadata Pack 首个 export slice 已实现：默认 Core JSON + Java/AIDL generated srcjar，`--native` 附加 CC/compdb；VS Code 已有首个 source-root projection，完整 pack import 和 IDE project projection 尚未闭合。
 - `aosp-index` CLI 使用指南和 `pack validate` 已加入，用户可以从 Linux out 导出并校验可复制 Metadata Pack。
 - `core/modules` 首个 ModuleCatalog slice 已实现，可合并 Java/CC/module-info facts 并计算依赖闭包；尚未接入 IDE project projection。
 - daemon 已提供 `aosp/modules/catalog|get|closure`，可从显式 Metadata Pack
@@ -32,6 +32,9 @@
 - 当前 JetBrains 插件已有 descriptor、Kotlin RPC framing/lifecycle client、EngineProcess、project-local profile state、profile UI、focused root planner/非持久投影模块、source-only AIDL fallback、异步 AIDL definition/generated peer/references 和 JNI peer actions，并查找公共 `engines/aosp-index`；VS Code 已有 Java/Kotlin source-only type fallback、AIDL providers、AIDL generated peer/JNI commands 和 JNI DefinitionProvider；仍没有 AIDL PSI 或 JNI gutter；
 - 当前 `aosp-index serve --stdio` 已启用 initialize、shutdown、profile validate、topology discover/validate、ModuleCatalog 查询、`aosp/jni/peers`、`aosp/aidl/resolve`、`aosp/aidl/peers` 和 `aosp/aidl/references`；长期增量索引尚未启用；
 - IndexCoordinator 首个状态 slice 已启用 `aosp/index/start|rebuild|status|cancel`；它能从 Metadata Pack 产生阶段、进度、模块和 generated 计数，尚未投影 Java source roots 或 IDE 原生索引。
+- VS Code 在 coordinator 完成后已把可证明的 RepoPath source roots 投影到
+  `java.project.sourcePaths`；构建机绝对路径不会写入本机配置，完整 srcjar 解压和
+  Java LS classpath 仍未闭合。
 - 当前 JNI 只覆盖 Java/Kotlin declaration、静态导出、常见 `JNINativeMethod` 注册表和有限注册调用；复杂宏、运行时 class 解析和完整 C++ 语义仍未覆盖；
 - 当前已有本地六平台 engine/JetBrains ZIP/VS Code VSIX 打包入口，以及 VS Code 显式/bundled/PATH engine 选择逻辑；尚未完成把 bundled engine 嵌入 VSIX、签名、公证、发布版下载和 marketplace verifier；
 - 当前没有任何远程执行服务；

@@ -10,6 +10,8 @@
 - engine lifecycle/RPC；
 - IDE source root/project view；
 - Java/Kotlin 原生语言能力接线；
+- VS Code Java projection 只写入经 RepoPath 证明的 workspace source roots；构建机绝对路径
+  不直接进入本机 `java.project` 配置，pack 中的本机可解析 libraries 才作为 referenced libraries。
 - AIDL PSI 或 LSP；
 - clangd 配置；
 - JNI 跨语言导航命令。

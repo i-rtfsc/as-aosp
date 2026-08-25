@@ -34,6 +34,8 @@
 - 保留用户现有模块，不把 canonical root 注册为 content root；
 - 对 selected module closure 创建 focused modules；
 - 验收：无需旧 Gradle 脚本，framework Java source root 和 generated peer 可由 IDE 原生索引。
+- 当前切片先完成 VS Code `java.project.sourcePaths` 投影；generated srcjar 解压和
+  Java LS 完整 classpath 作为下一验收。
 
 ## Phase 5：VS Code language integration
 
