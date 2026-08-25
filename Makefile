@@ -1,4 +1,4 @@
-.PHONY: help fmt fmt-check vet test-core test-protocol test-jetbrains test-vscode package package-vscode-local install-vscode smoke metadata-smoke aidl-smoke jni-smoke pack-smoke rpc-smoke commit-message-check check
+.PHONY: help fmt fmt-check vet test-core test-protocol test-jetbrains test-vscode package package-vscode-local install-vscode smoke metadata-smoke aidl-smoke jni-smoke pack-smoke pack-validate-smoke rpc-smoke commit-message-check check
 
 help:
 	@printf '%s\n' 'make fmt                  Format Go source' 'make fmt-check            Check Go formatting' 'make vet                   Run Go static checks' 'make test-core             Run core tests' 'make test-protocol         Run protocol tests' 'make test-jetbrains        Run JetBrains tests' 'make test-vscode           Run VS Code tests' 'make smoke                 Run CLI fixture smoke' 'make metadata-smoke        Read metadata fixture' 'make aidl-smoke             Read AIDL fixture' 'make jni-smoke              Read JNI fixture' 'make rpc-smoke             Run JSON-RPC daemon smoke' 'make commit-message-check  Check message width and Change-Id' 'make check                 Run all checks'
@@ -51,10 +51,13 @@ jni-smoke:
 pack-smoke:
 	go test ./cmd/aosp-index -run '^TestExportPack' -count=1
 
+pack-validate-smoke:
+	go test ./cmd/aosp-index -run '^TestExportPack' -count=1
+
 rpc-smoke:
 	go test ./cmd/aosp-index -run '^TestServeJSONRPCSmoke$$' -count=1
 
 commit-message-check:
 	bash scripts/check-commit-messages.sh
 
-check: fmt-check vet test-core test-protocol test-vscode smoke metadata-smoke aidl-smoke jni-smoke pack-smoke rpc-smoke commit-message-check
+check: fmt-check vet test-core test-protocol test-vscode smoke metadata-smoke aidl-smoke jni-smoke pack-smoke pack-validate-smoke rpc-smoke commit-message-check

@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"errors"
 	"flag"
+	"fmt"
 	"io"
 	"os"
 	"path/filepath"
@@ -25,8 +26,12 @@ type packManifest struct {
 }
 
 func runPack(args []string) {
-	if len(args) == 0 || args[0] != "export" {
-		fatal(errors.New("usage: aosp-index pack export --aosp-root <root> --out-root <out> --destination <dir> [--native] [--module name]"))
+	if len(args) == 0 || (args[0] != "export" && args[0] != "validate") {
+		fatal(errors.New("usage: aosp-index pack <export|validate> ..."))
+	}
+	if args[0] == "validate" {
+		runPackValidate(args[1:])
+		return
 	}
 	flags := flag.NewFlagSet("pack export", flag.ExitOnError)
 	aospRoot := flags.String("aosp-root", "", "AOSP source root")
@@ -145,6 +150,55 @@ func exportPack(aospRoot, outRoot, destination string, native bool, modules []st
 	}
 	_ = os.RemoveAll(destination)
 	return os.Rename(tmp, destination)
+}
+
+func runPackValidate(args []string) {
+	flags := flag.NewFlagSet("pack validate", flag.ExitOnError)
+	root := flags.String("root", "", "Metadata pack root")
+	_ = flags.Parse(args)
+	if *root == "" {
+		fatal(errors.New("--root is required"))
+	}
+	if err := validatePack(*root); err != nil {
+		fatal(err)
+	}
+}
+
+func validatePack(root string) error {
+	for _, file := range []string{"manifest.json", "checksums.sha256", filepath.Join("generated", "manifest.json")} {
+		if _, err := os.Stat(filepath.Join(root, file)); err != nil {
+			return fmt.Errorf("pack file missing: %s", file)
+		}
+	}
+	data, err := os.ReadFile(filepath.Join(root, "manifest.json"))
+	if err != nil {
+		return err
+	}
+	var manifest packManifest
+	if err := json.Unmarshal(data, &manifest); err != nil {
+		return fmt.Errorf("manifest parse failed: %w", err)
+	}
+	if manifest.SchemaVersion != 1 {
+		return fmt.Errorf("unsupported pack schema: %d", manifest.SchemaVersion)
+	}
+	checksums, err := os.ReadFile(filepath.Join(root, "checksums.sha256"))
+	if err != nil {
+		return err
+	}
+	for _, line := range strings.Split(strings.TrimSpace(string(checksums)), "\n") {
+		parts := strings.SplitN(line, "  ", 2)
+		if len(parts) != 2 {
+			return fmt.Errorf("invalid checksum line")
+		}
+		sum, err := fileSHA256(filepath.Join(root, filepath.FromSlash(parts[1])))
+		if err != nil {
+			return err
+		}
+		if sum != parts[0] {
+			return fmt.Errorf("checksum mismatch: %s", parts[1])
+		}
+	}
+	return nil
 }
 
 func findPackMetadata(outRoot, relative string) (string, bool) {

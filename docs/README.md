@@ -20,6 +20,7 @@
 13. [Build Facts 驱动导航决策](decisions/build-facts-driven-navigation.md)。
 14. [AOSP Metadata Pack 设计](design/aosp-metadata-pack-design.md)。
 15. [Build Facts 迁移实施计划](roadmap/build-facts-migration-plan.md)。
+16. [aosp-index CLI 使用指南](engineering/aosp-index-cli-guide.md)。
 
 ## 2. 文档权威性
 

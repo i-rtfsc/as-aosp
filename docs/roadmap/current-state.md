@@ -15,6 +15,7 @@
 - WorkspaceTopology、PathMapper、SourceMount 和四类 metadata reader 已有初始实现，但真实 AOSP schema 覆盖、路径映射接线和完整 topology 发现仍未闭合。
 - AIDL source parser/index、exact type ranges、references、generated peers 和 JNI source-only links 已接入 daemon；JetBrains/VS Code adapters 已有首个导航切片，但真实 IDE host、Android Studio verifier 和完整语言 UI 尚未闭合。
 - Metadata Pack 首个 export slice 已实现：默认 Core JSON + Java/AIDL generated srcjar，`--native` 附加 CC/compdb；ModuleCatalog、pack import 和 IDE project projection 尚未实现。
+- `aosp-index` CLI 使用指南和 `pack validate` 已加入，用户可以从 Linux out 导出并校验可复制 Metadata Pack。
 
 ## 3. Target
 
