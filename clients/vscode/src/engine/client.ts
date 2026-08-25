@@ -80,6 +80,14 @@ export interface GeneratedMaterializeResult {
   diagnostics: unknown[];
 }
 
+export interface PackInfoResult {
+  schemaVersion: number;
+  aospRoot?: string;
+  outRoot?: string;
+  packs: string[];
+  diagnostics: unknown[];
+}
+
 export class EngineClient {
   private process?: ChildProcessWithoutNullStreams;
   private startPromise?: Promise<void>;
@@ -188,6 +196,10 @@ export class EngineClient {
 
   async materializeGenerated(metadataPackRoot: string, cacheRoot: string): Promise<GeneratedMaterializeResult> {
     return this.request("aosp/generated/materialize", { metadataPackRoot, cacheRoot });
+  }
+
+  async packInfo(metadataPackRoot: string): Promise<PackInfoResult> {
+    return this.request("aosp/pack/info", { metadataPackRoot });
   }
 
   private request(method: string, params: unknown): Promise<any> {

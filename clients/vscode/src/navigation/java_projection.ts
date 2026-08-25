@@ -20,6 +20,7 @@ export async function applyJavaProjection(
   outRoot = "",
 ): Promise<JavaProjectionSummary> {
   const generated = await engine.materializeGenerated(metadataPackRoot, cacheRoot);
+  const packInfo = await engine.packInfo(metadataPackRoot);
   const catalog = await engine.modulesCatalog(metadataPackRoot);
   const closure = await engine.modulesClosure(
     metadataPackRoot,
@@ -27,7 +28,7 @@ export async function applyJavaProjection(
   );
   const sourcePaths = new Set<string>();
   const referencedLibraries = new Set<string>();
-  let skipped = closure.diagnostics.length + generated.diagnostics.length;
+  let skipped = closure.diagnostics.length + generated.diagnostics.length + packInfo.diagnostics.length;
   for (const sourceRoot of generated.sourceRoots) sourcePaths.add(sourceRoot.root);
   for (const module of closure.modules) {
     for (const ref of [...(module.sourceRoots ?? []), ...(module.sources ?? [])]) {
@@ -36,7 +37,7 @@ export async function applyJavaProjection(
       else skipped++;
     }
     for (const ref of [...(module.jars ?? []), ...(module.srcjars ?? [])]) {
-      const pathName = resolveLocalPath(metadataPackRoot, outRoot, ref);
+      const pathName = resolveLocalPath(metadataPackRoot, outRoot, packInfo.outRoot, ref);
       if (pathName) referencedLibraries.add(pathName);
       else skipped++;
     }
@@ -55,7 +56,7 @@ function resolveRepoPath(workspaceRoot: string, ref: PathRef): string | undefine
   return resolveRepoProjectionPath(workspaceRoot, ref);
 }
 
-function resolveLocalPath(packRoot: string, outRoot: string, ref: PathRef): string | undefined {
+function resolveLocalPath(packRoot: string, outRoot: string, packOutRoot: string | undefined, ref: PathRef): string | undefined {
   let candidate: string | undefined;
   if (ref.kind === "external-absolute" && ref.raw) candidate = ref.raw;
   if ((ref.kind === "repo-relative" || ref.kind === "generated") && ref.raw && !ref.raw.includes("..")) {
@@ -63,8 +64,12 @@ function resolveLocalPath(packRoot: string, outRoot: string, ref: PathRef): stri
   }
   if (candidate && fs.existsSync(candidate)) return candidate;
   if (outRoot && ref.raw && !ref.raw.includes("..")) {
-    const fallback = path.join(outRoot, ...ref.raw.replaceAll("\\", "/").split("/"));
-    if (fs.existsSync(fallback)) return fallback;
+    const normalized = ref.raw.replaceAll("\\", "/");
+    if (packOutRoot && normalized.startsWith(packOutRoot.replaceAll("\\", "/") + "/")) {
+      const suffix = normalized.slice(packOutRoot.replaceAll("\\", "/").length + 1);
+      const fallback = path.join(outRoot, ...suffix.split("/"));
+      if (fs.existsSync(fallback)) return fallback;
+    }
   }
   return undefined;
 }

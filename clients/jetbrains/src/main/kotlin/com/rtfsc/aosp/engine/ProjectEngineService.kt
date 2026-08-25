@@ -57,6 +57,11 @@ internal class ProjectEngineService(
         return engineProcess.request("aosp/generated/materialize", params)
     }
 
+    fun packInfo(params: String): ByteArray {
+        if (!engineProcess.isRunning) start()
+        return engineProcess.request("aosp/pack/info", params)
+    }
+
     override fun dispose() {
         stop()
     }

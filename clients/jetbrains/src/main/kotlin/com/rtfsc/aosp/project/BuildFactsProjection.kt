@@ -34,6 +34,8 @@ internal object BuildFactsProjection {
         if (packRoot.isEmpty()) {
             return BuildFactsProjectionResult(emptyList(), emptyList(), emptyList(), 0, listOf("Metadata Pack Root is required."))
         }
+        val packInfoParams = mapper.writeValueAsString(mapOf("metadataPackRoot" to packRoot))
+        val packInfo = mapper.readTree(engine.packInfo(packInfoParams)).path("result")
         val catalogParams = mapper.writeValueAsString(mapOf("metadataPackRoot" to packRoot))
         val catalog = mapper.readTree(engine.modulesCatalog(catalogParams)).path("result")
         val diagnostics = mutableListOf<String>()
@@ -49,7 +51,7 @@ internal object BuildFactsProjection {
         for (item in closure.path("modules")) {
             collectRepoRoots(item.path("sourceRoots"), workspaceRoot, sourceRoots, skipped)
             collectRepoRoots(item.path("sources"), workspaceRoot, sourceRoots, skipped)
-            collectLibraries(item.path("jars"), workspaceRoot, packRoot, state.outRoot, libraries, skipped)
+            collectLibraries(item.path("jars"), workspaceRoot, packRoot, packInfo.path("outRoot").asText(), state.outRoot, libraries, skipped)
         }
         val generatedParams = mapper.writeValueAsString(
             mapOf("metadataPackRoot" to packRoot, "cacheRoot" to cacheRoot.toString()),
@@ -90,6 +92,7 @@ internal object BuildFactsProjection {
         workspaceRoot: Path,
         packRoot: String,
         outRoot: String,
+        packOutRoot: String,
         libraries: MutableSet<Path>,
         skipped: IntArray,
     ) {
@@ -102,8 +105,14 @@ internal object BuildFactsProjection {
                 "external-absolute" -> Paths.get(raw)
                 else -> null
             }?.normalize()
-            if (candidate != null && Files.isRegularFile(candidate) && candidate.toString().endsWith(".jar")) {
-                libraries.add(candidate)
+            val relocated = if (outRoot.isNotBlank() && packOutRoot.isNotBlank() &&
+                raw.startsWith(packOutRoot.trimEnd('/', '\\') + java.io.File.separator) &&
+                !Files.isRegularFile(candidate)) {
+                val suffix = raw.removePrefix(packOutRoot.trimEnd('/', '\\') + java.io.File.separator)
+                Paths.get(outRoot).resolve(suffix.replace('/', java.io.File.separatorChar)).normalize()
+            } else candidate
+            if (relocated != null && Files.isRegularFile(relocated) && relocated.toString().endsWith(".jar")) {
+                libraries.add(relocated)
             } else if (outRoot.isNotBlank() || raw.isNotBlank()) {
                 skipped[0]++
             }

@@ -52,6 +52,10 @@ internal class EngineRpcClient(
         return request(method = "aosp/generated/materialize", params = params)
     }
 
+    fun packInfo(params: String): ByteArray {
+        return request(method = "aosp/pack/info", params = params)
+    }
+
     fun request(method: String, params: String): ByteArray {
         val id = nextId.getAndIncrement()
         val payload = "{" +
