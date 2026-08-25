@@ -1,0 +1,23 @@
+clients/vscode/src/ui/profile_panel.ts
+  s_0fcc3f909ad4ee::t_b02cf149e91577 5-8,43-54,102,105-106
+clients/vscode/src/extension.ts
+  s_0fcc3f909ad4ee::t_eaab2d66fbe787 24-34
+docs/roadmap/current-state.md
+  s_0fcc3f909ad4ee::t_080a59309e9fe8 21-22
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "8d16087a2588b7c1bb963482e5f7334e555600f5",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
