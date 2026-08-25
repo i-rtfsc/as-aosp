@@ -18,7 +18,8 @@
 - `aosp-index` CLI 使用指南和 `pack validate` 已加入，用户可以从 Linux out 导出并校验可复制 Metadata Pack。
 - `core/modules` 首个 ModuleCatalog slice 已实现，可合并 Java/CC/module-info facts 并计算依赖闭包；尚未接入 IDE project projection。
 - daemon 已提供 `aosp/modules/catalog|get|closure`，可从显式 Metadata Pack
-  返回稳定排序的模块摘要、单模块 facts 和依赖闭包；两个 IDE 客户端尚未消费。
+  返回稳定排序的模块摘要、单模块 facts 和依赖闭包；VS Code 侧边栏已能
+  主动检查 pack 并显示模块、generated 和 diagnostics 数量。
 
 ## 3. Target
 

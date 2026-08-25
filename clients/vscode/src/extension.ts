@@ -15,15 +15,23 @@ export function activate(context: vscode.ExtensionContext): void {
   const engine = new EngineClient();
   const output = vscode.window.createOutputChannel("AOSP IDE");
   output.appendLine("AOSP Workspace extension activated");
-  const profileView = new ProfileViewProvider(context);
   context.subscriptions.push(output);
-  context.subscriptions.push(vscode.window.registerWebviewViewProvider("aospWorkspace.setup", profileView));
-  context.subscriptions.push(createAospStatusBar(engine, output));
   const ensureEngine = async (): Promise<void> => {
     const configured = vscode.workspace.getConfiguration("aospIde").get<string>("engineExecutable");
     const executable = resolveEngineExecutable({ configured, extensionPath: context.extensionPath });
     await engine.start(executable);
   };
+  const profileView = new ProfileViewProvider(context, async (metadataPackRoot) => {
+    await ensureEngine();
+    const result = await engine.modulesCatalog(metadataPackRoot);
+    return {
+      modules: result.modules.length,
+      generated: result.modules.reduce((total, module) => total + module.generated, 0),
+      diagnostics: result.diagnostics.length,
+    };
+  });
+  context.subscriptions.push(vscode.window.registerWebviewViewProvider("aospWorkspace.setup", profileView));
+  context.subscriptions.push(createAospStatusBar(engine, output));
   context.subscriptions.push(
     vscode.languages.registerDefinitionProvider({ language: "aidl" }, {
       provideDefinition: async (...args) => {
