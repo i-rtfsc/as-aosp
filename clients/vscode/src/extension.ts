@@ -13,6 +13,7 @@ import { detectOut } from "./ui/overview";
 export function activate(context: vscode.ExtensionContext): void {
   const engine = new EngineClient();
   const output = vscode.window.createOutputChannel("AOSP IDE");
+  output.appendLine("AOSP Workspace extension activated");
   const profileView = new ProfileViewProvider(context);
   context.subscriptions.push(output);
   context.subscriptions.push(vscode.window.registerWebviewViewProvider("aospWorkspace.setup", profileView));

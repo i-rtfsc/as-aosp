@@ -12,6 +12,7 @@
   "activationEvents": [
     "workspaceContains:**/*",
     "onStartupFinished",
+    "onView:aospWorkspace.setup",
     "onLanguage:aidl",
     "onCommand:aospIde.goToJniPeer",
     "onCommand:aospIde.goToAidlGeneratedPeer",
