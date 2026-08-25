@@ -1,0 +1,45 @@
+protocol/aosp/index.go
+  s_0fcc3f909ad4ee::t_aec9aaeef358d9 1-72,77-152,154-169
+  s_0fcc3f909ad4ee::t_83300fa1072128 73-76,153
+clients/vscode/src/ui/profile_panel.ts
+  s_0fcc3f909ad4ee::t_4d506ed36d3409 8,56-62
+  s_0fcc3f909ad4ee::t_a5499f149f9ba8 113,116-117
+  s_0fcc3f909ad4ee::t_754b0eb1bf16cd 63-64
+clients/vscode/src/engine/client.ts
+  s_0fcc3f909ad4ee::t_4d506ed36d3409 52-63,158-164
+  s_49c115a093dc57::t_0cf8b1803fc5df 165
+protocol/aosp/server_test.go
+  s_0fcc3f909ad4ee::t_83300fa1072128 8,103-156
+  s_0fcc3f909ad4ee::t_ab39d996109655 11
+  s_0fcc3f909ad4ee::t_eaf557a1756bab 157
+clients/vscode/src/extension.ts
+  s_0fcc3f909ad4ee::t_84e7b7bb9ea37a 32-51
+docs/roadmap/current-state.md
+  s_0fcc3f909ad4ee::t_e71bc38095eaa2 34
+protocol/aosp/server.go
+  s_0fcc3f909ad4ee::t_aec9aaeef358d9 27,69,143-150,179
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "ac74d87d34491ae1df076e8d39e07fc1f54c1d07",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    },
+    "s_49c115a093dc57": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a031a2-e317-7a43-aaea-11b526d619e4",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
