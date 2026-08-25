@@ -7,6 +7,7 @@ import { goToJniPeer, JniDefinitionProvider } from "./navigation/jni";
 import { refreshCompdbOverlay } from "./navigation/compdb";
 import { createAospStatusBar } from "./status";
 import { resolveEngineExecutable } from "./engine/resolve";
+import { openProfilePanel } from "./ui/profile_panel";
 
 export function activate(context: vscode.ExtensionContext): void {
   const engine = new EngineClient();
@@ -59,6 +60,7 @@ export function activate(context: vscode.ExtensionContext): void {
       output.appendLine(`status: ${engine.status.state}${engine.status.error ? ` (${engine.status.error})` : ""}`);
       output.show(true);
     }),
+    vscode.commands.registerCommand("aospIde.openProfile", () => openProfilePanel(context)),
     vscode.workspace.onDidChangeConfiguration((event) => {
       if (event.affectsConfiguration("aospIde.engineExecutable") ||
         event.affectsConfiguration("aospIde.workspaceViewRoot") ||

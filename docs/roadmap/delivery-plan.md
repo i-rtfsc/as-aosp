@@ -46,7 +46,7 @@
 
 - 目标：VS Code extension、AIDL LSP、clangd compdb overlay 和 JNI commands。
 - 技术前置：AIDL-01、JNI-01、metadata reader。
-- 当前切片：TypeScript extension、统一 engine framing、AIDL DefinitionProvider 和 JNI peer command。
+- 当前切片：TypeScript extension、统一 engine framing、AIDL/JNI providers、compdb overlay 和图形 profile panel。
 - 下一验收：`npm run host-test` Extension Host fixture、engine status UI 和 clangd database。
 
 ## P2：外部环境

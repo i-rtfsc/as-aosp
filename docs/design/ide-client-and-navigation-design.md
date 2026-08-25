@@ -186,6 +186,7 @@ src/engine/client.ts      aosp-index 生命周期和 typed requests
 src/navigation/paths.ts   Workspace View 与 RepoPath 映射
 src/navigation/aidl.ts    AIDL definition 请求和目标打开
 src/navigation/jni.ts     JNI peer command 和目标打开
+src/ui/profile_panel.ts   Workspace View/profile 图形配置页
 ```
 
 extension 不实现 AIDL/JNI parser。AIDL DefinitionProvider 和 JNI command 都只发送
@@ -198,6 +199,11 @@ VS Code 路径 adapter 必须先验证 engine 返回的 RepoPath：拒绝绝对�
 盘符、UNC、空路径、`.`、`..` 和任何 escaping segment，再按当前平台路径 API 映射
 到 Workspace View。测试同时使用 `path.posix` 与 `path.win32`，不能只在开发机平台
 上验证斜杠。固定排除目录不能成为导航输入或目标。
+
+VS Code profile 配置使用 Webview panel，不要求用户编辑 Settings JSON。面板提供
+Workspace View、metadata/out、engine executable 和 path mappings 字段，并提供目录
+选择、保存、验证、刷新 compdb、打开状态等按钮。保存写入 workspace-scoped
+`aospIde.*` 配置；JSON 仍作为兼容底层存储，不作为产品主入口。
 
 ## 4. AIDL navigation
 
