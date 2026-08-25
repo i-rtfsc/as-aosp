@@ -1,0 +1,20 @@
+cmd/aosp-index/pack_test.go
+  s_0fcc3f909ad4ee::t_619ec244dbceb7 54-56,58-60,62-64
+  s_0fcc3f909ad4ee::t_4f21dc65a9dd27 53,57,61,65-66
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "4440cb79126a677103d62f824d873597b3110062",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
