@@ -49,6 +49,20 @@ export interface ModulesCatalogResult {
   diagnostics: unknown[];
 }
 
+export interface ModuleFact {
+  name: string;
+  sourceRoots?: Array<{ raw: string; kind: string; repoPath?: string }>;
+  sources?: Array<{ raw: string; kind: string; repoPath?: string }>;
+  generated?: Array<{ raw: string; kind: string; repoPath?: string }>;
+  jars?: Array<{ raw: string; kind: string; repoPath?: string }>;
+  srcjars?: Array<{ raw: string; kind: string; repoPath?: string }>;
+}
+
+export interface ModulesClosureResult {
+  modules: ModuleFact[];
+  diagnostics: unknown[];
+}
+
 export interface IndexSnapshot {
   profileId?: string;
   state: string;
@@ -153,6 +167,10 @@ export class EngineClient {
 
   async modulesCatalog(metadataPackRoot: string): Promise<ModulesCatalogResult> {
     return this.request("aosp/modules/catalog", { metadataPackRoot });
+  }
+
+  async modulesClosure(metadataPackRoot: string, names: string[]): Promise<ModulesClosureResult> {
+    return this.request("aosp/modules/closure", { metadataPackRoot, names });
   }
 
   async startIndex(profile: unknown, rebuild = false): Promise<IndexSnapshot> {

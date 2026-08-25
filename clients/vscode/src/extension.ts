@@ -10,6 +10,7 @@ import { resolveEngineExecutable } from "./engine/resolve";
 import { openProfilePanel, ProfileViewProvider } from "./ui/profile_panel";
 import { detectOut } from "./ui/overview";
 import { JavaSourceDefinitionProvider } from "./navigation/java";
+import { applyJavaProjection } from "./navigation/java_projection";
 
 export function activate(context: vscode.ExtensionContext): void {
   const engine = new EngineClient();
@@ -41,6 +42,28 @@ export function activate(context: vscode.ExtensionContext): void {
       buildIntegration: { mode: "read-only" },
     };
     const status = await engine.startIndex(profile, rebuild);
+    if (status.state === "running") {
+      for (let attempt = 0; attempt < 40; attempt++) {
+        await new Promise((resolve) => setTimeout(resolve, 50));
+        const current = await engine.indexStatus();
+        if (current.state !== "running") {
+          if (current.state === "ready" || current.state === "partial") {
+            const packRoot = profile.metadataPackRoot;
+            if (packRoot && profile.workspaceViewRoot) {
+              await applyJavaProjection(engine, profile.workspaceViewRoot, packRoot);
+            }
+          }
+          return {
+            state: current.state,
+            stage: current.stage,
+            progress: current.progress,
+            modules: current.moduleCount,
+            generated: current.generatedCount,
+            diagnostics: current.diagnostics.length,
+          };
+        }
+      }
+    }
     return {
       state: status.state,
       stage: status.stage,
