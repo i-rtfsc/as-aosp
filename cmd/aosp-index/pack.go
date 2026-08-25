@@ -13,6 +13,9 @@ import (
 	"path/filepath"
 	"sort"
 	"strings"
+
+	"github.com/i-rtfsc/as-aosp/core/metadata"
+	coremodules "github.com/i-rtfsc/as-aosp/core/modules"
 )
 
 type packManifest struct {
@@ -78,6 +81,9 @@ func exportPack(aospRoot, outRoot, destination string, native bool, modules []st
 		if err := copyFile(source, target); err != nil {
 			return err
 		}
+	}
+	if err := writePackCatalog(tmp); err != nil {
+		return err
 	}
 	generatedManifest := make([]map[string]any, 0)
 	err = filepath.WalkDir(filepath.Join(outRoot, "soong", ".intermediates"), func(pathName string, entry os.DirEntry, walkErr error) error {
@@ -150,6 +156,30 @@ func exportPack(aospRoot, outRoot, destination string, native bool, modules []st
 	}
 	_ = os.RemoveAll(destination)
 	return os.Rename(tmp, destination)
+}
+
+func writePackCatalog(root string) error {
+	report := metadata.LoadDirectory(root)
+	catalog := coremodules.Build(report.Snapshot)
+	if err := os.MkdirAll(filepath.Join(root, "modules"), 0o755); err != nil {
+		return err
+	}
+	data, err := json.MarshalIndent(catalog, "", "  ")
+	if err != nil {
+		return err
+	}
+	if err := os.WriteFile(filepath.Join(root, "modules", "catalog.json"), append(data, '\n'), 0o644); err != nil {
+		return err
+	}
+	graph := make(map[string][]string, len(catalog.Modules))
+	for name, module := range catalog.Modules {
+		graph[name] = module.Dependencies
+	}
+	data, err = json.MarshalIndent(graph, "", "  ")
+	if err != nil {
+		return err
+	}
+	return os.WriteFile(filepath.Join(root, "modules", "dependency-graph.json"), append(data, '\n'), 0o644)
 }
 
 func runPackValidate(args []string) {

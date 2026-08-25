@@ -12,7 +12,7 @@
 
 ## Phase 2：Metadata Pack export/import
 
-- `aosp-index pack export` 和 `pack validate` 首个 Core/native slice 已实现；
+- `aosp-index pack export` 和 `pack validate` 首个 Core/native slice 已实现，并输出规范化 ModuleCatalog/dependency graph；
 - 默认收集 AIDL/R/sysprop/logtags/proto 等 Java generated srcjar 和 entry manifest；
 - 实现 manifest/checksum/目录校验；
 - 支持从 Linux out 导出并在另一个 Workspace View 导入；
