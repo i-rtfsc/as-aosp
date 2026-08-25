@@ -41,6 +41,8 @@
   focused module；完整 Workspace Model module closure 仍未闭合。
 - Metadata Pack identity RPC 已提供原始 `outRoot`，VS Code/JetBrains 仅在前缀可证明
   时将构建机 jar 重定位到本机 `outRoot`，不做 basename 猜测。
+- pack export 已包含 `aidl/symbols.json` 与 `aidl/modules.json`；VS Code AIDL definition
+  provider 配置 pack 后优先查询这些 facts，未配置 pack 时保留 workspace scan fallback。
 - 当前 JNI 只覆盖 Java/Kotlin declaration、静态导出、常见 `JNINativeMethod` 注册表和有限注册调用；复杂宏、运行时 class 解析和完整 C++ 语义仍未覆盖；
 - 当前已有本地六平台 engine/JetBrains ZIP/VS Code VSIX 打包入口，以及 VS Code 显式/bundled/PATH engine 选择逻辑；尚未完成把 bundled engine 嵌入 VSIX、签名、公证、发布版下载和 marketplace verifier；
 - 当前没有任何远程执行服务；
