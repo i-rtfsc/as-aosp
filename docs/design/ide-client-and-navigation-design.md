@@ -204,6 +204,8 @@ VS Code profile 配置使用 Webview panel，不要求用户编辑 Settings JSON
 Workspace View、metadata/out、engine executable 和 path mappings 字段，并提供目录
 选择、保存、验证、刷新 compdb、打开状态等按钮。保存写入 workspace-scoped
 `aospIde.*` 配置；JSON 仍作为兼容底层存储，不作为产品主入口。
+扩展在打开 workspace 且尚未配置 `workspaceViewRoot` 时自动打开该面板，并把当前
+workspace 文件夹预填为 Workspace View Root；已配置的 workspace 不重复弹出。
 
 ## 4. AIDL navigation
 

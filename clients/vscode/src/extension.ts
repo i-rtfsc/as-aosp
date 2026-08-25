@@ -71,6 +71,10 @@ export function activate(context: vscode.ExtensionContext): void {
     }),
     { dispose: () => void engine.stop() },
   );
+  const configuredRoot = vscode.workspace.getConfiguration("aospIde").get<string>("workspaceViewRoot")?.trim();
+  if (vscode.workspace.workspaceFolders?.length && !configuredRoot) {
+    setTimeout(() => openProfilePanel(context), 300);
+  }
 }
 
 export function deactivate(): void {

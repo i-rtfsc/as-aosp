@@ -4,7 +4,7 @@ export function openProfilePanel(context: vscode.ExtensionContext): void {
   const panel = vscode.window.createWebviewPanel("aospIdeProfile", "AOSP IDE Profile", vscode.ViewColumn.One, { enableScripts: true, retainContextWhenHidden: true });
   const config = vscode.workspace.getConfiguration("aospIde");
   const initial = {
-    workspaceViewRoot: config.get<string>("workspaceViewRoot") ?? "",
+    workspaceViewRoot: config.get<string>("workspaceViewRoot") || vscode.workspace.workspaceFolders?.[0]?.uri.fsPath || "",
     metadataRoot: config.get<string>("metadataRoot") ?? "",
     engineExecutable: config.get<string>("engineExecutable") ?? "",
     pathMappings: JSON.stringify(config.get<unknown[]>("pathMappings") ?? [], null, 2),

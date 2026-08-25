@@ -10,6 +10,7 @@
   },
   "categories": ["Programming Languages", "Other"],
   "activationEvents": [
+    "workspaceContains:**/*",
     "onLanguage:aidl",
     "onCommand:aospIde.goToJniPeer",
     "onCommand:aospIde.goToAidlGeneratedPeer",
