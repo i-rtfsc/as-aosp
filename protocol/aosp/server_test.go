@@ -166,6 +166,25 @@ func TestServerMaterializesPackSrcJars(t *testing.T) {
 	}
 }
 
+func TestServerResolvesAIDLFromPack(t *testing.T) {
+	pack := t.TempDir()
+	if err := os.MkdirAll(filepath.Join(pack, "aidl"), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	symbols := map[string][]aidl.Symbol{"demo.IFoo": {{CanonicalName: "demo.IFoo", Kind: aidl.SymbolInterface, Path: "demo/IFoo.aidl", Origin: "parser", Confidence: "exact"}}}
+	data, _ := json.Marshal(symbols)
+	if err := os.WriteFile(filepath.Join(pack, "aidl", "symbols.json"), data, 0o644); err != nil {
+		t.Fatal(err)
+	}
+	server := initializedServer(t)
+	response, _ := server.Handle(makeRequest(2, "aosp/aidl/pack/resolve", AIDLPackResolveParams{MetadataPackRoot: pack, Name: "demo.IFoo"}))
+	var result AIDLPackResolveResult
+	decodeResult(t, response, &result)
+	if result.State != aidl.ResolutionFound || len(result.Symbols) != 1 || len(result.Diagnostics) != 0 {
+		t.Fatalf("result=%+v", result)
+	}
+}
+
 func writeProtocolSrcJar(t *testing.T, pathName, entry, source string) {
 	t.Helper()
 	file, err := os.Create(pathName)

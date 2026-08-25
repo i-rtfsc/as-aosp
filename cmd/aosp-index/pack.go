@@ -14,7 +14,9 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/i-rtfsc/as-aosp/core/aidl"
 	"github.com/i-rtfsc/as-aosp/core/metadata"
+	"github.com/i-rtfsc/as-aosp/core/model"
 	coremodules "github.com/i-rtfsc/as-aosp/core/modules"
 )
 
@@ -113,6 +115,9 @@ func exportPack(aospRoot, outRoot, destination string, native bool, modules []st
 	if err := writePackCatalog(tmp); err != nil {
 		return err
 	}
+	if err := writeAIDLPack(aospRoot, tmp); err != nil {
+		return err
+	}
 	generatedManifest := make([]map[string]any, 0)
 	err = filepath.WalkDir(filepath.Join(outRoot, "soong", ".intermediates"), func(pathName string, entry os.DirEntry, walkErr error) error {
 		if walkErr != nil {
@@ -184,6 +189,55 @@ func exportPack(aospRoot, outRoot, destination string, native bool, modules []st
 	}
 	_ = os.RemoveAll(destination)
 	return os.Rename(tmp, destination)
+}
+
+func writeAIDLPack(aospRoot, destination string) error {
+	index := aidl.NewIndex()
+	err := filepath.WalkDir(aospRoot, func(pathName string, entry os.DirEntry, walkErr error) error {
+		if walkErr != nil || entry.IsDir() {
+			return nil
+		}
+		if strings.ToLower(filepath.Ext(entry.Name())) != ".aidl" {
+			return nil
+		}
+		relative, err := filepath.Rel(aospRoot, pathName)
+		if err != nil {
+			return err
+		}
+		repoPath, err := model.NormalizeRepoPath(filepath.ToSlash(relative))
+		if err != nil {
+			return nil
+		}
+		data, err := os.ReadFile(pathName)
+		if err != nil {
+			return nil
+		}
+		index.Add(aidl.Parse(repoPath, string(data)))
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+	if err := os.MkdirAll(filepath.Join(destination, "aidl"), 0o755); err != nil {
+		return err
+	}
+	symbols, err := json.MarshalIndent(index.Symbols, "", "  ")
+	if err != nil {
+		return err
+	}
+	if err := os.WriteFile(filepath.Join(destination, "aidl", "symbols.json"), append(symbols, '\n'), 0o644); err != nil {
+		return err
+	}
+	documents := make([]string, 0, len(index.Documents))
+	for path := range index.Documents {
+		documents = append(documents, string(path))
+	}
+	sort.Strings(documents)
+	data, err := json.MarshalIndent(documents, "", "  ")
+	if err != nil {
+		return err
+	}
+	return os.WriteFile(filepath.Join(destination, "aidl", "modules.json"), append(data, '\n'), 0o644)
 }
 
 func writePackCatalog(root string) error {

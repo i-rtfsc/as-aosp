@@ -152,6 +152,8 @@ func (server *Server) Handle(request jsonrpc.Request) (jsonrpc.Response, bool) {
 		response = server.generatedMaterialize(request)
 	case "aosp/pack/info":
 		response = server.packInfo(request)
+	case "aosp/aidl/pack/resolve":
+		response = server.aidlPackResolve(request)
 	default:
 		response = jsonrpc.Failure(request.ID, jsonrpc.MethodNotFound(request.Method))
 	}

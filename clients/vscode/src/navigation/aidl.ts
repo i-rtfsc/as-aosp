@@ -15,9 +15,15 @@ export class AidlDefinitionProvider implements vscode.DefinitionProvider {
     if (!root || !currentPath) return undefined;
     const word = document.getWordRangeAtPosition(position, /[A-Za-z_]\w*/);
     if (!word) return undefined;
-    const result = await this.engine.aidlResolve({ workspaceViewRoot: root, currentPath, name: document.getText(word) });
-    if (result.resolution.state !== "found" || result.resolution.symbols?.length !== 1) return undefined;
-    const symbol = result.resolution.symbols[0];
+    const name = document.getText(word);
+    const config = vscode.workspace.getConfiguration("aospIde");
+    const packRoot = config.get<string>("metadataPackRoot")?.trim();
+    const result = packRoot
+      ? await this.engine.aidlPackResolve(packRoot, name)
+      : await this.engine.aidlResolve({ workspaceViewRoot: root, currentPath, name });
+    const resolution = "resolution" in result ? result.resolution : result;
+    if (resolution.state !== "found" || resolution.symbols?.length !== 1) return undefined;
+    const symbol = resolution.symbols[0];
     const target = targetUri(root, symbol.path);
     if (!target) return undefined;
     const targetDocument = await vscode.workspace.openTextDocument(target);

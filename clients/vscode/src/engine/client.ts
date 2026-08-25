@@ -16,6 +16,12 @@ export interface AidlResolveResult {
   diagnostics: unknown[];
 }
 
+export interface AidlPackResolveResult {
+  state: string;
+  symbols?: Array<{ path: string; range: { start: { offset: number } } }>;
+  diagnostics: unknown[];
+}
+
 export interface JniPeersResult {
   peers: Array<{
     java: { path: string; range: { start: number } };
@@ -160,6 +166,10 @@ export class EngineClient {
 
   async aidlResolve(params: { workspaceViewRoot: string; currentPath: string; name: string }): Promise<AidlResolveResult> {
     return this.request("aosp/aidl/resolve", params);
+  }
+
+  async aidlPackResolve(metadataPackRoot: string, name: string): Promise<AidlPackResolveResult> {
+    return this.request("aosp/aidl/pack/resolve", { metadataPackRoot, name });
   }
 
   async jniPeers(params: { workspaceViewRoot: string; currentPath: string }): Promise<JniPeersResult> {
