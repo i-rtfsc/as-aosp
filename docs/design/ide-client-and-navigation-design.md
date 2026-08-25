@@ -173,7 +173,8 @@ Workspace Model bridge 使用同一个 `WorkspaceRootPlan`，不会重复扫描�
 - AIDL TextMate grammar + LSP Definition/References/Symbols；
 - clangd 消费 path-mapped compdb overlay；
 - JNI 使用 command/Definition provider；
-- Java/Kotlin 依赖用户已有 language server。
+- Java/Kotlin 优先使用用户已有 language server；没有 language server 时，VS Code 提供
+  focused Workspace View 内的 source-only 类型跳转 fallback，不声称完整语义分析。
 
 ### 3.1 首个 VS Code 实现切片
 

@@ -23,7 +23,7 @@
 ## 4. Negative capability
 
 - 当前不能在未配置 engine/profile 时打开完整 AOSP 并自动提供导航；
-- 当前 JetBrains 插件已有 descriptor、Kotlin RPC framing/lifecycle client、EngineProcess、project-local profile state、profile UI、focused root planner/非持久投影模块、source-only AIDL fallback、异步 AIDL definition/generated peer/references 和 JNI peer actions，并查找公共 `engines/aosp-index`；VS Code 已有 AIDL providers、AIDL generated peer/JNI commands 和 JNI DefinitionProvider；仍没有 AIDL PSI 或 JNI gutter；
+- 当前 JetBrains 插件已有 descriptor、Kotlin RPC framing/lifecycle client、EngineProcess、project-local profile state、profile UI、focused root planner/非持久投影模块、source-only AIDL fallback、异步 AIDL definition/generated peer/references 和 JNI peer actions，并查找公共 `engines/aosp-index`；VS Code 已有 Java/Kotlin source-only type fallback、AIDL providers、AIDL generated peer/JNI commands 和 JNI DefinitionProvider；仍没有 AIDL PSI 或 JNI gutter；
 - 当前 `aosp-index serve --stdio` 已启用 initialize、shutdown、profile validate、topology discover/validate、`aosp/jni/peers`、`aosp/aidl/resolve`、`aosp/aidl/peers` 和 `aosp/aidl/references`；长期增量索引尚未启用；
 - 当前 JNI 只覆盖 Java/Kotlin declaration、静态导出、常见 `JNINativeMethod` 注册表和有限注册调用；复杂宏、运行时 class 解析和完整 C++ 语义仍未覆盖；
 - 当前已有本地六平台 engine/JetBrains ZIP/VS Code VSIX 打包入口，以及 VS Code 显式/bundled/PATH engine 选择逻辑；尚未完成把 bundled engine 嵌入 VSIX、签名、公证、发布版下载和 marketplace verifier；

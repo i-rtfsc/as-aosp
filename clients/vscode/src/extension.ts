@@ -9,6 +9,7 @@ import { createAospStatusBar } from "./status";
 import { resolveEngineExecutable } from "./engine/resolve";
 import { openProfilePanel, ProfileViewProvider } from "./ui/profile_panel";
 import { detectOut } from "./ui/overview";
+import { JavaSourceDefinitionProvider } from "./navigation/java";
 
 export function activate(context: vscode.ExtensionContext): void {
   const engine = new EngineClient();
@@ -43,6 +44,10 @@ export function activate(context: vscode.ExtensionContext): void {
         return new JniDefinitionProvider(engine).provideDefinition(document, position, token);
       },
       }),
+    vscode.languages.registerDefinitionProvider(
+      [{ language: "java" }, { language: "kotlin" }],
+      new JavaSourceDefinitionProvider(),
+    ),
     vscode.commands.registerCommand("aospIde.goToJniPeer", async () => {
       await ensureEngine();
       await goToJniPeer(engine);
