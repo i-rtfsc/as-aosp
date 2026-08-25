@@ -6,6 +6,7 @@ data class EngineProfileState(
     var focusedSourcePaths: String = "",
     var canonicalRepoRoot: String = "",
     var outRoot: String = "",
+    var metadataPackRoot: String = "",
     var engineExecutable: String = "",
 ) {
     fun localValidationErrors(): List<String> {

@@ -15,6 +15,7 @@ export class ProfileViewProvider implements vscode.WebviewViewProvider {
     return {
       workspaceViewRoot: config.get<string>("workspaceViewRoot") || vscode.workspace.workspaceFolders?.[0]?.uri.fsPath || "",
       metadataRoot: config.get<string>("metadataRoot") ?? "",
+      metadataPackRoot: config.get<string>("metadataPackRoot") ?? "",
       engineExecutable: config.get<string>("engineExecutable") ?? "",
       pathMappings: JSON.stringify(config.get<unknown[]>("pathMappings") ?? [], null, 2),
     };
@@ -31,6 +32,7 @@ export class ProfileViewProvider implements vscode.WebviewViewProvider {
         const config = vscode.workspace.getConfiguration("aospIde");
         await config.update("workspaceViewRoot", message.workspaceViewRoot, vscode.ConfigurationTarget.Workspace);
         await config.update("metadataRoot", message.metadataRoot, vscode.ConfigurationTarget.Workspace);
+        await config.update("metadataPackRoot", message.metadataPackRoot, vscode.ConfigurationTarget.Workspace);
         await config.update("engineExecutable", message.engineExecutable, vscode.ConfigurationTarget.Workspace);
         await config.update("pathMappings", mappings, vscode.ConfigurationTarget.Workspace);
         void vscode.window.showInformationMessage("AOSP IDE profile saved.");
@@ -46,6 +48,7 @@ export function openProfilePanel(context: vscode.ExtensionContext): void {
   const initial = {
     workspaceViewRoot: config.get<string>("workspaceViewRoot") || vscode.workspace.workspaceFolders?.[0]?.uri.fsPath || "",
     metadataRoot: config.get<string>("metadataRoot") ?? "",
+    metadataPackRoot: config.get<string>("metadataPackRoot") ?? "",
     engineExecutable: config.get<string>("engineExecutable") ?? "",
     pathMappings: JSON.stringify(config.get<unknown[]>("pathMappings") ?? [], null, 2),
   };
@@ -60,6 +63,7 @@ export function openProfilePanel(context: vscode.ExtensionContext): void {
       try { mappings = JSON.parse(message.pathMappings || "[]"); } catch { void vscode.window.showErrorMessage("AOSP IDE pathMappings must be valid JSON."); return; }
       await config.update("workspaceViewRoot", message.workspaceViewRoot, vscode.ConfigurationTarget.Workspace);
       await config.update("metadataRoot", message.metadataRoot, vscode.ConfigurationTarget.Workspace);
+      await config.update("metadataPackRoot", message.metadataPackRoot, vscode.ConfigurationTarget.Workspace);
       await config.update("engineExecutable", message.engineExecutable, vscode.ConfigurationTarget.Workspace);
       await config.update("pathMappings", mappings, vscode.ConfigurationTarget.Workspace);
       void vscode.window.showInformationMessage("AOSP IDE profile saved.");
@@ -80,11 +84,11 @@ export function profileHtml(initial: Record<string, string>): string {
   <section class="hero"><span class="pill">SOURCE-READY</span><h1>AOSP Workspace</h1><p>Focused source navigation for AOSP, MIUI and QCOM</p></section>
   <div class="grid">
     <section class="card"><div class="eyebrow">WORKSPACE VIEW</div><div class="value" id="workspaceValue">${escapeHtml(initial.workspaceViewRoot)}</div><div class="hint"><span class="dot"></span>Only the visible folder is indexed. Symlinks and mounted repositories are supported.</div><div class="field"><label for="workspaceViewRoot">Workspace View Root</label><div class="row"><input id="workspaceViewRoot" value="${escapeHtml(initial.workspaceViewRoot)}"><button data-browse="workspaceViewRoot">Browse</button></div></div></section>
-    <section class="card"><div class="eyebrow">OUT / METADATA</div><div class="value" id="outValue">${initial.metadataRoot ? "BUILD-BACKED" : "SOURCE-ONLY"}</div><div class="hint">${initial.metadataRoot ? escapeHtml(initial.metadataRoot) : "No out configured yet. AIDL and JNI source navigation still works."}</div><div class="field"><label for="metadataRoot">Metadata / out Root</label><div class="row"><input id="metadataRoot" value="${escapeHtml(initial.metadataRoot)}"><button data-browse="metadataRoot">Browse</button></div></div></section>
+    <section class="card"><div class="eyebrow">OUT / METADATA</div><div class="value" id="outValue">${initial.metadataRoot ? "BUILD-BACKED" : "SOURCE-ONLY"}</div><div class="hint">${initial.metadataRoot ? escapeHtml(initial.metadataRoot) : "No out configured yet. AIDL and JNI source navigation still works."}</div><div class="field"><label for="metadataRoot">Out / compdb Root</label><div class="row"><input id="metadataRoot" value="${escapeHtml(initial.metadataRoot)}"><button data-browse="metadataRoot">Browse</button></div></div><div class="field"><label for="metadataPackRoot">Metadata Pack Root</label><div class="row"><input id="metadataPackRoot" value="${escapeHtml(initial.metadataPackRoot)}"><button data-browse="metadataPackRoot">Browse</button></div><div class="hint">Use a pack exported on another machine for module and generated-source facts.</div></div></section>
     <section class="card wide"><div class="eyebrow">NAVIGATION CAPABILITIES</div><div class="cap"><div><b><span class="ok">✓</span> AIDL definition</b><span class="hint">Package, import and type resolution</span></div><div><b><span class="ok">✓</span> AIDL references</b><span class="hint">Exact type ranges when available</span></div><div><b><span class="ok">✓</span> Generated peers</b><span class="hint">Java, C++ and NDK candidates</span></div><div><b><span class="ok">✓</span> JNI Java ↔ C++</b><span class="hint">Static and common registration forms</span></div></div></section>
     <section class="card wide"><div class="eyebrow">ADVANCED</div><div class="field"><label for="engineExecutable">Engine executable (optional)</label><input id="engineExecutable" value="${escapeHtml(initial.engineExecutable)}" placeholder="Bundled engine → engines/aosp-index → PATH"></div><div class="field"><label for="pathMappings">Path mappings</label><textarea id="pathMappings" rows="5">${escapeHtml(initial.pathMappings)}</textarea><div class="hint">Use JSON only when build-machine paths differ from this computer.</div></div></section>
   </div><div class="actions"><button class="primary" id="save">Save &amp; Verify Profile</button><button id="compdb">Refresh clangd Database</button><button id="status">Show Status</button></div><div class="footer">AOSP Workspace keeps configuration workspace-scoped. Reopen it from the AOSP Workspace icon in the Activity Bar.</div>
-  <script nonce="${nonce}">const api=acquireVsCodeApi();const $=id=>document.getElementById(id);document.querySelectorAll('[data-browse]').forEach(b=>b.onclick=()=>api.postMessage({type:'browse',field:b.dataset.browse}));$('save').onclick=()=>api.postMessage({type:'save',workspaceViewRoot:$('workspaceViewRoot').value,metadataRoot:$('metadataRoot').value,engineExecutable:$('engineExecutable').value,pathMappings:$('pathMappings').value});$('compdb').onclick=()=>api.postMessage({type:'command',command:'aospIde.refreshCompdbOverlay'});$('status').onclick=()=>api.postMessage({type:'command',command:'aospIde.showStatus'});$('workspaceViewRoot').oninput=e=>$('workspaceValue').textContent=e.target.value;window.addEventListener('message',e=>{if(e.data.type==='set'){ $(e.data.field).value=e.data.value;if(e.data.field==='workspaceViewRoot')$('workspaceValue').textContent=e.data.value}});</script></body></html>`;
+  <script nonce="${nonce}">const api=acquireVsCodeApi();const $=id=>document.getElementById(id);document.querySelectorAll('[data-browse]').forEach(b=>b.onclick=()=>api.postMessage({type:'browse',field:b.dataset.browse}));$('save').onclick=()=>api.postMessage({type:'save',workspaceViewRoot:$('workspaceViewRoot').value,metadataRoot:$('metadataRoot').value,metadataPackRoot:$('metadataPackRoot').value,engineExecutable:$('engineExecutable').value,pathMappings:$('pathMappings').value});$('compdb').onclick=()=>api.postMessage({type:'command',command:'aospIde.refreshCompdbOverlay'});$('status').onclick=()=>api.postMessage({type:'command',command:'aospIde.showStatus'});$('workspaceViewRoot').oninput=e=>$('workspaceValue').textContent=e.target.value;window.addEventListener('message',e=>{if(e.data.type==='set'){ $(e.data.field).value=e.data.value;if(e.data.field==='workspaceViewRoot')$('workspaceValue').textContent=e.data.value}});</script></body></html>`;
 }
 
 function escapeHtml(value: string): string { return value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;"); }

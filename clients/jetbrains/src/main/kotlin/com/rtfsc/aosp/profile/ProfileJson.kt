@@ -19,6 +19,7 @@ internal object ProfileJson {
                     ),
                     "canonicalRepoRoot" to state.canonicalRepoRoot,
                     "outRoot" to state.outRoot,
+                    "metadataPackRoot" to state.metadataPackRoot,
                     "visibilityPolicy" to mapOf("mode" to "strict-view"),
                     "buildIntegration" to mapOf("mode" to "read-only"),
                 ),

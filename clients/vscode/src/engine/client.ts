@@ -44,6 +44,11 @@ export interface CompdbOverlayResult {
   diagnostics: unknown[];
 }
 
+export interface ModulesCatalogResult {
+  modules: Array<{ name: string; sourceRoots: number; generated: number; dependencies: number }>;
+  diagnostics: unknown[];
+}
+
 export class EngineClient {
   private process?: ChildProcessWithoutNullStreams;
   private startPromise?: Promise<void>;
@@ -132,6 +137,10 @@ export class EngineClient {
 
   async compdbOverlay(params: { metadataRoot: string; workspaceViewRoot: string; pathMappings: unknown[] }): Promise<CompdbOverlayResult> {
     return this.request("aosp/compdb/overlay", params);
+  }
+
+  async modulesCatalog(metadataPackRoot: string): Promise<ModulesCatalogResult> {
+    return this.request("aosp/modules/catalog", { metadataPackRoot });
   }
 
   private request(method: string, params: unknown): Promise<any> {

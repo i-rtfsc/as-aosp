@@ -7,7 +7,7 @@
 Profile 至少包含：
 
 - schemaVersion、id；
-- workspaceViewRoot、canonicalRepoRoot、outRoot；
+- workspaceViewRoot、canonicalRepoRoot、outRoot、metadataPackRoot；
 - buildTarget product/release/variant；
 - scope include/exclude；
 - sourceMounts；

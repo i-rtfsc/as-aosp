@@ -66,6 +66,7 @@ export function activate(context: vscode.ExtensionContext): void {
       output.appendLine(`engine: ${config.get<string>("engineExecutable") || "aosp-index"}`);
       output.appendLine(`workspaceViewRoot: ${config.get<string>("workspaceViewRoot") || "<workspace>"}`);
       output.appendLine(`metadataRoot: ${config.get<string>("metadataRoot") || "<unset>"}`);
+      output.appendLine(`metadataPackRoot: ${config.get<string>("metadataPackRoot") || "<unset>"}`);
       output.appendLine(`status: ${engine.status.state}${engine.status.error ? ` (${engine.status.error})` : ""}`);
       output.show(true);
     }),
@@ -74,6 +75,7 @@ export function activate(context: vscode.ExtensionContext): void {
       if (event.affectsConfiguration("aospIde.engineExecutable") ||
         event.affectsConfiguration("aospIde.workspaceViewRoot") ||
         event.affectsConfiguration("aospIde.metadataRoot") ||
+        event.affectsConfiguration("aospIde.metadataPackRoot") ||
         event.affectsConfiguration("aospIde.pathMappings")) {
         void engine.stop();
       }

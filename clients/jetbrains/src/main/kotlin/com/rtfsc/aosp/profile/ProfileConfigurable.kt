@@ -31,6 +31,7 @@ internal class ProfileConfigurable(
     private val focusedSourcePaths = JBTextField()
     private val canonicalRepoRoot = TextFieldWithBrowseButton()
     private val outRoot = TextFieldWithBrowseButton()
+    private val metadataPackRoot = TextFieldWithBrowseButton()
     private val engineExecutable = TextFieldWithBrowseButton()
     private val validateButton = JButton("Validate")
     private val applyRootsButton = JButton("Apply Focused Roots")
@@ -41,6 +42,7 @@ internal class ProfileConfigurable(
         configureChooser(workspaceViewRoot, folderDescriptor())
         configureChooser(canonicalRepoRoot, folderDescriptor())
         configureChooser(outRoot, folderDescriptor())
+        configureChooser(metadataPackRoot, folderDescriptor())
         configureChooser(
             engineExecutable,
             FileChooserDescriptorFactory.createSingleFileOrExecutableAppDescriptor(),
@@ -53,6 +55,7 @@ internal class ProfileConfigurable(
             .addLabeledComponent(JLabel("Focused Source Paths"), focusedSourcePaths)
             .addLabeledComponent(JLabel("Canonical AOSP Root"), canonicalRepoRoot)
             .addLabeledComponent(JLabel("Out Root"), outRoot)
+            .addLabeledComponent(JLabel("Metadata Pack Root"), metadataPackRoot)
             .addLabeledComponent(JLabel("Engine Executable"), engineExecutable)
             .panel
         val actions = JPanel(FlowLayout(FlowLayout.LEFT))
@@ -76,6 +79,7 @@ internal class ProfileConfigurable(
             state.focusedSourcePaths = draft.focusedSourcePaths
             state.canonicalRepoRoot = draft.canonicalRepoRoot
             state.outRoot = draft.outRoot
+            state.metadataPackRoot = draft.metadataPackRoot
             state.engineExecutable = draft.engineExecutable
         }
     }
@@ -87,6 +91,7 @@ internal class ProfileConfigurable(
         focusedSourcePaths.text = state.focusedSourcePaths
         canonicalRepoRoot.text = state.canonicalRepoRoot
         outRoot.text = state.outRoot
+        metadataPackRoot.text = state.metadataPackRoot
         engineExecutable.text = state.engineExecutable
     }
 
@@ -101,6 +106,7 @@ internal class ProfileConfigurable(
             focusedSourcePaths = focusedSourcePaths.text,
             canonicalRepoRoot = canonicalRepoRoot.text,
             outRoot = outRoot.text,
+            metadataPackRoot = metadataPackRoot.text,
             engineExecutable = engineExecutable.text,
         )
     }

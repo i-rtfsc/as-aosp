@@ -42,6 +42,11 @@
           "default": "",
           "description": "AOSP out or metadata root containing compile_commands.json."
         },
+        "aospIde.metadataPackRoot": {
+          "type": "string",
+          "default": "",
+          "description": "Imported AOSP Metadata Pack containing module facts."
+        },
         "aospIde.pathMappings": {
           "type": "array",
           "default": [],

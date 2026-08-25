@@ -6,6 +6,7 @@ type Profile struct {
 	WorkspaceViewRoot string               `json:"workspaceViewRoot"`
 	CanonicalRepoRoot string               `json:"canonicalRepoRoot,omitempty"`
 	OutRoot           string               `json:"outRoot,omitempty"`
+	MetadataPackRoot  string               `json:"metadataPackRoot,omitempty"`
 	BuildTarget       BuildTarget          `json:"buildTarget,omitempty"`
 	Scope             Scope                `json:"scope,omitempty"`
 	SourceMounts      []ProfileSourceMount `json:"sourceMounts,omitempty"`
