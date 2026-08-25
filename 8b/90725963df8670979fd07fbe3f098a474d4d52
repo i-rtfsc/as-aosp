@@ -1,0 +1,41 @@
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/profile/ProfileConfigurable.kt
+  s_0fcc3f909ad4ee::t_5b354d9cf252aa 38,53,66,191-218
+  s_e9dd769d815b63::t_540bfacfab2c16 219-220
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/engine/ProjectEngineService.kt
+  s_0fcc3f909ad4ee::t_d3a7bd71c957e3 45-49,55-59
+  s_0fcc3f909ad4ee::t_5b354d9cf252aa 50-54
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/project/BuildFactsProjection.kt
+  s_0fcc3f909ad4ee::t_5b354d9cf252aa 34-35,37-40
+  s_0fcc3f909ad4ee::t_d3a7bd71c957e3 1-33,36,41-78,80-102
+  s_0fcc3f909ad4ee::t_5eec3fa690d11a 79
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/engine/EngineRpcClient.kt
+  s_0fcc3f909ad4ee::t_5b354d9cf252aa 47-50
+  s_0fcc3f909ad4ee::t_d3a7bd71c957e3 43-46,51-54
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/project/FocusedRootsService.kt
+  s_0fcc3f909ad4ee::t_d3a7bd71c957e3 12-13,34-42
+  s_0fcc3f909ad4ee::t_603e8bbfd40745 43-44
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "8b90725963df8670979fd07fbe3f098a474d4d52",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    },
+    "s_e9dd769d815b63": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a03183-9fdd-7f72-b2c6-acb6e5382f11",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
