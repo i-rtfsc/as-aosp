@@ -1,0 +1,19 @@
+clients/vscode/src/ui/profile_panel.ts
+  s_0fcc3f909ad4ee::t_888629efef8d61 35-47
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "04247e3c94319d247089a0e330e48cdbd3a8a2a6",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
