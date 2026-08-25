@@ -1,0 +1,29 @@
+clients/vscode/package.json
+  s_0fcc3f909ad4ee::t_cf2286114d0ad9 18,64-67
+docs/design/ide-client-and-navigation-design.md
+  s_0fcc3f909ad4ee::t_26837293c11c6f 189,203-206
+  s_0fcc3f909ad4ee::t_ea7789e6d81138 207
+docs/roadmap/delivery-plan.md
+  s_0fcc3f909ad4ee::t_26837293c11c6f 49
+clients/vscode/src/ui/profile_panel.ts
+  s_0fcc3f909ad4ee::t_cf2286114d0ad9 1-26,30-38
+  s_0fcc3f909ad4ee::t_d745694d8e0962 27-29
+clients/vscode/src/extension.ts
+  s_0fcc3f909ad4ee::t_cf2286114d0ad9 10,63
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "42659153c4b8f7b3dbc4b9cd792021589e40fcd1",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
