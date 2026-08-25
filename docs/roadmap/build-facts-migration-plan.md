@@ -31,6 +31,8 @@
 ## Phase 4：JetBrains project projection
 
 - 使用 Workspace Model/ModuleRootModel facade 投影 source roots、jars、srcjars、generated；
+- 当前 JetBrains slice 先复用 ModuleRootModel 投影 source/generated roots；libraries 和
+  Workspace Model closure 后续接入；
 - 保留用户现有模块，不把 canonical root 注册为 content root；
 - 对 selected module closure 创建 focused modules；
 - 验收：无需旧 Gradle 脚本，framework Java source root 和 generated peer 可由 IDE 原生索引。

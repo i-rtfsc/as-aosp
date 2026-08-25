@@ -35,6 +35,12 @@ initialize/shutdown client bootstrap。
 - Java/AIDL、Java/JNI 自定义 Definition；
 - Tool Window 显示 mode、provider、missing、stale 和 diagnostics。
 
+JetBrains 首个 Build-Facts projection slice 复用现有非持久 focused module：
+engine 返回的 RepoPath source roots 映射到 Workspace View，generated materialize
+返回的 cache roots 作为 generated source folder 加入同一 module。构建机绝对路径
+不直接写入 ModuleRootModel；classpath libraries 和完整 Workspace Model module
+closure 在此 slice 之后接入。
+
 ### 2.1 首版平台 baseline
 
 - IntelliJ Platform Gradle Plugin：`2.18.1`；
