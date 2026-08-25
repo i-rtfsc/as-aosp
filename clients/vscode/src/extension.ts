@@ -8,15 +8,15 @@ import { refreshCompdbOverlay } from "./navigation/compdb";
 import { createAospStatusBar } from "./status";
 import { resolveEngineExecutable } from "./engine/resolve";
 import { openProfilePanel, ProfileViewProvider } from "./ui/profile_panel";
-import { OverviewProvider, detectOut } from "./ui/overview";
+import { detectOut } from "./ui/overview";
 
 export function activate(context: vscode.ExtensionContext): void {
   const engine = new EngineClient();
   const output = vscode.window.createOutputChannel("AOSP IDE");
-  const overview = new OverviewProvider(context);
+  const overview = new ProfileViewProvider(context);
   const profileView = new ProfileViewProvider(context);
   context.subscriptions.push(output);
-  context.subscriptions.push(vscode.window.registerTreeDataProvider("aospIde.overview", overview));
+  context.subscriptions.push(vscode.window.registerWebviewViewProvider("aospIde.overview", overview));
   context.subscriptions.push(vscode.window.registerWebviewViewProvider("aospIde.profile", profileView));
   context.subscriptions.push(createAospStatusBar(engine, output));
   const ensureEngine = async (): Promise<void> => {

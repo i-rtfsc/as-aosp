@@ -34,9 +34,10 @@
 
 ## 3. VS Code
 
-注册 `viewsContainers.activitybar` 的 AOSP IDE 图标和 `views` sidebar。sidebar 显示
-当前 profile、Workspace View、out/metadata、engine 和 capability 卡片；“Configure Profile”
-打开完整 Webview panel。Command Palette 和状态栏继续作为备用入口。
+注册 `viewsContainers.activitybar` 的 AOSP IDE 图标和两个 Webview sidebar views。
+主视图直接显示可点击的 profile 表单、Workspace View、out/metadata、engine 和 capability
+状态；不使用文章式 TreeView。第二个 Profile view 是同一配置页的稳定别名。Command
+Palette 和状态栏继续作为备用入口。
 
 打开 workspace 后：
 
