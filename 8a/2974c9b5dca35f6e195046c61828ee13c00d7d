@@ -1,0 +1,24 @@
+docs/roadmap/build-facts-migration-plan.md
+  s_0fcc3f909ad4ee::t_61262e8dc36d57 37-38
+docs/design/ide-client-and-navigation-design.md
+  s_0fcc3f909ad4ee::t_6313aa0610bdd9 13-14
+docs/roadmap/current-state.md
+  s_0fcc3f909ad4ee::t_61262e8dc36d57 35-37
+  s_0fcc3f909ad4ee::t_6313aa0610bdd9 17
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "8a2974c9b5dca35f6e195046c61828ee13c00d7d",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
