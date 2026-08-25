@@ -1,0 +1,19 @@
+docs/research/aosp-ide-navigation-research.md
+  s_0fcc3f909ad4ee::t_dfad4b808df42b 1-247
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "bf57ce72d09feaaed4c5a61886964c3bb2ca26a8",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
