@@ -1,0 +1,35 @@
+cmd/aosp-index/pack_test.go
+  s_0fcc3f909ad4ee::t_1e02505dde2851 21
+clients/vscode/src/engine/client.ts
+  s_0fcc3f909ad4ee::t_2b5eb9239d658b 19-24,171-172
+  s_0fcc3f909ad4ee::t_d567fa7aa32b1f 173-174
+protocol/aosp/aidl_pack.go
+  s_0fcc3f909ad4ee::t_527edec7d31c13 20,22-23
+  s_0fcc3f909ad4ee::t_30155132d130e1 1-19,21,24-56
+cmd/aosp-index/pack.go
+  s_0fcc3f909ad4ee::t_1e02505dde2851 17,19,118-120,194-240
+  s_0fcc3f909ad4ee::t_c8976e866290fd 241-242
+protocol/aosp/server_test.go
+  s_0fcc3f909ad4ee::t_30155132d130e1 169-187
+clients/vscode/src/navigation/aidl.ts
+  s_0fcc3f909ad4ee::t_faa23bdde4dc60 24-26
+  s_0fcc3f909ad4ee::t_2b5eb9239d658b 18-23
+protocol/aosp/server.go
+  s_0fcc3f909ad4ee::t_30155132d130e1 155-156
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "143d053631cd4056f7888d59df08c1ac9a48244b",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
