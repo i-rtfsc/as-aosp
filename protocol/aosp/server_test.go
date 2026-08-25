@@ -8,6 +8,7 @@ import (
 
 	"github.com/i-rtfsc/as-aosp/core/aidl"
 	"github.com/i-rtfsc/as-aosp/core/model"
+	coremodules "github.com/i-rtfsc/as-aosp/core/modules"
 	"github.com/i-rtfsc/as-aosp/core/topology"
 	"github.com/i-rtfsc/as-aosp/protocol/jsonrpc"
 )
@@ -30,7 +31,8 @@ func TestServerLifecycleAndCapabilities(t *testing.T) {
 	}
 	var initialized InitializeResult
 	decodeResult(t, response, &initialized)
-	if !initialized.Capabilities.AIDLNavigation || !initialized.Capabilities.JNINavigation {
+	if !initialized.Capabilities.AIDLNavigation || !initialized.Capabilities.JNINavigation ||
+		!initialized.Capabilities.ModuleCatalog {
 		t.Fatalf("capabilities=%+v", initialized.Capabilities)
 	}
 	response, _ = server.Handle(makeRequest(3, "aosp/initialize", InitializeParams{ProtocolVersion: "1.0"}))
@@ -40,6 +42,59 @@ func TestServerLifecycleAndCapabilities(t *testing.T) {
 	response, reply = server.Handle(makeRequest(4, "aosp/shutdown", nil))
 	if !reply || response.Error != nil || !server.shutdown {
 		t.Fatalf("shutdown=%+v reply=%v", response, reply)
+	}
+}
+
+func TestServerQueriesModuleCatalogFromPack(t *testing.T) {
+	root := t.TempDir()
+	pathName := filepath.Join(root, "modules", "catalog.json")
+	if err := os.MkdirAll(filepath.Dir(pathName), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	catalog := coremodules.Catalog{Modules: map[string]coremodules.Module{
+		"framework": {Name: "framework", Dependencies: []string{"core"}},
+		"core":      {Name: "core"},
+	}}
+	data, _ := json.Marshal(catalog)
+	if err := os.WriteFile(pathName, data, 0o644); err != nil {
+		t.Fatal(err)
+	}
+	server := initializedServer(t)
+	response, _ := server.Handle(makeRequest(2, "aosp/modules/catalog", ModulesParams{
+		MetadataPackRoot: root,
+	}))
+	var listed ModulesCatalogResult
+	decodeResult(t, response, &listed)
+	if len(listed.Diagnostics) != 0 || len(listed.Modules) != 2 ||
+		listed.Modules[0].Name != "core" || listed.Modules[1].Name != "framework" {
+		t.Fatalf("listed=%+v", listed)
+	}
+	response, _ = server.Handle(makeRequest(3, "aosp/modules/closure", ModulesParams{
+		MetadataPackRoot: root, Names: []string{"framework"},
+	}))
+	var closure ModulesClosureResult
+	decodeResult(t, response, &closure)
+	if len(closure.Diagnostics) != 0 || len(closure.Modules) != 2 ||
+		closure.Modules[0].Name != "core" || closure.Modules[1].Name != "framework" {
+		t.Fatalf("closure=%+v", closure)
+	}
+	response, _ = server.Handle(makeRequest(4, "aosp/modules/get", ModulesParams{
+		MetadataPackRoot: root, Name: "framework",
+	}))
+	var got ModuleResult
+	decodeResult(t, response, &got)
+	if len(got.Diagnostics) != 0 || got.Module == nil || got.Module.Name != "framework" {
+		t.Fatalf("got=%+v", got)
+	}
+}
+
+func TestServerReportsMissingModulePack(t *testing.T) {
+	server := initializedServer(t)
+	response, _ := server.Handle(makeRequest(2, "aosp/modules/catalog", ModulesParams{}))
+	var result ModulesCatalogResult
+	decodeResult(t, response, &result)
+	if len(result.Diagnostics) != 1 || result.Diagnostics[0].Code != "METADATA_PACK_ROOT_MISSING" {
+		t.Fatalf("result=%+v", result)
 	}
 }
 

@@ -19,10 +19,11 @@ import (
 const ProtocolVersion = "1.0"
 
 type Server struct {
-	initialized  bool
-	shutdown     bool
-	jniSnapshot  *jniSnapshot
-	aidlSnapshot *aidlSnapshot
+	initialized           bool
+	shutdown              bool
+	jniSnapshot           *jniSnapshot
+	aidlSnapshot          *aidlSnapshot
+	moduleCatalogSnapshot *moduleCatalogSnapshot
 }
 
 type jniSnapshot struct {
@@ -63,6 +64,7 @@ type Capabilities struct {
 	TopologyValidation bool `json:"topologyValidation"`
 	AIDLNavigation     bool `json:"aidlNavigation"`
 	JNINavigation      bool `json:"jniNavigation"`
+	ModuleCatalog      bool `json:"moduleCatalog"`
 }
 
 type ProfileResult struct {
@@ -130,6 +132,12 @@ func (server *Server) Handle(request jsonrpc.Request) (jsonrpc.Response, bool) {
 		response = server.aidlReferences(request)
 	case "aosp/compdb/overlay":
 		response = server.compdbOverlay(request)
+	case "aosp/modules/catalog":
+		response = server.modulesCatalog(request)
+	case "aosp/modules/get":
+		response = server.moduleGet(request)
+	case "aosp/modules/closure":
+		response = server.modulesClosure(request)
 	default:
 		response = jsonrpc.Failure(request.ID, jsonrpc.MethodNotFound(request.Method))
 	}
@@ -157,6 +165,7 @@ func (server *Server) initialize(request jsonrpc.Request) (jsonrpc.Response, boo
 			TopologyValidation: true,
 			AIDLNavigation:     true,
 			JNINavigation:      true,
+			ModuleCatalog:      true,
 		},
 	}), !request.IsNotification()
 }
