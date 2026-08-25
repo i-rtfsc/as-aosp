@@ -12,3 +12,7 @@ test("prefers configured, then bundled, then PATH engine", () => {
   assert.equal(resolveEngineExecutable({ extensionPath: "/ext", exists: (value) => value.endsWith("linux-amd64/aosp-index"), platform: "linux", architecture: "x64" }), "/ext/engine/linux-amd64/aosp-index");
   assert.equal(resolveEngineExecutable({ extensionPath: "/ext", exists: () => false, platform: "linux", architecture: "x64" }), "aosp-index");
 });
+
+test("prefers the shared engines/aosp-index entry", () => {
+  assert.equal(resolveEngineExecutable({ extensionPath: "/ext", homeDirectory: "/user", exists: (value) => value === "/user/engines/aosp-index", platform: "linux", architecture: "x64" }), "/user/engines/aosp-index");
+});

@@ -14,8 +14,8 @@ internal class ProjectEngineService(
 
     fun start(): ByteArray {
         val executable = profileSettings.current.engineExecutable
-        require(executable.isNotBlank()) { "engine executable is not configured" }
-        return EngineCommand.start(engineProcess, executable)
+        val resolved = EngineCommand.resolveExecutable(executable, System.getProperty("user.home"))
+        return EngineCommand.start(engineProcess, resolved)
     }
 
     fun stop() {

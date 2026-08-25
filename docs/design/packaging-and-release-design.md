@@ -15,9 +15,15 @@ engine 构建矩阵为 `darwin/linux/windows × amd64/arm64`。Windows 文件名
 Go core 当前不依赖 CGO，因此同一源码可以交叉编译。插件包不同时携带六个平台二进制，
 首版仍由用户配置 `aosp-index`；后续 marketplace/release 可按平台组合下载或发布。
 
-客户端 engine 解析优先级：用户显式 executable、扩展目录内当前 `os-arch` bundled
-engine、PATH 中的 `aosp-index`。首版平台无关客户端包通常走显式配置或 PATH；在
+客户端 engine 解析优先级：用户显式 executable、用户公共 engine store 的
+`engines/aosp-index`、扩展目录内当前 `os-arch` bundled engine、PATH 中的
+`aosp-index`。首版平台无关客户端包通常走显式配置或 PATH；在
 manifest 签名和下载信任模型完成前，客户端不自动联网下载二进制。
+
+公共 store 的稳定入口必须保持为 `engines/aosp-index`，不能把版本目录作为唯一入口。
+客户端可在该文件旁读取版本/哈希元数据；更新时先写临时文件并原子替换，不能覆盖
+正在运行的 executable。默认位置为 macOS `~/Library/Application Support/AOSP IDE`、
+Linux `~/.local/share/aosp-ide`、Windows `%LOCALAPPDATA%/AOSP IDE`。
 
 ## 2. 客户端复用
 
