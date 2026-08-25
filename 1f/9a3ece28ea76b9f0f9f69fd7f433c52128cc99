@@ -1,0 +1,32 @@
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/engine/ProjectEngineService.kt
+  s_0fcc3f909ad4ee::t_e9cfe9f5e2e012 60-64
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/engine/EngineRpcClient.kt
+  s_0fcc3f909ad4ee::t_e9cfe9f5e2e012 55-58
+clients/vscode/src/navigation/java_projection.ts
+  s_0fcc3f909ad4ee::t_5d02ffcb486e57 23,31,40,59,67-72
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/project/BuildFactsProjection.kt
+  s_0fcc3f909ad4ee::t_e9cfe9f5e2e012 37-38,54,95,108-115
+protocol/aosp/pack_info.go
+  s_0fcc3f909ad4ee::t_bdd0fd6171be73 1-63
+clients/vscode/src/engine/client.ts
+  s_0fcc3f909ad4ee::t_5d02ffcb486e57 83-90,201-202
+  s_0fcc3f909ad4ee::t_4181776dad9f05 203-204
+protocol/aosp/server.go
+  s_0fcc3f909ad4ee::t_bdd0fd6171be73 153-154
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "1f9a3ece28ea76b9f0f9f69fd7f433c52128cc99",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
