@@ -29,11 +29,15 @@ type packManifest struct {
 }
 
 func runPack(args []string) {
-	if len(args) == 0 || (args[0] != "export" && args[0] != "validate") {
-		fatal(errors.New("usage: aosp-index pack <export|validate> ..."))
+	if len(args) == 0 || (args[0] != "export" && args[0] != "validate" && args[0] != "inspect") {
+		fatal(errors.New("usage: aosp-index pack <export|validate|inspect> ..."))
 	}
 	if args[0] == "validate" {
 		runPackValidate(args[1:])
+		return
+	}
+	if args[0] == "inspect" {
+		runPackInspect(args[1:])
 		return
 	}
 	flags := flag.NewFlagSet("pack export", flag.ExitOnError)
@@ -50,6 +54,30 @@ func runPack(args []string) {
 	if err := exportPack(*aospRoot, *outRoot, *destination, *native, []string(modules)); err != nil {
 		fatal(err)
 	}
+}
+
+func runPackInspect(args []string) {
+	flags := flag.NewFlagSet("pack inspect", flag.ExitOnError)
+	root := flags.String("root", "", "Metadata pack root")
+	moduleName := flags.String("module", "", "module name")
+	_ = flags.Parse(args)
+	if *root == "" {
+		fatal(errors.New("--root is required"))
+	}
+	catalog, err := coremodules.LoadPackCatalog(*root)
+	if err != nil {
+		fatal(err)
+	}
+	output := map[string]any{"modules": len(catalog.Modules)}
+	if *moduleName != "" {
+		module, ok := catalog.Modules[*moduleName]
+		if !ok {
+			fatal(fmt.Errorf("module not found: %s", *moduleName))
+		}
+		output["module"] = module
+		output["closure"] = catalog.Closure([]string{*moduleName})
+	}
+	writeJSON(output)
 }
 
 type stringFlags []string

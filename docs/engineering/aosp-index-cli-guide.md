@@ -117,7 +117,19 @@ aosp-index pack validate --root /Users/me/aosp-metadata/android-16
 
 校验 manifest、checksum、核心文件和 generated manifest。
 
-## 8. IDE 服务
+## 8. Metadata Pack 查看
+
+查看 pack ModuleCatalog：
+
+```bash
+aosp-index pack inspect --root /Users/me/aosp-metadata/android-16
+aosp-index pack inspect --root /Users/me/aosp-metadata/android-16 \
+  --module framework-minus-apex
+```
+
+指定 module 时返回模块 facts 和 dependency closure。
+
+## 9. IDE 服务
 
 ```bash
 aosp-index serve --stdio
@@ -125,7 +137,7 @@ aosp-index serve --stdio
 
 stdin/stdout 使用 Content-Length JSON-RPC framing。stdout 只写协议，日志写 stderr。
 
-## 9. 常见问题
+## 10. 常见问题
 
 - 没有 out：先用 source-only，或复制 Linux 导出的 Metadata Pack；
 - Linux 绝对路径：使用 `--path-map external=local`；
