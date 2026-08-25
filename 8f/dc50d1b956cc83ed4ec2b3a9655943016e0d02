@@ -1,0 +1,28 @@
+Makefile
+  s_0fcc3f909ad4ee::t_ff3670906596c5 1,27-30
+  s_0fcc3f909ad4ee::t_51f8275cb9f946 31
+  s_0fcc3f909ad4ee::t_8e4d3335b6b5eb 32
+packaging/package-vscode-local.sh
+  s_0fcc3f909ad4ee::t_ff3670906596c5 1-37
+docs/roadmap/delivery-plan.md
+  s_0fcc3f909ad4ee::t_ff3670906596c5 58
+docs/design/packaging-and-release-design.md
+  s_0fcc3f909ad4ee::t_ff3670906596c5 28-29,31-32
+  s_0fcc3f909ad4ee::t_51f8275cb9f946 30
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "8fdc50d1b956cc83ed4ec2b3a9655943016e0d02",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
