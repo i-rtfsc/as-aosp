@@ -15,6 +15,7 @@
 8. [JNI 跨语言索引设计](design/jni-cross-language-index-design.md)。
 9. [当前状态](roadmap/current-state.md)和[当前交付计划](roadmap/delivery-plan.md)。
 10. [打包与发布设计](design/packaging-and-release-design.md)。
+11. [Profile UI 与多项目体验设计](design/profile-ui-and-multi-project-design.md)。
 
 ## 2. 文档权威性
 
