@@ -1,0 +1,40 @@
+protocol/aosp/server.go
+  s_0fcc3f909ad4ee::t_e19266fa59c52c 151-152
+protocol/aosp/generated.go
+  s_0fcc3f909ad4ee::t_1e4713ad526e0a 28
+  s_0fcc3f909ad4ee::t_e19266fa59c52c 1-27,29-88
+protocol/aosp/server_test.go
+  s_0fcc3f909ad4ee::t_62714354456fe2 4,143-189
+  s_5f30dac179bcb2::t_498bfb6e37696e 190
+clients/vscode/src/navigation/java_projection.ts
+  s_0fcc3f909ad4ee::t_9cfec86b622721 17,19,27-28
+clients/vscode/src/engine/client.ts
+  s_0fcc3f909ad4ee::t_9cfec86b622721 78-82,189-190
+  s_5f30dac179bcb2::t_fbc27d8f09aa91 191-192
+clients/vscode/src/extension.ts
+  s_0fcc3f909ad4ee::t_9cfec86b622721 53
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "6e3daa4c320e9b3c19db35b9751140c547fb2baf",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    },
+    "s_5f30dac179bcb2": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "019ffe38-b3cd-77e3-8987-f48bc62a086c",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
