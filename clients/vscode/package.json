@@ -23,7 +23,7 @@
   "main": "./out/extension.js",
   "contributes": {
     "viewsContainers": { "activitybar": [{ "id": "aospWorkspace", "title": "AOSP Workspace", "icon": "resources/aosp-ide.svg" }] },
-    "views": { "aospWorkspace": [{ "id": "aospWorkspace.setup", "name": "Workspace Setup" }] },
+    "views": { "aospWorkspace": [{ "id": "aospWorkspace.setup", "name": "Workspace Setup", "type": "webview" }] },
     "configuration": {
       "title": "AOSP Workspace",
       "properties": {

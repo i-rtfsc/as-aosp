@@ -40,7 +40,7 @@ Webview sidebar view（使用新 id，避免旧版本 view 状态残留）。
 状态；不使用文章式 TreeView。第二个 Profile view 是同一配置页的稳定别名。Command
 Palette 和状态栏继续作为备用入口。
 
-主 view 声明 `onView:<view-id>` activation event，确保用户点击 Activity Bar 时先激活
+主 view 声明 `type: webview` 和 `onView:<view-id>` activation event，确保用户点击 Activity Bar 时先激活
 扩展并注册 WebviewViewProvider，不依赖某个语言文件或其他 command 先触发 activation。
 
 打开 workspace 后：
