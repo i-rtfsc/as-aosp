@@ -1,0 +1,39 @@
+cmd/aosp-index/pack.go
+  s_0fcc3f909ad4ee::t_f678b40407456b 32-33,59
+  s_0fcc3f909ad4ee::t_4369003b6c690d 39-42,60-80
+  s_0fcc3f909ad4ee::t_7596821cee0683 81-82
+docs/engineering/aosp-index-cli-guide.md
+  s_0fcc3f909ad4ee::t_11252889ea3324 122-132,140
+  s_0fcc3f909ad4ee::t_ca3916779e2452 120
+  s_5f30dac179bcb2::t_bea703cf96f0c1 121
+core/modules/load.go
+  s_0fcc3f909ad4ee::t_f678b40407456b 1-3,8-10,23
+  s_0fcc3f909ad4ee::t_4369003b6c690d 4-7,11-22
+core/modules/load_test.go
+  s_0fcc3f909ad4ee::t_4369003b6c690d 4-7,11-23
+  s_0fcc3f909ad4ee::t_f678b40407456b 1-3,8-10,24
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "ead0665e2bc3f1d675557486021bd5e49ed48b5d",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    },
+    "s_5f30dac179bcb2": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "019ffe38-b3cd-77e3-8987-f48bc62a086c",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
