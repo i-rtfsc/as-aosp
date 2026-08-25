@@ -16,6 +16,10 @@
 9. [当前状态](roadmap/current-state.md)和[当前交付计划](roadmap/delivery-plan.md)。
 10. [打包与发布设计](design/packaging-and-release-design.md)。
 11. [Profile UI 与多项目体验设计](design/profile-ui-and-multi-project-design.md)。
+12. [AOSP IDE 跳转方案调研与架构调整](research/aosp-ide-navigation-research.md)。
+13. [Build Facts 驱动导航决策](decisions/build-facts-driven-navigation.md)。
+14. [AOSP Metadata Pack 设计](design/aosp-metadata-pack-design.md)。
+15. [Build Facts 迁移实施计划](roadmap/build-facts-migration-plan.md)。
 
 ## 2. 文档权威性
 
