@@ -1,0 +1,52 @@
+docs/roadmap/current-state.md
+  s_0fcc3f909ad4ee::t_56307ae4e2d395 26
+clients/jetbrains/src/test/kotlin/com/rtfsc/aosp/engine/EngineCommandTest.kt
+  s_0fcc3f909ad4ee::t_56307ae4e2d395 5,12-20
+  s_0fcc3f909ad4ee::t_879a33767d5ec8 21
+clients/vscode/src/engine/resolve.test.ts
+  s_0fcc3f909ad4ee::t_18f6e406150b24 15-18
+docs/design/packaging-and-release-design.md
+  s_0fcc3f909ad4ee::t_508bbcc5a776c1 18-20,23-26
+  s_5f30dac179bcb2::t_236b5be51c326a 27
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/engine/ProjectEngineService.kt
+  s_0fcc3f909ad4ee::t_722a3196373cb9 17-18
+clients/vscode/src/engine/resolve.ts
+  s_0fcc3f909ad4ee::t_b72f5448643f5c 30
+  s_0fcc3f909ad4ee::t_18f6e406150b24 12,19-22,29,31
+  s_0fcc3f909ad4ee::t_2a68bae3bbaa64 32
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/engine/EngineCommand.kt
+  s_0fcc3f909ad4ee::t_722a3196373cb9 4,12-18
+  s_e9dd769d815b63::t_94767e2fc4d16a 19
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "e5fcd47c134e0da9e4625c6ec06cafc5d9d50a16",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    },
+    "s_5f30dac179bcb2": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "019ffe38-b3cd-77e3-8987-f48bc62a086c",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    },
+    "s_e9dd769d815b63": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a03183-9fdd-7f72-b2c6-acb6e5382f11",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
