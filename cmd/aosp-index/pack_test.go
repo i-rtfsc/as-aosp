@@ -50,6 +50,20 @@ func TestExportPackReadsSoongMetadataCandidate(t *testing.T) {
 	}
 }
 
+func TestValidatePackRejectsChecksumMismatch(t *testing.T) {
+	root := t.TempDir()
+	out := filepath.Join(root, "out")
+	destination := filepath.Join(root, "pack")
+	writePackFixture(t, filepath.Join(out, "module-info.json"), `{}`)
+	if err := exportPack(root, out, destination, false, nil); err != nil {
+		t.Fatal(err)
+	}
+	writePackFixture(t, filepath.Join(destination, "module-info.json"), `{"tampered":true}`)
+	if err := validatePack(destination); err == nil {
+		t.Fatal("tampered pack was accepted")
+	}
+}
+
 func TestExportPackAddsNativeFilesOnlyWhenRequested(t *testing.T) {
 	root := t.TempDir()
 	out := filepath.Join(root, "out")
