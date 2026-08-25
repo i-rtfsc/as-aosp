@@ -15,7 +15,7 @@ export function activate(context: vscode.ExtensionContext): void {
   const output = vscode.window.createOutputChannel("AOSP IDE");
   const profileView = new ProfileViewProvider(context);
   context.subscriptions.push(output);
-  context.subscriptions.push(vscode.window.registerWebviewViewProvider("aospWorkspace.profile", profileView));
+  context.subscriptions.push(vscode.window.registerWebviewViewProvider("aospWorkspace.setup", profileView));
   context.subscriptions.push(createAospStatusBar(engine, output));
   const ensureEngine = async (): Promise<void> => {
     const configured = vscode.workspace.getConfiguration("aospIde").get<string>("engineExecutable");
