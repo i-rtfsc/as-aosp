@@ -24,6 +24,7 @@
 - profile 保存后启动后台 coordinator；
 - 阶段：discover、metadata、module graph、Java/AIDL/JNI、generated、compdb；
 - 增加 `aosp/index/status`、`aosp/index/rebuild`、`aosp/index/cancel`；
+- 首版先完成可查询的阶段状态和 Metadata Pack catalog/generate 计数，再接 IDE 原生索引；
 - snapshot 按 profile/topology/metadata/build facts fingerprint 失效；
 - 验收：侧边栏显示 progress、ready/partial/stale/error。
 

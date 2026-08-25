@@ -123,6 +123,23 @@ Metadata Pack 缺失、catalog JSON 损坏或模块不存在属于业务诊断�
 Build-Facts 结果。首版每次请求按 pack catalog 文件的路径、大小和修改时间
 判断是否复用 daemon 内存快照；pack 被原子替换后必须重新加载。
 
+IndexCoordinator 状态方法：
+
+```text
+aosp/index/start
+aosp/index/status
+aosp/index/rebuild
+aosp/index/cancel
+```
+
+`start` 和 `rebuild` 接收完整 `profile`，并返回 coordinator snapshot。
+状态至少包含 `state`（`idle`、`running`、`ready`、`partial`、`stale`、
+`error`、`cancelled`）、当前 `stage`、`completedStages`、`totalStages`、
+`progress`、`moduleCount`、`generatedCount` 和 diagnostics。首版 coordinator
+在 daemon 进程内运行并以有界阶段顺序执行；即使某个 metadata reader 缺失，
+也必须保留已完成阶段并进入 `partial`，不能伪装成 `ready`。`cancel` 只影响
+当前 profile 的 coordinator，不删除旧 snapshot。
+
 进程入口统一为一个跨平台二进制：
 
 ```text
