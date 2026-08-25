@@ -1,0 +1,24 @@
+cmd/aosp-index/pack.go
+  s_0fcc3f909ad4ee::t_0864c452890fdb 90-92,99-101,122-124,155-159,166-168,173-175
+  s_0fcc3f909ad4ee::t_a40a737796483a 4,68-69,89,93-94,98,102,150-154,160-165,169-172,176-180
+  s_0fcc3f909ad4ee::t_509d67dba536fe 181
+cmd/aosp-index/pack_test.go
+  s_0fcc3f909ad4ee::t_0864c452890fdb 31-33,35-37,41-42,45-50
+  s_0fcc3f909ad4ee::t_f7932a2488d1a5 21,34,38-40,43-44
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "46a1681067f9bb11b4042bb40e72972a1bea5731",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
