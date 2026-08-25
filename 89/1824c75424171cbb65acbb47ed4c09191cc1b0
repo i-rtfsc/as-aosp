@@ -1,0 +1,25 @@
+clients/vscode/package.json
+  s_0fcc3f909ad4ee::t_f57aa5868e1a2c 14,25
+clients/vscode/src/extension.ts
+  s_0fcc3f909ad4ee::t_f57aa5868e1a2c 18
+clients/vscode/resources/aosp-ide.svg
+  s_0fcc3f909ad4ee::t_f57aa5868e1a2c 1
+docs/design/profile-ui-and-multi-project-design.md
+  s_0fcc3f909ad4ee::t_f57aa5868e1a2c 37-38
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "891824c75424171cbb65acbb47ed4c09191cc1b0",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
