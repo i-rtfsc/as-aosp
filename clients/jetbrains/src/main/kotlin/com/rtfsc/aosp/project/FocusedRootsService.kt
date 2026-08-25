@@ -9,6 +9,8 @@ import com.intellij.openapi.module.ModuleManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ModuleRootManager
 import com.rtfsc.aosp.profile.EngineProfileSettings
+import com.rtfsc.aosp.engine.ProjectEngineService
+import java.nio.file.Paths
 
 @Service(Service.Level.PROJECT)
 internal class FocusedRootsService(
@@ -27,6 +29,17 @@ internal class FocusedRootsService(
         }
         FocusedRootsApplier.apply(module, plan)
         return plan
+    }
+
+    fun applyBuildFacts(): BuildFactsProjectionResult {
+        val engine = project.getService(ProjectEngineService::class.java)
+        val module = WriteAction.compute<Module, RuntimeException> {
+            focusedModule ?: ModuleManager.getInstance(project)
+                .newNonPersistentModule("AOSP Focused", EmptyModuleType.EMPTY_MODULE)
+                .also { focusedModule = it }
+        }
+        val cacheRoot = Paths.get(project.basePath ?: System.getProperty("java.io.tmpdir"), ".aosp-ide", "cache")
+        return BuildFactsProjection.apply(module, settings.current, engine, cacheRoot)
     }
 
     override fun dispose() {

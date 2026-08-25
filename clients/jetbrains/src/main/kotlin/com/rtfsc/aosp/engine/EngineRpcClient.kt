@@ -40,6 +40,18 @@ internal class EngineRpcClient(
         return request(method = "aosp/aidl/references", params = params)
     }
 
+    fun modulesClosure(params: String): ByteArray {
+        return request(method = "aosp/modules/closure", params = params)
+    }
+
+    fun modulesCatalog(params: String): ByteArray {
+        return request(method = "aosp/modules/catalog", params = params)
+    }
+
+    fun generatedMaterialize(params: String): ByteArray {
+        return request(method = "aosp/generated/materialize", params = params)
+    }
+
     fun request(method: String, params: String): ByteArray {
         val id = nextId.getAndIncrement()
         val payload = "{" +

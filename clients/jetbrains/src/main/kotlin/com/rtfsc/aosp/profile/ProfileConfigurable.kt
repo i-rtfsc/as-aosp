@@ -35,6 +35,7 @@ internal class ProfileConfigurable(
     private val engineExecutable = TextFieldWithBrowseButton()
     private val validateButton = JButton("Validate")
     private val applyRootsButton = JButton("Apply Focused Roots")
+    private val applyBuildFactsButton = JButton("Apply Build Facts")
     private val panel = JPanel(BorderLayout())
     private val validateAction = ActionListener { validateInBackground() }
 
@@ -49,6 +50,7 @@ internal class ProfileConfigurable(
         )
         validateButton.addActionListener(validateAction)
         applyRootsButton.addActionListener { applyFocusedRoots() }
+        applyBuildFactsButton.addActionListener { applyBuildFacts() }
         val form = FormBuilder.createFormBuilder()
             .addLabeledComponent(JLabel("Profile ID"), profileId)
             .addLabeledComponent(JLabel("Workspace View Root"), workspaceViewRoot)
@@ -61,6 +63,7 @@ internal class ProfileConfigurable(
         val actions = JPanel(FlowLayout(FlowLayout.LEFT))
         actions.add(validateButton)
         actions.add(applyRootsButton)
+        actions.add(applyBuildFactsButton)
         panel.add(form, BorderLayout.NORTH)
         panel.add(actions, BorderLayout.SOUTH)
     }
@@ -183,6 +186,36 @@ internal class ProfileConfigurable(
             "Applied ${applied.sourceRoots.size} focused source root(s).",
             "AOSP IDE",
         )
+    }
+
+    private fun applyBuildFacts() {
+        apply()
+        applyBuildFactsButton.isEnabled = false
+        object : Task.Backgroundable(project, "Applying AOSP Build Facts", true) {
+            private var message = ""
+
+            override fun run(indicator: ProgressIndicator) {
+                indicator.text = "Loading module catalog and generated sources"
+                val result = project.getService(FocusedRootsService::class.java).applyBuildFacts()
+                message = "Applied ${result.sourceRoots.size} source root(s), " +
+                    "${result.generatedRoots.size} generated root(s), skipped ${result.skipped}."
+                if (result.diagnostics.isNotEmpty()) {
+                    message += " Diagnostics: ${result.diagnostics.size}."
+                }
+            }
+
+            override fun onSuccess() {
+                Messages.showInfoMessage(panel, message, "AOSP IDE")
+            }
+
+            override fun onThrowable(error: Throwable) {
+                Messages.showErrorDialog(panel, error.message ?: error.javaClass.simpleName, "AOSP Build Facts failed")
+            }
+
+            override fun onFinished() {
+                applyBuildFactsButton.isEnabled = true
+            }
+        }.queue()
     }
 
     private fun configureChooser(

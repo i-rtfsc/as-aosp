@@ -42,6 +42,21 @@ internal class ProjectEngineService(
         return engineProcess.request("aosp/aidl/references", params)
     }
 
+    fun modulesClosure(params: String): ByteArray {
+        if (!engineProcess.isRunning) start()
+        return engineProcess.request("aosp/modules/closure", params)
+    }
+
+    fun modulesCatalog(params: String): ByteArray {
+        if (!engineProcess.isRunning) start()
+        return engineProcess.request("aosp/modules/catalog", params)
+    }
+
+    fun generatedMaterialize(params: String): ByteArray {
+        if (!engineProcess.isRunning) start()
+        return engineProcess.request("aosp/generated/materialize", params)
+    }
+
     override fun dispose() {
         stop()
     }
