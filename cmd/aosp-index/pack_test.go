@@ -1,0 +1,75 @@
+package main
+
+import (
+	"archive/zip"
+	"encoding/json"
+	"os"
+	"path/filepath"
+	"testing"
+)
+
+func TestExportPackIncludesCoreMetadataAndSrcjarsByDefault(t *testing.T) {
+	root := t.TempDir()
+	out := filepath.Join(root, "out")
+	writePackFixture(t, filepath.Join(out, "module-info.json"), `{}`)
+	writePackFixture(t, filepath.Join(out, "module_bp_java_deps.json"), `{}`)
+	writeSrcJar(t, filepath.Join(out, "soong", ".intermediates", "framework", "gen", "framework.srcjar"))
+	destination := filepath.Join(root, "pack")
+	if err := exportPack(root, out, destination, false, nil); err != nil {
+		t.Fatal(err)
+	}
+	for _, relative := range []string{"manifest.json", "checksums.sha256", "module-info.json", "module_bp_java_deps.json", filepath.Join("generated", "manifest.json"), filepath.Join("generated", "srcjars", "framework.srcjar")} {
+		if _, err := os.Stat(filepath.Join(destination, relative)); err != nil {
+			t.Fatalf("missing %s: %v", relative, err)
+		}
+	}
+	var manifest packManifest
+	data, _ := os.ReadFile(filepath.Join(destination, "manifest.json"))
+	if err := json.Unmarshal(data, &manifest); err != nil || len(manifest.Packs) != 1 || manifest.Packs[0] != "core" {
+		t.Fatalf("manifest=%+v err=%v", manifest, err)
+	}
+}
+
+func TestExportPackAddsNativeFilesOnlyWhenRequested(t *testing.T) {
+	root := t.TempDir()
+	out := filepath.Join(root, "out")
+	writePackFixture(t, filepath.Join(out, "module_bp_cc_deps.json"), `{}`)
+	writePackFixture(t, filepath.Join(out, "development", "ide", "compdb", "compile_commands.json"), `[]`)
+	destination := filepath.Join(root, "pack")
+	if err := exportPack(root, out, destination, true, []string{"framework"}); err != nil {
+		t.Fatal(err)
+	}
+	for _, relative := range []string{"module_bp_cc_deps.json", filepath.Join("development", "ide", "compdb", "compile_commands.json")} {
+		if _, err := os.Stat(filepath.Join(destination, relative)); err != nil {
+			t.Fatalf("missing %s", relative)
+		}
+	}
+}
+
+func writePackFixture(t *testing.T, pathName, content string) {
+	t.Helper()
+	if err := os.MkdirAll(filepath.Dir(pathName), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(pathName, []byte(content), 0o644); err != nil {
+		t.Fatal(err)
+	}
+}
+func writeSrcJar(t *testing.T, pathName string) {
+	t.Helper()
+	if err := os.MkdirAll(filepath.Dir(pathName), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	file, err := os.Create(pathName)
+	if err != nil {
+		t.Fatal(err)
+	}
+	writer := zip.NewWriter(file)
+	entry, err := writer.Create("android/demo/IFoo.java")
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, _ = entry.Write([]byte("package android.demo; class IFoo {}"))
+	_ = writer.Close()
+	_ = file.Close()
+}

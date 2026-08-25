@@ -46,6 +46,8 @@ func main() {
 		runAidl(os.Args[2:])
 	case "jni":
 		runJni(os.Args[2:])
+	case "pack":
+		runPack(os.Args[2:])
 	case "serve":
 		runServe(os.Args[2:])
 	default:
