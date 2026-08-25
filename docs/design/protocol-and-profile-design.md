@@ -140,6 +140,17 @@ aosp/index/cancel
 也必须保留已完成阶段并进入 `partial`，不能伪装成 `ready`。`cancel` 只影响
 当前 profile 的 coordinator，不删除旧 snapshot。
 
+Generated source materialization：
+
+```text
+aosp/generated/materialize
+```
+
+请求携带 `metadataPackRoot` 和本机 `cacheRoot`。engine 只读取 pack 的
+`generated/manifest.json`，通过 `core/generated` 按 archive hash 安全解压
+srcjar，并返回已发布的 source roots 与 diagnostics。结果不写入 AOSP 源码
+或 out；重复请求复用相同 hash 目录。
+
 进程入口统一为一个跨平台二进制：
 
 ```text

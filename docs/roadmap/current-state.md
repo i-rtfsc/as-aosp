@@ -33,8 +33,9 @@
 - 当前 `aosp-index serve --stdio` 已启用 initialize、shutdown、profile validate、topology discover/validate、ModuleCatalog 查询、`aosp/jni/peers`、`aosp/aidl/resolve`、`aosp/aidl/peers` 和 `aosp/aidl/references`；长期增量索引尚未启用；
 - IndexCoordinator 首个状态 slice 已启用 `aosp/index/start|rebuild|status|cancel`；它能从 Metadata Pack 产生阶段、进度、模块和 generated 计数，尚未投影 Java source roots 或 IDE 原生索引。
 - VS Code 在 coordinator 完成后已把可证明的 RepoPath source roots 投影到
-  `java.project.sourcePaths`；构建机绝对路径不会写入本机配置，完整 srcjar 解压和
-  Java LS classpath 仍未闭合。
+  `java.project.sourcePaths`，并通过 `aosp/generated/materialize` 将 pack 内 srcjar
+  安全解压到 engine cache；构建机绝对路径不会写入本机配置，完整 Java LS classpath
+  仍未闭合。
 - 当前 JNI 只覆盖 Java/Kotlin declaration、静态导出、常见 `JNINativeMethod` 注册表和有限注册调用；复杂宏、运行时 class 解析和完整 C++ 语义仍未覆盖；
 - 当前已有本地六平台 engine/JetBrains ZIP/VS Code VSIX 打包入口，以及 VS Code 显式/bundled/PATH engine 选择逻辑；尚未完成把 bundled engine 嵌入 VSIX、签名、公证、发布版下载和 marketplace verifier；
 - 当前没有任何远程执行服务；
