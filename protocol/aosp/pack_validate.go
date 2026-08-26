@@ -23,9 +23,16 @@ type packValidationSnapshot struct {
 	result corepack.Result
 }
 
+type packValidationFlight struct {
+	done   chan struct{}
+	stamp  packValidationStamp
+	result corepack.Result
+}
+
 type packValidationCache struct {
 	mu      sync.Mutex
 	entries map[string]packValidationSnapshot
+	flights map[string]*packValidationFlight
 }
 
 func (server *Server) validatePackIfDeclared(root string) []corepack.Diagnostic {
@@ -33,17 +40,46 @@ func (server *Server) validatePackIfDeclared(root string) []corepack.Diagnostic 
 	if !declared {
 		return nil
 	}
-	server.packValidation.mu.Lock()
-	defer server.packValidation.mu.Unlock()
-	if snapshot, ok := server.packValidation.entries[root]; ok && snapshot.stamp == stamp {
-		return snapshot.result.Diagnostics
+	for {
+		server.packValidation.mu.Lock()
+		if snapshot, ok := server.packValidation.entries[root]; ok && snapshot.stamp == stamp {
+			server.packValidation.mu.Unlock()
+			return snapshot.result.Diagnostics
+		}
+		if flight, ok := server.packValidation.flights[root]; ok && flight.stamp == stamp {
+			server.packValidation.mu.Unlock()
+			<-flight.done
+			stamp, declared = currentPackStamp(root)
+			if !declared {
+				return nil
+			}
+			continue
+		}
+		if server.packValidation.flights == nil {
+			server.packValidation.flights = make(map[string]*packValidationFlight)
+		}
+		flight := &packValidationFlight{done: make(chan struct{}), stamp: stamp}
+		server.packValidation.flights[root] = flight
+		server.packValidation.mu.Unlock()
+		result := corepack.Validate(root)
+		endStamp, endDeclared := currentPackStamp(root)
+		server.packValidation.mu.Lock()
+		delete(server.packValidation.flights, root)
+		if endDeclared && endStamp == stamp {
+			if server.packValidation.entries == nil {
+				server.packValidation.entries = make(map[string]packValidationSnapshot)
+			}
+			server.packValidation.entries[root] = packValidationSnapshot{stamp: stamp, result: result}
+		}
+		flight.result = result
+		close(flight.done)
+		server.packValidation.mu.Unlock()
+		if endDeclared && endStamp != stamp {
+			stamp = endStamp
+			continue
+		}
+		return result.Diagnostics
 	}
-	result := corepack.Validate(root)
-	if server.packValidation.entries == nil {
-		server.packValidation.entries = make(map[string]packValidationSnapshot)
-	}
-	server.packValidation.entries[root] = packValidationSnapshot{stamp: stamp, result: result}
-	return result.Diagnostics
 }
 
 func currentPackStamp(root string) (packValidationStamp, bool) {
@@ -116,14 +152,11 @@ func (server *Server) packValidate(request jsonrpc.Request) jsonrpc.Response {
 	if root == "" {
 		return jsonrpc.Success(request.ID, PackValidateResult{Diagnostics: []corepack.Diagnostic{{Code: "PACK_ROOT_MISSING", Message: "metadataPackRoot is required"}}})
 	}
-	result := corepack.Validate(root)
-	if stamp, declared := currentPackStamp(root); declared {
-		server.packValidation.mu.Lock()
-		if server.packValidation.entries == nil {
-			server.packValidation.entries = make(map[string]packValidationSnapshot)
-		}
-		server.packValidation.entries[root] = packValidationSnapshot{stamp: stamp, result: result}
-		server.packValidation.mu.Unlock()
+	if _, err := os.Stat(filepath.Join(root, "manifest.json")); os.IsNotExist(err) {
+		result := corepack.Validate(root)
+		return jsonrpc.Success(request.ID, PackValidateResult{Valid: result.Valid, Diagnostics: result.Diagnostics})
 	}
+	diagnostics := server.validatePackIfDeclared(root)
+	result := corepack.Result{Valid: len(diagnostics) == 0, Diagnostics: diagnostics}
 	return jsonrpc.Success(request.ID, PackValidateResult{Valid: result.Valid, Diagnostics: result.Diagnostics})
 }
