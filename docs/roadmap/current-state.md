@@ -67,6 +67,8 @@
 - JetBrains 已有 `AOSP Workspace` Tool Window、startup auto-apply 和 Settings 保存后
   自动 rebuild；窗口显示 source/generated/library/skipped/diagnostic counts，完整
   persistent Workspace Model module closure 仍未闭合。
+- JetBrains profile state 已可观察；Tool Window 路径标签随 Settings 更新，coordinator
+  以 300ms debounce 自动重建，所有 Swing 标签更新切回 EDT。
 - `core/pack` 已对 generated manifest 与 srcjar entry 做内容一致性校验，拒绝 entry
   漂移和 zip-slip；不要求部分 Workspace View 的源码实体位于 pack 内。
 - 当前 JNI 只覆盖 Java/Kotlin declaration、静态导出、常见 `JNINativeMethod` 注册表和有限注册调用；复杂宏、运行时 class 解析和完整 C++ 语义仍未覆盖；
