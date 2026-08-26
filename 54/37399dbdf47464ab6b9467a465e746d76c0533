@@ -1,0 +1,36 @@
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/engine/ProjectEngineService.kt
+  s_0fcc3f909ad4ee::t_4dd86a90153dd4 30-34
+clients/vscode/src/engine/client.ts
+  s_0fcc3f909ad4ee::t_3c3a8b54e141be 33-34,192-193
+  s_0fcc3f909ad4ee::t_abc0764af59245 194-195
+clients/vscode/src/navigation/jni.ts
+  s_0fcc3f909ad4ee::t_3c3a8b54e141be 14-17,33-36
+cmd/aosp-index/pack_test.go
+  s_0fcc3f909ad4ee::t_0a900b7da387f0 81-83
+protocol/aosp/server.go
+  s_0fcc3f909ad4ee::t_3c3a8b54e141be 161-162
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/jni/JniPeerAction.kt
+  s_0fcc3f909ad4ee::t_4dd86a90153dd4 54-70
+protocol/aosp/jni_pack.go
+  s_0fcc3f909ad4ee::t_3c3a8b54e141be 1-52
+cmd/aosp-index/pack.go
+  s_0fcc3f909ad4ee::t_0a900b7da387f0 18
+  s_0fcc3f909ad4ee::t_f33db4f533e52b 122-126,200-240
+  s_0fcc3f909ad4ee::t_82f3d4d4ad00ca 241-242
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "5437399dbdf47464ab6b9467a465e746d76c0533",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
