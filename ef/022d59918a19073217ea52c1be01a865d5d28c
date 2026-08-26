@@ -1,0 +1,37 @@
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/workspace/AospWorkspaceToolWindowFactory.kt
+  s_0fcc3f909ad4ee::t_1f0a77f9bcb307 19,54-58,61-64
+  s_0fcc3f909ad4ee::t_e22536400a465c 59-60,65-70
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/profile/EngineProfileSettings.kt
+  s_0fcc3f909ad4ee::t_e22536400a465c 8,17,26,31-41
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/workspace/WorkspaceCoordinatorService.kt
+  s_0fcc3f909ad4ee::t_6655b8145c2024 4,29,41,43-46,93
+  s_0fcc3f909ad4ee::t_e22536400a465c 12-14,32-34,40,42,47-51,94-97
+  s_0fcc3f909ad4ee::t_8aebebc0721fd7 98
+clients/jetbrains/src/test/kotlin/com/rtfsc/aosp/profile/EngineProfileSettingsTest.kt
+  s_0fcc3f909ad4ee::t_1f0a77f9bcb307 5,25-37
+  s_5f30dac179bcb2::t_d63c00c31883ac 38
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "ef022d59918a19073217ea52c1be01a865d5d28c",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    },
+    "s_5f30dac179bcb2": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "019ffe38-b3cd-77e3-8987-f48bc62a086c",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
