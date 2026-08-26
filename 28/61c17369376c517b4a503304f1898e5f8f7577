@@ -1,0 +1,28 @@
+docs/design/profile-ui-and-multi-project-design.md
+  s_0fcc3f909ad4ee::t_3e849065d7edc7 16
+  s_0fcc3f909ad4ee::t_43371dbdb782c2 50
+  h_8b376749578497 46-49
+docs/roadmap/target-driven-project-graph-plan.md
+  s_0fcc3f909ad4ee::t_3e849065d7edc7 40
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "2861c17369376c517b4a503304f1898e5f8f7577",
+  "prompts": {},
+  "humans": {
+    "h_8b376749578497": {
+      "author": "Solo <anqi.huang@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
