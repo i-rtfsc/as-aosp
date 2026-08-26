@@ -22,19 +22,8 @@ export function activate(context: vscode.ExtensionContext): void {
     const executable = resolveEngineExecutable({ configured, extensionPath: context.extensionPath });
     await engine.start(executable);
   };
-  const profileView = new ProfileViewProvider(context, async (metadataPackRoot) => {
+  const startIndex = async (rebuild: boolean) => {
     await ensureEngine();
-    const validation = await engine.validatePack(metadataPackRoot);
-    if (!validation.valid) {
-      throw new Error(validation.diagnostics.map((item) => `${item.code}: ${item.message}`).join("; "));
-    }
-    const result = await engine.modulesCatalog(metadataPackRoot);
-    return {
-      modules: result.modules.length,
-      generated: result.modules.reduce((total, module) => total + module.generated, 0),
-      diagnostics: result.diagnostics.length,
-    };
-  }, async (rebuild) => {
     const config = vscode.workspace.getConfiguration("aospIde");
     const profile = {
       schemaVersion: 1,
@@ -47,42 +36,63 @@ export function activate(context: vscode.ExtensionContext): void {
     };
     if (profile.metadataPackRoot) {
       const validation = await engine.validatePack(profile.metadataPackRoot);
-      if (!validation.valid) {
-        throw new Error(validation.diagnostics.map((item) => `${item.code}: ${item.message}`).join("; "));
-      }
+      if (!validation.valid) throw new Error(validation.diagnostics.map((item) => `${item.code}: ${item.message}`).join("; "));
     }
     const status = await engine.startIndex(profile, rebuild);
-    if (status.state === "running") {
-      for (let attempt = 0; attempt < 40; attempt++) {
-        await new Promise((resolve) => setTimeout(resolve, 50));
-        const current = await engine.indexStatus();
-        if (current.state !== "running") {
-          if (current.state === "ready" || current.state === "partial") {
-            const packRoot = profile.metadataPackRoot;
-            if (packRoot && profile.workspaceViewRoot) {
-              await applyJavaProjection(engine, profile.workspaceViewRoot, packRoot, context.globalStorageUri.fsPath, profile.outRoot);
-            }
-          }
-          return {
-            state: current.state,
-            stage: current.stage,
-            progress: current.progress,
-            modules: current.moduleCount,
-            generated: current.generatedCount,
-            diagnostics: current.diagnostics.length,
-          };
-        }
+    let current = status;
+    for (let attempt = 0; attempt < 40 && current.state === "running"; attempt++) {
+      await new Promise((resolve) => setTimeout(resolve, 50));
+      current = await engine.indexStatus();
+    }
+    if (current.state === "ready" || current.state === "partial") {
+      const packRoot = profile.metadataPackRoot;
+      if (packRoot && profile.workspaceViewRoot) {
+        await applyJavaProjection(engine, profile.workspaceViewRoot, packRoot, context.globalStorageUri.fsPath, profile.outRoot);
       }
     }
     return {
-      state: status.state,
-      stage: status.stage,
-      progress: status.progress,
-      modules: status.moduleCount,
-      generated: status.generatedCount,
-      diagnostics: status.diagnostics.length,
+      state: current.state,
+      stage: current.stage,
+      progress: current.progress,
+      modules: current.moduleCount,
+      generated: current.generatedCount,
+      diagnostics: current.diagnostics.length,
     };
-  });
+  };
+  const profileView = new ProfileViewProvider(context, async (metadataPackRoot) => {
+    await ensureEngine();
+    const validation = await engine.validatePack(metadataPackRoot);
+    if (!validation.valid) {
+      throw new Error(validation.diagnostics.map((item) => `${item.code}: ${item.message}`).join("; "));
+    }
+    const result = await engine.modulesCatalog(metadataPackRoot);
+    return {
+      modules: result.modules.length,
+      generated: result.modules.reduce((total, module) => total + module.generated, 0),
+      diagnostics: result.diagnostics.length,
+    };
+  }, startIndex);
+  let autoGeneration = 0;
+  let autoTimer: NodeJS.Timeout | undefined;
+  const runAutomaticIndex = async (rebuild = false): Promise<void> => {
+    const generation = ++autoGeneration;
+    const root = vscode.workspace.getConfiguration("aospIde").get<string>("workspaceViewRoot")?.trim()
+      || vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
+    if (!root) return;
+    profileView.updateIndexStatus("Starting automatically…");
+    try {
+      const status = await startIndex(rebuild);
+      if (generation !== autoGeneration) return;
+      profileView.updateIndexStatus(`${status.state} · ${status.stage} · ${status.progress}% · ${status.modules} modules · ${status.generated} generated · ${status.diagnostics} diagnostics`);
+    } catch (error) {
+      if (generation !== autoGeneration) return;
+      profileView.updateIndexStatus(`Index unavailable: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  };
+  const scheduleAutomaticIndex = (rebuild = false): void => {
+    if (autoTimer) clearTimeout(autoTimer);
+    autoTimer = setTimeout(() => void runAutomaticIndex(rebuild), 300);
+  };
   context.subscriptions.push(vscode.window.registerWebviewViewProvider("aospWorkspace.setup", profileView));
   context.subscriptions.push(createAospStatusBar(engine, output));
   context.subscriptions.push(
@@ -138,10 +148,11 @@ export function activate(context: vscode.ExtensionContext): void {
         event.affectsConfiguration("aospIde.metadataRoot") ||
         event.affectsConfiguration("aospIde.metadataPackRoot") ||
         event.affectsConfiguration("aospIde.pathMappings")) {
-        void engine.stop();
+        autoGeneration++;
+        void engine.stop().finally(() => scheduleAutomaticIndex(true));
       }
     }),
-    { dispose: () => void engine.stop() },
+    { dispose: () => { if (autoTimer) clearTimeout(autoTimer); void engine.stop(); } },
   );
   const configuredRoot = vscode.workspace.getConfiguration("aospIde").get<string>("workspaceViewRoot")?.trim();
   if (vscode.workspace.workspaceFolders?.length && !configuredRoot) {
@@ -151,7 +162,10 @@ export function activate(context: vscode.ExtensionContext): void {
         await vscode.workspace.getConfiguration("aospIde").update("metadataRoot", detection.root, vscode.ConfigurationTarget.Workspace);
       }
       setTimeout(() => profileView.reveal(), 300);
+      scheduleAutomaticIndex(false);
     });
+  } else if (configuredRoot) {
+    scheduleAutomaticIndex(false);
   }
 }
 

@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 
 export class ProfileViewProvider implements vscode.WebviewViewProvider {
   private view?: vscode.WebviewView;
+  private indexStatus = "Not started";
   constructor(
     private readonly context: vscode.ExtensionContext,
     private readonly inspectPack?: (root: string) => Promise<{ modules: number; generated: number; diagnostics: number }>,
@@ -12,8 +13,16 @@ export class ProfileViewProvider implements vscode.WebviewViewProvider {
     view.webview.options = { enableScripts: true };
     view.webview.html = profileHtml(this.initial());
     this.attachMessages(view.webview);
+    void view.webview.postMessage({ type: "indexStatus", text: this.indexStatus });
   }
   reveal(): void { this.view?.show?.(true); }
+  updateIndexStatus(text: string): void {
+    this.indexStatus = text;
+    void this.view?.webview.postMessage({ type: "indexStatus", text });
+  }
+  showCurrentIndexStatus(): void {
+    this.updateIndexStatus(this.indexStatus);
+  }
   private initial(): Record<string, string> {
     const config = vscode.workspace.getConfiguration("aospIde");
     return {
@@ -57,9 +66,9 @@ export class ProfileViewProvider implements vscode.WebviewViewProvider {
         if (!this.startIndex) return;
         try {
           const status = await this.startIndex(Boolean(message.rebuild));
-          webview.postMessage({ type: "indexStatus", text: `${status.state} · ${status.stage} · ${status.progress}% · ${status.modules} modules · ${status.generated} generated · ${status.diagnostics} diagnostics` });
+          this.updateIndexStatus(`${status.state} · ${status.stage} · ${status.progress}% · ${status.modules} modules · ${status.generated} generated · ${status.diagnostics} diagnostics`);
         } catch (error) {
-          webview.postMessage({ type: "indexStatus", text: `Index unavailable: ${error instanceof Error ? error.message : String(error)}` });
+          this.updateIndexStatus(`Index unavailable: ${error instanceof Error ? error.message : String(error)}`);
         }
       }
       if (message.type === "command" && typeof message.command === "string") await vscode.commands.executeCommand(message.command);
