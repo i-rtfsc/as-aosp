@@ -13,6 +13,7 @@
 - 自动发现 Workspace Root 和 `out`，用户可覆盖为外部挂载路径或 source-only；
 - 独立配置可复制的 Metadata Pack Root，不把 pack 误当成完整 `out`；
 - 提供 Targets 列表和 artifact/module/source selector；不提供 Selected Modules 入口；
+- Targets 必须使用图形化列表和编辑器；Settings JSON/Targets JSON 不是用户入口；
 - profile 是项目级状态，不把 AOSP/MIUI/QCOM 不同源码树静默合并。
 
 ## 2. Neon Workspace 视觉
@@ -41,6 +42,11 @@ Webview sidebar view（使用新 id，避免旧版本 view 状态残留）。
 主视图直接显示可点击的 profile 表单、Workspace View、out/metadata、engine 和 capability
 状态；不使用文章式 TreeView。第二个 Profile view 是同一配置页的稳定别名。Command
 Palette 和状态栏继续作为备用入口。
+
+Targets 区域显示重复项目行，每行包含名称、kind、artifact/module/source 摘要、状态、
+编辑和删除操作。`Add Target` 打开内联 editor：Target name、kind、artifact kind/name、
+Soong modules、source roots 和 dependencies/generated/resources/manifest 开关。保存后生成
+TargetSpec；用户不编辑 JSON。
 
 主 view 声明 `type: webview` 和 `onView:<view-id>` activation event，确保用户点击 Activity Bar 时先激活
 扩展并注册 WebviewViewProvider，不依赖某个语言文件或其他 command 先触发 activation。

@@ -37,6 +37,7 @@
 ## Phase 5：VS Code
 
 - current `java.project.*` 继续作为 fallback；
+- VS Code 先交付图形化 TargetSpec 列表/editor，删除 Targets JSON 用户入口；
 - 实现 JDT LS 多 project/importer 或 workspace-scoped project descriptions；
 - target-scoped source/generated/classpath；
 - target-scoped clangd compdb overlay；
