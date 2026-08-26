@@ -1,0 +1,37 @@
+clients/vscode/src/ui/profile_panel.ts
+  s_0fcc3f909ad4ee::t_444930fbd378b9 32,50,88
+  s_0fcc3f909ad4ee::t_5954da138a3426 124
+  s_0fcc3f909ad4ee::t_aaf31b3ed9378e 133-136
+  s_0fcc3f909ad4ee::t_3dd12eb2901c42 129
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/profile/EngineProfileState.kt
+  s_0fcc3f909ad4ee::t_42f589563fb6f6 10
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/profile/ProfileConfigurable.kt
+  s_0fcc3f909ad4ee::t_42f589563fb6f6 88,101,117
+  s_0fcc3f909ad4ee::t_f4552a873d41df 35,62
+clients/vscode/src/navigation/java_projection.ts
+  s_0fcc3f909ad4ee::t_444930fbd378b9 22,29
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/project/BuildFactsProjection.kt
+  s_0fcc3f909ad4ee::t_42f589563fb6f6 51-52
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/profile/ProfileJson.kt
+  s_0fcc3f909ad4ee::t_42f589563fb6f6 23
+clients/vscode/package.json
+  s_0fcc3f909ad4ee::t_444930fbd378b9 50-55
+clients/vscode/src/extension.ts
+  s_0fcc3f909ad4ee::t_aaf31b3ed9378e 34,51
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "8409b797e5d66e68b62d73b27e72f988410a4ab3",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
