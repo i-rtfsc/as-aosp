@@ -59,10 +59,14 @@ Palette 和状态栏继续作为备用入口。
 
 ## 4. JetBrains
 
-注册 `AOSP IDE` Tool Window，提供与 VS Code 相同的 Overview/Profile/Sources/Build & Out/
+注册 `AOSP Workspace` Tool Window，提供与 VS Code 相同的 Overview/Profile/Sources/Build & Out/
 Diagnostics 卡片。Settings Configurable 保留为高级编辑入口，默认项目操作从 Tool Window
 完成。打开项目时以项目根为 Workspace View 候选并自动检测 `out`；用户可以通过 Browse
 覆盖为外部 out 或选择 Source-only。
+
+JetBrains startup activity 在已有 profile 时自动执行 Build-Facts projection；Tool Window
+提供状态、模块/generated 计数、diagnostics 和 `Apply/Rebuild` 操作。状态由项目级
+coordinator service 保存，窗口关闭后重新打开仍恢复最后快照。
 
 ## 5. 自动 out 检测
 
