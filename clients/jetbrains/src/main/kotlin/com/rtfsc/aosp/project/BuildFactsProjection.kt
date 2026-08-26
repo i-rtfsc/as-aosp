@@ -119,8 +119,17 @@ internal object BuildFactsProjection {
                 val suffix = raw.removePrefix(packOutRoot.trimEnd('/', '\\') + java.io.File.separator)
                 Paths.get(outRoot).resolve(suffix.replace('/', java.io.File.separatorChar)).normalize()
             } else candidate
-            if (relocated != null && Files.isRegularFile(relocated) && relocated.toString().endsWith(".jar")) {
-                libraries.add(relocated)
+            val packed = if (packOutRoot.isNotBlank() && raw.startsWith(packOutRoot.trimEnd('/', '\\') + java.io.File.separator)) {
+                val suffix = raw.removePrefix(packOutRoot.trimEnd('/', '\\') + java.io.File.separator)
+                Paths.get(packRoot).resolve("out").resolve(suffix.replace('/', java.io.File.separatorChar)).normalize()
+            } else null
+            val selected = when {
+                relocated != null && Files.isRegularFile(relocated) -> relocated
+                packed != null && Files.isRegularFile(packed) -> packed
+                else -> null
+            }
+            if (selected != null && selected.toString().endsWith(".jar")) {
+                libraries.add(selected)
             } else if (outRoot.isNotBlank() || raw.isNotBlank()) {
                 skipped[0]++
             }

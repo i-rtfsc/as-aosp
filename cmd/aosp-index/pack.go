@@ -73,6 +73,10 @@ func runPackInspect(args []string) {
 		fatal(err)
 	}
 	output := map[string]any{"modules": len(catalog.Modules)}
+	jarFiles, jarBytes := packArtifactStats(*root, filepath.Join("out"), ".jar")
+	srcjarFiles, srcjarBytes := packArtifactStats(*root, filepath.Join("generated", "srcjars"), ".srcjar")
+	output["jars"] = map[string]any{"files": jarFiles, "bytes": jarBytes}
+	output["srcjars"] = map[string]any{"files": srcjarFiles, "bytes": srcjarBytes}
 	if *moduleName != "" {
 		module, ok := catalog.Modules[*moduleName]
 		if !ok {
@@ -82,6 +86,22 @@ func runPackInspect(args []string) {
 		output["closure"] = catalog.Closure([]string{*moduleName})
 	}
 	writeJSON(output)
+}
+
+func packArtifactStats(root, relativeRoot, extension string) (int, int64) {
+	files := 0
+	var bytes int64
+	_ = filepath.WalkDir(filepath.Join(root, relativeRoot), func(pathName string, entry os.DirEntry, err error) error {
+		if err != nil || entry.IsDir() || strings.ToLower(filepath.Ext(entry.Name())) != extension {
+			return nil
+		}
+		if info, infoErr := entry.Info(); infoErr == nil {
+			files++
+			bytes += info.Size()
+		}
+		return nil
+	})
+	return files, bytes
 }
 
 type stringFlags []string
@@ -115,6 +135,9 @@ func exportPack(aospRoot, outRoot, destination string, native bool, modules []st
 		}
 	}
 	if err := writePackCatalog(tmp); err != nil {
+		return err
+	}
+	if err := copyPackLibraries(tmp, outRoot, modules); err != nil {
 		return err
 	}
 	selectedPrefixes, err := selectedRepoPrefixes(tmp, modules)
@@ -207,6 +230,64 @@ func exportPack(aospRoot, outRoot, destination string, native bool, modules []st
 	}
 	_ = os.RemoveAll(destination)
 	return os.Rename(tmp, destination)
+}
+
+func copyPackLibraries(root, outRoot string, names []string) error {
+	catalog, err := coremodules.LoadPackCatalog(root)
+	if err != nil {
+		return err
+	}
+	selected := make([]string, 0)
+	if len(names) == 0 {
+		for name := range catalog.Modules {
+			selected = append(selected, name)
+		}
+	} else {
+		selected = catalog.Closure(names)
+	}
+	seen := map[string]bool{}
+	for _, name := range selected {
+		for _, ref := range catalog.Modules[name].Jars {
+			source, destination, ok := resolvePackArtifact(outRoot, ref.Raw)
+			if !ok || seen[destination] {
+				continue
+			}
+			if err := copyFile(source, filepath.Join(root, destination)); err != nil {
+				return err
+			}
+			seen[destination] = true
+		}
+	}
+	return nil
+}
+
+func resolvePackArtifact(outRoot, raw string) (string, string, bool) {
+	normalized := filepath.ToSlash(strings.TrimSpace(raw))
+	if normalized == "" || strings.Contains(normalized, "..") {
+		return "", "", false
+	}
+	if filepath.IsAbs(raw) {
+		base := filepath.ToSlash(filepath.Clean(outRoot))
+		if !strings.HasPrefix(normalized, base+"/") {
+			return "", "", false
+		}
+		suffix := strings.TrimPrefix(normalized, base+"/")
+		if !strings.HasSuffix(strings.ToLower(suffix), ".jar") {
+			return "", "", false
+		}
+		if _, err := os.Stat(raw); err != nil {
+			return "", "", false
+		}
+		return raw, filepath.ToSlash(filepath.Join("out", filepath.FromSlash(suffix))), true
+	}
+	if !strings.HasSuffix(strings.ToLower(normalized), ".jar") {
+		return "", "", false
+	}
+	source := filepath.Join(outRoot, filepath.FromSlash(normalized))
+	if _, err := os.Stat(source); err != nil {
+		return "", "", false
+	}
+	return source, filepath.ToSlash(filepath.Join("out", filepath.FromSlash(normalized))), true
 }
 
 func selectedSrcJars(root string, names []string) (map[string]bool, error) {

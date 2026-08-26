@@ -66,6 +66,15 @@ function resolveLocalPath(packRoot: string, outRoot: string, packOutRoot: string
     candidate = path.join(packRoot, ...ref.raw.replaceAll("\\", "/").split("/"));
   }
   if (candidate && fs.existsSync(candidate)) return candidate;
+  if (packOutRoot && ref.raw) {
+    const normalized = ref.raw.replaceAll("\\", "/");
+    const sourceRoot = packOutRoot.replaceAll("\\", "/");
+    if (normalized.startsWith(sourceRoot + "/")) {
+      const suffix = normalized.slice(sourceRoot.length + 1);
+      const packed = path.join(packRoot, "out", ...suffix.split("/"));
+      if (fs.existsSync(packed)) return packed;
+    }
+  }
   if (outRoot && ref.raw && !ref.raw.includes("..")) {
     const normalized = ref.raw.replaceAll("\\", "/");
     if (packOutRoot && normalized.startsWith(packOutRoot.replaceAll("\\", "/") + "/")) {

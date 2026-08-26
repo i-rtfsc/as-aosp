@@ -50,6 +50,38 @@ func TestExportPackReadsSoongMetadataCandidate(t *testing.T) {
 	}
 }
 
+func TestExportPackCopiesReferencedJarsIntoPack(t *testing.T) {
+	root := t.TempDir()
+	out := filepath.Join(root, "out")
+	writePackFixture(t, filepath.Join(out, "module-info.json"), `{}`)
+	writePackFixture(t, filepath.Join(out, "module_bp_java_deps.json"), `{"framework":{"jars":["/srv/aosp/out/soong/framework.jar"]}}`)
+	jar := filepath.Join(out, "soong", "framework.jar")
+	writePackFixture(t, jar, "jar-bytes")
+	// The fixture uses a different recorded build root, so no copy is expected.
+	destination := filepath.Join(root, "pack")
+	if err := exportPack(root, out, destination, false, nil); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := os.Stat(filepath.Join(destination, "out", "soong", "framework.jar")); !os.IsNotExist(err) {
+		t.Fatalf("unrelated absolute jar was copied: %v", err)
+	}
+}
+
+func TestExportPackCopiesRelativeReferencedJars(t *testing.T) {
+	root := t.TempDir()
+	out := filepath.Join(root, "out")
+	writePackFixture(t, filepath.Join(out, "module-info.json"), `{}`)
+	writePackFixture(t, filepath.Join(out, "module_bp_java_deps.json"), `{"framework":{"jars":["soong/framework.jar"]}}`)
+	writePackFixture(t, filepath.Join(out, "soong", "framework.jar"), "jar-bytes")
+	destination := filepath.Join(root, "pack")
+	if err := exportPack(root, out, destination, false, nil); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := os.Stat(filepath.Join(destination, "out", "soong", "framework.jar")); err != nil {
+		t.Fatalf("relative jar missing: %v", err)
+	}
+}
+
 func TestValidatePackRejectsChecksumMismatch(t *testing.T) {
 	root := t.TempDir()
 	out := filepath.Join(root, "out")
