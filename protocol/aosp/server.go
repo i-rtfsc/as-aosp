@@ -68,6 +68,7 @@ type Capabilities struct {
 	JNINavigation      bool `json:"jniNavigation"`
 	ModuleCatalog      bool `json:"moduleCatalog"`
 	IndexCoordinator   bool `json:"indexCoordinator"`
+	ProjectGraph       bool `json:"projectGraph"`
 }
 
 type ProfileResult struct {
@@ -157,6 +158,8 @@ func (server *Server) Handle(request jsonrpc.Request) (jsonrpc.Response, bool) {
 		response = server.packInfo(request)
 	case "aosp/pack/validate":
 		response = server.packValidate(request)
+	case "aosp/projects/graph":
+		response = server.projectGraph(request)
 	case "aosp/aidl/pack/resolve":
 		response = server.aidlPackResolve(request)
 	case "aosp/aidl/pack/references":
@@ -194,6 +197,7 @@ func (server *Server) initialize(request jsonrpc.Request) (jsonrpc.Response, boo
 			JNINavigation:      true,
 			ModuleCatalog:      true,
 			IndexCoordinator:   true,
+			ProjectGraph:       true,
 		},
 	}), !request.IsNotification()
 }

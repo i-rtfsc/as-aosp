@@ -30,7 +30,7 @@ type Result struct {
 
 func Validate(root string) Result {
 	result := Result{Valid: false, Diagnostics: []Diagnostic{}}
-	required := []string{"manifest.json", "checksums.sha256", filepath.Join("generated", "manifest.json"), filepath.Join("modules", "catalog.json"), filepath.Join("modules", "dependency-graph.json"), filepath.Join("aidl", "symbols.json"), filepath.Join("aidl", "index.json"), filepath.Join("aidl", "modules.json")}
+	required := []string{"manifest.json", "checksums.sha256", filepath.Join("generated", "manifest.json"), filepath.Join("modules", "catalog.json"), filepath.Join("modules", "dependency-graph.json"), filepath.Join("artifacts", "catalog.json"), filepath.Join("aidl", "symbols.json"), filepath.Join("aidl", "index.json"), filepath.Join("aidl", "modules.json")}
 	for _, file := range required {
 		if _, err := os.Stat(filepath.Join(root, file)); err != nil {
 			result.Diagnostics = append(result.Diagnostics, Diagnostic{Code: "PACK_FILE_MISSING", Message: err.Error(), Path: file})
@@ -51,6 +51,10 @@ func Validate(root string) Result {
 	}
 	if _, err := modules.LoadPackCatalog(root); err != nil {
 		return invalid("PACK_MODULE_CATALOG_INVALID", err.Error(), filepath.Join("modules", "catalog.json"))
+	}
+	var artifactsCatalog map[string]any
+	if err := readJSON(root, filepath.Join("artifacts", "catalog.json"), &artifactsCatalog); err != nil || artifactsCatalog == nil {
+		return invalid("PACK_ARTIFACT_CATALOG_INVALID", "artifact catalog is invalid", filepath.Join("artifacts", "catalog.json"))
 	}
 	var aidlIndex aidl.Index
 	if err := readJSON(root, filepath.Join("aidl", "index.json"), &aidlIndex); err != nil || aidlIndex.Documents == nil || aidlIndex.Symbols == nil {

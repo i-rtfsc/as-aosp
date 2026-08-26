@@ -15,6 +15,7 @@ import (
 	"strings"
 
 	"github.com/i-rtfsc/as-aosp/core/aidl"
+	"github.com/i-rtfsc/as-aosp/core/artifacts"
 	"github.com/i-rtfsc/as-aosp/core/jni"
 	"github.com/i-rtfsc/as-aosp/core/metadata"
 	"github.com/i-rtfsc/as-aosp/core/model"
@@ -207,6 +208,9 @@ func exportPack(aospRoot, outRoot, destination string, native bool, modules []st
 	if err := writePackCatalog(tmp); err != nil {
 		return err
 	}
+	if err := writeArtifactCatalog(tmp); err != nil {
+		return err
+	}
 	if err := copyPackLibraries(tmp, outRoot, modules); err != nil {
 		return err
 	}
@@ -307,6 +311,22 @@ func exportPack(aospRoot, outRoot, destination string, native bool, modules []st
 	}
 	_ = os.RemoveAll(destination)
 	return os.Rename(tmp, destination)
+}
+
+func writeArtifactCatalog(root string) error {
+	catalog, err := coremodules.LoadPackCatalog(root)
+	if err != nil {
+		return err
+	}
+	artifactCatalog := artifacts.Build(catalog)
+	if err := os.MkdirAll(filepath.Join(root, "artifacts"), 0o755); err != nil {
+		return err
+	}
+	data, err := json.MarshalIndent(artifactCatalog, "", "  ")
+	if err != nil {
+		return err
+	}
+	return os.WriteFile(filepath.Join(root, "artifacts", "catalog.json"), append(data, '\n'), 0o644)
 }
 
 func copyPackLibraries(root, outRoot string, names []string) error {

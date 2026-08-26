@@ -22,6 +22,7 @@
 
 - pack 增加 `artifacts/catalog.json` 和 target resolution facts；
 - 新增 target resolve/project graph RPC；
+- 当前首个 RPC 名称为 `aosp/projects/graph`；
 - manifest 记录 target closure 与 artifact coverage；
 - 验收：Linux 导出后 Mac 可离线解析相同 ProjectGraph。
 

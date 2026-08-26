@@ -30,6 +30,9 @@ aosp-metadata-pack/
 │   └── manifest.json
 ├── out/
 │   └── **/*.jar
+├── artifacts/
+│   ├── catalog.json
+│   └── dependency-graph.json
 ├── modules/
 │   ├── catalog.json
 │   └── dependency-graph.json
@@ -49,6 +52,8 @@ aosp-metadata-pack/
 - `modules/dependency-graph.json`：模块依赖闭包。
 - `out/**/*.jar`：ModuleCatalog 明确引用且在导出 out 内存在的 Java classpath；
   保留 out 相对路径，跨机器客户端按 manifest `outRoot` 严格重定位。
+- `artifacts/catalog.json`：jar、srcjar、apk 等用户 Target artifact 的 identity、owner
+  module、路径和匹配信息；不把 APK 当作普通 Java library。
 
 ### Native facts
 

@@ -116,7 +116,11 @@ Build-Facts ModuleCatalog 查询 slice：
 aosp/modules/catalog
 aosp/modules/get
 aosp/modules/closure
+aosp/projects/graph
 ```
+
+`aosp/projects/graph` 接收 TargetSpec 集合，返回统一 ProjectGraph。`selectedModules`
+仅作为兼容参数；客户端不应再独立 flatten ModuleCatalog。
 
 三个方法都显式携带 `metadataPackRoot`，不依赖 daemon 当前工作目录或
 进程级全局 profile。`catalog` 返回按模块名排序的摘要，供 UI 选择模块和

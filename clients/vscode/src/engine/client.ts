@@ -75,6 +75,25 @@ export interface ModulesClosureResult {
   diagnostics: unknown[];
 }
 
+export interface ProjectGraphResult {
+  graph: {
+    targets: Array<{
+      spec: { id: string; kind: string };
+      resolvedModules: string[];
+      resolvedArtifacts: Array<{ id: string; kind: string; name: string; path: { raw: string; repoPath?: string } }>;
+      sourceRoots: Array<{ raw: string; kind: string; repoPath?: string }>;
+      generatedRoots: Array<{ raw: string; kind: string; repoPath?: string }>;
+      libraries: Array<{ raw: string; kind: string; repoPath?: string }>;
+      dependencies: string[];
+      diagnostics: unknown[];
+    }>;
+    ownership: Array<{ repoPath: string; targetId: string }>;
+    duplicateSourceDecisions: string[];
+    diagnostics: unknown[];
+  };
+  diagnostics: unknown[];
+}
+
 export interface IndexSnapshot {
   profileId?: string;
   state: string;
@@ -221,6 +240,10 @@ export class EngineClient {
 
   async modulesClosure(metadataPackRoot: string, names: string[]): Promise<ModulesClosureResult> {
     return this.request("aosp/modules/closure", { metadataPackRoot, names });
+  }
+
+  async projectGraph(metadataPackRoot: string, targets: unknown[], selectedModules: string[] = []): Promise<ProjectGraphResult> {
+    return this.request("aosp/projects/graph", { metadataPackRoot, targets, selectedModules });
   }
 
   async startIndex(profile: unknown, rebuild = false): Promise<IndexSnapshot> {

@@ -73,6 +73,7 @@ func minimalPack(t *testing.T) string {
 		"generated/manifest.json": `[]`, "modules/catalog.json": `{"modules":{}}`,
 		"modules/dependency-graph.json": `{}`, "aidl/symbols.json": `{}`,
 		"aidl/index.json": `{"documents":{},"symbols":{}}`, "aidl/modules.json": `[]`,
+		"artifacts/catalog.json": `{"artifacts":{}}`,
 	}
 	for name, data := range files {
 		writeFile(t, filepath.Join(root, name), []byte(data))

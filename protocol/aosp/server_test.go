@@ -93,6 +93,40 @@ func TestServerQueriesModuleCatalogFromPack(t *testing.T) {
 	}
 }
 
+func TestServerBuildsProjectGraphFromPack(t *testing.T) {
+	root := t.TempDir()
+	modulePath := filepath.Join(root, "modules", "catalog.json")
+	artifactPath := filepath.Join(root, "artifacts", "catalog.json")
+	for _, pathName := range []string{modulePath, artifactPath} {
+		if err := os.MkdirAll(filepath.Dir(pathName), 0o755); err != nil {
+			t.Fatal(err)
+		}
+	}
+	moduleData := `{"modules":{"framework":{"name":"framework","sourceRoots":[{"raw":"frameworks/base/core/java","kind":"repo-relative","repoPath":"frameworks/base/core/java"}]}}}`
+	artifactData := `{"artifacts":{"jar:framework.jar":{"id":"jar:framework.jar","kind":"jar","name":"framework.jar","path":{"raw":"out/framework.jar","kind":"generated","repoPath":"out/framework.jar"},"ownerModules":["framework"]}}}`
+	if err := os.WriteFile(modulePath, []byte(moduleData), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(artifactPath, []byte(artifactData), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	server := initializedServer(t)
+	response, _ := server.Handle(makeRequest(2, "aosp/projects/graph", ProjectGraphParams{
+		MetadataPackRoot: root,
+		Targets: []model.TargetSpec{{
+			ID: "framework", Kind: model.TargetJava,
+			Selectors: model.TargetSelectors{Artifacts: []model.ArtifactSelector{{Kind: model.ArtifactJar, Name: "framework.jar"}}},
+		}},
+	}))
+	var result ProjectGraphResult
+	decodeResult(t, response, &result)
+	if len(result.Diagnostics) != 0 || len(result.Graph.Targets) != 1 ||
+		len(result.Graph.Targets[0].ResolvedArtifacts) != 1 ||
+		result.Graph.Targets[0].ResolvedArtifacts[0].Name != "framework.jar" {
+		t.Fatalf("result=%+v", result)
+	}
+}
+
 func TestServerInvalidatesPackValidationAfterInPlaceChange(t *testing.T) {
 	root := t.TempDir()
 	pathName := filepath.Join(root, "modules", "catalog.json")
@@ -139,7 +173,8 @@ func writeMinimalValidPack(t *testing.T, root, catalogPath string) {
 	files := map[string]string{
 		"manifest.json":           `{"schemaVersion":1,"packs":["core"]}`,
 		"generated/manifest.json": `[]`, "modules/dependency-graph.json": `{}`,
-		"aidl/symbols.json": `{}`, "aidl/index.json": `{"documents":{},"symbols":{}}`,
+		"artifacts/catalog.json": `{"artifacts":{}}`,
+		"aidl/symbols.json":      `{}`, "aidl/index.json": `{"documents":{},"symbols":{}}`,
 		"aidl/modules.json": `[]`,
 	}
 	for pathName, data := range files {
@@ -156,7 +191,7 @@ func writeMinimalValidPack(t *testing.T, root, catalogPath string) {
 	}
 	// This fixture only exercises cache invalidation; the first validation must succeed.
 	checksums := ""
-	for _, pathName := range []string{"aidl/index.json", "aidl/modules.json", "aidl/symbols.json", "generated/manifest.json", "manifest.json", "modules/catalog.json", "modules/dependency-graph.json"} {
+	for _, pathName := range []string{"aidl/index.json", "aidl/modules.json", "aidl/symbols.json", "generated/manifest.json", "manifest.json", "modules/catalog.json", "modules/dependency-graph.json", "artifacts/catalog.json"} {
 		data, _ := os.ReadFile(filepath.Join(root, pathName))
 		sum := sha256.Sum256(data)
 		checksums += hex.EncodeToString(sum[:]) + "  " + pathName + "\n"
