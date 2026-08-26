@@ -1,0 +1,38 @@
+docs/roadmap/build-facts-migration-plan.md
+  h_8b376749578497 34-36,48-49
+docs/README.md
+  h_8b376749578497 24
+docs/research/aosp-ide-navigation-reaudit-2026-08.md
+  s_0fcc3f909ad4ee::t_400c0c47fd5197 1-4,19-35,62-75,88-97,108-112,118,122-149,157-182
+  s_0fcc3f909ad4ee::t_a7d9de1b6d292c 16-18
+  h_8b376749578497 5-15,36-61,76-87,98-107,113-117,119-121,150-156
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "b807be400c132f0fc6ca1eda755c53c5f2cb6c02",
+  "prompts": {},
+  "humans": {
+    "h_8b376749578497": {
+      "author": "Solo <anqi.huang@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    },
+    "s_e9dd769d815b63": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a03183-9fdd-7f72-b2c6-acb6e5382f11",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
