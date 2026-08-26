@@ -62,6 +62,8 @@
   pack 原子替换或原地文件变化后自动失效。
 - daemon pack 校验采用 per-pack singleflight；同一 fingerprint 的并发查询共享一次
   checksum 工作，不同 pack 可以并行，校验期间发生变化的结果不会写入旧缓存。
+- `core/pack` 已对 generated manifest 与 srcjar entry 做内容一致性校验，拒绝 entry
+  漂移和 zip-slip；不要求部分 Workspace View 的源码实体位于 pack 内。
 - 当前 JNI 只覆盖 Java/Kotlin declaration、静态导出、常见 `JNINativeMethod` 注册表和有限注册调用；复杂宏、运行时 class 解析和完整 C++ 语义仍未覆盖；
 - 当前已有本地六平台 engine/JetBrains ZIP/VS Code VSIX 打包入口，以及 VS Code 显式/bundled/PATH engine 选择逻辑；尚未完成把 bundled engine 嵌入 VSIX、签名、公证、发布版下载和 marketplace verifier；
 - 当前没有任何远程执行服务；

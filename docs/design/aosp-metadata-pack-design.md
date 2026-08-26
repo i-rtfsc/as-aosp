@@ -285,6 +285,8 @@ root。generated source 只有在本机可见或 pack 自带时标记 exact，�
 - checksum 清单必须完整覆盖 pack 文件，拒绝重复、遗漏、额外文件和逃逸路径；
 - Core Pack 必须包含合法 ModuleCatalog、AIDL index 和 generated manifest；
 - Native Pack 必须额外包含合法 JNI index；
+- generated manifest 的 entry 列表必须与 srcjar 实际普通文件完全一致，并拒绝
+  zip-slip、绝对路径和不安全 entry；
 - 解压拒绝绝对路径、`..`、symlink 和超大 entry；
 - 写入 `.aosp-ide/cache`，不写源码；
 - 导入失败不替换旧 pack；
