@@ -33,6 +33,7 @@ internal class ProfileConfigurable(
     private val outRoot = TextFieldWithBrowseButton()
     private val metadataPackRoot = TextFieldWithBrowseButton()
     private val selectedModules = JBTextField()
+    private val pathMappings = JBTextField()
     private val engineExecutable = TextFieldWithBrowseButton()
     private val validateButton = JButton("Validate")
     private val applyRootsButton = JButton("Apply Focused Roots")
@@ -60,6 +61,7 @@ internal class ProfileConfigurable(
             .addLabeledComponent(JLabel("Out Root"), outRoot)
             .addLabeledComponent(JLabel("Metadata Pack Root"), metadataPackRoot)
             .addLabeledComponent(JLabel("Selected Modules"), selectedModules)
+            .addLabeledComponent(JLabel("Path Mappings JSON"), pathMappings)
             .addLabeledComponent(JLabel("Engine Executable"), engineExecutable)
             .panel
         val actions = JPanel(FlowLayout(FlowLayout.LEFT))
@@ -86,6 +88,7 @@ internal class ProfileConfigurable(
             state.outRoot = draft.outRoot
             state.metadataPackRoot = draft.metadataPackRoot
             state.selectedModules = draft.selectedModules
+            state.pathMappings = draft.pathMappings
             state.engineExecutable = draft.engineExecutable
         }
     }
@@ -99,6 +102,7 @@ internal class ProfileConfigurable(
         outRoot.text = state.outRoot
         metadataPackRoot.text = state.metadataPackRoot
         selectedModules.text = state.selectedModules
+        pathMappings.text = state.pathMappings
         engineExecutable.text = state.engineExecutable
     }
 
@@ -115,6 +119,7 @@ internal class ProfileConfigurable(
             outRoot = outRoot.text,
             metadataPackRoot = metadataPackRoot.text,
             selectedModules = selectedModules.text,
+            pathMappings = pathMappings.text,
             engineExecutable = engineExecutable.text,
         )
     }

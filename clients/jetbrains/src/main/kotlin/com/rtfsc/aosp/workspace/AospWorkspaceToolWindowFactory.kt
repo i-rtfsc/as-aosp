@@ -17,6 +17,11 @@ import javax.swing.BorderFactory
 import javax.swing.JButton
 import javax.swing.JPanel
 import javax.swing.SwingUtilities
+import com.fasterxml.jackson.databind.ObjectMapper
+import java.nio.file.Files
+import java.nio.file.Path
+import com.intellij.openapi.progress.Task
+import com.intellij.openapi.progress.ProgressIndicator
 
 internal class AospWorkspaceToolWindowFactory : ToolWindowFactory {
     override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
@@ -27,6 +32,7 @@ internal class AospWorkspaceToolWindowFactory : ToolWindowFactory {
         val state = JBLabel("Idle")
         val counts = JBLabel("0 source roots · 0 generated · 0 libraries")
         val diagnostics = JBLabel("0 diagnostics")
+        val compdb = JBLabel("CompDB not refreshed")
 
         val header = JBPanel<JBPanel<*>>(BorderLayout()).apply {
             border = BorderFactory.createEmptyBorder(12, 12, 10, 12)
@@ -39,10 +45,12 @@ internal class AospWorkspaceToolWindowFactory : ToolWindowFactory {
             add(JBLabel("WORKSPACE")); add(root)
             add(JBLabel("METADATA PACK")); add(pack)
             add(JBLabel("INDEX STATUS")); add(state); add(counts); add(diagnostics)
+            add(JBLabel("C/C++ COMPDB")); add(compdb)
         }
         val actions = JPanel(FlowLayout(FlowLayout.LEFT)).apply {
             add(JButton("Apply").apply { addActionListener { coordinator.start(false) } })
             add(JButton("Rebuild").apply { addActionListener { coordinator.start(true) } })
+            add(JButton("Refresh CompDB").apply { addActionListener { refreshCompdb(project, settings, compdb) } })
             add(JButton("Settings").apply { addActionListener { ShowSettingsUtil.getInstance().showSettingsDialog(project, "AOSP Workspace") } })
         }
         val panel = JPanel(BorderLayout()).apply {
@@ -70,5 +78,49 @@ internal class AospWorkspaceToolWindowFactory : ToolWindowFactory {
             }
         }
         toolWindow.contentManager.addContent(ContentFactory.getInstance().createContent(panel, "Overview", false))
+    }
+
+    private fun refreshCompdb(project: Project, settings: EngineProfileSettings, label: JBLabel) {
+        object : Task.Backgroundable(project, "Refreshing AOSP compilation database", true) {
+            private var summary = "CompDB refresh failed"
+
+            override fun run(indicator: ProgressIndicator) {
+                indicator.text = "Mapping Native Pack compilation commands"
+                val mapper = ObjectMapper()
+                val profile = settings.current
+                val mappings = runCatching { mapper.readTree(profile.pathMappings) }.getOrNull()
+                    ?: mapper.createArrayNode()
+                val params = mapper.writeValueAsString(
+                    mapOf(
+                        "metadataRoot" to profile.outRoot,
+                        "metadataPackRoot" to profile.metadataPackRoot,
+                        "workspaceViewRoot" to profile.workspaceViewRoot,
+                        "pathMappings" to mappings,
+                    ),
+                )
+                val result = mapper.readTree(
+                    project.getService(com.rtfsc.aosp.engine.ProjectEngineService::class.java)
+                        .compdbOverlay(params),
+                ).path("result")
+                val entries = result.path("entries")
+                val target = Path.of(
+                    project.basePath ?: System.getProperty("java.io.tmpdir"),
+                    ".aosp-ide",
+                    "compdb-overlay",
+                    "compile_commands.json",
+                )
+                Files.createDirectories(target.parent)
+                Files.writeString(target, mapper.writerWithDefaultPrettyPrinter().writeValueAsString(entries))
+                summary = "${entries.size()} entries · ${result.path("diagnostics").size()} diagnostics"
+            }
+
+            override fun onSuccess() {
+                label.text = summary
+            }
+
+            override fun onThrowable(error: Throwable) {
+                label.text = "CompDB error · ${error.message ?: error.javaClass.simpleName}"
+            }
+        }.queue()
     }
 }

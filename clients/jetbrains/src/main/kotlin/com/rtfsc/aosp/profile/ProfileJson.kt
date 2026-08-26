@@ -21,6 +21,7 @@ internal object ProfileJson {
                     "outRoot" to state.outRoot,
                     "metadataPackRoot" to state.metadataPackRoot,
                     "selectedModules" to state.selectedModules.split(',').map(String::trim).filter(String::isNotEmpty),
+                    "pathMappings" to (runCatching { mapper.readTree(state.pathMappings) }.getOrNull() ?: emptyList<Any>()),
                     "visibilityPolicy" to mapOf("mode" to "strict-view"),
                     "buildIntegration" to mapOf("mode" to "read-only"),
                 ),
