@@ -1,12 +1,15 @@
 package pack
 
 import (
+	"archive/zip"
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
+	"reflect"
+	"sort"
 	"strings"
 
 	"github.com/i-rtfsc/as-aosp/core/aidl"
@@ -58,7 +61,8 @@ func Validate(root string) Result {
 		return invalid("PACK_AIDL_SYMBOLS_INVALID", "AIDL symbols are invalid", filepath.Join("aidl", "symbols.json"))
 	}
 	var generated []struct {
-		Path string `json:"path"`
+		Path    string   `json:"path"`
+		Entries []string `json:"entries"`
 	}
 	if err := readJSON(root, filepath.Join("generated", "manifest.json"), &generated); err != nil || generated == nil {
 		return invalid("PACK_GENERATED_MANIFEST_INVALID", "generated manifest is invalid", filepath.Join("generated", "manifest.json"))
@@ -70,6 +74,13 @@ func Validate(root string) Result {
 		}
 		if _, err := os.Stat(filepath.Join(root, filepath.FromSlash(name))); err != nil {
 			return invalid("PACK_GENERATED_ARCHIVE_MISSING", err.Error(), name)
+		}
+		actual, err := archiveEntries(filepath.Join(root, filepath.FromSlash(name)))
+		if err != nil {
+			return invalid("PACK_GENERATED_ARCHIVE_INVALID", err.Error(), name)
+		}
+		if !sameStrings(actual, entry.Entries) {
+			return invalid("PACK_GENERATED_ENTRIES_MISMATCH", "generated manifest entries do not match archive", name)
 		}
 	}
 	if contains(manifest.Packs, "native") {
@@ -113,6 +124,35 @@ func Validate(root string) Result {
 	}
 	result.Valid = true
 	return result
+}
+
+func archiveEntries(pathName string) ([]string, error) {
+	reader, err := zip.OpenReader(pathName)
+	if err != nil {
+		return nil, err
+	}
+	defer reader.Close()
+	entries := make([]string, 0, len(reader.File))
+	for _, file := range reader.File {
+		name := strings.TrimPrefix(strings.ReplaceAll(file.Name, "\\", "/"), "/")
+		if name == "" || name == "." || strings.Contains(name, "../") || strings.HasPrefix(name, "../") {
+			return nil, fmt.Errorf("unsafe archive entry: %s", file.Name)
+		}
+		if file.FileInfo().IsDir() {
+			continue
+		}
+		entries = append(entries, name)
+	}
+	sort.Strings(entries)
+	return entries, nil
+}
+
+func sameStrings(left, right []string) bool {
+	copyLeft := append([]string(nil), left...)
+	copyRight := append([]string(nil), right...)
+	sort.Strings(copyLeft)
+	sort.Strings(copyRight)
+	return reflect.DeepEqual(copyLeft, copyRight)
 }
 
 func invalid(code, message, path string) Result {
