@@ -1,0 +1,26 @@
+core/pack/validate_test.go
+  s_0fcc3f909ad4ee::t_e0dd8f7c463540 4-7,31-61,63-66,70-73
+  s_0fcc3f909ad4ee::t_7e6f5246ec2326 91-93
+  s_0fcc3f909ad4ee::t_ebf4cbff15a317 10
+  s_0fcc3f909ad4ee::t_91b80b1eb6eb94 62,67-69,74-90,94-126
+core/pack/validate.go
+  s_0fcc3f909ad4ee::t_38106415bb5d8c 11-12
+  s_0fcc3f909ad4ee::t_c4072110ef8a0d 4,64-65,78-84,129-156
+  s_0fcc3f909ad4ee::t_31729359a4c128 157
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "b3f46f6db77a854fb41584d85a46d3502fadc047",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
