@@ -14,6 +14,7 @@ import com.rtfsc.aosp.engine.EngineProcess
 import com.rtfsc.aosp.engine.EngineCommand
 import com.rtfsc.aosp.project.WorkspaceRootPlanner
 import com.rtfsc.aosp.project.FocusedRootsService
+import com.rtfsc.aosp.workspace.WorkspaceCoordinatorService
 import java.awt.BorderLayout
 import java.awt.FlowLayout
 import java.awt.event.ActionListener
@@ -68,7 +69,7 @@ internal class ProfileConfigurable(
         panel.add(actions, BorderLayout.SOUTH)
     }
 
-    override fun getDisplayName(): String = "AOSP IDE"
+    override fun getDisplayName(): String = "AOSP Workspace"
 
     override fun createComponent(): JComponent = panel
 
@@ -85,6 +86,7 @@ internal class ProfileConfigurable(
             state.metadataPackRoot = draft.metadataPackRoot
             state.engineExecutable = draft.engineExecutable
         }
+        project.getService(WorkspaceCoordinatorService::class.java).start(true)
     }
 
     override fun reset() {

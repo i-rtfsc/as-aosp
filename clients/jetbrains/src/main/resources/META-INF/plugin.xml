@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.rtfsc.aosp</id>
-    <name>AOSP IDE</name>
-    <vendor>AOSP IDE contributors</vendor>
+    <name>AOSP Workspace</name>
+    <vendor>AOSP Workspace contributors</vendor>
     <description><![CDATA[
         Focused AOSP source navigation and cross-language indexing.
     ]]></description>
@@ -11,6 +11,9 @@
         <gotoDeclarationHandler language="AIDL" implementationClass="com.rtfsc.aosp.aidl.AidlGotoDeclarationHandler"/>
         <projectConfigurable instance="com.rtfsc.aosp.profile.ProfileConfigurable"/>
         <projectService serviceImplementation="com.rtfsc.aosp.project.FocusedRootsService"/>
+        <projectService serviceImplementation="com.rtfsc.aosp.workspace.WorkspaceCoordinatorService"/>
+        <postStartupActivity implementation="com.rtfsc.aosp.workspace.AospWorkspaceStartupActivity"/>
+        <toolWindow id="AOSP Workspace" anchor="right" factoryClass="com.rtfsc.aosp.workspace.AospWorkspaceToolWindowFactory"/>
     </extensions>
     <actions>
         <action id="com.rtfsc.aosp.aidlDefinition" class="com.rtfsc.aosp.aidl.AidlDefinitionAction" text="Go to AIDL Definition">

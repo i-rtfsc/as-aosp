@@ -33,7 +33,7 @@ dependencies {
 intellijPlatform {
     buildSearchableOptions = false
     pluginConfiguration {
-        name = "AOSP IDE"
+        name = "AOSP Workspace"
         version = project.version.toString()
         ideaVersion {
             sinceBuild = "251"
