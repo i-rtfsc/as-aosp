@@ -130,6 +130,7 @@ aosp/index/start
 aosp/index/status
 aosp/index/rebuild
 aosp/index/cancel
+aosp/index/projection
 ```
 
 `start` 和 `rebuild` 接收完整 `profile`，并返回 coordinator snapshot。
@@ -139,6 +140,10 @@ aosp/index/cancel
 在 daemon 进程内运行并以有界阶段顺序执行；即使某个 metadata reader 缺失，
 也必须保留已完成阶段并进入 `partial`，不能伪装成 `ready`。`cancel` 只影响
 当前 profile 的 coordinator，不删除旧 snapshot。
+
+`projection` 由 IDE 客户端在本机 source/generated/library projection 完成后调用，
+携带 `profileId`、各类 root/library counts 和 diagnostics。daemon 将 projection
+diagnostics 合并到 snapshot；任一 projection diagnostic 会把状态保持为 `partial`。
 
 Generated source materialization：
 

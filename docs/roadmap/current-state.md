@@ -64,6 +64,8 @@
   checksum 工作，不同 pack 可以并行，校验期间发生变化的结果不会写入旧缓存。
 - VS Code 已在已有 profile 的 workspace 激活时自动启动 coordinator；配置变化经
   300ms debounce 后取消旧 session 并 rebuild，侧边栏重新打开会恢复最后状态。
+- coordinator 已支持 IDE projection 回报；VS Code 和 JetBrains 会上报 source/generated/
+  library counts 与 diagnostics，snapshot 的最终状态覆盖 facts 与本机投影两段链路。
 - JetBrains 已有 `AOSP Workspace` Tool Window、startup auto-apply 和 Settings 保存后
   自动 rebuild；窗口显示 source/generated/library/skipped/diagnostic counts，完整
   persistent Workspace Model module closure 仍未闭合。
