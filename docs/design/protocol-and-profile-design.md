@@ -169,6 +169,9 @@ diagnostics。所有 pack-backed 查询在 daemon 内也会执行同一校验；
 daemon 可缓存校验结果，但缓存指纹必须覆盖 pack 内每个文件的相对路径、大小和
 mtime，并同时覆盖 manifest/checksum identity。指纹变化后重新执行完整 checksum；
 缓存只是性能优化，不能改变 `core/pack` 的权威结果。
+同一 pack/fingerprint 的并发请求合并为一次校验；不同 pack 可以并行校验。
+`core/pack.Validate` 执行期间不得持有全局 cache lock。若校验前后 fingerprint
+不同，结果不得写入 cache，必须针对新 fingerprint 重新校验。
 
 进程入口统一为一个跨平台二进制：
 
