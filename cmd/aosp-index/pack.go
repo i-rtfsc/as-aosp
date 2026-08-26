@@ -33,8 +33,8 @@ type packManifest struct {
 }
 
 func runPack(args []string) {
-	if len(args) == 0 || (args[0] != "export" && args[0] != "validate" && args[0] != "inspect") {
-		fatal(errors.New("usage: aosp-index pack <export|validate|inspect> ..."))
+	if len(args) == 0 || (args[0] != "export" && args[0] != "validate" && args[0] != "inspect" && args[0] != "preflight") {
+		fatal(errors.New("usage: aosp-index pack <export|validate|inspect|preflight> ..."))
 	}
 	if args[0] == "validate" {
 		runPackValidate(args[1:])
@@ -42,6 +42,10 @@ func runPack(args []string) {
 	}
 	if args[0] == "inspect" {
 		runPackInspect(args[1:])
+		return
+	}
+	if args[0] == "preflight" {
+		runPackPreflight(args[1:])
 		return
 	}
 	flags := flag.NewFlagSet("pack export", flag.ExitOnError)
@@ -58,6 +62,59 @@ func runPack(args []string) {
 	if err := exportPack(*aospRoot, *outRoot, *destination, *native, []string(modules)); err != nil {
 		fatal(err)
 	}
+}
+
+func runPackPreflight(args []string) {
+	flags := flag.NewFlagSet("pack preflight", flag.ExitOnError)
+	outRoot := flags.String("out-root", "", "AOSP out root")
+	_ = flags.Parse(args)
+	if *outRoot == "" {
+		fatal(errors.New("--out-root is required"))
+	}
+	outRootAbs, err := filepath.Abs(*outRoot)
+	if err != nil {
+		fatal(err)
+	}
+	checks := []map[string]any{}
+	for _, item := range []struct {
+		name       string
+		candidates []string
+	}{
+		{"module-info", []string{"module-info.json", filepath.Join("soong", "module-info.json")}},
+		{"java-deps", []string{"module_bp_java_deps.json", filepath.Join("soong", "module_bp_java_deps.json")}},
+		{"cc-deps", []string{"module_bp_cc_deps.json", filepath.Join("soong", "module_bp_cc_deps.json")}},
+		{"compdb", []string{filepath.Join("development", "ide", "compdb", "compile_commands.json"), filepath.Join("soong", "development", "ide", "compdb", "compile_commands.json")}},
+	} {
+		found := ""
+		for _, candidate := range item.candidates {
+			pathName := filepath.Join(outRootAbs, candidate)
+			if info, statErr := os.Stat(pathName); statErr == nil && !info.IsDir() {
+				found = pathName
+				break
+			}
+		}
+		checks = append(checks, map[string]any{"name": item.name, "found": found != "", "path": found})
+	}
+	srcjars, jars := 0, 0
+	_ = filepath.WalkDir(outRootAbs, func(pathName string, entry os.DirEntry, walkErr error) error {
+		if walkErr != nil || entry.IsDir() {
+			return nil
+		}
+		switch strings.ToLower(filepath.Ext(entry.Name())) {
+		case ".srcjar":
+			srcjars++
+		case ".jar":
+			jars++
+		}
+		return nil
+	})
+	writeJSON(map[string]any{
+		"outRoot":     outRootAbs,
+		"checks":      checks,
+		"srcjars":     srcjars,
+		"jars":        jars,
+		"suggestions": []string{"If compdb is missing, run SOONG_GEN_COMPDB=1 m nothing."},
+	})
 }
 
 func runPackInspect(args []string) {

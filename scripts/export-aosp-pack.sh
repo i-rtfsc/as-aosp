@@ -15,6 +15,7 @@ if [[ -z "${AOSP_PACK_DESTINATION:-}" ]]; then
 fi
 
 engine="${AOSP_INDEX_BIN:-aosp-index}"
+"$engine" pack preflight --out-root "$OUT_DIR"
 args=(pack export
   --aosp-root "$ANDROID_BUILD_TOP"
   --out-root "$OUT_DIR"
