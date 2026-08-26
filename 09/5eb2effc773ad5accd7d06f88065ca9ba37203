@@ -1,0 +1,79 @@
+docs/decisions/target-driven-project-graph.md
+  s_0fcc3f909ad4ee::t_5a505b25810ef6 20,96-99
+  h_8b376749578497 19
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/project/BuildFactsProjection.kt
+  s_0fcc3f909ad4ee::t_15eaeb4879a8f9 54,59
+  s_0fcc3f909ad4ee::t_c1e202509dcf36 60
+  s_0fcc3f909ad4ee::t_2f93809219840d 61
+  h_8b376749578497 47-53,64-65
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/profile/EngineProfileState.kt
+  s_0fcc3f909ad4ee::t_5809d31855d24a 18
+  s_0fcc3f909ad4ee::t_24ef481422fd3b 11
+docs/design/profile-ui-and-multi-project-design.md
+  s_0fcc3f909ad4ee::t_5a505b25810ef6 15
+docs/design/ide-client-and-navigation-design.md
+  h_8b376749578497 44-45
+clients/vscode/src/navigation/java_projection.ts
+  s_0fcc3f909ad4ee::t_2d8b1e4dcc71fd 38
+  s_0fcc3f909ad4ee::t_9b30e557b423ba 22,32-37
+  h_8b376749578497 26-27,30
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/profile/ProfileJson.kt
+  h_8b376749578497 24
+docs/design/project-graph-and-ide-projection-design.md
+  h_8b376749578497 36
+core/model/target.go
+  s_0fcc3f909ad4ee::t_dd5651109c5176 55
+docs/roadmap/target-driven-project-graph-plan.md
+  s_0fcc3f909ad4ee::t_5a505b25810ef6 10
+clients/vscode/src/engine/client.ts
+  s_0fcc3f909ad4ee::t_2d8b1e4dcc71fd 242
+  h_8b376749578497 241
+protocol/aosp/project_graph.go
+  s_0fcc3f909ad4ee::t_dd5651109c5176 18,36-37
+  h_8b376749578497 35,53
+clients/vscode/src/ui/profile_panel.ts
+  s_0fcc3f909ad4ee::t_df7baf58e19993 32,128,141
+  s_0fcc3f909ad4ee::t_16365343e260a7 45-49
+  h_8b376749578497 54,92,133,138-140
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/profile/ProfileConfigurable.kt
+  s_0fcc3f909ad4ee::t_24ef481422fd3b 105
+  h_8b376749578497 36,64,91,122
+clients/vscode/src/extension.ts
+  s_0fcc3f909ad4ee::t_9b30e557b423ba 34
+  h_8b376749578497 38,52
+docs/design/protocol-and-profile-design.md
+  s_0fcc3f909ad4ee::t_5a505b25810ef6 121-122
+  s_0fcc3f909ad4ee::t_e6131a698c4686 22
+  h_8b376749578497 21
+docs/roadmap/current-state.md
+  s_0fcc3f909ad4ee::t_5a505b25810ef6 71
+  h_8b376749578497 69-70,74
+core/model/profile_validate.go
+  h_8b376749578497 16-18
+clients/vscode/package.json
+  h_8b376749578497 50,53-54
+core/model/target_test.go
+  s_0fcc3f909ad4ee::t_e6131a698c4686 27-33
+  h_8b376749578497 24-26
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "095eb2effc773ad5accd7d06f88065ca9ba37203",
+  "prompts": {},
+  "humans": {
+    "h_8b376749578497": {
+      "author": "Solo <anqi.huang@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
