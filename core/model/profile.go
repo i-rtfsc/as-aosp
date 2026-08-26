@@ -7,6 +7,7 @@ type Profile struct {
 	CanonicalRepoRoot string               `json:"canonicalRepoRoot,omitempty"`
 	OutRoot           string               `json:"outRoot,omitempty"`
 	MetadataPackRoot  string               `json:"metadataPackRoot,omitempty"`
+	SelectedModules   []string             `json:"selectedModules,omitempty"`
 	BuildTarget       BuildTarget          `json:"buildTarget,omitempty"`
 	Scope             Scope                `json:"scope,omitempty"`
 	SourceMounts      []ProfileSourceMount `json:"sourceMounts,omitempty"`

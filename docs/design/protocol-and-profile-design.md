@@ -10,12 +10,17 @@ Profile 至少包含：
 - workspaceViewRoot、canonicalRepoRoot、outRoot、metadataPackRoot；
 - buildTarget product/release/variant；
 - scope include/exclude；
+- selectedModules：可选 Soong module names，按 ModuleCatalog dependency closure 投影；
 - sourceMounts；
 - pathMappings；
 - visibilityPolicy；
 - buildIntegration mode。
 
 本机绝对路径只进入用户本地配置，不进入共享 fixture。
+
+`selectedModules` 为空表示使用 catalog 全部模块，适合已经由导出器裁剪过的 pack。
+非空时客户端必须调用 `aosp/modules/closure`，未知模块产生 diagnostics，不能静默
+退化为全部模块。source path scope 与 module selection 是两个正交过滤维度。
 
 ## 2. 进程与目录边界
 
