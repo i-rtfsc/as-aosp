@@ -58,6 +58,9 @@ aosp-metadata-pack/
 - `jni/index.json`：`--native` 导出的 Java/Kotlin native declaration、C/C++ symbol、
   registration 和 cross-language links；路径身份使用 RepoPath。
 
+Native Pack 的 compdb 保持 `development/ide/compdb/compile_commands.json` 路径，
+客户端没有本机 out 时可直接读取；其中的构建机绝对路径仍需 profile pathMappings。
+
 ### AIDL/generated facts
 
 - `aidl/symbols.json`：package、interface、parcelable、method、type ranges；

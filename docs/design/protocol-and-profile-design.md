@@ -257,12 +257,15 @@ aosp/aidl/references
 aosp/compdb/overlay
 ```
 
-请求携带 `metadataRoot`、`workspaceViewRoot` 和显式 `pathMappings`。engine 读取
+请求携带 `metadataRoot`、可选 `metadataPackRoot`、`workspaceViewRoot` 和显式
+`pathMappings`。engine 读取
 compilation database，映射 `directory`、`file`、`output` 以及 argv 中的构建机绝对
 路径；`@response-file` 会被读取、转换并作为 overlay-side response file 返回。原始
 out/compdb 不被修改。不能证明映射的参数保留原值并标记 `COMPDB_PATH_UNMAPPED`，
 同一 `file` 的多条 variant 全部保留并标记 `COMPDB_VARIANT_DUPLICATE`，
 response file 无法读取时标记 `COMPDB_RESPONSE_READ_FAILED`，不会猜测本机路径。
+当 `metadataRoot` 为空时，engine 可以从已校验的 Native Metadata Pack 读取 compdb；
+pack 中的构建机绝对路径仍必须通过显式 mapping。
 
 后续索引 slice：
 

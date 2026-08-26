@@ -70,6 +70,9 @@
   dependency closure 投影，空值保持全部模块，未知模块返回 diagnostics。
 - pack export 已复制 ModuleCatalog 明确引用的 out 内 Java jars 到 `pack/out/**`；
   两端可在没有本机 out 时使用 pack classpath，inspect 会报告 jar/srcjar 统计。
+- Native Pack 的 `compile_commands.json` 已可在 VS Code compdb overlay 中直接消费；
+  `metadataRoot` 为空时 daemon 使用已校验的 `metadataPackRoot`，JetBrains compdb UI
+  仍待接入。
 - pack export 已规范化相对/绝对 OUT_DIR 输入，并提供 `scripts/export-aosp-pack.sh` /
   `make export-pack` 服务器入口，自动执行 export、validate、inspect。
 - 服务器入口新增 `pack preflight`，导出前报告 module-info、Java/CC deps、compdb、
