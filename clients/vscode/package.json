@@ -47,6 +47,12 @@
           "default": "",
           "description": "Imported AOSP Metadata Pack containing module facts."
         },
+        "aospIde.selectedModules": {
+          "type": "array",
+          "default": [],
+          "description": "Optional Soong modules to project with their dependency closure.",
+          "items": { "type": "string" }
+        },
         "aospIde.pathMappings": {
           "type": "array",
           "default": [],

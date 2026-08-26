@@ -19,13 +19,14 @@ export async function applyJavaProjection(
   metadataPackRoot: string,
   cacheRoot: string,
   outRoot = "",
+  selectedModules: string[] = [],
 ): Promise<JavaProjectionSummary> {
   const generated = await engine.materializeGenerated(metadataPackRoot, cacheRoot);
   const packInfo = await engine.packInfo(metadataPackRoot);
   const catalog = await engine.modulesCatalog(metadataPackRoot);
   const closure = await engine.modulesClosure(
     metadataPackRoot,
-    catalog.modules.map((module) => module.name),
+    selectedModules.length > 0 ? selectedModules : catalog.modules.map((module) => module.name),
   );
   const sourcePaths = new Set<string>();
   const referencedLibraries = new Set<string>();

@@ -20,6 +20,7 @@ internal object ProfileJson {
                     "canonicalRepoRoot" to state.canonicalRepoRoot,
                     "outRoot" to state.outRoot,
                     "metadataPackRoot" to state.metadataPackRoot,
+                    "selectedModules" to state.selectedModules.split(',').map(String::trim).filter(String::isNotEmpty),
                     "visibilityPolicy" to mapOf("mode" to "strict-view"),
                     "buildIntegration" to mapOf("mode" to "read-only"),
                 ),

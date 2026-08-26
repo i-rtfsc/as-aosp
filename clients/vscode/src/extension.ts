@@ -31,6 +31,7 @@ export function activate(context: vscode.ExtensionContext): void {
       workspaceViewRoot: config.get<string>("workspaceViewRoot") || vscode.workspace.workspaceFolders?.[0]?.uri.fsPath || "",
       outRoot: config.get<string>("metadataRoot") || "",
       metadataPackRoot: config.get<string>("metadataPackRoot") || "",
+      selectedModules: config.get<string[]>("selectedModules") || [],
       pathMappings: config.get<unknown[]>("pathMappings") || [],
       buildIntegration: { mode: "read-only" },
     };
@@ -47,7 +48,7 @@ export function activate(context: vscode.ExtensionContext): void {
     if (current.state === "ready" || current.state === "partial") {
       const packRoot = profile.metadataPackRoot;
       if (packRoot && profile.workspaceViewRoot) {
-        const projection = await applyJavaProjection(engine, profile.workspaceViewRoot, packRoot, context.globalStorageUri.fsPath, profile.outRoot);
+        const projection = await applyJavaProjection(engine, profile.workspaceViewRoot, packRoot, context.globalStorageUri.fsPath, profile.outRoot, profile.selectedModules);
         current = await engine.reportProjection({
           profileId: profile.id,
           sourceRoots: projection.sourcePaths.length,

@@ -7,6 +7,7 @@ data class EngineProfileState(
     var canonicalRepoRoot: String = "",
     var outRoot: String = "",
     var metadataPackRoot: String = "",
+    var selectedModules: String = "",
     var engineExecutable: String = "",
 ) {
     fun localValidationErrors(): List<String> {
