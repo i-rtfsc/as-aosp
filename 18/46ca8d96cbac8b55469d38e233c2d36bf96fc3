@@ -1,0 +1,27 @@
+docs/engineering/aosp-index-cli-guide.md
+  s_0fcc3f909ad4ee::t_3b215c10eb28e4 115-119
+  h_8b376749578497 109-114
+docs/roadmap/current-state.md
+  s_0fcc3f909ad4ee::t_c3a8e0e3a40467 73-74
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "1846ca8d96cbac8b55469d38e233c2d36bf96fc3",
+  "prompts": {},
+  "humans": {
+    "h_8b376749578497": {
+      "author": "Solo <anqi.huang@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
