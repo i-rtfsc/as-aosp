@@ -1,0 +1,30 @@
+cmd/aosp-index/pack_test.go
+  s_0fcc3f909ad4ee::t_ff0fa00148e12c 113-131
+cmd/aosp-index/pack.go
+  s_0fcc3f909ad4ee::t_5b495835ffcd36 131-134,151-153,211-233
+  s_45523d6cdd74f1::t_b223fb52af8557 234-235
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "7178c563547016c2f21cffcaf1f64c62e327a425",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    },
+    "s_45523d6cdd74f1": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a0137d-ebb1-79b2-abfb-ac185f54e4f5",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
