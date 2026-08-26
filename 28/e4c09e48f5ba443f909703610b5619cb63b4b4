@@ -1,0 +1,37 @@
+protocol/aosp/server_test.go
+  s_0fcc3f909ad4ee::t_890b66f513f6dc 126,128
+  s_0fcc3f909ad4ee::t_c384f5e9ff0f6b 122-125,127
+  h_8b376749578497 121,129-136
+clients/vscode/src/engine/client.ts
+  h_8b376749578497 214
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/engine/ProjectEngineService.kt
+  s_0fcc3f909ad4ee::t_daf463078821a4 103-104
+  h_8b376749578497 100-102
+protocol/aosp/compdb.go
+  s_0fcc3f909ad4ee::t_4b454f916922c3 38-46
+  h_8b376749578497 15,36-37
+clients/vscode/src/navigation/compdb.ts
+  s_0fcc3f909ad4ee::t_4b454f916922c3 12-13,18
+  h_8b376749578497 11
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "28e4c09e48f5ba443f909703610b5619cb63b4b4",
+  "prompts": {},
+  "humans": {
+    "h_8b376749578497": {
+      "author": "Solo <anqi.huang@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
