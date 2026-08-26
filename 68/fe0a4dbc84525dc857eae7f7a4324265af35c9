@@ -1,0 +1,33 @@
+docs/roadmap/current-state.md
+  h_8b376749578497 71
+  s_0fcc3f909ad4ee::t_49a470652ff56f 72
+core/artifacts/catalog.go
+  h_8b376749578497 4-10,32-68,104-109,122-123
+  s_0fcc3f909ad4ee::t_5c052f10258b4e 126-143
+  s_0fcc3f909ad4ee::t_368272ef2f74db 1-3,11-31,69-103,110-121,124-125
+core/artifacts/catalog_test.go
+  h_8b376749578497 1-28
+  s_0fcc3f909ad4ee::t_368272ef2f74db 29-37,41-47
+  s_0fcc3f909ad4ee::t_5c052f10258b4e 38-40
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "68fe0a4dbc84525dc857eae7f7a4324265af35c9",
+  "prompts": {},
+  "humans": {
+    "h_8b376749578497": {
+      "author": "Solo <anqi.huang@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
