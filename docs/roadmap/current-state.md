@@ -66,12 +66,12 @@
   300ms debounce 后取消旧 session 并 rebuild，侧边栏重新打开会恢复最后状态。
 - coordinator 已支持 IDE projection 回报；VS Code 和 JetBrains 会上报 source/generated/
   library counts 与 diagnostics，snapshot 的最终状态覆盖 facts 与本机投影两段链路。
-- VS Code 和 JetBrains 当前已支持 Selected Modules 兼容字段；TargetSpec/ArtifactResolver/
-  ProjectGraph 尚未完整实现；`core/model` 已加入 TargetSpec/ArtifactSelector 与 legacy
-  selectedModules 转换，`core/artifacts` 已加入基于 path/name/digest 的 Catalog/Resolver，
+- VS Code 和 JetBrains 已切换到 Targets；TargetSpec/ArtifactResolver/ProjectGraph
+  尚未完整实现；`core/model` 已加入 TargetSpec/ArtifactSelector，`core/artifacts` 已加入
+  基于 path/name/digest 的 Catalog/Resolver，
   `core/projects` 已能从 target/module/artifact facts 构建首个 ProjectGraph 和 source
   ownership decisions；`aosp/projects/graph` RPC 与 pack artifact catalog 已接入，
-  VS Code/JetBrains engine clients 已暴露 graph query，客户端投影仍在迁移到 ProjectGraph。
+  VS Code/JetBrains 投影只使用 ProjectGraph，selectedModules 路径已移除。
 - pack export 已复制 ModuleCatalog 明确引用的 out 内 Java jars 到 `pack/out/**`；
   两端可在没有本机 out 时使用 pack classpath，inspect 会报告 jar/srcjar 统计。
 - Native Pack 的 `compile_commands.json` 已可在 VS Code compdb overlay 中直接消费；

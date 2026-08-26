@@ -19,20 +19,23 @@ export async function applyJavaProjection(
   metadataPackRoot: string,
   cacheRoot: string,
   outRoot = "",
-  selectedModules: string[] = [],
+  targets: unknown[] = [],
 ): Promise<JavaProjectionSummary> {
   const generated = await engine.materializeGenerated(metadataPackRoot, cacheRoot);
   const packInfo = await engine.packInfo(metadataPackRoot);
-  const catalog = await engine.modulesCatalog(metadataPackRoot);
-  const closure = await engine.modulesClosure(
-    metadataPackRoot,
-    selectedModules.length > 0 ? selectedModules : catalog.modules.map((module) => module.name),
-  );
+  const graphResult = await engine.projectGraph(metadataPackRoot, targets);
+  const graphTargets = graphResult.diagnostics.length === 0 ? graphResult.graph.targets : [];
   const sourcePaths = new Set<string>();
   const referencedLibraries = new Set<string>();
-  let skipped = closure.diagnostics.length + generated.diagnostics.length + packInfo.diagnostics.length;
+  let skipped = graphResult.diagnostics.length + generated.diagnostics.length + packInfo.diagnostics.length;
   for (const sourceRoot of generated.sourceRoots) sourcePaths.add(sourceRoot.root);
-  for (const module of closure.modules) {
+  const graphModules = graphTargets.flatMap((target) => ({
+    sourceRoots: target.sourceRoots,
+    sources: [],
+    jars: target.libraries,
+    srcjars: [],
+  }));
+  for (const module of graphModules) {
     for (const ref of [...(module.sourceRoots ?? []), ...(module.sources ?? [])]) {
       const pathName = resolveRepoPath(workspaceRoot, ref);
       if (pathName) sourcePaths.add(pathName);

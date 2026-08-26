@@ -15,8 +15,7 @@ import (
 
 type ProjectGraphParams struct {
 	MetadataPackRoot string             `json:"metadataPackRoot"`
-	Targets          []model.TargetSpec `json:"targets,omitempty"`
-	SelectedModules  []string           `json:"selectedModules,omitempty"`
+	Targets          []model.TargetSpec `json:"targets"`
 }
 
 type ProjectGraphResult struct {
@@ -33,6 +32,9 @@ func (server *Server) projectGraph(request jsonrpc.Request) jsonrpc.Response {
 	if root == "" {
 		return jsonrpc.Success(request.ID, ProjectGraphResult{Diagnostics: []model.Diagnostic{{Code: "PROJECT_GRAPH_PACK_MISSING", Severity: model.SeverityError, Stage: "project-graph-rpc", Message: "metadataPackRoot is required"}}})
 	}
+	if len(params.Targets) == 0 {
+		return jsonrpc.Success(request.ID, ProjectGraphResult{Diagnostics: []model.Diagnostic{{Code: "PROJECT_GRAPH_TARGETS_MISSING", Severity: model.SeverityError, Stage: "project-graph-rpc", Message: "at least one target is required"}}})
+	}
 	if diagnostics := diagnosticsToModel(server.validatePackIfDeclared(root)); len(diagnostics) > 0 {
 		return jsonrpc.Success(request.ID, ProjectGraphResult{Diagnostics: diagnostics})
 	}
@@ -48,10 +50,6 @@ func (server *Server) projectGraph(request jsonrpc.Request) jsonrpc.Response {
 	if err := json.Unmarshal(data, &artifactCatalog); err != nil {
 		return jsonrpc.Success(request.ID, ProjectGraphResult{Diagnostics: []model.Diagnostic{{Code: "PROJECT_GRAPH_ARTIFACT_CATALOG_INVALID", Severity: model.SeverityError, Stage: "project-graph-rpc", Message: err.Error()}}})
 	}
-	targets := params.Targets
-	if len(targets) == 0 {
-		targets = (model.Profile{SelectedModules: params.SelectedModules}).EffectiveTargets()
-	}
-	graph := projects.Build(moduleCatalog, artifactCatalog, targets)
+	graph := projects.Build(moduleCatalog, artifactCatalog, params.Targets)
 	return jsonrpc.Success(request.ID, ProjectGraphResult{Graph: graph, Diagnostics: graph.Diagnostics})
 }

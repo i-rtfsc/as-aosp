@@ -52,19 +52,7 @@ type TargetSpec struct {
 }
 
 func (profile Profile) EffectiveTargets() []TargetSpec {
-	if len(profile.Targets) > 0 {
-		return normalizeTargets(profile.Targets)
-	}
-	modules := uniqueTargetStrings(profile.SelectedModules)
-	targets := make([]TargetSpec, 0, len(modules))
-	for _, module := range modules {
-		targets = append(targets, TargetSpec{
-			ID: "module:" + module, DisplayName: module, Kind: TargetMixed,
-			Selectors:           TargetSelectors{Modules: []string{module}},
-			IncludeDependencies: true, IncludeGeneratedSources: true,
-		})
-	}
-	return targets
+	return normalizeTargets(profile.Targets)
 }
 
 func (target TargetSpec) Validate() []Diagnostic {

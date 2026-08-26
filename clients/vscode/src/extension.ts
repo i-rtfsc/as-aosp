@@ -31,10 +31,11 @@ export function activate(context: vscode.ExtensionContext): void {
       workspaceViewRoot: config.get<string>("workspaceViewRoot") || vscode.workspace.workspaceFolders?.[0]?.uri.fsPath || "",
       outRoot: config.get<string>("metadataRoot") || "",
       metadataPackRoot: config.get<string>("metadataPackRoot") || "",
-      selectedModules: config.get<string[]>("selectedModules") || [],
+      targets: config.get<unknown[]>("targets") || [],
       pathMappings: config.get<unknown[]>("pathMappings") || [],
       buildIntegration: { mode: "read-only" },
     };
+    if (profile.targets.length === 0) throw new Error("Configure at least one TargetSpec before indexing.");
     if (profile.metadataPackRoot) {
       const validation = await engine.validatePack(profile.metadataPackRoot);
       if (!validation.valid) throw new Error(validation.diagnostics.map((item) => `${item.code}: ${item.message}`).join("; "));
@@ -48,7 +49,7 @@ export function activate(context: vscode.ExtensionContext): void {
     if (current.state === "ready" || current.state === "partial") {
       const packRoot = profile.metadataPackRoot;
       if (packRoot && profile.workspaceViewRoot) {
-        const projection = await applyJavaProjection(engine, profile.workspaceViewRoot, packRoot, context.globalStorageUri.fsPath, profile.outRoot, profile.selectedModules);
+        const projection = await applyJavaProjection(engine, profile.workspaceViewRoot, packRoot, context.globalStorageUri.fsPath, profile.outRoot, profile.targets);
         current = await engine.reportProjection({
           profileId: profile.id,
           sourceRoots: projection.sourcePaths.length,

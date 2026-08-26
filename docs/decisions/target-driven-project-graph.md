@@ -16,8 +16,8 @@ TargetSpec
   -> JetBrains modules / VS Code Java projects / clangd projects
 ```
 
-`selectedModules` 保留为低级兼容 selector；它不是最终产品模型。空的 targets 才表示
-使用默认 profile/catalog 范围。
+Targets 是唯一用户配置；不提供 selectedModules 兼容 selector。没有 targets 时 profile
+无效，客户端必须在投影前提示用户配置目标。
 
 ## 2. 为什么不是 Artifact 直接等于 Module
 
@@ -93,10 +93,10 @@ module dependency order. Clients do not independently flatten ModuleCatalog.
 
 ## 6. Compatibility
 
-- Existing `selectedModules` profiles are translated into implicit TargetSpecs;
-- existing pack/module RPCs remain supported as lower-level engine methods;
-- current single focused module and VS Code `java.project.*` projections remain fallback;
-- new clients consume ProjectGraph first;
+- existing pack/module RPCs remain available for diagnostics and engine internals；
+- current single focused module and VS Code `java.project.*` are temporary implementations of
+  ProjectGraph projection, not alternate product paths；
+- clients consume ProjectGraph only；
 - no Gradle compatibility project is restored as product architecture.
 
 ## 7. Acceptance

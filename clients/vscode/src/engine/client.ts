@@ -238,12 +238,8 @@ export class EngineClient {
     return this.request("aosp/modules/catalog", { metadataPackRoot });
   }
 
-  async modulesClosure(metadataPackRoot: string, names: string[]): Promise<ModulesClosureResult> {
-    return this.request("aosp/modules/closure", { metadataPackRoot, names });
-  }
-
-  async projectGraph(metadataPackRoot: string, targets: unknown[], selectedModules: string[] = []): Promise<ProjectGraphResult> {
-    return this.request("aosp/projects/graph", { metadataPackRoot, targets, selectedModules });
+  async projectGraph(metadataPackRoot: string, targets: unknown[]): Promise<ProjectGraphResult> {
+    return this.request("aosp/projects/graph", { metadataPackRoot, targets });
   }
 
   async startIndex(profile: unknown, rebuild = false): Promise<IndexSnapshot> {

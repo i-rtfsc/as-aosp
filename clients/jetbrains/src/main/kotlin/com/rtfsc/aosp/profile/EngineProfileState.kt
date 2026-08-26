@@ -7,14 +7,15 @@ data class EngineProfileState(
     var canonicalRepoRoot: String = "",
     var outRoot: String = "",
     var metadataPackRoot: String = "",
-    var selectedModules: String = "",
     var pathMappings: String = "",
+    var targetsJson: String = "",
     var engineExecutable: String = "",
 ) {
     fun localValidationErrors(): List<String> {
         return buildList {
             if (profileId.isBlank()) add("Profile ID is required.")
             if (workspaceViewRoot.isBlank()) add("Workspace View Root is required.")
+            if (targetsJson.isBlank()) add("At least one TargetSpec is required.")
             if (engineExecutable.isBlank()) add("Engine executable is required.")
         }
     }

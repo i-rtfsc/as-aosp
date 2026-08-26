@@ -41,8 +41,8 @@ engine 返回的 RepoPath source roots 映射到 Workspace View，generated mate
 不直接写入 ModuleRootModel；classpath libraries 和完整 Workspace Model module
 closure 在此 slice 之后接入。
 
-两个客户端使用统一 ProjectGraph。旧 `selectedModules` 只作为隐式 TargetSpec 转换；
-新 Target 可以选择 Framework/Services/SystemUI.apk、Soong modules、artifacts 和 source
+两个客户端使用统一 ProjectGraph，不提供 selectedModules 兼容路径。Target 可以选择
+Framework/Services/SystemUI.apk、Soong modules、artifacts 和 source
 roots，未知 selector 必须显示 diagnostics，不允许因为拼写错误加载整个 pack。
 
 JetBrains AIDL editor handler 继续使用本地 PSI，避免在同步 declaration handler

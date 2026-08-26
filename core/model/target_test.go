@@ -14,20 +14,20 @@ func TestEffectiveTargetsPreservesExplicitArtifactTargets(t *testing.T) {
 	}
 }
 
-func TestEffectiveTargetsTranslatesLegacySelectedModules(t *testing.T) {
-	targets := (Profile{SelectedModules: []string{" services ", "framework", "services"}}).EffectiveTargets()
-	if len(targets) != 2 || targets[0].ID != "module:framework" || targets[1].Selectors.Modules[0] != "services" {
-		t.Fatalf("targets=%+v", targets)
-	}
-	if !targets[0].IncludeDependencies || !targets[0].IncludeGeneratedSources {
-		t.Fatalf("legacy target defaults=%+v", targets[0])
-	}
-}
-
 func TestTargetValidationRejectsEmptyAndMalformedSelectors(t *testing.T) {
 	target := TargetSpec{ID: "systemui", Kind: TargetAndroid, Selectors: TargetSelectors{Artifacts: []ArtifactSelector{{Kind: ArtifactAPK}}}}
 	diagnostics := target.Validate()
 	if len(diagnostics) != 1 || diagnostics[0].Code != "TARGET_ARTIFACT_IDENTITY_EMPTY" {
 		t.Fatalf("diagnostics=%+v", diagnostics)
 	}
+}
+
+func TestProfileValidationRequiresExplicitTargets(t *testing.T) {
+	diagnostics := (Profile{SchemaVersion: 1, ID: "aosp", WorkspaceViewRoot: "/workspace"}).Validate()
+	for _, diagnostic := range diagnostics {
+		if diagnostic.Code == "PROFILE_TARGETS_EMPTY" {
+			return
+		}
+	}
+	t.Fatalf("missing target diagnostic: %+v", diagnostics)
 }

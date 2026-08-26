@@ -43,23 +43,26 @@ internal object BuildFactsProjection {
         }
         val packInfoParams = mapper.writeValueAsString(mapOf("metadataPackRoot" to packRoot))
         val packInfo = mapper.readTree(engine.packInfo(packInfoParams)).path("result")
-        val catalogParams = mapper.writeValueAsString(mapOf("metadataPackRoot" to packRoot))
-        val catalog = mapper.readTree(engine.modulesCatalog(catalogParams)).path("result")
         val diagnostics = mutableListOf<String>()
-        collectDiagnostics(catalog.path("diagnostics"), diagnostics)
-        val names = catalog.path("modules").map { it.path("name").asText() }.filter(String::isNotBlank)
-        val selected = state.selectedModules.split(',').map(String::trim).filter(String::isNotEmpty)
-        val params = mapper.writeValueAsString(mapOf("metadataPackRoot" to packRoot, "names" to if (selected.isEmpty()) names else selected))
-        val closure = mapper.readTree(engine.modulesClosure(params)).path("result")
-        collectDiagnostics(closure.path("diagnostics"), diagnostics)
+        val targets = runCatching { mapper.readTree(state.targetsJson) }.getOrNull()
+        if (targets == null || !targets.isArray || targets.size() == 0) {
+            diagnostics += "PROJECT_GRAPH_TARGETS_MISSING: Targets JSON must contain at least one target."
+            return BuildFactsProjectionResult(emptyList(), emptyList(), emptyList(), 0, diagnostics)
+        }
+        val graphResponse = mapper.readTree(engine.projectGraph(mapper.writeValueAsString(mapOf("metadataPackRoot" to packRoot, "targets" to targets))))
+        collectDiagnostics(graphResponse.path("result").path("diagnostics"), diagnostics)
+        val graph = graphResponse.path("result").path("graph")
         val sourceRoots = linkedSetOf<Path>()
         val libraries = linkedSetOf<Path>()
         val skipped = intArrayOf(0)
         val workspaceRoot = Paths.get(state.workspaceViewRoot).toAbsolutePath().normalize()
-        for (item in closure.path("modules")) {
+        val graphItems = graph.path("targets")
+        val moduleItems = graphItems
+        for (item in moduleItems) {
             collectRepoRoots(item.path("sourceRoots"), workspaceRoot, sourceRoots, skipped)
             collectRepoRoots(item.path("sources"), workspaceRoot, sourceRoots, skipped)
-            collectLibraries(item.path("jars"), workspaceRoot, packRoot, packInfo.path("outRoot").asText(), state.outRoot, libraries, skipped)
+            val jars = item.path("libraries")
+            collectLibraries(jars, workspaceRoot, packRoot, packInfo.path("outRoot").asText(), state.outRoot, libraries, skipped)
         }
         val generatedParams = mapper.writeValueAsString(
             mapOf("metadataPackRoot" to packRoot, "cacheRoot" to cacheRoot.toString()),

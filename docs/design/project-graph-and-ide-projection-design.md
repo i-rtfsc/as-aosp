@@ -33,7 +33,7 @@ source root in multiple Java modules.
 ## 4. Migration
 
 1. Build ProjectGraph DTO and RPC.
-2. Translate legacy `selectedModules` to implicit targets.
+2. Require explicit TargetSpec configuration before projection.
 3. Upgrade JetBrains module projection.
 4. Add VS Code JDT project/importer integration.
 5. Keep source-only and existing settings projection as degraded fallback.

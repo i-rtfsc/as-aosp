@@ -13,6 +13,9 @@ func (p Profile) Validate() []Diagnostic {
 	if p.WorkspaceViewRoot == "" {
 		diagnostics = append(diagnostics, Diagnostic{Code: "PROFILE_VIEW_ROOT_EMPTY", Severity: SeverityError, Stage: "profile", Message: "workspaceViewRoot is required"})
 	}
+	if len(p.Targets) == 0 {
+		diagnostics = append(diagnostics, Diagnostic{Code: "PROFILE_TARGETS_EMPTY", Severity: SeverityError, Stage: "profile", Message: "at least one target is required"})
+	}
 	if p.VisibilityPolicy.Mode != "" && p.VisibilityPolicy.Mode != "strict-view" && p.VisibilityPolicy.Mode != "open-external-on-demand" && p.VisibilityPolicy.Mode != "auto-expand" {
 		diagnostics = append(diagnostics, Diagnostic{Code: "PROFILE_VISIBILITY_MODE_UNKNOWN", Severity: SeverityError, Stage: "profile", Message: fmt.Sprintf("unknown visibility mode %q", p.VisibilityPolicy.Mode)})
 	}

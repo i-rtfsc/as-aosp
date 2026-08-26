@@ -47,11 +47,11 @@
           "default": "",
           "description": "Imported AOSP Metadata Pack containing module facts."
         },
-        "aospIde.selectedModules": {
+        "aospIde.targets": {
           "type": "array",
           "default": [],
-          "description": "Optional Soong modules to project with their dependency closure.",
-          "items": { "type": "string" }
+          "description": "TargetSpec objects for Framework, Services, SystemUI, and custom targets.",
+          "items": { "type": "object" }
         },
         "aospIde.pathMappings": {
           "type": "array",

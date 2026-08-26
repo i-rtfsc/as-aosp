@@ -11,7 +11,6 @@ Profile 至少包含：
 - buildTarget product/release/variant；
 - scope include/exclude；
 - targets：用户定义的 TargetSpec 集合，可按 artifact、module、source root 组合；
-- selectedModules：兼容旧 profile 的低级 Soong selector；
 - sourceMounts；
 - pathMappings；
 - visibilityPolicy；
@@ -19,8 +18,8 @@ Profile 至少包含：
 
 本机绝对路径只进入用户本地配置，不进入共享 fixture。
 
-`targets` 为空时可由兼容层把 `selectedModules` 转换为隐式 TargetSpec。新的客户端应
-优先请求 ProjectGraph；ModuleCatalog/closure 保留为低级解析 API。
+`targets` 必须至少包含一个 TargetSpec。客户端只请求 ProjectGraph；ModuleCatalog/closure
+仅供 engine 内部和诊断命令使用，不作为客户端投影 API。缺少 targets 的 profile 无效。
 
 ## 2. 进程与目录边界
 
@@ -119,8 +118,8 @@ aosp/modules/closure
 aosp/projects/graph
 ```
 
-`aosp/projects/graph` 接收 TargetSpec 集合，返回统一 ProjectGraph。`selectedModules`
-仅作为兼容参数；客户端不应再独立 flatten ModuleCatalog。
+`aosp/projects/graph` 接收非空 TargetSpec 集合，返回统一 ProjectGraph。客户端不得
+独立 flatten ModuleCatalog。
 
 三个方法都显式携带 `metadataPackRoot`，不依赖 daemon 当前工作目录或
 进程级全局 profile。`catalog` 返回按模块名排序的摘要，供 UI 选择模块和

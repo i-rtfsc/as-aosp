@@ -40,10 +40,6 @@ internal class EngineRpcClient(
         return request(method = "aosp/aidl/references", params = params)
     }
 
-    fun modulesClosure(params: String): ByteArray {
-        return request(method = "aosp/modules/closure", params = params)
-    }
-
     fun modulesCatalog(params: String): ByteArray {
         return request(method = "aosp/modules/catalog", params = params)
     }

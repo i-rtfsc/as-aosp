@@ -62,11 +62,6 @@ internal class ProjectEngineService(
         return engineProcess.request("aosp/aidl/pack/peers", params)
     }
 
-    fun modulesClosure(params: String): ByteArray {
-        if (!engineProcess.isRunning) start()
-        return engineProcess.request("aosp/modules/closure", params)
-    }
-
     fun projectGraph(params: String): ByteArray {
         if (!engineProcess.isRunning) start()
         return engineProcess.request("aosp/projects/graph", params)

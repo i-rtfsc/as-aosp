@@ -32,8 +32,8 @@ internal class ProfileConfigurable(
     private val canonicalRepoRoot = TextFieldWithBrowseButton()
     private val outRoot = TextFieldWithBrowseButton()
     private val metadataPackRoot = TextFieldWithBrowseButton()
-    private val selectedModules = JBTextField()
     private val pathMappings = JBTextField()
+    private val targetsJson = JBTextField()
     private val engineExecutable = TextFieldWithBrowseButton()
     private val validateButton = JButton("Validate")
     private val applyRootsButton = JButton("Apply Focused Roots")
@@ -60,8 +60,8 @@ internal class ProfileConfigurable(
             .addLabeledComponent(JLabel("Canonical AOSP Root"), canonicalRepoRoot)
             .addLabeledComponent(JLabel("Out Root"), outRoot)
             .addLabeledComponent(JLabel("Metadata Pack Root"), metadataPackRoot)
-            .addLabeledComponent(JLabel("Selected Modules"), selectedModules)
             .addLabeledComponent(JLabel("Path Mappings JSON"), pathMappings)
+            .addLabeledComponent(JLabel("Targets JSON"), targetsJson)
             .addLabeledComponent(JLabel("Engine Executable"), engineExecutable)
             .panel
         val actions = JPanel(FlowLayout(FlowLayout.LEFT))
@@ -87,8 +87,8 @@ internal class ProfileConfigurable(
             state.canonicalRepoRoot = draft.canonicalRepoRoot
             state.outRoot = draft.outRoot
             state.metadataPackRoot = draft.metadataPackRoot
-            state.selectedModules = draft.selectedModules
             state.pathMappings = draft.pathMappings
+            state.targetsJson = draft.targetsJson
             state.engineExecutable = draft.engineExecutable
         }
     }
@@ -101,8 +101,8 @@ internal class ProfileConfigurable(
         canonicalRepoRoot.text = state.canonicalRepoRoot
         outRoot.text = state.outRoot
         metadataPackRoot.text = state.metadataPackRoot
-        selectedModules.text = state.selectedModules
         pathMappings.text = state.pathMappings
+        targetsJson.text = state.targetsJson
         engineExecutable.text = state.engineExecutable
     }
 
@@ -118,8 +118,8 @@ internal class ProfileConfigurable(
             canonicalRepoRoot = canonicalRepoRoot.text,
             outRoot = outRoot.text,
             metadataPackRoot = metadataPackRoot.text,
-            selectedModules = selectedModules.text,
             pathMappings = pathMappings.text,
+            targetsJson = targetsJson.text,
             engineExecutable = engineExecutable.text,
         )
     }

@@ -7,7 +7,6 @@ type Profile struct {
 	CanonicalRepoRoot string               `json:"canonicalRepoRoot,omitempty"`
 	OutRoot           string               `json:"outRoot,omitempty"`
 	MetadataPackRoot  string               `json:"metadataPackRoot,omitempty"`
-	SelectedModules   []string             `json:"selectedModules,omitempty"`
 	Targets           []TargetSpec         `json:"targets,omitempty"`
 	BuildTarget       BuildTarget          `json:"buildTarget,omitempty"`
 	Scope             Scope                `json:"scope,omitempty"`
