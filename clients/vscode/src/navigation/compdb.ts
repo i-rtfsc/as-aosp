@@ -8,12 +8,14 @@ import { overlayResponseFilePath } from "./compdb_paths";
 export async function refreshCompdbOverlay(engine: EngineClient, output?: vscode.OutputChannel): Promise<void> {
   const root = workspaceViewRoot();
   const metadataRoot = vscode.workspace.getConfiguration("aospIde").get<string>("metadataRoot")?.trim();
-  if (!root || !metadataRoot) {
-    void vscode.window.showWarningMessage("Configure AOSP IDE workspaceViewRoot and metadataRoot first.");
+  const metadataPackRoot = vscode.workspace.getConfiguration("aospIde").get<string>("metadataPackRoot")?.trim();
+  if (!root || (!metadataRoot && !metadataPackRoot)) {
+    void vscode.window.showWarningMessage("Configure AOSP Workspace and an out or Metadata Pack first.");
     return;
   }
   const result = await engine.compdbOverlay({
     metadataRoot,
+    metadataPackRoot,
     workspaceViewRoot: root,
     pathMappings: vscode.workspace.getConfiguration("aospIde").get<unknown[]>("pathMappings") ?? [],
   });

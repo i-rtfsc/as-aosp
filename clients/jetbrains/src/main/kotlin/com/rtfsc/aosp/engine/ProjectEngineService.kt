@@ -97,6 +97,11 @@ internal class ProjectEngineService(
         return engineProcess.request("aosp/index/projection", params)
     }
 
+    fun compdbOverlay(params: String): ByteArray {
+        if (!engineProcess.isRunning) start()
+        return engineProcess.request("aosp/compdb/overlay", params)
+    }
+
     override fun dispose() {
         stop()
     }

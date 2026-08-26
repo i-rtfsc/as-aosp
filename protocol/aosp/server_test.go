@@ -118,6 +118,22 @@ func TestServerInvalidatesPackValidationAfterInPlaceChange(t *testing.T) {
 	}
 }
 
+func TestServerReadsCompdbFromMetadataPack(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, "compile_commands.json", `[{"directory":"/srv/aosp","arguments":["clang","-I","/srv/aosp/include"],"file":"/srv/aosp/demo.cpp"}]`)
+	server := initializedServer(t)
+	response, _ := server.Handle(makeRequest(2, "aosp/compdb/overlay", CompDBOverlayParams{
+		MetadataPackRoot:  root,
+		WorkspaceViewRoot: t.TempDir(),
+		PathMappings:      []model.PathMapping{{ExternalPrefix: "/srv/aosp", LocalPrefix: "/workspace/aosp"}},
+	}))
+	var result CompDBOverlayResult
+	decodeResult(t, response, &result)
+	if len(result.Diagnostics) != 0 || len(result.Entries) != 1 || result.Entries[0].File != filepath.FromSlash("/workspace/aosp/demo.cpp") {
+		t.Fatalf("result=%+v", result)
+	}
+}
+
 func writeMinimalValidPack(t *testing.T, root, catalogPath string) {
 	t.Helper()
 	files := map[string]string{

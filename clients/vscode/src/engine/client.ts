@@ -211,7 +211,7 @@ export class EngineClient {
     return this.request("aosp/aidl/references", params);
   }
 
-  async compdbOverlay(params: { metadataRoot: string; workspaceViewRoot: string; pathMappings: unknown[] }): Promise<CompdbOverlayResult> {
+  async compdbOverlay(params: { metadataRoot?: string; metadataPackRoot?: string; workspaceViewRoot: string; pathMappings: unknown[] }): Promise<CompdbOverlayResult> {
     return this.request("aosp/compdb/overlay", params);
   }
 

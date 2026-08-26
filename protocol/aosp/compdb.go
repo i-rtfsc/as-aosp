@@ -12,6 +12,7 @@ import (
 
 type CompDBOverlayParams struct {
 	MetadataRoot      string              `json:"metadataRoot"`
+	MetadataPackRoot  string              `json:"metadataPackRoot,omitempty"`
 	WorkspaceViewRoot string              `json:"workspaceViewRoot"`
 	PathMappings      []model.PathMapping `json:"pathMappings,omitempty"`
 }
@@ -32,7 +33,17 @@ func (server *Server) compdbOverlay(request jsonrpc.Request) jsonrpc.Response {
 	if err := decodeParams(request, &params); err != nil {
 		return jsonrpc.Failure(request.ID, jsonrpc.InvalidParams(err.Error()))
 	}
-	root, err := filepath.Abs(params.MetadataRoot)
+	rootValue := strings.TrimSpace(params.MetadataRoot)
+	if rootValue == "" {
+		rootValue = strings.TrimSpace(params.MetadataPackRoot)
+		if diagnostics := server.validatePackIfDeclared(rootValue); len(diagnostics) > 0 {
+			return jsonrpc.Success(request.ID, CompDBOverlayResult{Diagnostics: diagnosticsToModel(diagnostics)})
+		}
+	}
+	if rootValue == "" {
+		return jsonrpc.Success(request.ID, CompDBOverlayResult{Diagnostics: []model.Diagnostic{{Code: "COMPDB_ROOT_MISSING", Severity: model.SeverityError, Stage: "compdb-rpc", Message: "metadataRoot or metadataPackRoot is required"}}})
+	}
+	root, err := filepath.Abs(rootValue)
 	if err != nil {
 		return jsonrpc.Success(request.ID, CompDBOverlayResult{Diagnostics: []model.Diagnostic{{Code: "COMPDB_ROOT_INVALID", Severity: model.SeverityError, Stage: "compdb-rpc", Message: err.Error()}}})
 	}
