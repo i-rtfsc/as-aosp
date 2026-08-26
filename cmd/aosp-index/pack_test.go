@@ -110,6 +110,25 @@ func TestExportPackFiltersAIDLBySelectedModuleClosure(t *testing.T) {
 	}
 }
 
+func TestExportPackFiltersSrcJarsBySelectedModuleFacts(t *testing.T) {
+	root := t.TempDir()
+	out := filepath.Join(root, "out")
+	writePackFixture(t, filepath.Join(out, "module-info.json"), `{"framework":{"path":["frameworks/base"]}}`)
+	writePackFixture(t, filepath.Join(out, "module_bp_java_deps.json"), `{"framework":{"srcjars":["/srv/aosp/out/soong/.intermediates/framework/gen/framework.srcjar"]}}`)
+	writeSrcJar(t, filepath.Join(out, "soong", ".intermediates", "framework", "gen", "framework.srcjar"))
+	writeSrcJar(t, filepath.Join(out, "soong", ".intermediates", "other", "gen", "other.srcjar"))
+	destination := filepath.Join(root, "pack")
+	if err := exportPack(root, out, destination, false, []string{"framework"}); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := os.Stat(filepath.Join(destination, "generated", "srcjars", "framework", "gen", "framework.srcjar")); err != nil {
+		t.Fatalf("selected archive missing: %v", err)
+	}
+	if _, err := os.Stat(filepath.Join(destination, "generated", "srcjars", "other", "gen", "other.srcjar")); !os.IsNotExist(err) {
+		t.Fatalf("unselected archive was exported: %v", err)
+	}
+}
+
 func TestExportPackRejectsUnknownSelectedModule(t *testing.T) {
 	root := t.TempDir()
 	out := filepath.Join(root, "out")

@@ -128,6 +128,10 @@ func exportPack(aospRoot, outRoot, destination string, native bool, modules []st
 			return err
 		}
 	}
+	selectedArchives, err := selectedSrcJars(tmp, modules)
+	if err != nil {
+		return err
+	}
 	generatedManifest := make([]map[string]any, 0)
 	err = filepath.WalkDir(filepath.Join(outRoot, "soong", ".intermediates"), func(pathName string, entry os.DirEntry, walkErr error) error {
 		if walkErr != nil {
@@ -143,6 +147,9 @@ func exportPack(aospRoot, outRoot, destination string, native bool, modules []st
 		intermediateRelative, relErr := filepath.Rel(filepath.Join(outRoot, "soong", ".intermediates"), pathName)
 		if relErr != nil {
 			return relErr
+		}
+		if len(modules) > 0 && !selectedArchives[filepath.ToSlash(intermediateRelative)] {
+			return nil
 		}
 		packPath := filepath.Join("generated", "srcjars", intermediateRelative)
 		target := filepath.Join(tmp, packPath)
@@ -199,6 +206,31 @@ func exportPack(aospRoot, outRoot, destination string, native bool, modules []st
 	}
 	_ = os.RemoveAll(destination)
 	return os.Rename(tmp, destination)
+}
+
+func selectedSrcJars(root string, names []string) (map[string]bool, error) {
+	result := make(map[string]bool)
+	if len(names) == 0 {
+		return result, nil
+	}
+	catalog, err := coremodules.LoadPackCatalog(root)
+	if err != nil {
+		return nil, err
+	}
+	for _, name := range names {
+		if _, ok := catalog.Modules[name]; !ok {
+			return nil, fmt.Errorf("selected module not found: %s", name)
+		}
+	}
+	for _, name := range catalog.Closure(names) {
+		for _, ref := range append(catalog.Modules[name].SrcJars, catalog.Modules[name].Generated...) {
+			raw := filepath.ToSlash(ref.Raw)
+			if marker := strings.Index(raw, ".intermediates/"); marker >= 0 {
+				result[strings.TrimPrefix(raw[marker+len(".intermediates/"):], "/")] = true
+			}
+		}
+	}
+	return result, nil
 }
 
 func selectedRepoPrefixes(root string, names []string) ([]string, error) {
