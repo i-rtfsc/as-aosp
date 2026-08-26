@@ -1,0 +1,23 @@
+docs/design/aosp-metadata-pack-design.md
+  s_0fcc3f909ad4ee::t_386173c24ff5fa 58
+docs/roadmap/current-state.md
+  s_0fcc3f909ad4ee::t_a72a1ce8f7b8e6 46-48
+docs/design/protocol-and-profile-design.md
+  s_0fcc3f909ad4ee::t_386173c24ff5fa 218-220
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "ffce949d88b4f4c1f291172cc9bfd538c6636ede",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
