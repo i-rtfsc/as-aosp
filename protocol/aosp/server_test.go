@@ -2,6 +2,8 @@ package aosp
 
 import (
 	"archive/zip"
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"os"
 	"path/filepath"
@@ -88,6 +90,63 @@ func TestServerQueriesModuleCatalogFromPack(t *testing.T) {
 	decodeResult(t, response, &got)
 	if len(got.Diagnostics) != 0 || got.Module == nil || got.Module.Name != "framework" {
 		t.Fatalf("got=%+v", got)
+	}
+}
+
+func TestServerInvalidatesPackValidationAfterInPlaceChange(t *testing.T) {
+	root := t.TempDir()
+	pathName := filepath.Join(root, "modules", "catalog.json")
+	if err := os.MkdirAll(filepath.Dir(pathName), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	writeMinimalValidPack(t, root, pathName)
+	server := initializedServer(t)
+	first, _ := server.Handle(makeRequest(2, "aosp/pack/validate", PackValidateParams{MetadataPackRoot: root}))
+	var firstResult PackValidateResult
+	decodeResult(t, first, &firstResult)
+	if !firstResult.Valid {
+		t.Fatalf("first validation=%+v", firstResult)
+	}
+	if err := os.WriteFile(pathName, []byte(`{"modules":null}`), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	second, _ := server.Handle(makeRequest(3, "aosp/modules/catalog", ModulesParams{MetadataPackRoot: root}))
+	var secondResult ModulesCatalogResult
+	decodeResult(t, second, &secondResult)
+	if len(secondResult.Diagnostics) == 0 {
+		t.Fatalf("in-place pack change was hidden: %+v", secondResult)
+	}
+}
+
+func writeMinimalValidPack(t *testing.T, root, catalogPath string) {
+	t.Helper()
+	files := map[string]string{
+		"manifest.json":           `{"schemaVersion":1,"packs":["core"]}`,
+		"generated/manifest.json": `[]`, "modules/dependency-graph.json": `{}`,
+		"aidl/symbols.json": `{}`, "aidl/index.json": `{"documents":{},"symbols":{}}`,
+		"aidl/modules.json": `[]`,
+	}
+	for pathName, data := range files {
+		full := filepath.Join(root, pathName)
+		if err := os.MkdirAll(filepath.Dir(full), 0o755); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(full, []byte(data), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if err := os.WriteFile(catalogPath, []byte(`{"modules":{}}`), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	// This fixture only exercises cache invalidation; the first validation must succeed.
+	checksums := ""
+	for _, pathName := range []string{"aidl/index.json", "aidl/modules.json", "aidl/symbols.json", "generated/manifest.json", "manifest.json", "modules/catalog.json", "modules/dependency-graph.json"} {
+		data, _ := os.ReadFile(filepath.Join(root, pathName))
+		sum := sha256.Sum256(data)
+		checksums += hex.EncodeToString(sum[:]) + "  " + pathName + "\n"
+	}
+	if err := os.WriteFile(filepath.Join(root, "checksums.sha256"), []byte(checksums), 0o644); err != nil {
+		t.Fatal(err)
 	}
 }
 

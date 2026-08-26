@@ -1,6 +1,8 @@
 package aosp
 
 import (
+	"crypto/sha256"
+	"encoding/binary"
 	"os"
 	"path/filepath"
 	"strings"
@@ -13,6 +15,7 @@ import (
 type packValidationStamp struct {
 	rootTime, manifestTime, checksumsTime int64
 	manifestSize, checksumsSize           int64
+	filesDigest                           [32]byte
 }
 
 type packValidationSnapshot struct {
@@ -53,11 +56,46 @@ func currentPackStamp(root string) (packValidationStamp, bool) {
 	if rootErr != nil || manifestErr != nil || checksumsErr != nil {
 		return packValidationStamp{}, true
 	}
+	digest, err := packFilesDigest(root)
+	if err != nil {
+		return packValidationStamp{}, true
+	}
 	return packValidationStamp{
 		rootTime: rootInfo.ModTime().UnixNano(), manifestTime: manifestInfo.ModTime().UnixNano(),
 		checksumsTime: checksumsInfo.ModTime().UnixNano(), manifestSize: manifestInfo.Size(),
 		checksumsSize: checksumsInfo.Size(),
+		filesDigest:   digest,
 	}, true
+}
+
+func packFilesDigest(root string) ([32]byte, error) {
+	hash := sha256.New()
+	err := filepath.WalkDir(root, func(pathName string, entry os.DirEntry, walkErr error) error {
+		if walkErr != nil {
+			return walkErr
+		}
+		if entry.IsDir() || entry.Name() == "checksums.sha256" {
+			return nil
+		}
+		relative, err := filepath.Rel(root, pathName)
+		if err != nil {
+			return err
+		}
+		info, err := entry.Info()
+		if err != nil {
+			return err
+		}
+		_, _ = hash.Write([]byte(filepath.ToSlash(relative)))
+		var buffer [16]byte
+		binary.LittleEndian.PutUint64(buffer[:8], uint64(info.Size()))
+		binary.LittleEndian.PutUint64(buffer[8:], uint64(info.ModTime().UnixNano()))
+		_, _ = hash.Write(buffer[:])
+		return nil
+	})
+	if err != nil {
+		return [32]byte{}, err
+	}
+	return sha256.Sum256(hash.Sum(nil)), nil
 }
 
 type PackValidateParams struct {
