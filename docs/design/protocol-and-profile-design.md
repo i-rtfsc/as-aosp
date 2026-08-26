@@ -221,6 +221,9 @@ source declaration，再调用 `core/aidl.GeneratedPeers` 生成 Java/C++/NDK �
 
 配置 Metadata Pack 后可读取 `aidl/index.json` 进行 references 和 generated peer
 查询；缺少 index 或 schema 不兼容时必须回退 Workspace parser。
+Pack generated peer 请求可选携带 `cacheRoot`。提供时 engine materialize srcjar，
+将匹配的 Java peer 返回为 `build-srcjar`、`exact` 和 `localPath`；不提供时只返回
+命名候选，客户端必须按可见性规则回退。
 
 ```text
 aosp/aidl/references

@@ -48,6 +48,8 @@
   workspace engine 查询。
 - JetBrains AIDL 右键 definition、references、generated peer actions 已 pack-first；
   同步 PSI declaration handler 保持本地解析，避免阻塞编辑器线程。
+- AIDL pack generated peer RPC 已支持 cacheRoot，能够把匹配的 srcjar Java entry
+  materialize 为可打开的 exact localPath。
 - `--native` Metadata Pack 已包含 `jni/index.json`；VS Code 和 JetBrains JNI peer action
   优先查询 native pack links，pack 缺失或 peer 不唯一时回退 source-only workspace index。
 - `pack export --module` 已按 ModuleCatalog dependency closure 限制 AIDL/JNI source
