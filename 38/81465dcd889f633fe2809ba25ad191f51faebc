@@ -1,0 +1,26 @@
+protocol/aosp/server_test.go
+  s_0fcc3f909ad4ee::t_eef57a7d6d883c 96-123,125-130,137,141-146,151
+  s_0fcc3f909ad4ee::t_290a25d5fcb52f 124,131-136,138-140,147-150
+  s_0fcc3f909ad4ee::t_3f2fd8559b01f7 5-6
+  s_0fcc3f909ad4ee::t_1b4b6a3d1bc7ba 152
+protocol/aosp/pack_validate.go
+  s_0fcc3f909ad4ee::t_290a25d5fcb52f 67
+  s_0fcc3f909ad4ee::t_8aaac222845486 99-100
+  s_0fcc3f909ad4ee::t_6745d6368a334f 4-5,18,59-62,71-98
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "3881465dcd889f633fe2809ba25ad191f51faebc",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
