@@ -54,7 +54,8 @@ QCOM  -> /work/qcom-view  -> profile qcom
 - canonical root；
 - local out/metadata 或 pack；
 - path mappings；
-- selected modules；
+- target specs；legacy selected modules 作为兼容低级 selector；
+- target specs、artifact identity 和 resolved ProjectGraph；
 - build facts match；
 - index snapshot/cache；
 - compdb overlay 和 diagnostics。
@@ -85,4 +86,4 @@ MIUI、OPPO、QCOM 等不要求官方 pack 精确覆盖所有私有 module。产
 Pack 默认必须包含 Java/AIDL 导航所需的 generated source archives。AIDL、R、sysprop、
 logtags、proto 等生成 Java 如果只保留路径 metadata 而不包含对应 srcjar/entry，不能
 视为完整 Core Pack；可选拆分只适用于 Native headers、超大非 Java generated 文件和
-未被 selected module 引用的额外产物。
+未被 selected target 引用的额外产物。

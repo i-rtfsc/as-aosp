@@ -157,7 +157,7 @@ aosp-index pack export --aosp-root "$ANDROID_BUILD_TOP" \
   --out-root "$OUT_DIR" --destination /tmp/aosp-pack \
   --core --native
 
-# 只保留 selected module closure，Java generated/srcjar 仍默认包含
+# 只保留 selected target/module closure，Java generated/srcjar 仍默认包含
 aosp-index pack export --aosp-root "$ANDROID_BUILD_TOP" \
   --out-root "$OUT_DIR" --destination /tmp/aosp-pack \
   --native \
@@ -165,7 +165,7 @@ aosp-index pack export --aosp-root "$ANDROID_BUILD_TOP" \
 ```
 
 `--core` 是默认且推荐模式，并默认包含 Java/AIDL 相关 generated srcjar、entry manifest
-和必要的解出源码。Native headers、超大非 Java generated 文件和未被 selected module
+和必要的解出源码。Native headers、超大非 Java generated 文件和未被 selected target
 引用的 archive 才是可选项；不能把 `--generated` 作为 Java/AIDL 基础能力的开关。
 
 `--module` 必须按 ModuleCatalog dependency closure 选择 source roots。AIDL/JNI

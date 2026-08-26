@@ -1,6 +1,6 @@
 # AOSP IDE 当前状态
 
-> 复核日期：2026-08-23。
+> 复核日期：2026-08-26。
 
 ## 1. Current
 
@@ -66,8 +66,8 @@
   300ms debounce 后取消旧 session 并 rebuild，侧边栏重新打开会恢复最后状态。
 - coordinator 已支持 IDE projection 回报；VS Code 和 JetBrains 会上报 source/generated/
   library counts 与 diagnostics，snapshot 的最终状态覆盖 facts 与本机投影两段链路。
-- VS Code 和 JetBrains profile UI 已支持 Selected Modules；非空值按 ModuleCatalog
-  dependency closure 投影，空值保持全部模块，未知模块返回 diagnostics。
+- VS Code 和 JetBrains 当前已支持 Selected Modules 兼容字段；TargetSpec/ArtifactResolver/
+  ProjectGraph 尚未实现，selected module closure 仍是过渡投影。
 - pack export 已复制 ModuleCatalog 明确引用的 out 内 Java jars 到 `pack/out/**`；
   两端可在没有本机 out 时使用 pack classpath，inspect 会报告 jar/srcjar 统计。
 - Native Pack 的 `compile_commands.json` 已可在 VS Code compdb overlay 中直接消费；

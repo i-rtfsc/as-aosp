@@ -12,7 +12,7 @@
 - 色彩鲜艳、青春、现代，但信息密度和错误状态必须适合开发工具；
 - 自动发现 Workspace Root 和 `out`，用户可覆盖为外部挂载路径或 source-only；
 - 独立配置可复制的 Metadata Pack Root，不把 pack 误当成完整 `out`；
-- 提供 Selected Modules 输入和 catalog inspection，按 dependency closure 缩小 IDE 投影；
+- 提供 Targets 列表和 artifact/module/source selector；Selected Modules 仅作为高级兼容字段；
 - profile 是项目级状态，不把 AOSP/MIUI/QCOM 不同源码树静默合并。
 
 ## 2. Neon Workspace 视觉
@@ -22,7 +22,7 @@
 
 ```text
 ┌──────────────────────────────────────────────┐
-│ AOSP IDE                         ● Ready      │
+│ AOSP Workspace                  ● Ready      │
 │ Focused source navigation workspace          │
 ├──────────────────────────────────────────────┤
 │ Workspace View card      Out Detected card   │

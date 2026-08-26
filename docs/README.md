@@ -19,9 +19,11 @@
 12. [AOSP IDE 跳转方案调研与架构调整](research/aosp-ide-navigation-research.md)。
 13. [Build Facts 驱动导航决策](decisions/build-facts-driven-navigation.md)。
 14. [AOSP Metadata Pack 设计](design/aosp-metadata-pack-design.md)。
-15. [Build Facts 迁移实施计划](roadmap/build-facts-migration-plan.md)。
+15. [Target-driven ProjectGraph 决策](decisions/target-driven-project-graph.md)。
 16. [aosp-index CLI 使用指南](engineering/aosp-index-cli-guide.md)。
-17. [AOSP 多 IDE 导航方案重新审计](research/aosp-ide-navigation-reaudit-2026-08.md)。
+17. [TargetSpec 与 ArtifactResolver](design/target-spec-and-artifact-resolver-design.md)。
+18. [ProjectGraph 与 IDE Projection](design/project-graph-and-ide-projection-design.md)。
+19. [Target-driven ProjectGraph 实施计划](roadmap/target-driven-project-graph-plan.md)。
 
 ## 2. 文档权威性
 
@@ -61,6 +63,7 @@
 ## 5. 当前重要决策
 
 - [`dev-ide` 分支与仓库根边界](decisions/dev-ide-repository-boundary.md)
+- [Target-driven ProjectGraph](decisions/target-driven-project-graph.md)
 - [共享 Go 索引引擎](decisions/shared-go-index-engine.md)
 - [Workspace View 与完整 AOSP 根目录分离](decisions/workspace-view-separation.md)
 

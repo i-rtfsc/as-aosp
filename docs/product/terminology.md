@@ -14,6 +14,10 @@
 | LocalPath | 当前机器可访问的操作系统路径。 |
 | ExternalPath | metadata/compdb 中记录的构建机绝对路径。 |
 | ProjectView | 投影给具体 IDE 的模块、源码根、生成根和依赖集合。 |
+| TargetSpec | 用户定义的开发目标，可组合 artifact、Soong module、源码目录和依赖选项。 |
+| Artifact | 构建产物或输出锚点，例如 jar、apk、srcjar；不等同于 Soong module。 |
+| ArtifactResolver | 将 TargetSpec 的 selectors 解析为 artifact、module、source 和 generated facts 的组件。 |
+| ProjectGraph | 面向 IDE 的稳定投影合同，包含 targets、modules、libraries、ownership 和 dependencies。 |
 | source-only | 仅依靠可见源码与目录规则的模式。 |
 | metadata-partial | 部分构建 metadata 可用的模式。 |
 | build-backed | 主要查询数据来自匹配的构建产物。 |

@@ -7,6 +7,9 @@
 1. [当前状态](current-state.md)
 2. [当前交付计划](delivery-plan.md)
 3. [剩余任务分解](active-execution-plan.md)
+4. Target-driven ProjectGraph 迁移以 `docs/decisions/target-driven-project-graph.md`
+   和 `docs/design/project-graph-and-ide-projection-design.md` 为准。
+5. [Target-driven ProjectGraph 实施计划](target-driven-project-graph-plan.md)
 
 ## 状态词
 

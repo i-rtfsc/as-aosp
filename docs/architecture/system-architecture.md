@@ -10,6 +10,8 @@
 4. IDE ProjectView 是索引图的投影，不是 AOSP 构建图的替代品。
 5. C/C++ 类型语义由 clangd/IDE 负责，JNI 只作为共享跨语言边。
 6. 远程执行服务是可选的 Linux 构建辅助，不是核心索引必需进程。
+7. 用户意图由 TargetSpec 表达，ArtifactResolver 将其解析为 ProjectGraph；IDE 客户端
+   不把 Soong module 直接当作用户目标。
 
 ## 2. 逻辑架构
 
@@ -24,6 +26,7 @@ L2 Index Application
 L3 Domain Index
   WorkspaceTopology, RepoPath, SourceProvider
   Soong metadata, generated files, AIDL symbols, JNI links
+  TargetSpec, ArtifactResolver, ProjectGraph
 
 L4 External Sources
   AOSP source, out, srcjar, module metadata, compdb, optional remote execution

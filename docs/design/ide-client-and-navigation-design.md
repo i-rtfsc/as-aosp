@@ -41,9 +41,9 @@ engine 返回的 RepoPath source roots 映射到 Workspace View，generated mate
 不直接写入 ModuleRootModel；classpath libraries 和完整 Workspace Model module
 closure 在此 slice 之后接入。
 
-两个客户端的 module selection 使用同一规则：`selectedModules` 非空时只投影
-ModuleCatalog dependency closure；空值才使用 catalog 全部模块。未知 module 必须
-显示 diagnostics，不允许因为拼写错误突然加载整个 pack。
+两个客户端使用统一 ProjectGraph。旧 `selectedModules` 只作为隐式 TargetSpec 转换；
+新 Target 可以选择 Framework/Services/SystemUI.apk、Soong modules、artifacts 和 source
+roots，未知 selector 必须显示 diagnostics，不允许因为拼写错误加载整个 pack。
 
 JetBrains AIDL editor handler 继续使用本地 PSI，避免在同步 declaration handler
 中阻塞 engine；右键 definition、references 和 generated peer actions 已 pack-first，
