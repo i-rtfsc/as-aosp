@@ -64,6 +64,35 @@ func TestValidatePackRejectsChecksumMismatch(t *testing.T) {
 	}
 }
 
+func TestValidatePackRejectsUntrackedFile(t *testing.T) {
+	root := t.TempDir()
+	out := filepath.Join(root, "out")
+	destination := filepath.Join(root, "pack")
+	writePackFixture(t, filepath.Join(out, "module-info.json"), `{}`)
+	if err := exportPack(root, out, destination, false, nil); err != nil {
+		t.Fatal(err)
+	}
+	writePackFixture(t, filepath.Join(destination, "unexpected.json"), `{}`)
+	if err := validatePack(destination); err == nil {
+		t.Fatal("pack with untracked file was accepted")
+	}
+}
+
+func TestValidateNativePackRequiresJNIIndex(t *testing.T) {
+	root := t.TempDir()
+	out := filepath.Join(root, "out")
+	destination := filepath.Join(root, "pack")
+	if err := exportPack(root, out, destination, true, nil); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Remove(filepath.Join(destination, "jni", "index.json")); err != nil {
+		t.Fatal(err)
+	}
+	if err := validatePack(destination); err == nil {
+		t.Fatal("native pack without JNI index was accepted")
+	}
+}
+
 func TestExportPackAddsNativeFilesOnlyWhenRequested(t *testing.T) {
 	root := t.TempDir()
 	out := filepath.Join(root, "out")
