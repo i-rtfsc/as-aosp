@@ -183,6 +183,11 @@ func TestServerResolvesAIDLFromPack(t *testing.T) {
 	if result.State != aidl.ResolutionFound || len(result.Symbols) != 1 || len(result.Diagnostics) != 0 {
 		t.Fatalf("result=%+v", result)
 	}
+	response, _ = server.Handle(makeRequest(3, "aosp/aidl/pack/resolve", AIDLPackResolveParams{MetadataPackRoot: pack, Name: "IFoo"}))
+	decodeResult(t, response, &result)
+	if result.State != aidl.ResolutionFound || len(result.Symbols) != 1 {
+		t.Fatalf("short name result=%+v", result)
+	}
 }
 
 func TestServerQueriesPackedAIDLReferences(t *testing.T) {

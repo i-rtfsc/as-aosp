@@ -55,9 +55,14 @@ class AidlDefinitionAction : AnAction("Go to AIDL Definition") {
 
             override fun run(indicator: ProgressIndicator) {
                 indicator.text = "Resolving AIDL source symbol"
+                val engine = project.getService(ProjectEngineService::class.java)
                 val response = try {
-                    project.getService(ProjectEngineService::class.java)
-                        .aidlResolve(request.toString())
+                    val packed = AidlPackQueries.resolve(engine, settings.metadataPackRoot, token)
+                    if (packed != null) {
+                        objectMapper.createObjectNode().set<JsonNode>("result", packed).toString().toByteArray()
+                    } else {
+                        engine.aidlResolve(request.toString())
+                    }
                 } catch (failure: Throwable) {
                     failureMessage = "AIDL engine query failed: ${failure.message ?: failure.javaClass.simpleName}"
                     return
@@ -83,7 +88,8 @@ class AidlDefinitionAction : AnAction("Go to AIDL Definition") {
     }
 
     private fun selectTarget(response: JsonNode): Target? {
-        val resolution = response.path("result").path("resolution")
+        val result = response.path("result")
+        val resolution = if (result.has("resolution")) result.path("resolution") else result
         if (resolution.path("state").asText() != "found") return null
         val symbols = resolution.path("symbols")
         if (!symbols.isArray || symbols.size() != 1) return null

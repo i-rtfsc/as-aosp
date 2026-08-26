@@ -64,6 +64,13 @@ func (server *Server) aidlPackResolve(request jsonrpc.Request) jsonrpc.Response 
 		return jsonrpc.Success(request.ID, result)
 	}
 	result.Symbols = symbols[result.Name]
+	if len(result.Symbols) == 0 && !strings.Contains(result.Name, ".") {
+		for canonical, values := range symbols {
+			if strings.HasSuffix(canonical, "."+result.Name) {
+				result.Symbols = append(result.Symbols, values...)
+			}
+		}
+	}
 	switch len(result.Symbols) {
 	case 1:
 		result.State = aidl.ResolutionFound

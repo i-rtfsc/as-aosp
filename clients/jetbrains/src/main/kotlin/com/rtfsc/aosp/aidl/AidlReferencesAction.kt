@@ -25,12 +25,17 @@ class AidlReferencesAction : AnAction("Find AIDL Usages") {
         val file = event.getData(CommonDataKeys.VIRTUAL_FILE) ?: return
         val root = runCatching { Path.of(project.getService(EngineProfileSettings::class.java).current.workspaceViewRoot).toAbsolutePath().normalize() }.getOrNull() ?: return
         val current = runCatching { root.relativize(file.toNioPath().toAbsolutePath().normalize()).toString().replace('\\', '/') }.getOrNull() ?: return
+        val settings = project.getService(EngineProfileSettings::class.java).current
         val request = mapper.createObjectNode().apply { put("workspaceViewRoot", root.toString()); put("currentPath", current); put("name", file.nameWithoutExtension) }
         object : Task.Backgroundable(project, "Find AIDL Usages", true) {
             private var count = 0
             override fun run(indicator: ProgressIndicator) {
-                val response = runCatching { project.getService(ProjectEngineService::class.java).aidlReferences(request.toString()) }.getOrNull() ?: return
-                count = mapper.readTree(response).path("result").path("references").size()
+                val engine = project.getService(ProjectEngineService::class.java)
+                val packed = runCatching { AidlPackQueries.references(engine, settings.metadataPackRoot, file.nameWithoutExtension) }.getOrNull()
+                count = if (packed != null) packed.path("references").size() else {
+                    val response = runCatching { engine.aidlReferences(request.toString()) }.getOrNull() ?: return
+                    mapper.readTree(response).path("result").path("references").size()
+                }
             }
             override fun onSuccess() { if (count == 0) Messages.showInfoMessage(project, "No AIDL usages were found.", "AOSP AIDL Navigation") else Messages.showInfoMessage(project, "$count AIDL usages found.", "AOSP AIDL Navigation") }
         }.queue()

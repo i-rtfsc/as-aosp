@@ -27,8 +27,9 @@ class AidlPeerAction : AnAction("Go to AIDL Generated Peer") {
     override fun actionPerformed(event: AnActionEvent) {
         val project = event.project ?: return
         val file = event.getData(CommonDataKeys.VIRTUAL_FILE) ?: return
+        val settings = project.getService(EngineProfileSettings::class.java).current
         val root = runCatching {
-            Path.of(project.getService(EngineProfileSettings::class.java).current.workspaceViewRoot)
+            Path.of(settings.workspaceViewRoot)
                 .toAbsolutePath().normalize()
         }.getOrNull() ?: run {
             showError(project, "Workspace View Root is not configured.")
@@ -50,10 +51,13 @@ class AidlPeerAction : AnAction("Go to AIDL Generated Peer") {
 
             override fun run(indicator: ProgressIndicator) {
                 indicator.text = "Resolving generated AIDL peers"
-                val response = runCatching {
-                    project.getService(ProjectEngineService::class.java).aidlPeers(request.toString())
-                }.getOrNull() ?: return
-                target = selectTarget(mapper.readTree(response))
+                val engine = project.getService(ProjectEngineService::class.java)
+                val packed = runCatching { AidlPackQueries.peers(engine, settings.metadataPackRoot, name) }.getOrNull()
+                val result = packed ?: run {
+                    val response = runCatching { engine.aidlPeers(request.toString()) }.getOrNull() ?: return
+                    mapper.readTree(response).path("result")
+                }
+                target = selectTarget(result)
             }
 
             override fun onSuccess() {
@@ -73,7 +77,8 @@ class AidlPeerAction : AnAction("Go to AIDL Generated Peer") {
     }
 
     private fun selectTarget(response: JsonNode): Target? {
-        val peers = response.path("result").path("peers")
+        val result = if (response.has("result")) response.path("result") else response
+        val peers = result.path("peers")
         val visible = peers.filter { peer ->
             peer.path("confidence").asText() == "exact" && peer.path("exists").asBoolean(false)
         }.mapNotNull { peer ->
