@@ -1,0 +1,33 @@
+cmd/aosp-index/pack_test.go
+  s_0fcc3f909ad4ee::t_52cd1213ca499b 102-104
+  s_0fcc3f909ad4ee::t_51e64ea795b490 86-101,105-120
+  s_0fcc3f909ad4ee::t_476aeb91f45041 73
+  s_0fcc3f909ad4ee::t_504917b1c7671b 121
+cmd/aosp-index/pack.go
+  s_0fcc3f909ad4ee::t_e4ec686c09cee7 119-123,127,204-234,252-254,280,297-299,339-349
+  s_49c115a093dc57::t_c6c468159d968f 350-351
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "511ca8824b211d1c388399b2b329a442ccd60bc2",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    },
+    "s_49c115a093dc57": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a031a2-e317-7a43-aaea-11b526d619e4",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
