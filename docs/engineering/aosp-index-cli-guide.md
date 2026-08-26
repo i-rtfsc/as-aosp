@@ -121,7 +121,8 @@ jni/index.json  # 仅 --native
 aosp-index pack validate --root /Users/me/aosp-metadata/android-16
 ```
 
-校验 manifest、checksum、核心文件和 generated manifest。
+校验 manifest/schema、checksum 完整覆盖、ModuleCatalog、AIDL index、generated
+manifest，以及 Native Pack 的 JNI index。损坏或多出的未声明文件都会失败。
 
 ## 8. Metadata Pack 查看
 
