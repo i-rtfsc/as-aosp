@@ -1,0 +1,39 @@
+cmd/aosp-index/pack.go
+  s_0fcc3f909ad4ee::t_252200dd642c2f 112-115
+  s_0fcc3f909ad4ee::t_5db3276d099357 47-50,67-78,87-97,111,116-117
+  s_0fcc3f909ad4ee::t_b8ed5588520d37 118-119
+  h_8b376749578497 36-37,79-86,98-110
+scripts/export-aosp-pack.sh
+  h_8b376749578497 18
+Makefile
+  h_8b376749578497 1,63-65
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "e37b4cfa9a7fea84af117632517e5e9fcb07c2c5",
+  "prompts": {},
+  "humans": {
+    "h_8b376749578497": {
+      "author": "Solo <anqi.huang@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    },
+    "s_9e0e88dd6aa6f2": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a031c0-4100-7f10-938e-c5064fa43e93",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
