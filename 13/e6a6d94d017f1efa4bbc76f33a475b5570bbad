@@ -1,0 +1,50 @@
+core/pack/validate_test.go
+  s_0fcc3f909ad4ee::t_e0dd8f7c463540 55-57
+  s_0fcc3f909ad4ee::t_c4263a6f3b95d3 58-64
+scripts/export-aosp-pack.sh
+  s_0fcc3f909ad4ee::t_3b215c10eb28e4 1-10,30-31
+  h_8b376749578497 11-29,32-34
+cmd/aosp-index/pack_test.go
+  s_0fcc3f909ad4ee::t_97fcb3e838af3c 122
+  s_0fcc3f909ad4ee::t_5c35b141fdb3d5 75,100-103,108-120
+  h_8b376749578497 104-107
+  s_0fcc3f909ad4ee::t_fd178f7c71f1b7 85-99,121
+cmd/aosp-index/pack.go
+  s_0fcc3f909ad4ee::t_d6cd53f986c405 244-249
+  s_0fcc3f909ad4ee::t_6347334c8d924f 125,250,317
+  h_8b376749578497 113-124,306-315
+core/pack/validate.go
+  s_0fcc3f909ad4ee::t_d6cd53f986c405 125-133
+Makefile
+  s_5f30dac179bcb2::t_590d902343b081 62
+  s_0fcc3f909ad4ee::t_3b215c10eb28e4 1,60-61
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "13e6a6d94d017f1efa4bbc76f33a475b5570bbad",
+  "prompts": {},
+  "humans": {
+    "h_8b376749578497": {
+      "author": "Solo <anqi.huang@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    },
+    "s_5f30dac179bcb2": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "019ffe38-b3cd-77e3-8987-f48bc62a086c",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
