@@ -1,0 +1,23 @@
+cmd/aosp-index/pack.go
+  s_0fcc3f909ad4ee::t_d03f9c82cd31df 492
+  s_0fcc3f909ad4ee::t_9611459be243df 421-430,446-459,464,470-475,480,483-491,493-494,498-557
+  s_0fcc3f909ad4ee::t_2d39db8029a507 558
+cmd/aosp-index/pack_test.go
+  s_0fcc3f909ad4ee::t_b744de2a73620c 67-95
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "8eb135347a7c5fa7ca307c0c18adf9b3ef09af1b",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
