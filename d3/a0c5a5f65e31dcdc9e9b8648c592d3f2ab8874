@@ -1,0 +1,31 @@
+docs/design/protocol-and-profile-design.md
+  s_0fcc3f909ad4ee::t_67dbf3da701b31 267-268
+  h_8b376749578497 260-261
+docs/design/aosp-metadata-pack-design.md
+  s_0fcc3f909ad4ee::t_67dbf3da701b31 62-63
+  h_8b376749578497 61
+docs/roadmap/current-state.md
+  s_0fcc3f909ad4ee::t_daf463078821a4 75
+  h_8b376749578497 73-74
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "d3a0c5a5f65e31dcdc9e9b8648c592d3f2ab8874",
+  "prompts": {},
+  "humans": {
+    "h_8b376749578497": {
+      "author": "Solo <anqi.huang@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
