@@ -1,0 +1,49 @@
+protocol/aosp/pack_validate.go
+  s_0fcc3f909ad4ee::t_4a2d170da7bc8f 15
+  s_0fcc3f909ad4ee::t_2b1f1dff041cfc 1-14,16-30
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/project/BuildFactsProjection.kt
+  s_0fcc3f909ad4ee::t_67492c906ba14e 37-39,41-43
+  s_0fcc3f909ad4ee::t_7f11c6c76dcacb 40
+protocol/aosp/server.go
+  s_0fcc3f909ad4ee::t_2b1f1dff041cfc 155-156
+clients/vscode/src/extension.ts
+  s_0fcc3f909ad4ee::t_5f77b62188bc33 27-30,48-53
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/engine/ProjectEngineService.kt
+  s_0fcc3f909ad4ee::t_67492c906ba14e 85-89
+core/pack/validate_test.go
+  s_0fcc3f909ad4ee::t_c0ffe70229ccd3 12-24
+  s_0fcc3f909ad4ee::t_1ed6e481cf8b9e 1-11,25
+cmd/aosp-index/pack.go
+  s_0fcc3f909ad4ee::t_3f459c78217913 22,422-424,426-427,429-430
+core/pack/validate.go
+  s_0fcc3f909ad4ee::t_ac967b7fff9bb1 11-14,48-59,63-73,76-77
+  s_0fcc3f909ad4ee::t_c0ffe70229ccd3 60-62,118-153
+  s_0fcc3f909ad4ee::t_1ed6e481cf8b9e 1-10,15-47,74-75,78-117
+clients/vscode/src/engine/client.ts
+  s_0fcc3f909ad4ee::t_5f77b62188bc33 102-106,237-238
+  s_c53787a0ef0941::t_7121d4614ec126 239-240
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "4508772f8880147c5f5257eae35583f525e2d39e",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    },
+    "s_c53787a0ef0941": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "db1ed2bb-4d03-40a3-a929-0d2d3ef1cbcb",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
