@@ -16,5 +16,13 @@ func (p Profile) Validate() []Diagnostic {
 	if p.VisibilityPolicy.Mode != "" && p.VisibilityPolicy.Mode != "strict-view" && p.VisibilityPolicy.Mode != "open-external-on-demand" && p.VisibilityPolicy.Mode != "auto-expand" {
 		diagnostics = append(diagnostics, Diagnostic{Code: "PROFILE_VISIBILITY_MODE_UNKNOWN", Severity: SeverityError, Stage: "profile", Message: fmt.Sprintf("unknown visibility mode %q", p.VisibilityPolicy.Mode)})
 	}
+	seenTargets := make(map[string]bool)
+	for _, target := range p.Targets {
+		diagnostics = append(diagnostics, target.Validate()...)
+		if target.ID != "" && seenTargets[target.ID] {
+			diagnostics = append(diagnostics, targetDiagnostic("TARGET_ID_DUPLICATE", "target id is duplicated: "+target.ID))
+		}
+		seenTargets[target.ID] = true
+	}
 	return diagnostics
 }
