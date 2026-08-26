@@ -1,0 +1,36 @@
+core/model/profile.go
+  s_0fcc3f909ad4ee::t_8ad35323da57fc 10
+docs/roadmap/current-state.md
+  s_0fcc3f909ad4ee::t_dc7ab222dcb436 69-70
+docs/design/profile-ui-and-multi-project-design.md
+  s_0fcc3f909ad4ee::t_8ad35323da57fc 15
+docs/design/ide-client-and-navigation-design.md
+  s_0fcc3f909ad4ee::t_8ad35323da57fc 44-47
+docs/design/protocol-and-profile-design.md
+  s_0fcc3f909ad4ee::t_8ad35323da57fc 13,21-23
+  s_49c115a093dc57::t_89edf325edc625 24
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "c3b7762e73d99ed25f455ec2fde45468d385d073",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    },
+    "s_49c115a093dc57": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a031a2-e317-7a43-aaea-11b526d619e4",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
