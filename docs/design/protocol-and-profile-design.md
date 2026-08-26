@@ -215,6 +215,9 @@ source declaration，再调用 `core/aidl.GeneratedPeers` 生成 Java/C++/NDK �
 
 首个 AIDL references slice：
 
+配置 Metadata Pack 后可读取 `aidl/index.json` 进行 references 和 generated peer
+查询；缺少 index 或 schema 不兼容时必须回退 Workspace parser。
+
 ```text
 aosp/aidl/references
 ```

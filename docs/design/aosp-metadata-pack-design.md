@@ -55,6 +55,7 @@ aosp-metadata-pack/
 ### AIDL/generated facts
 
 - `aidl/symbols.json`：package、interface、parcelable、method、type ranges；
+- `aidl/index.json`：规范化 parsed documents 与 symbols，用于 references 和 generated peers；
 - `aidl/modules.json`：AIDL source 与 owning module；
 - `aidl/generated-peers.json`：Java/C++/NDK peer 和 confidence；
 - `generated/srcjars`：默认包含 Java/R/AIDL/proto/sysprop/logtags 等生成源码 archive；
