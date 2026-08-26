@@ -1,0 +1,45 @@
+clients/vscode/src/navigation/aidl_peers.ts
+  s_0fcc3f909ad4ee::t_0ce10f9fc27755 4,8,20,24-30
+protocol/aosp/generated.go
+  s_0fcc3f909ad4ee::t_ee6ec4a4ac31d1 9,11,52-61,64,67,71,74,79,86,90,94-97,99
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/aidl/AidlPeerAction.kt
+  s_0fcc3f909ad4ee::t_a3192081d27394 55-56,69,71,87-91,100
+clients/vscode/src/engine/client.ts
+  s_0fcc3f909ad4ee::t_0ce10f9fc27755 38,190-191
+protocol/aosp/server_test.go
+  s_0fcc3f909ad4ee::t_8eff446603bf0a 214-250
+protocol/aosp/aidl_pack.go
+  s_0fcc3f909ad4ee::t_467278d39254e2 10
+  s_0fcc3f909ad4ee::t_ee6ec4a4ac31d1 39,115-128,134
+clients/vscode/src/navigation/aidl_peer_selection.ts
+  s_0fcc3f909ad4ee::t_0ce10f9fc27755 3,17-22
+  s_5f30dac179bcb2::t_001207c05366da 23-24
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/aidl/AidlPackQueries.kt
+  s_0fcc3f909ad4ee::t_a3192081d27394 26,28
+clients/vscode/src/extension.ts
+  s_0fcc3f909ad4ee::t_0ce10f9fc27755 118
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "64ca3fbae01a48e6f7f9714294072955df0af05b",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    },
+    "s_5f30dac179bcb2": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "019ffe38-b3cd-77e3-8987-f48bc62a086c",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
