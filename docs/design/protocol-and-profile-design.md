@@ -166,6 +166,9 @@ pack kinds。客户端只有在 ExternalPath 位于 manifest 原始 outRoot 前�
 `aosp/pack/validate` 调用 `core/pack` 的同一校验实现，返回 `valid` 和稳定
 diagnostics。所有 pack-backed 查询在 daemon 内也会执行同一校验；CLI、VS Code
 和 JetBrains 不各自实现 checksum 或 schema 解析。
+daemon 可缓存校验结果，但缓存指纹必须覆盖 pack 内每个文件的相对路径、大小和
+mtime，并同时覆盖 manifest/checksum identity。指纹变化后重新执行完整 checksum；
+缓存只是性能优化，不能改变 `core/pack` 的权威结果。
 
 进程入口统一为一个跨平台二进制：
 
