@@ -50,6 +50,8 @@
   同步 PSI declaration handler 保持本地解析，避免阻塞编辑器线程。
 - `--native` Metadata Pack 已包含 `jni/index.json`；VS Code 和 JetBrains JNI peer action
   优先查询 native pack links，pack 缺失或 peer 不唯一时回退 source-only workspace index。
+- `pack export --module` 已按 ModuleCatalog dependency closure 限制 AIDL/JNI source
+  facts 扫描范围；未知模块 fail closed，generated srcjar owner 过滤尚未实现。
 - 当前 JNI 只覆盖 Java/Kotlin declaration、静态导出、常见 `JNINativeMethod` 注册表和有限注册调用；复杂宏、运行时 class 解析和完整 C++ 语义仍未覆盖；
 - 当前已有本地六平台 engine/JetBrains ZIP/VS Code VSIX 打包入口，以及 VS Code 显式/bundled/PATH engine 选择逻辑；尚未完成把 bundled engine 嵌入 VSIX、签名、公证、发布版下载和 marketplace verifier；
 - 当前没有任何远程执行服务；

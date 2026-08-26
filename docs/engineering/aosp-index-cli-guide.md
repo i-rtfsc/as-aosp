@@ -90,11 +90,14 @@ aosp-index pack export \
   --native
 ```
 
-可重复记录目标模块：
+可重复选择目标模块及其 dependency closure：
 
 ```bash
 --module framework-minus-apex --module services
 ```
+
+选择模块后，AIDL 和 `--native` JNI facts 只扫描 closure 覆盖的 source roots。
+模块名不存在时导出失败，不会退化为全树扫描。generated srcjar 当前仍全量保留。
 
 首版输出：
 
@@ -105,6 +108,8 @@ module-info.json
 module_bp_java_deps.json
 generated/srcjars/**
 generated/manifest.json
+aidl/index.json
+jni/index.json  # 仅 --native
 ```
 
 可以通过网盘、U 盘、rsync 或挂载目录复制到 Mac/Windows，不需要下载服务器。
