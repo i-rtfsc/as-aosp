@@ -41,6 +41,10 @@ engine 返回的 RepoPath source roots 映射到 Workspace View，generated mate
 不直接写入 ModuleRootModel；classpath libraries 和完整 Workspace Model module
 closure 在此 slice 之后接入。
 
+JetBrains AIDL editor handler 继续使用本地 PSI，避免在同步 declaration handler
+中阻塞 engine；右键 definition、references 和 generated peer actions 已 pack-first，
+仅在 pack facts 缺失、损坏或不可见时回退 engine/workspace 查询。
+
 ### 2.1 首版平台 baseline
 
 - IntelliJ Platform Gradle Plugin：`2.18.1`；

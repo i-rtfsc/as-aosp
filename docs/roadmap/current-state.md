@@ -46,6 +46,8 @@
 - pack export 现在同时包含 `aidl/index.json`；VS Code AIDL definition、references 和
   generated peer actions 已优先查询 pack index，pack diagnostics 或缺失结果会回退
   workspace engine 查询。
+- JetBrains AIDL 右键 definition、references、generated peer actions 已 pack-first；
+  同步 PSI declaration handler 保持本地解析，避免阻塞编辑器线程。
 - 当前 JNI 只覆盖 Java/Kotlin declaration、静态导出、常见 `JNINativeMethod` 注册表和有限注册调用；复杂宏、运行时 class 解析和完整 C++ 语义仍未覆盖；
 - 当前已有本地六平台 engine/JetBrains ZIP/VS Code VSIX 打包入口，以及 VS Code 显式/bundled/PATH engine 选择逻辑；尚未完成把 bundled engine 嵌入 VSIX、签名、公证、发布版下载和 marketplace verifier；
 - 当前没有任何远程执行服务；
