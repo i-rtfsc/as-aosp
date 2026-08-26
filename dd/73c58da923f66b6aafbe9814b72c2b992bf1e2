@@ -1,0 +1,21 @@
+protocol/aosp/pack_validate.go
+  s_0fcc3f909ad4ee::t_a42a0839c81143 27-28
+  s_0fcc3f909ad4ee::t_59d929b7a6ec43 26,29-31,35,43-81,159-160
+  s_0fcc3f909ad4ee::t_ff6a71b9be2378 155-157
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "dd73c58da923f66b6aafbe9814b72c2b992bf1e2",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
