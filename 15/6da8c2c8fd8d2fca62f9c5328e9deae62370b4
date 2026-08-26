@@ -1,0 +1,21 @@
+docs/roadmap/current-state.md
+  s_0fcc3f909ad4ee::t_6110b3d04b4441 49-50
+docs/design/ide-client-and-navigation-design.md
+  s_0fcc3f909ad4ee::t_6110b3d04b4441 44-47
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "156da8c2c8fd8d2fca62f9c5328e9deae62370b4",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
