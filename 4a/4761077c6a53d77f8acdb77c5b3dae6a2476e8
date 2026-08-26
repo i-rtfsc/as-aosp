@@ -1,0 +1,21 @@
+docs/design/protocol-and-profile-design.md
+  s_0fcc3f909ad4ee::t_c7779c08739dd4 172-174
+docs/roadmap/current-state.md
+  s_0fcc3f909ad4ee::t_3d9366afc1c626 63-64
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "4a4761077c6a53d77f8acdb77c5b3dae6a2476e8",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
