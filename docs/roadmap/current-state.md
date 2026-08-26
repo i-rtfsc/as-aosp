@@ -70,6 +70,8 @@
   dependency closure 投影，空值保持全部模块，未知模块返回 diagnostics。
 - pack export 已复制 ModuleCatalog 明确引用的 out 内 Java jars 到 `pack/out/**`；
   两端可在没有本机 out 时使用 pack classpath，inspect 会报告 jar/srcjar 统计。
+- pack export 已规范化相对/绝对 OUT_DIR 输入，并提供 `scripts/export-aosp-pack.sh` /
+  `make export-pack` 服务器入口，自动执行 export、validate、inspect。
 - JetBrains 已有 `AOSP Workspace` Tool Window、startup auto-apply 和 Settings 保存后
   自动 rebuild；窗口显示 source/generated/library/skipped/diagnostic counts，完整
   persistent Workspace Model module closure 仍未闭合。

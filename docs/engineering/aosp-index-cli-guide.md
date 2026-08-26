@@ -106,6 +106,17 @@ aosp-index pack inspect --root /srv/packs/android-framework
 du -sh /srv/packs/android-framework
 ```
 
+也可以在服务器设置环境变量后使用仓库脚本：
+
+```bash
+export ANDROID_BUILD_TOP=/srv/aosp
+export OUT_DIR=/srv/aosp/out
+export AOSP_PACK_DESTINATION=/srv/packs/android-framework
+export AOSP_PACK_MODULES=framework-minus-apex,services
+export AOSP_PACK_NATIVE=1
+make export-pack
+```
+
 pack 会把 ModuleCatalog 明确引用且实际存在的 Java jars 复制到
 `out/**/*.jar`。复制到 Mac 后，在图形界面选择该目录作为 Metadata Pack Root；
 如果 Mac 没有本机 out，Java classpath 会优先使用 pack 内这些 jars。
