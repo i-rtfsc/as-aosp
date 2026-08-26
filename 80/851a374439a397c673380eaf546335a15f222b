@@ -1,0 +1,28 @@
+cmd/aosp-index/pack_test.go
+  s_0fcc3f909ad4ee::t_15abe7827cb474 53-84
+cmd/aosp-index/pack.go
+  s_0fcc3f909ad4ee::t_d76e92a9c85e52 76-79,91-104
+  s_0fcc3f909ad4ee::t_f926352cb63040 105,140-142,235-291
+  s_0fcc3f909ad4ee::t_32122b06f44dfe 106
+  s_0fcc3f909ad4ee::t_149bb3d4a92190 292
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/project/BuildFactsProjection.kt
+  s_0fcc3f909ad4ee::t_bb28ac9a38642e 122-132
+clients/vscode/src/navigation/java_projection.ts
+  s_0fcc3f909ad4ee::t_bb28ac9a38642e 69-77
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "80851a374439a397c673380eaf546335a15f222b",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
