@@ -15,11 +15,12 @@ export async function goToAidlGeneratedPeer(engine: EngineClient): Promise<void>
     void vscode.window.showWarningMessage("Place the caret on an AIDL declaration.");
     return;
   }
-  const result = await engine.aidlPeers({
-    workspaceViewRoot: root,
-    currentPath,
-    name: editor.document.getText(word),
-  });
+  const name = editor.document.getText(word);
+  const packRoot = vscode.workspace.getConfiguration("aospIde").get<string>("metadataPackRoot")?.trim();
+  const packed = packRoot ? await engine.aidlPackPeers(packRoot, name) : undefined;
+  const result = packed && packed.diagnostics.length === 0 && packed.peers.length > 0
+    ? packed
+    : await engine.aidlPeers({ workspaceViewRoot: root, currentPath, name });
   const selected = selectAidlPeerPath(result);
   if (!selected || !targetUri(root, selected)) {
     void vscode.window.showWarningMessage("No unique visible AIDL generated peer was found.");

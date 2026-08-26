@@ -228,6 +228,13 @@ func writeAIDLPack(aospRoot, destination string) error {
 	if err := os.WriteFile(filepath.Join(destination, "aidl", "symbols.json"), append(symbols, '\n'), 0o644); err != nil {
 		return err
 	}
+	indexData, err := json.MarshalIndent(index, "", "  ")
+	if err != nil {
+		return err
+	}
+	if err := os.WriteFile(filepath.Join(destination, "aidl", "index.json"), append(indexData, '\n'), 0o644); err != nil {
+		return err
+	}
 	documents := make([]string, 0, len(index.Documents))
 	for path := range index.Documents {
 		documents = append(documents, string(path))

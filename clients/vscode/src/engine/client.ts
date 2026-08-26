@@ -44,6 +44,9 @@ export interface AidlReferencesResult {
   diagnostics: unknown[];
 }
 
+export interface AidlPackReferencesResult { references: AidlReferencesResult["references"]; diagnostics: unknown[]; }
+export interface AidlPackPeersResult { peers: AidlPeersResult["peers"]; diagnostics: unknown[]; }
+
 export interface CompdbOverlayResult {
   entries: Array<{ directory: string; arguments: string[]; file: string; output?: string }>;
   responseFiles?: Record<string, string>;
@@ -170,6 +173,14 @@ export class EngineClient {
 
   async aidlPackResolve(metadataPackRoot: string, name: string): Promise<AidlPackResolveResult> {
     return this.request("aosp/aidl/pack/resolve", { metadataPackRoot, name });
+  }
+
+  async aidlPackReferences(metadataPackRoot: string, name: string): Promise<AidlPackReferencesResult> {
+    return this.request("aosp/aidl/pack/references", { metadataPackRoot, name });
+  }
+
+  async aidlPackPeers(metadataPackRoot: string, name: string): Promise<AidlPackPeersResult> {
+    return this.request("aosp/aidl/pack/peers", { metadataPackRoot, name });
   }
 
   async jniPeers(params: { workspaceViewRoot: string; currentPath: string }): Promise<JniPeersResult> {

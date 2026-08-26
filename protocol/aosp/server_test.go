@@ -185,6 +185,27 @@ func TestServerResolvesAIDLFromPack(t *testing.T) {
 	}
 }
 
+func TestServerQueriesPackedAIDLReferences(t *testing.T) {
+	pack := t.TempDir()
+	if err := os.MkdirAll(filepath.Join(pack, "aidl"), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	index := aidl.NewIndex()
+	index.Add(aidl.Parse("demo/Client.aidl", "package demo; import demo.IFoo; interface Client { IFoo value(); }"))
+	index.Add(aidl.Parse("demo/IFoo.aidl", "package demo; interface IFoo {}"))
+	data, _ := json.Marshal(index)
+	if err := os.WriteFile(filepath.Join(pack, "aidl", "index.json"), data, 0o644); err != nil {
+		t.Fatal(err)
+	}
+	server := initializedServer(t)
+	response, _ := server.Handle(makeRequest(2, "aosp/aidl/pack/references", AIDLPackReferencesParams{MetadataPackRoot: pack, Name: "IFoo"}))
+	var result AIDLPackReferencesResult
+	decodeResult(t, response, &result)
+	if len(result.Diagnostics) != 0 || len(result.References) != 2 {
+		t.Fatalf("result=%+v", result)
+	}
+}
+
 func writeProtocolSrcJar(t *testing.T, pathName, entry, source string) {
 	t.Helper()
 	file, err := os.Create(pathName)

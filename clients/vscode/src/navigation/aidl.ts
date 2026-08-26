@@ -18,8 +18,9 @@ export class AidlDefinitionProvider implements vscode.DefinitionProvider {
     const name = document.getText(word);
     const config = vscode.workspace.getConfiguration("aospIde");
     const packRoot = config.get<string>("metadataPackRoot")?.trim();
-    const result = packRoot
-      ? await this.engine.aidlPackResolve(packRoot, name)
+    const packed = packRoot ? await this.engine.aidlPackResolve(packRoot, name) : undefined;
+    const result = packed && packed.diagnostics.length === 0 && packed.state === "found"
+      ? packed
       : await this.engine.aidlResolve({ workspaceViewRoot: root, currentPath, name });
     const resolution = "resolution" in result ? result.resolution : result;
     if (resolution.state !== "found" || resolution.symbols?.length !== 1) return undefined;

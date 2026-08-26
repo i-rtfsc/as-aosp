@@ -23,6 +23,26 @@ type AIDLPackResolveResult struct {
 	Diagnostics []model.Diagnostic   `json:"diagnostics"`
 }
 
+type AIDLPackReferencesParams struct {
+	MetadataPackRoot string `json:"metadataPackRoot"`
+	Name             string `json:"name"`
+}
+
+type AIDLPackReferencesResult struct {
+	References  []aidl.Reference   `json:"references"`
+	Diagnostics []model.Diagnostic `json:"diagnostics"`
+}
+
+type AIDLPackPeersParams struct {
+	MetadataPackRoot string `json:"metadataPackRoot"`
+	Name             string `json:"name"`
+}
+
+type AIDLPackPeersResult struct {
+	Peers       []aidl.GeneratedPeer `json:"peers"`
+	Diagnostics []model.Diagnostic   `json:"diagnostics"`
+}
+
 func (server *Server) aidlPackResolve(request jsonrpc.Request) jsonrpc.Response {
 	var params AIDLPackResolveParams
 	if err := decodeParams(request, &params); err != nil {
@@ -53,4 +73,44 @@ func (server *Server) aidlPackResolve(request jsonrpc.Request) jsonrpc.Response 
 		result.State = aidl.ResolutionAmbiguous
 	}
 	return jsonrpc.Success(request.ID, result)
+}
+
+func loadAIDLPackIndex(root string) (aidl.Index, []model.Diagnostic) {
+	data, err := os.ReadFile(filepath.Join(root, "aidl", "index.json"))
+	if err != nil {
+		return aidl.NewIndex(), []model.Diagnostic{{Code: "AIDL_PACK_INDEX_READ_FAILED", Severity: model.SeverityWarning, Stage: "aidl-pack-rpc", Message: err.Error()}}
+	}
+	var index aidl.Index
+	if err := json.Unmarshal(data, &index); err != nil || index.Documents == nil || index.Symbols == nil {
+		return aidl.NewIndex(), []model.Diagnostic{{Code: "AIDL_PACK_INDEX_INVALID", Severity: model.SeverityWarning, Stage: "aidl-pack-rpc", Message: "aidl/index.json is invalid"}}
+	}
+	return index, nil
+}
+
+func (server *Server) aidlPackReferences(request jsonrpc.Request) jsonrpc.Response {
+	var params AIDLPackReferencesParams
+	if err := decodeParams(request, &params); err != nil {
+		return jsonrpc.Failure(request.ID, jsonrpc.InvalidParams(err.Error()))
+	}
+	index, diagnostics := loadAIDLPackIndex(params.MetadataPackRoot)
+	return jsonrpc.Success(request.ID, AIDLPackReferencesResult{References: index.References(strings.TrimSpace(params.Name)), Diagnostics: diagnostics})
+}
+
+func (server *Server) aidlPackPeers(request jsonrpc.Request) jsonrpc.Response {
+	var params AIDLPackPeersParams
+	if err := decodeParams(request, &params); err != nil {
+		return jsonrpc.Failure(request.ID, jsonrpc.InvalidParams(err.Error()))
+	}
+	index, diagnostics := loadAIDLPackIndex(params.MetadataPackRoot)
+	peers := make([]aidl.GeneratedPeer, 0)
+	for _, document := range index.Documents {
+		resolution := index.Resolve(document, params.Name)
+		if resolution.State != aidl.ResolutionFound || len(resolution.Symbols) != 1 {
+			continue
+		}
+		report := index.GeneratedPeers(document, resolution.Name, aidl.PeerOptions{})
+		peers = append(peers, report.Peers...)
+		diagnostics = append(diagnostics, report.Diagnostics...)
+	}
+	return jsonrpc.Success(request.ID, AIDLPackPeersResult{Peers: peers, Diagnostics: diagnostics})
 }

@@ -18,7 +18,7 @@ func TestExportPackIncludesCoreMetadataAndSrcjarsByDefault(t *testing.T) {
 	if err := exportPack(root, out, destination, false, nil); err != nil {
 		t.Fatal(err)
 	}
-	for _, relative := range []string{"manifest.json", "checksums.sha256", "module-info.json", "module_bp_java_deps.json", filepath.Join("generated", "manifest.json"), filepath.Join("generated", "srcjars", "framework", "gen", "framework.srcjar"), filepath.Join("modules", "catalog.json"), filepath.Join("modules", "dependency-graph.json"), filepath.Join("aidl", "symbols.json"), filepath.Join("aidl", "modules.json")} {
+	for _, relative := range []string{"manifest.json", "checksums.sha256", "module-info.json", "module_bp_java_deps.json", filepath.Join("generated", "manifest.json"), filepath.Join("generated", "srcjars", "framework", "gen", "framework.srcjar"), filepath.Join("modules", "catalog.json"), filepath.Join("modules", "dependency-graph.json"), filepath.Join("aidl", "symbols.json"), filepath.Join("aidl", "index.json"), filepath.Join("aidl", "modules.json")} {
 		if _, err := os.Stat(filepath.Join(destination, relative)); err != nil {
 			t.Fatalf("missing %s: %v", relative, err)
 		}
