@@ -55,6 +55,16 @@ func TestValidateRejectsUnsafeGeneratedEntry(t *testing.T) {
 	}
 }
 
+func TestValidateRejectsInvalidJavaJar(t *testing.T) {
+	root := minimalPack(t)
+	writeFile(t, filepath.Join(root, "out", "soong", "framework.jar"), []byte("not-a-jar"))
+	refreshChecksums(t, root)
+	result := Validate(root)
+	if result.Valid || result.Diagnostics[0].Code != "PACK_JAVA_JAR_INVALID" {
+		t.Fatalf("result=%+v", result)
+	}
+}
+
 func minimalPack(t *testing.T) string {
 	t.Helper()
 	root := t.TempDir()

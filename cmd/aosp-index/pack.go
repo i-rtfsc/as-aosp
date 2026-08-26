@@ -110,6 +110,19 @@ func (s *stringFlags) String() string         { return strings.Join(*s, ",") }
 func (s *stringFlags) Set(value string) error { *s = append(*s, value); return nil }
 
 func exportPack(aospRoot, outRoot, destination string, native bool, modules []string) error {
+	var err error
+	aospRoot, err = filepath.Abs(aospRoot)
+	if err != nil {
+		return fmt.Errorf("resolve AOSP root: %w", err)
+	}
+	outRoot, err = filepath.Abs(outRoot)
+	if err != nil {
+		return fmt.Errorf("resolve out root: %w", err)
+	}
+	destination, err = filepath.Abs(destination)
+	if err != nil {
+		return fmt.Errorf("resolve pack destination: %w", err)
+	}
 	tmp, err := os.MkdirTemp(filepath.Dir(destination), ".aosp-pack-")
 	if err != nil {
 		return err
@@ -228,6 +241,13 @@ func exportPack(aospRoot, outRoot, destination string, native bool, modules []st
 	if err := os.WriteFile(filepath.Join(tmp, "checksums.sha256"), []byte(strings.Join(checksums, "\n")+"\n"), 0o644); err != nil {
 		return err
 	}
+	if result := corepack.Validate(tmp); !result.Valid {
+		if len(result.Diagnostics) == 0 {
+			return fmt.Errorf("exported metadata pack failed validation")
+		}
+		diagnostic := result.Diagnostics[0]
+		return fmt.Errorf("exported pack invalid: %s: %s: %s", diagnostic.Code, diagnostic.Path, diagnostic.Message)
+	}
 	_ = os.RemoveAll(destination)
 	return os.Rename(tmp, destination)
 }
@@ -283,11 +303,18 @@ func resolvePackArtifact(outRoot, raw string) (string, string, bool) {
 	if !strings.HasSuffix(strings.ToLower(normalized), ".jar") {
 		return "", "", false
 	}
-	source := filepath.Join(outRoot, filepath.FromSlash(normalized))
-	if _, err := os.Stat(source); err != nil {
-		return "", "", false
+	candidates := []struct{ source, suffix string }{{filepath.Join(outRoot, filepath.FromSlash(normalized)), normalized}}
+	outName := filepath.Base(outRoot)
+	if strings.HasPrefix(normalized, outName+"/") {
+		suffix := strings.TrimPrefix(normalized, outName+"/")
+		candidates = append(candidates, struct{ source, suffix string }{filepath.Join(outRoot, filepath.FromSlash(suffix)), suffix})
 	}
-	return source, filepath.ToSlash(filepath.Join("out", filepath.FromSlash(normalized))), true
+	for _, candidate := range candidates {
+		if _, err := os.Stat(candidate.source); err == nil {
+			return candidate.source, filepath.ToSlash(filepath.Join("out", filepath.FromSlash(candidate.suffix))), true
+		}
+	}
+	return "", "", false
 }
 
 func selectedSrcJars(root string, names []string) (map[string]bool, error) {

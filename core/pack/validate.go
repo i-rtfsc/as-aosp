@@ -122,6 +122,15 @@ func Validate(root string) Result {
 			return invalid("PACK_CHECKSUM_ENTRY_MISSING", "checksum entry missing", file)
 		}
 	}
+	for _, file := range files {
+		if strings.HasPrefix(file, "out/") && strings.HasSuffix(strings.ToLower(file), ".jar") {
+			reader, err := zip.OpenReader(filepath.Join(root, filepath.FromSlash(file)))
+			if err != nil {
+				return invalid("PACK_JAVA_JAR_INVALID", err.Error(), file)
+			}
+			_ = reader.Close()
+		}
+	}
 	result.Valid = true
 	return result
 }

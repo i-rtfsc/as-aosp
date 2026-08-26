@@ -72,13 +72,51 @@ func TestExportPackCopiesRelativeReferencedJars(t *testing.T) {
 	out := filepath.Join(root, "out")
 	writePackFixture(t, filepath.Join(out, "module-info.json"), `{}`)
 	writePackFixture(t, filepath.Join(out, "module_bp_java_deps.json"), `{"framework":{"jars":["soong/framework.jar"]}}`)
-	writePackFixture(t, filepath.Join(out, "soong", "framework.jar"), "jar-bytes")
+	writeJar(t, filepath.Join(out, "soong", "framework.jar"))
 	destination := filepath.Join(root, "pack")
 	if err := exportPack(root, out, destination, false, nil); err != nil {
 		t.Fatal(err)
 	}
 	if _, err := os.Stat(filepath.Join(destination, "out", "soong", "framework.jar")); err != nil {
 		t.Fatalf("relative jar missing: %v", err)
+	}
+}
+
+func TestExportPackCopiesOutPrefixedReferencedJars(t *testing.T) {
+	root := t.TempDir()
+	out := filepath.Join(root, "out")
+	writePackFixture(t, filepath.Join(out, "module-info.json"), `{}`)
+	writePackFixture(t, filepath.Join(out, "module_bp_java_deps.json"), `{"framework":{"jars":["out/soong/framework.jar"]}}`)
+	writeJar(t, filepath.Join(out, "soong", "framework.jar"))
+	destination := filepath.Join(root, "pack")
+	if err := exportPack(root, out, destination, false, nil); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := os.Stat(filepath.Join(destination, "out", "soong", "framework.jar")); err != nil {
+		t.Fatalf("out-prefixed jar missing: %v", err)
+	}
+}
+
+func writeJar(t *testing.T, pathName string) {
+	t.Helper()
+	if err := os.MkdirAll(filepath.Dir(pathName), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	file, err := os.Create(pathName)
+	if err != nil {
+		t.Fatal(err)
+	}
+	writer := zip.NewWriter(file)
+	entry, err := writer.Create("META-INF/MANIFEST.MF")
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, _ = entry.Write([]byte("Manifest-Version: 1.0\n"))
+	if err := writer.Close(); err != nil {
+		t.Fatal(err)
+	}
+	if err := file.Close(); err != nil {
+		t.Fatal(err)
 	}
 }
 
