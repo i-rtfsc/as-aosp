@@ -158,6 +158,8 @@ func (server *Server) Handle(request jsonrpc.Request) (jsonrpc.Response, bool) {
 		response = server.aidlPackReferences(request)
 	case "aosp/aidl/pack/peers":
 		response = server.aidlPackPeers(request)
+	case "aosp/jni/pack/peers":
+		response = server.jniPackPeers(request)
 	default:
 		response = jsonrpc.Failure(request.ID, jsonrpc.MethodNotFound(request.Method))
 	}

@@ -30,6 +30,8 @@ export interface JniPeersResult {
   diagnostics: unknown[];
 }
 
+export interface JniPackPeersResult extends JniPeersResult {}
+
 export interface AidlPeersResult {
   peers: Array<{
     path: { raw: string; repoPath?: string };
@@ -185,6 +187,10 @@ export class EngineClient {
 
   async jniPeers(params: { workspaceViewRoot: string; currentPath: string }): Promise<JniPeersResult> {
     return this.request("aosp/jni/peers", params);
+  }
+
+  async jniPackPeers(metadataPackRoot: string, className?: string, methodName?: string, functionName?: string): Promise<JniPackPeersResult> {
+    return this.request("aosp/jni/pack/peers", { metadataPackRoot, className, methodName, functionName });
   }
 
   async aidlPeers(params: { workspaceViewRoot: string; currentPath: string; name: string }): Promise<AidlPeersResult> {

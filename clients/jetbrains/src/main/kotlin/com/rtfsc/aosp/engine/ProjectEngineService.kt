@@ -27,6 +27,11 @@ internal class ProjectEngineService(
         return engineProcess.request("aosp/jni/peers", params)
     }
 
+    fun jniPackPeers(params: String): ByteArray {
+        if (!engineProcess.isRunning) start()
+        return engineProcess.request("aosp/jni/pack/peers", params)
+    }
+
     fun aidlResolve(params: String): ByteArray {
         if (!engineProcess.isRunning) start()
         return engineProcess.request("aosp/aidl/resolve", params)

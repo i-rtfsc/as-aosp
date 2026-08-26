@@ -51,14 +51,24 @@ class JniPeerAction : AnAction("Go to JNI Peer") {
             private var failureMessage: String? = null
 
             override fun run(indicator: ProgressIndicator) {
-                indicator.text = "Scanning focused AOSP sources"
-                val response = try {
-                    project.getService(ProjectEngineService::class.java).jniPeers(request.toString())
-                } catch (failure: Throwable) {
-                    failureMessage = "JNI engine query failed: ${failure.message ?: failure.javaClass.simpleName}"
-                    return
+                val engine = project.getService(ProjectEngineService::class.java)
+                indicator.text = "Resolving JNI facts"
+                val packed = if (settings.metadataPackRoot.isBlank()) null else runCatching {
+                    val packedRequest = objectMapper.createObjectNode().apply { put("metadataPackRoot", settings.metadataPackRoot) }
+                    objectMapper.readTree(engine.jniPackPeers(packedRequest.toString()))
+                }.getOrNull()
+                val packedTarget = packed?.let { selectTarget(it, currentPath) }
+                if (packedTarget != null) {
+                    target = packedTarget
+                } else {
+                    val response = try {
+                        engine.jniPeers(request.toString())
+                    } catch (failure: Throwable) {
+                        failureMessage = "JNI engine query failed: ${failure.message ?: failure.javaClass.simpleName}"
+                        return
+                    }
+                    target = selectTarget(objectMapper.readTree(response), currentPath)
                 }
-                target = selectTarget(objectMapper.readTree(response), currentPath)
                 if (target == null) failureMessage = "No unique JNI peer was found for this file."
             }
 

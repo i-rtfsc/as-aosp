@@ -11,7 +11,10 @@ export class JniDefinitionProvider implements vscode.DefinitionProvider {
     const root = workspaceViewRoot();
     const currentPath = root && repoPath(root, document.uri);
     if (!root || !currentPath) return undefined;
-    const result = await this.engine.jniPeers({ workspaceViewRoot: root, currentPath });
+    const packRoot = vscode.workspace.getConfiguration("aospIde").get<string>("metadataPackRoot")?.trim();
+    const packed = packRoot ? await this.engine.jniPackPeers(packRoot) : undefined;
+    const result = packed && packed.diagnostics.length === 0 && packed.peers.length > 0
+      ? packed : await this.engine.jniPeers({ workspaceViewRoot: root, currentPath });
     const selected = selectJniDefinitionTarget(result, currentPath);
     if (!selected) return undefined;
     const target = targetUri(root, selected.path);
@@ -27,7 +30,10 @@ export async function goToJniPeer(engine: EngineClient): Promise<void> {
   const root = workspaceViewRoot();
   const currentPath = editor && root && repoPath(root, editor.document.uri);
   if (!editor || !root || !currentPath) return;
-  const result = await engine.jniPeers({ workspaceViewRoot: root, currentPath });
+  const packRoot = vscode.workspace.getConfiguration("aospIde").get<string>("metadataPackRoot")?.trim();
+  const packed = packRoot ? await engine.jniPackPeers(packRoot) : undefined;
+  const result = packed && packed.diagnostics.length === 0 && packed.peers.length > 0
+    ? packed : await engine.jniPeers({ workspaceViewRoot: root, currentPath });
   const selected = selectJniDefinitionTarget(result, currentPath);
   if (!selected) {
     void vscode.window.showWarningMessage("No unique JNI peer was found for this file.");

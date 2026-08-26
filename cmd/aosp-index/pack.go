@@ -15,6 +15,7 @@ import (
 	"strings"
 
 	"github.com/i-rtfsc/as-aosp/core/aidl"
+	"github.com/i-rtfsc/as-aosp/core/jni"
 	"github.com/i-rtfsc/as-aosp/core/metadata"
 	"github.com/i-rtfsc/as-aosp/core/model"
 	coremodules "github.com/i-rtfsc/as-aosp/core/modules"
@@ -118,6 +119,11 @@ func exportPack(aospRoot, outRoot, destination string, native bool, modules []st
 	if err := writeAIDLPack(aospRoot, tmp); err != nil {
 		return err
 	}
+	if native {
+		if err := writeJNIPack(aospRoot, tmp); err != nil {
+			return err
+		}
+	}
 	generatedManifest := make([]map[string]any, 0)
 	err = filepath.WalkDir(filepath.Join(outRoot, "soong", ".intermediates"), func(pathName string, entry os.DirEntry, walkErr error) error {
 		if walkErr != nil {
@@ -189,6 +195,49 @@ func exportPack(aospRoot, outRoot, destination string, native bool, modules []st
 	}
 	_ = os.RemoveAll(destination)
 	return os.Rename(tmp, destination)
+}
+
+func writeJNIPack(aospRoot, destination string) error {
+	javaFiles, cppFiles := map[model.RepoPath]string{}, map[model.RepoPath]string{}
+	err := filepath.WalkDir(aospRoot, func(pathName string, entry os.DirEntry, walkErr error) error {
+		if walkErr != nil || entry.IsDir() || strings.HasPrefix(filepath.ToSlash(pathName), filepath.ToSlash(filepath.Join(aospRoot, ".repo"))) || strings.Contains(filepath.ToSlash(pathName), "/.git/") || strings.Contains(filepath.ToSlash(pathName), "/out/") {
+			return nil
+		}
+		ext := strings.ToLower(filepath.Ext(entry.Name()))
+		if ext != ".java" && ext != ".kt" && ext != ".c" && ext != ".cc" && ext != ".cpp" && ext != ".cxx" && ext != ".h" && ext != ".hh" && ext != ".hpp" {
+			return nil
+		}
+		relative, err := filepath.Rel(aospRoot, pathName)
+		if err != nil {
+			return err
+		}
+		repoPath, err := model.NormalizeRepoPath(filepath.ToSlash(relative))
+		if err != nil {
+			return nil
+		}
+		data, err := os.ReadFile(pathName)
+		if err != nil {
+			return nil
+		}
+		if ext == ".java" || ext == ".kt" {
+			javaFiles[repoPath] = string(data)
+		} else {
+			cppFiles[repoPath] = string(data)
+		}
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+	index := jni.BuildIndex(javaFiles, cppFiles)
+	if err := os.MkdirAll(filepath.Join(destination, "jni"), 0o755); err != nil {
+		return err
+	}
+	data, err := json.MarshalIndent(index, "", "  ")
+	if err != nil {
+		return err
+	}
+	return os.WriteFile(filepath.Join(destination, "jni", "index.json"), append(data, '\n'), 0o644)
 }
 
 func writeAIDLPack(aospRoot, destination string) error {

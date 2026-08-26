@@ -78,6 +78,9 @@ func TestExportPackAddsNativeFilesOnlyWhenRequested(t *testing.T) {
 			t.Fatalf("missing %s", relative)
 		}
 	}
+	if _, err := os.Stat(filepath.Join(destination, "jni", "index.json")); err != nil {
+		t.Fatalf("missing JNI index: %v", err)
+	}
 }
 
 func writePackFixture(t *testing.T, pathName, content string) {
