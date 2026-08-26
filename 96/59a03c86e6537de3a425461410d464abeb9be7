@@ -1,0 +1,21 @@
+docs/design/aosp-metadata-pack-design.md
+  s_0fcc3f909ad4ee::t_9a35171d744f80 288-289
+docs/roadmap/current-state.md
+  s_0fcc3f909ad4ee::t_9a35171d744f80 65-66
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "9659a03c86e6537de3a425461410d464abeb9be7",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
