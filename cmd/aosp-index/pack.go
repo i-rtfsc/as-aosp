@@ -116,11 +116,15 @@ func exportPack(aospRoot, outRoot, destination string, native bool, modules []st
 	if err := writePackCatalog(tmp); err != nil {
 		return err
 	}
-	if err := writeAIDLPack(aospRoot, tmp); err != nil {
+	selectedPrefixes, err := selectedRepoPrefixes(tmp, modules)
+	if err != nil {
+		return err
+	}
+	if err := writeAIDLPack(aospRoot, tmp, selectedPrefixes); err != nil {
 		return err
 	}
 	if native {
-		if err := writeJNIPack(aospRoot, tmp); err != nil {
+		if err := writeJNIPack(aospRoot, tmp, selectedPrefixes); err != nil {
 			return err
 		}
 	}
@@ -197,7 +201,37 @@ func exportPack(aospRoot, outRoot, destination string, native bool, modules []st
 	return os.Rename(tmp, destination)
 }
 
-func writeJNIPack(aospRoot, destination string) error {
+func selectedRepoPrefixes(root string, names []string) ([]string, error) {
+	if len(names) == 0 {
+		return nil, nil
+	}
+	catalog, err := coremodules.LoadPackCatalog(root)
+	if err != nil {
+		return nil, err
+	}
+	for _, name := range names {
+		if _, ok := catalog.Modules[name]; !ok {
+			return nil, fmt.Errorf("selected module not found: %s", name)
+		}
+	}
+	prefixes := make(map[string]bool)
+	for _, name := range catalog.Closure(names) {
+		module := catalog.Modules[name]
+		for _, ref := range append(module.SourceRoots, module.Paths...) {
+			if ref.RepoPath != "" {
+				prefixes[string(ref.RepoPath)] = true
+			}
+		}
+	}
+	result := make([]string, 0, len(prefixes))
+	for prefix := range prefixes {
+		result = append(result, prefix)
+	}
+	sort.Strings(result)
+	return result, nil
+}
+
+func writeJNIPack(aospRoot, destination string, prefixes []string) error {
 	javaFiles, cppFiles := map[model.RepoPath]string{}, map[model.RepoPath]string{}
 	err := filepath.WalkDir(aospRoot, func(pathName string, entry os.DirEntry, walkErr error) error {
 		if walkErr != nil || entry.IsDir() || strings.HasPrefix(filepath.ToSlash(pathName), filepath.ToSlash(filepath.Join(aospRoot, ".repo"))) || strings.Contains(filepath.ToSlash(pathName), "/.git/") || strings.Contains(filepath.ToSlash(pathName), "/out/") {
@@ -213,6 +247,9 @@ func writeJNIPack(aospRoot, destination string) error {
 		}
 		repoPath, err := model.NormalizeRepoPath(filepath.ToSlash(relative))
 		if err != nil {
+			return nil
+		}
+		if !repoPathAllowed(repoPath, prefixes) {
 			return nil
 		}
 		data, err := os.ReadFile(pathName)
@@ -240,7 +277,7 @@ func writeJNIPack(aospRoot, destination string) error {
 	return os.WriteFile(filepath.Join(destination, "jni", "index.json"), append(data, '\n'), 0o644)
 }
 
-func writeAIDLPack(aospRoot, destination string) error {
+func writeAIDLPack(aospRoot, destination string, prefixes []string) error {
 	index := aidl.NewIndex()
 	err := filepath.WalkDir(aospRoot, func(pathName string, entry os.DirEntry, walkErr error) error {
 		if walkErr != nil || entry.IsDir() {
@@ -255,6 +292,9 @@ func writeAIDLPack(aospRoot, destination string) error {
 		}
 		repoPath, err := model.NormalizeRepoPath(filepath.ToSlash(relative))
 		if err != nil {
+			return nil
+		}
+		if !repoPathAllowed(repoPath, prefixes) {
 			return nil
 		}
 		data, err := os.ReadFile(pathName)
@@ -294,6 +334,19 @@ func writeAIDLPack(aospRoot, destination string) error {
 		return err
 	}
 	return os.WriteFile(filepath.Join(destination, "aidl", "modules.json"), append(data, '\n'), 0o644)
+}
+
+func repoPathAllowed(path model.RepoPath, prefixes []string) bool {
+	if len(prefixes) == 0 {
+		return true
+	}
+	value := string(path)
+	for _, prefix := range prefixes {
+		if value == prefix || strings.HasPrefix(value, prefix+"/") {
+			return true
+		}
+	}
+	return false
 }
 
 func writePackCatalog(root string) error {
