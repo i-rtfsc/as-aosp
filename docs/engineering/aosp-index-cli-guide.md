@@ -90,6 +90,31 @@ aosp-index pack export \
   --native
 ```
 
+服务器导出后建议直接校验并查看 artifact 统计：
+
+```bash
+aosp-index pack export \
+  --aosp-root "$ANDROID_BUILD_TOP" \
+  --out-root "$OUT_DIR" \
+  --destination /srv/packs/android-framework \
+  --module framework-minus-apex \
+  --module services \
+  --native
+
+aosp-index pack validate --root /srv/packs/android-framework
+aosp-index pack inspect --root /srv/packs/android-framework
+du -sh /srv/packs/android-framework
+```
+
+pack 会把 ModuleCatalog 明确引用且实际存在的 Java jars 复制到
+`out/**/*.jar`。复制到 Mac 后，在图形界面选择该目录作为 Metadata Pack Root；
+如果 Mac 没有本机 out，Java classpath 会优先使用 pack 内这些 jars。
+
+```bash
+# Mac：pack 可以放在任意目录，不需要放进 AOSP Workspace View
+aosp-index pack validate --root /Users/me/aosp-packs/android-framework
+```
+
 可重复选择目标模块及其 dependency closure：
 
 ```bash
@@ -109,6 +134,7 @@ module-info.json
 module_bp_java_deps.json
 generated/srcjars/**
 generated/manifest.json
+out/**/*.jar
 aidl/index.json
 jni/index.json  # 仅 --native
 ```
@@ -134,7 +160,15 @@ aosp-index pack inspect --root /Users/me/aosp-metadata/android-16 \
   --module framework-minus-apex
 ```
 
-指定 module 时返回模块 facts 和 dependency closure。
+输出包含 module、jar、srcjar 数量和字节；指定 module 时额外返回模块 facts 和
+dependency closure。服务器复制前建议依次执行：
+
+```bash
+aosp-index pack validate --root /srv/packs/framework
+aosp-index pack inspect --root /srv/packs/framework \
+  --module framework-minus-apex
+du -sh /srv/packs/framework
+```
 
 ## 9. IDE 服务
 

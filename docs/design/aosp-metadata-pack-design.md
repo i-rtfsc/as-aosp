@@ -28,6 +28,8 @@ aosp-metadata-pack/
 │   ├── proto/
 │   ├── headers/
 │   └── manifest.json
+├── out/
+│   └── **/*.jar
 ├── modules/
 │   ├── catalog.json
 │   └── dependency-graph.json
@@ -45,6 +47,8 @@ aosp-metadata-pack/
 - `module_bp_java_deps.json`：Java/Kotlin sources、jars、srcjars、AIDL include dirs、flags；
 - `modules/catalog.json`：规范化 ModuleCatalog，作为客户端首选输入；
 - `modules/dependency-graph.json`：模块依赖闭包。
+- `out/**/*.jar`：ModuleCatalog 明确引用且在导出 out 内存在的 Java classpath；
+  保留 out 相对路径，跨机器客户端按 manifest `outRoot` 严格重定位。
 
 ### Native facts
 

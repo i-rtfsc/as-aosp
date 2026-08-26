@@ -68,6 +68,8 @@
   library counts 与 diagnostics，snapshot 的最终状态覆盖 facts 与本机投影两段链路。
 - VS Code 和 JetBrains profile UI 已支持 Selected Modules；非空值按 ModuleCatalog
   dependency closure 投影，空值保持全部模块，未知模块返回 diagnostics。
+- pack export 已复制 ModuleCatalog 明确引用的 out 内 Java jars 到 `pack/out/**`；
+  两端可在没有本机 out 时使用 pack classpath，inspect 会报告 jar/srcjar 统计。
 - JetBrains 已有 `AOSP Workspace` Tool Window、startup auto-apply 和 Settings 保存后
   自动 rebuild；窗口显示 source/generated/library/skipped/diagnostic counts，完整
   persistent Workspace Model module closure 仍未闭合。
