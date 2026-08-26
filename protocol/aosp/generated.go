@@ -6,7 +6,9 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/i-rtfsc/as-aosp/core/aidl"
 	"github.com/i-rtfsc/as-aosp/core/generated"
+	"github.com/i-rtfsc/as-aosp/core/metadata"
 	"github.com/i-rtfsc/as-aosp/core/model"
 	"github.com/i-rtfsc/as-aosp/protocol/jsonrpc"
 )
@@ -47,40 +49,54 @@ func (server *Server) generatedMaterialize(request jsonrpc.Request) jsonrpc.Resp
 		})
 		return jsonrpc.Success(request.ID, result)
 	}
+	roots, _, diagnostics := materializeGeneratedSources(packRoot, cacheRoot)
+	result.SourceRoots = roots
+	result.Diagnostics = append(result.Diagnostics, diagnostics...)
+	return jsonrpc.Success(request.ID, result)
+}
+
+func materializeGeneratedSources(packRoot, cacheRoot string) ([]GeneratedSourceRoot, []aidl.ArchiveEntry, []model.Diagnostic) {
+	roots := []GeneratedSourceRoot{}
+	archiveEntries := []aidl.ArchiveEntry{}
+	diagnostics := []model.Diagnostic{}
 	data, err := os.ReadFile(filepath.Join(packRoot, "generated", "manifest.json"))
 	if err != nil {
-		result.Diagnostics = append(result.Diagnostics, generatedDiagnostic(
+		diagnostics = append(diagnostics, generatedDiagnostic(
 			"GENERATED_MANIFEST_READ_FAILED", err.Error(), filepath.Join(packRoot, "generated", "manifest.json"),
 		))
-		return jsonrpc.Success(request.ID, result)
+		return roots, archiveEntries, diagnostics
 	}
 	var entries []generatedManifestEntry
 	if err := json.Unmarshal(data, &entries); err != nil {
-		result.Diagnostics = append(result.Diagnostics, generatedDiagnostic(
+		diagnostics = append(diagnostics, generatedDiagnostic(
 			"GENERATED_MANIFEST_INVALID", err.Error(), filepath.Join(packRoot, "generated", "manifest.json"),
 		))
-		return jsonrpc.Success(request.ID, result)
+		return roots, archiveEntries, diagnostics
 	}
 	for _, entry := range entries {
 		relative := filepath.ToSlash(strings.TrimSpace(entry.Path))
 		if relative == "" || !strings.HasPrefix(relative, "generated/srcjars/") || strings.Contains(relative, "..") {
-			result.Diagnostics = append(result.Diagnostics, generatedDiagnostic(
+			diagnostics = append(diagnostics, generatedDiagnostic(
 				"GENERATED_ARCHIVE_PATH_INVALID", "manifest archive path is outside generated/srcjars", relative,
 			))
 			continue
 		}
 		archive := filepath.Join(packRoot, filepath.FromSlash(relative))
 		report := generated.ExtractSrcJar(archive, cacheRoot, generated.DefaultLimits())
-		result.Diagnostics = append(result.Diagnostics, report.Diagnostics...)
+		diagnostics = append(diagnostics, report.Diagnostics...)
 		if report.Archive == nil {
 			continue
 		}
-		result.SourceRoots = append(result.SourceRoots, GeneratedSourceRoot{
+		roots = append(roots, GeneratedSourceRoot{
 			Archive: relative, Root: string(report.Archive.Root), Hash: report.Archive.Hash,
 			Entries: len(report.Archive.Entries),
 		})
+		archiveRef := metadata.NewPathRef(relative)
+		for name, localPath := range report.Archive.Entries {
+			archiveEntries = append(archiveEntries, aidl.ArchiveEntry{Archive: archiveRef, Entry: name, LocalPath: localPath})
+		}
 	}
-	return jsonrpc.Success(request.ID, result)
+	return roots, archiveEntries, diagnostics
 }
 
 func generatedDiagnostic(code, message, pathName string) model.Diagnostic {

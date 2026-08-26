@@ -52,7 +52,8 @@ class AidlPeerAction : AnAction("Go to AIDL Generated Peer") {
             override fun run(indicator: ProgressIndicator) {
                 indicator.text = "Resolving generated AIDL peers"
                 val engine = project.getService(ProjectEngineService::class.java)
-                val packed = runCatching { AidlPackQueries.peers(engine, settings.metadataPackRoot, name) }.getOrNull()
+                val cacheRoot = Path.of(project.basePath ?: System.getProperty("java.io.tmpdir"), ".aosp-ide", "cache").toString()
+                val packed = runCatching { AidlPackQueries.peers(engine, settings.metadataPackRoot, name, cacheRoot) }.getOrNull()
                 val result = packed ?: run {
                     val response = runCatching { engine.aidlPeers(request.toString()) }.getOrNull() ?: return
                     mapper.readTree(response).path("result")
@@ -65,8 +66,9 @@ class AidlPeerAction : AnAction("Go to AIDL Generated Peer") {
                     showError(project, "No unique visible AIDL generated peer was found.")
                     return
                 }
+                val targetPath = if (resolved.local) Path.of(resolved.path) else root.resolve(resolved.path).normalize()
                 val targetFile = LocalFileSystem.getInstance()
-                    .refreshAndFindFileByIoFile(root.resolve(resolved.path).normalize().toFile())
+                    .refreshAndFindFileByIoFile(targetPath.toFile())
                 if (targetFile == null) {
                     showError(project, "Generated AIDL peer is not visible: ${resolved.path}")
                     return
@@ -82,8 +84,11 @@ class AidlPeerAction : AnAction("Go to AIDL Generated Peer") {
         val visible = peers.filter { peer ->
             peer.path("confidence").asText() == "exact" && peer.path("exists").asBoolean(false)
         }.mapNotNull { peer ->
-            val path = peer.path("path").path("repoPath").asText(peer.path("path").path("raw").asText())
-            if (path.isBlank() || path.startsWith("/")) null else Target(path, 0)
+            val localPath = peer.path("localPath").asText()
+            if (localPath.isNotBlank()) Target(localPath, 0, true) else {
+                val path = peer.path("path").path("repoPath").asText(peer.path("path").path("raw").asText())
+                if (path.isBlank() || path.startsWith("/")) null else Target(path, 0, false)
+            }
         }.distinct()
         return visible.singleOrNull()
     }
@@ -92,5 +97,5 @@ class AidlPeerAction : AnAction("Go to AIDL Generated Peer") {
         Messages.showWarningDialog(project, message, "AOSP AIDL Navigation")
     }
 
-    private data class Target(val path: String, val offset: Int)
+    private data class Target(val path: String, val offset: Int, val local: Boolean)
 }

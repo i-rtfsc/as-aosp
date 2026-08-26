@@ -23,9 +23,9 @@ internal object AidlPackQueries {
         return result.takeIf { it.path("diagnostics").isEmpty }
     }
 
-    fun peers(engine: ProjectEngineService, packRoot: String, name: String): JsonNode? {
+    fun peers(engine: ProjectEngineService, packRoot: String, name: String, cacheRoot: String): JsonNode? {
         if (packRoot.isBlank()) return null
-        val response = engine.aidlPackPeers(params(packRoot, name))
+        val response = engine.aidlPackPeers(mapper.writeValueAsString(mapOf("metadataPackRoot" to packRoot, "name" to name, "cacheRoot" to cacheRoot)))
         val result = mapper.readTree(response).path("result")
         return result.takeIf {
             it.path("diagnostics").isEmpty && it.path("peers").any { peer ->

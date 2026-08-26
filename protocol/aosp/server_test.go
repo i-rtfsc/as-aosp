@@ -211,6 +211,43 @@ func TestServerQueriesPackedAIDLReferences(t *testing.T) {
 	}
 }
 
+func TestServerMaterializesPackedAIDLJavaPeer(t *testing.T) {
+	pack := t.TempDir()
+	if err := os.MkdirAll(filepath.Join(pack, "aidl"), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	index := aidl.NewIndex()
+	index.Add(aidl.Parse("demo/IFoo.aidl", "package demo; interface IFoo {}"))
+	data, _ := json.Marshal(index)
+	if err := os.WriteFile(filepath.Join(pack, "aidl", "index.json"), data, 0o644); err != nil {
+		t.Fatal(err)
+	}
+	archive := filepath.Join(pack, "generated", "srcjars", "framework.srcjar")
+	if err := os.MkdirAll(filepath.Dir(archive), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	writeProtocolSrcJar(t, archive, "demo/IFoo.java", "package demo; class IFoo {}")
+	manifest, _ := json.Marshal([]map[string]string{{"path": "generated/srcjars/framework.srcjar"}})
+	if err := os.WriteFile(filepath.Join(pack, "generated", "manifest.json"), manifest, 0o644); err != nil {
+		t.Fatal(err)
+	}
+	server := initializedServer(t)
+	response, _ := server.Handle(makeRequest(2, "aosp/aidl/pack/peers", AIDLPackPeersParams{
+		MetadataPackRoot: pack, CacheRoot: t.TempDir(), Name: "IFoo",
+	}))
+	var result AIDLPackPeersResult
+	decodeResult(t, response, &result)
+	found := false
+	for _, peer := range result.Peers {
+		if peer.Language == aidl.PeerJava && peer.Confidence == "exact" && peer.LocalPath != "" {
+			found = true
+		}
+	}
+	if !found || len(result.Diagnostics) != 0 {
+		t.Fatalf("result=%+v", result)
+	}
+}
+
 func writeProtocolSrcJar(t *testing.T, pathName, entry, source string) {
 	t.Helper()
 	file, err := os.Create(pathName)

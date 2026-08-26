@@ -35,6 +35,7 @@ export interface JniPackPeersResult extends JniPeersResult {}
 export interface AidlPeersResult {
   peers: Array<{
     path: { raw: string; repoPath?: string };
+    localPath?: string;
     confidence: string;
     exists: boolean;
   }>;
@@ -186,8 +187,8 @@ export class EngineClient {
     return this.request("aosp/aidl/pack/references", { metadataPackRoot, name });
   }
 
-  async aidlPackPeers(metadataPackRoot: string, name: string): Promise<AidlPackPeersResult> {
-    return this.request("aosp/aidl/pack/peers", { metadataPackRoot, name });
+  async aidlPackPeers(metadataPackRoot: string, name: string, cacheRoot?: string): Promise<AidlPackPeersResult> {
+    return this.request("aosp/aidl/pack/peers", { metadataPackRoot, name, cacheRoot });
   }
 
   async jniPeers(params: { workspaceViewRoot: string; currentPath: string }): Promise<JniPeersResult> {

@@ -115,7 +115,7 @@ export function activate(context: vscode.ExtensionContext): void {
     }),
     vscode.commands.registerCommand("aospIde.goToAidlGeneratedPeer", async () => {
       await ensureEngine();
-      await goToAidlGeneratedPeer(engine);
+      await goToAidlGeneratedPeer(engine, context.globalStorageUri.fsPath);
     }),
     vscode.commands.registerCommand("aospIde.refreshCompdbOverlay", async () => {
       await ensureEngine();

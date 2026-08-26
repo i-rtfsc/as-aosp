@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/i-rtfsc/as-aosp/core/aidl"
+	"github.com/i-rtfsc/as-aosp/core/metadata"
 	"github.com/i-rtfsc/as-aosp/core/model"
 	"github.com/i-rtfsc/as-aosp/protocol/jsonrpc"
 )
@@ -35,6 +36,7 @@ type AIDLPackReferencesResult struct {
 
 type AIDLPackPeersParams struct {
 	MetadataPackRoot string `json:"metadataPackRoot"`
+	CacheRoot        string `json:"cacheRoot,omitempty"`
 	Name             string `json:"name"`
 }
 
@@ -110,12 +112,26 @@ func (server *Server) aidlPackPeers(request jsonrpc.Request) jsonrpc.Response {
 	}
 	index, diagnostics := loadAIDLPackIndex(params.MetadataPackRoot)
 	peers := make([]aidl.GeneratedPeer, 0)
+	archiveEntries := []aidl.ArchiveEntry{}
+	sourceArchives := []metadata.PathRef{}
+	if strings.TrimSpace(params.CacheRoot) != "" {
+		_, entries, generatedDiagnostics := materializeGeneratedSources(params.MetadataPackRoot, params.CacheRoot)
+		archiveEntries = entries
+		diagnostics = append(diagnostics, generatedDiagnostics...)
+		seen := map[string]bool{}
+		for _, entry := range entries {
+			if !seen[entry.Archive.Raw] {
+				seen[entry.Archive.Raw] = true
+				sourceArchives = append(sourceArchives, entry.Archive)
+			}
+		}
+	}
 	for _, document := range index.Documents {
 		resolution := index.Resolve(document, params.Name)
 		if resolution.State != aidl.ResolutionFound || len(resolution.Symbols) != 1 {
 			continue
 		}
-		report := index.GeneratedPeers(document, resolution.Name, aidl.PeerOptions{})
+		report := index.GeneratedPeers(document, resolution.Name, aidl.PeerOptions{ArchiveEntries: archiveEntries, SourceArchives: sourceArchives})
 		peers = append(peers, report.Peers...)
 		diagnostics = append(diagnostics, report.Diagnostics...)
 	}

@@ -1,11 +1,11 @@
 import * as vscode from "vscode";
 import { EngineClient } from "../engine/client";
 import { repoPath, targetUri, workspaceViewRoot } from "./paths";
-import { selectAidlPeerPath } from "./aidl_peer_selection";
+import { selectAidlPeerLocalPath, selectAidlPeerPath } from "./aidl_peer_selection";
 
 export { selectAidlPeerPath } from "./aidl_peer_selection";
 
-export async function goToAidlGeneratedPeer(engine: EngineClient): Promise<void> {
+export async function goToAidlGeneratedPeer(engine: EngineClient, cacheRoot?: string): Promise<void> {
   const editor = vscode.window.activeTextEditor;
   const root = workspaceViewRoot();
   const currentPath = editor && root && repoPath(root, editor.document.uri);
@@ -17,10 +17,17 @@ export async function goToAidlGeneratedPeer(engine: EngineClient): Promise<void>
   }
   const name = editor.document.getText(word);
   const packRoot = vscode.workspace.getConfiguration("aospIde").get<string>("metadataPackRoot")?.trim();
-  const packed = packRoot ? await engine.aidlPackPeers(packRoot, name) : undefined;
+  const packed = packRoot ? await engine.aidlPackPeers(packRoot, name, cacheRoot) : undefined;
   const result = packed && packed.diagnostics.length === 0 && packed.peers.length > 0
     ? packed
     : await engine.aidlPeers({ workspaceViewRoot: root, currentPath, name });
+  const localPath = selectAidlPeerLocalPath(result);
+  if (localPath) {
+    const target = vscode.Uri.file(localPath);
+    const document = await vscode.workspace.openTextDocument(target);
+    await vscode.window.showTextDocument(document);
+    return;
+  }
   const selected = selectAidlPeerPath(result);
   if (!selected || !targetUri(root, selected)) {
     void vscode.window.showWarningMessage("No unique visible AIDL generated peer was found.");
