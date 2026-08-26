@@ -5,6 +5,7 @@ import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
 import com.intellij.openapi.components.StoragePathMacros
+import java.util.concurrent.CopyOnWriteArrayList
 
 @State(
     name = "AospIdeEngineProfile",
@@ -13,6 +14,7 @@ import com.intellij.openapi.components.StoragePathMacros
 @Service(Service.Level.PROJECT)
 internal class EngineProfileSettings : PersistentStateComponent<EngineProfileState> {
     private var state = EngineProfileState()
+    private val listeners = CopyOnWriteArrayList<(EngineProfileState) -> Unit>()
 
     val current: EngineProfileState
         get() = state
@@ -21,9 +23,21 @@ internal class EngineProfileSettings : PersistentStateComponent<EngineProfileSta
 
     override fun loadState(state: EngineProfileState) {
         this.state = state
+        notifyListeners()
     }
 
     fun update(transform: (EngineProfileState) -> Unit) {
         transform(state)
+        notifyListeners()
+    }
+
+    fun addListener(listener: (EngineProfileState) -> Unit): AutoCloseable {
+        listeners += listener
+        listener(state)
+        return AutoCloseable { listeners -= listener }
+    }
+
+    private fun notifyListeners() {
+        listeners.forEach { it(state) }
     }
 }

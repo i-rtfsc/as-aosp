@@ -16,6 +16,7 @@ import java.awt.GridLayout
 import javax.swing.BorderFactory
 import javax.swing.JButton
 import javax.swing.JPanel
+import javax.swing.SwingUtilities
 
 internal class AospWorkspaceToolWindowFactory : ToolWindowFactory {
     override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
@@ -50,11 +51,24 @@ internal class AospWorkspaceToolWindowFactory : ToolWindowFactory {
             add(actions, BorderLayout.SOUTH)
         }
         val listener = coordinator.addListener { value ->
-            state.text = "${value.state.uppercase()} · ${value.message}"
-            counts.text = "${value.sourceRoots} source roots · ${value.generatedRoots} generated · ${value.libraries} libraries"
-            diagnostics.text = "${value.diagnostics} diagnostics · ${value.skipped} skipped"
+            SwingUtilities.invokeLater {
+                state.text = "${value.state.uppercase()} · ${value.message}"
+                counts.text = "${value.sourceRoots} source roots · ${value.generatedRoots} generated · ${value.libraries} libraries"
+                diagnostics.text = "${value.diagnostics} diagnostics · ${value.skipped} skipped"
+            }
         }
-        toolWindow.disposable?.let { com.intellij.openapi.util.Disposer.register(it) { listener.close() } }
+        val settingsListener = settings.addListener { value ->
+            SwingUtilities.invokeLater {
+                root.text = value.workspaceViewRoot.ifBlank { "Workspace not configured" }
+                pack.text = value.metadataPackRoot.ifBlank { "Metadata Pack not configured" }
+            }
+        }
+        toolWindow.disposable?.let {
+            com.intellij.openapi.util.Disposer.register(it) {
+                listener.close()
+                settingsListener.close()
+            }
+        }
         toolWindow.contentManager.addContent(ContentFactory.getInstance().createContent(panel, "Overview", false))
     }
 }

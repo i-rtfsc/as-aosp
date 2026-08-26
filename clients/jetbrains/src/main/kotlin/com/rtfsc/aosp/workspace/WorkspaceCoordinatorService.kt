@@ -1,6 +1,7 @@
 package com.rtfsc.aosp.workspace
 
 import com.intellij.openapi.components.Service
+import com.intellij.openapi.Disposable
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
@@ -8,6 +9,9 @@ import com.rtfsc.aosp.profile.EngineProfileSettings
 import com.rtfsc.aosp.project.FocusedRootsService
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.atomic.AtomicLong
+import java.util.concurrent.ScheduledExecutorService
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 
 internal data class WorkspaceStatus(
     val state: String = "idle",
@@ -22,13 +26,28 @@ internal data class WorkspaceStatus(
 @Service(Service.Level.PROJECT)
 internal class WorkspaceCoordinatorService(
     private val project: Project,
-) {
+) : Disposable {
     private val generation = AtomicLong()
     private val listeners = CopyOnWriteArrayList<(WorkspaceStatus) -> Unit>()
+    private val scheduler: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor()
+    private var settingsSubscription: AutoCloseable? = null
+    private var pending: java.util.concurrent.ScheduledFuture<*>? = null
 
     @Volatile
     var status: WorkspaceStatus = WorkspaceStatus()
         private set
+
+    init {
+        var initial = true
+        settingsSubscription = project.getService(EngineProfileSettings::class.java).addListener {
+            if (initial) {
+                initial = false
+                return@addListener
+            }
+            pending?.cancel(false)
+            pending = scheduler.schedule({ start(false) }, 300, TimeUnit.MILLISECONDS)
+        }
+    }
 
     fun addListener(listener: (WorkspaceStatus) -> Unit): AutoCloseable {
         listeners += listener
@@ -69,6 +88,12 @@ internal class WorkspaceCoordinatorService(
                 }
             }
         }.queue()
+    }
+
+    override fun dispose() {
+        settingsSubscription?.close()
+        pending?.cancel(false)
+        scheduler.shutdownNow()
     }
 
     private fun publish(value: WorkspaceStatus) {
