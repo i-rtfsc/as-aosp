@@ -1,0 +1,32 @@
+protocol/aosp/server_test.go
+  s_0fcc3f909ad4ee::t_bd67264779770d 186-190
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/aidl/AidlReferencesAction.kt
+  s_0fcc3f909ad4ee::t_08b89d25149366 28,33-38
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/aidl/AidlPackQueries.kt
+  s_0fcc3f909ad4ee::t_08b89d25149366 1-30,35-41
+  s_0fcc3f909ad4ee::t_bd67264779770d 31-34
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/aidl/AidlPeerAction.kt
+  s_0fcc3f909ad4ee::t_08b89d25149366 30,32,54-60,80-81
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/aidl/AidlDefinitionAction.kt
+  s_0fcc3f909ad4ee::t_08b89d25149366 58,60-65,91-92
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/engine/ProjectEngineService.kt
+  s_0fcc3f909ad4ee::t_08b89d25149366 45-59
+protocol/aosp/aidl_pack.go
+  s_0fcc3f909ad4ee::t_bd67264779770d 67-73
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "ba3e5067cce02e30ef06c41c6f85bd5910e94a93",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
