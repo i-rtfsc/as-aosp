@@ -47,7 +47,15 @@ export function activate(context: vscode.ExtensionContext): void {
     if (current.state === "ready" || current.state === "partial") {
       const packRoot = profile.metadataPackRoot;
       if (packRoot && profile.workspaceViewRoot) {
-        await applyJavaProjection(engine, profile.workspaceViewRoot, packRoot, context.globalStorageUri.fsPath, profile.outRoot);
+        const projection = await applyJavaProjection(engine, profile.workspaceViewRoot, packRoot, context.globalStorageUri.fsPath, profile.outRoot);
+        current = await engine.reportProjection({
+          profileId: profile.id,
+          sourceRoots: projection.sourcePaths.length,
+          generatedRoots: projection.generatedRoots,
+          libraries: projection.referencedLibraries.length,
+          skipped: projection.skipped,
+          diagnostics: [],
+        });
       }
     }
     return {

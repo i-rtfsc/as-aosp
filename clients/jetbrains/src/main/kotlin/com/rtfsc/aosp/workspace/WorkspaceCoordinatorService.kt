@@ -7,6 +7,9 @@ import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
 import com.rtfsc.aosp.profile.EngineProfileSettings
 import com.rtfsc.aosp.project.FocusedRootsService
+import com.rtfsc.aosp.engine.ProjectEngineService
+import com.rtfsc.aosp.profile.ProfileJson
+import com.fasterxml.jackson.databind.ObjectMapper
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.ScheduledExecutorService
@@ -28,6 +31,7 @@ internal class WorkspaceCoordinatorService(
     private val project: Project,
 ) : Disposable {
     private val generation = AtomicLong()
+    private val mapper = ObjectMapper()
     private val listeners = CopyOnWriteArrayList<(WorkspaceStatus) -> Unit>()
     private val scheduler: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor()
     private var settingsSubscription: AutoCloseable? = null
@@ -65,7 +69,22 @@ internal class WorkspaceCoordinatorService(
 
             override fun run(indicator: ProgressIndicator) {
                 indicator.text = "Loading module and generated source facts"
+                val engine = project.getService(ProjectEngineService::class.java)
+                engine.indexStart(ProfileJson.validationParams(state), rebuild)
                 val result = project.getService(FocusedRootsService::class.java).applyBuildFacts()
+                val projection = mapper.writeValueAsString(
+                    mapOf(
+                        "profileId" to state.profileId,
+                        "sourceRoots" to result.sourceRoots.size,
+                        "generatedRoots" to result.generatedRoots.size,
+                        "libraries" to result.libraries.size,
+                        "skipped" to result.skipped,
+                        "diagnostics" to result.diagnostics.map { message ->
+                            mapOf("code" to "IDE_PROJECTION_DIAGNOSTIC", "severity" to "warning", "stage" to "projection", "message" to message)
+                        },
+                    ),
+                )
+                engine.indexProjection(projection)
                 val stateName = if (result.diagnostics.isEmpty()) "ready" else "partial"
                 completed = WorkspaceStatus(
                     state = stateName,

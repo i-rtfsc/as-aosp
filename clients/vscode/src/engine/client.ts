@@ -84,6 +84,10 @@ export interface IndexSnapshot {
   progress: number;
   moduleCount: number;
   generatedCount: number;
+  sourceRootCount: number;
+  generatedRootCount: number;
+  libraryCount: number;
+  skippedCount: number;
   diagnostics: unknown[];
 }
 
@@ -225,6 +229,10 @@ export class EngineClient {
 
   async indexStatus(): Promise<IndexSnapshot> {
     return this.request("aosp/index/status", null);
+  }
+
+  async reportProjection(params: { profileId: string; sourceRoots: number; generatedRoots: number; libraries: number; skipped: number; diagnostics: unknown[] }): Promise<IndexSnapshot> {
+    return this.request("aosp/index/projection", params);
   }
 
   async materializeGenerated(metadataPackRoot: string, cacheRoot: string): Promise<GeneratedMaterializeResult> {

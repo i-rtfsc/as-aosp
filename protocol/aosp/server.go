@@ -149,6 +149,8 @@ func (server *Server) Handle(request jsonrpc.Request) (jsonrpc.Response, bool) {
 		response = server.indexStatus(request)
 	case "aosp/index/cancel":
 		response = server.indexCancel(request)
+	case "aosp/index/projection":
+		response = server.indexProjection(request)
 	case "aosp/generated/materialize":
 		response = server.generatedMaterialize(request)
 	case "aosp/pack/info":

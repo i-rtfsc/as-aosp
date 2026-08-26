@@ -12,16 +12,29 @@ type IndexStartParams struct {
 	Profile model.Profile `json:"profile"`
 }
 
+type IndexProjectionParams struct {
+	ProfileID      string             `json:"profileId"`
+	SourceRoots    int                `json:"sourceRoots"`
+	GeneratedRoots int                `json:"generatedRoots"`
+	Libraries      int                `json:"libraries"`
+	Skipped        int                `json:"skipped"`
+	Diagnostics    []model.Diagnostic `json:"diagnostics"`
+}
+
 type IndexSnapshot struct {
-	ProfileID       string             `json:"profileId"`
-	State           string             `json:"state"`
-	Stage           string             `json:"stage"`
-	CompletedStages []string           `json:"completedStages"`
-	TotalStages     int                `json:"totalStages"`
-	Progress        int                `json:"progress"`
-	ModuleCount     int                `json:"moduleCount"`
-	GeneratedCount  int                `json:"generatedCount"`
-	Diagnostics     []model.Diagnostic `json:"diagnostics"`
+	ProfileID          string             `json:"profileId"`
+	State              string             `json:"state"`
+	Stage              string             `json:"stage"`
+	CompletedStages    []string           `json:"completedStages"`
+	TotalStages        int                `json:"totalStages"`
+	Progress           int                `json:"progress"`
+	ModuleCount        int                `json:"moduleCount"`
+	GeneratedCount     int                `json:"generatedCount"`
+	SourceRootCount    int                `json:"sourceRootCount"`
+	GeneratedRootCount int                `json:"generatedRootCount"`
+	LibraryCount       int                `json:"libraryCount"`
+	SkippedCount       int                `json:"skippedCount"`
+	Diagnostics        []model.Diagnostic `json:"diagnostics"`
 }
 
 type indexCoordinator struct {
@@ -66,6 +79,44 @@ func (server *Server) indexStatus(request jsonrpc.Request) jsonrpc.Response {
 		})
 	}
 	return jsonrpc.Success(request.ID, server.indexStatusResult())
+}
+
+func (server *Server) indexProjection(request jsonrpc.Request) jsonrpc.Response {
+	var params IndexProjectionParams
+	if err := decodeParams(request, &params); err != nil {
+		return jsonrpc.Failure(request.ID, jsonrpc.InvalidParams(err.Error()))
+	}
+	if server.coordinator == nil {
+		return jsonrpc.Success(request.ID, IndexSnapshot{State: "idle", TotalStages: 4, CompletedStages: []string{}, Diagnostics: []model.Diagnostic{}})
+	}
+	server.coordinator.mu.Lock()
+	defer server.coordinator.mu.Unlock()
+	if params.ProfileID != "" && server.coordinator.snapshot.ProfileID != params.ProfileID {
+		return jsonrpc.Success(request.ID, server.coordinator.snapshot)
+	}
+	server.coordinator.snapshot.Stage = "projection"
+	server.coordinator.snapshot.SourceRootCount = params.SourceRoots
+	server.coordinator.snapshot.GeneratedRootCount = params.GeneratedRoots
+	server.coordinator.snapshot.LibraryCount = params.Libraries
+	server.coordinator.snapshot.SkippedCount = params.Skipped
+	server.coordinator.snapshot.Diagnostics = append(server.coordinator.snapshot.Diagnostics, params.Diagnostics...)
+	server.coordinator.snapshot.CompletedStages = appendUniqueStage(server.coordinator.snapshot.CompletedStages, "projection")
+	server.coordinator.snapshot.Progress = 100
+	if len(params.Diagnostics) > 0 {
+		server.coordinator.snapshot.State = "partial"
+	} else if server.coordinator.snapshot.State == "running" || server.coordinator.snapshot.State == "ready" {
+		server.coordinator.snapshot.State = "ready"
+	}
+	return jsonrpc.Success(request.ID, server.coordinator.snapshot)
+}
+
+func appendUniqueStage(values []string, stage string) []string {
+	for _, value := range values {
+		if value == stage {
+			return values
+		}
+	}
+	return append(values, stage)
 }
 
 func (server *Server) indexCancel(request jsonrpc.Request) jsonrpc.Response {

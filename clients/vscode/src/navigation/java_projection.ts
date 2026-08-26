@@ -9,6 +9,7 @@ type PathRef = { raw?: string; kind: string; repoPath?: string };
 export interface JavaProjectionSummary {
   sourcePaths: string[];
   referencedLibraries: string[];
+  generatedRoots: number;
   skipped: number;
 }
 
@@ -48,6 +49,7 @@ export async function applyJavaProjection(
   return {
     sourcePaths: [...sourcePaths].sort(),
     referencedLibraries: [...referencedLibraries].sort(),
+    generatedRoots: generated.sourceRoots.length,
     skipped,
   };
 }

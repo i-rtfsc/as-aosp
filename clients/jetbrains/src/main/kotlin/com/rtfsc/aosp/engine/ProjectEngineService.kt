@@ -87,6 +87,16 @@ internal class ProjectEngineService(
         return engineProcess.request("aosp/pack/validate", params)
     }
 
+    fun indexStart(params: String, rebuild: Boolean): ByteArray {
+        if (!engineProcess.isRunning) start()
+        return engineProcess.request(if (rebuild) "aosp/index/rebuild" else "aosp/index/start", params)
+    }
+
+    fun indexProjection(params: String): ByteArray {
+        if (!engineProcess.isRunning) start()
+        return engineProcess.request("aosp/index/projection", params)
+    }
+
     override fun dispose() {
         stop()
     }
