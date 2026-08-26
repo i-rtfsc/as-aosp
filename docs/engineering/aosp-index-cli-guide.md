@@ -106,6 +106,16 @@ aosp-index pack inspect --root /srv/packs/android-framework
 du -sh /srv/packs/android-framework
 ```
 
+如果还不确定服务器 out 是否生成了足够的 IDE facts，可先运行：
+
+```bash
+aosp-index pack preflight --out-root "$OUT_DIR"
+```
+
+重点确认 `module-info`、`java-deps` 和 `compdb`。若 compdb 显示缺失，建议在已完成
+lunch 的同一 shell 中执行 `SOONG_GEN_COMPDB=1 m nothing` 后再导出；Java 导航不因
+compdb 缺失而失效，但 C/C++/JNI 编译参数会降级。
+
 也可以在服务器设置环境变量后使用仓库脚本：
 
 ```bash
