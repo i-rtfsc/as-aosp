@@ -1,0 +1,64 @@
+docs/roadmap/target-driven-project-graph-plan.md
+  s_0fcc3f909ad4ee::t_6b0f7d56f8b0cb 10-50
+  h_8b376749578497 1-9
+docs/archive/README.md
+  s_0fcc3f909ad4ee::t_9418a9ef8a5c43 25
+  h_8b376749578497 14,19-24
+docs/decisions/build-facts-driven-navigation.md
+  s_0fcc3f909ad4ee::t_bfc015ff050b52 58
+  h_8b376749578497 57,89
+docs/README.md
+  s_0fcc3f909ad4ee::t_9418a9ef8a5c43 22,25
+  s_0fcc3f909ad4ee::t_6b0f7d56f8b0cb 26
+  h_8b376749578497 24,66
+docs/design/protocol-and-profile-design.md
+  h_8b376749578497 13-14,22-23
+docs/design/profile-ui-and-multi-project-design.md
+  s_0fcc3f909ad4ee::t_bfc015ff050b52 15
+  h_8b376749578497 25
+docs/roadmap/current-state.md
+  s_0fcc3f909ad4ee::t_bfc015ff050b52 70
+  h_8b376749578497 3,69
+docs/design/target-spec-and-artifact-resolver-design.md
+  s_0fcc3f909ad4ee::t_2802f7b8b23d79 12-28,36-40
+  h_8b376749578497 1-11,29-35,41-64
+docs/roadmap/README.md
+  s_0fcc3f909ad4ee::t_6b0f7d56f8b0cb 12
+  h_8b376749578497 10-11
+docs/product/terminology.md
+  h_8b376749578497 17-20
+docs/design/ide-client-and-navigation-design.md
+  s_0fcc3f909ad4ee::t_bfc015ff050b52 45-46
+  h_8b376749578497 44
+docs/architecture/system-architecture.md
+  h_8b376749578497 13-14,29
+docs/design/aosp-metadata-pack-design.md
+  s_0fcc3f909ad4ee::t_4ed8a7c19ec320 160,168
+docs/decisions/target-driven-project-graph.md
+  s_0fcc3f909ad4ee::t_2802f7b8b23d79 1-5,19-40,50-78,88-91,94-96,102-111
+  h_8b376749578497 6-18,41-49,79-87,92-93,97-101
+docs/design/project-graph-and-ide-projection-design.md
+  s_0fcc3f909ad4ee::t_2802f7b8b23d79 1-14,19-28
+  h_8b376749578497 15-18,29-39
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "288028931bab16e0babb2f2f43217709a1cf673f",
+  "prompts": {},
+  "humans": {
+    "h_8b376749578497": {
+      "author": "Solo <anqi.huang@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
