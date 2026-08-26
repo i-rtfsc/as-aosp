@@ -1,0 +1,23 @@
+clients/vscode/src/ui/profile_panel.ts
+  s_0fcc3f909ad4ee::t_d5eba1fc5b37f1 5,16,19-22,69,71
+  s_0fcc3f909ad4ee::t_fffac28a3b4647 23-25
+clients/vscode/src/extension.ts
+  s_0fcc3f909ad4ee::t_0acc29c0c59f13 75-95,151-152,155,165,167-168
+  s_0fcc3f909ad4ee::t_fffac28a3b4647 25,39,42-50,54-59,61-74
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "43ecdf5e0e3d57f1f2e344f2d6d57dd1c2261240",
+  "prompts": {},
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
