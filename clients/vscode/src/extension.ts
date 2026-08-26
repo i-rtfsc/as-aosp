@@ -24,6 +24,10 @@ export function activate(context: vscode.ExtensionContext): void {
   };
   const profileView = new ProfileViewProvider(context, async (metadataPackRoot) => {
     await ensureEngine();
+    const validation = await engine.validatePack(metadataPackRoot);
+    if (!validation.valid) {
+      throw new Error(validation.diagnostics.map((item) => `${item.code}: ${item.message}`).join("; "));
+    }
     const result = await engine.modulesCatalog(metadataPackRoot);
     return {
       modules: result.modules.length,
@@ -41,6 +45,12 @@ export function activate(context: vscode.ExtensionContext): void {
       pathMappings: config.get<unknown[]>("pathMappings") || [],
       buildIntegration: { mode: "read-only" },
     };
+    if (profile.metadataPackRoot) {
+      const validation = await engine.validatePack(profile.metadataPackRoot);
+      if (!validation.valid) {
+        throw new Error(validation.diagnostics.map((item) => `${item.code}: ${item.message}`).join("; "));
+      }
+    }
     const status = await engine.startIndex(profile, rebuild);
     if (status.state === "running") {
       for (let attempt = 0; attempt < 40; attempt++) {

@@ -34,6 +34,13 @@ internal object BuildFactsProjection {
         if (packRoot.isEmpty()) {
             return BuildFactsProjectionResult(emptyList(), emptyList(), emptyList(), 0, listOf("Metadata Pack Root is required."))
         }
+        val validation = mapper.readTree(engine.packValidate(mapper.writeValueAsString(mapOf("metadataPackRoot" to packRoot)))).path("result")
+        if (!validation.path("valid").asBoolean(false)) {
+            val diagnostics = validation.path("diagnostics").map { node ->
+                "${node.path("code").asText("PACK_INVALID")}: ${node.path("message").asText("invalid pack")}"
+            }
+            return BuildFactsProjectionResult(emptyList(), emptyList(), emptyList(), 0, diagnostics)
+        }
         val packInfoParams = mapper.writeValueAsString(mapOf("metadataPackRoot" to packRoot))
         val packInfo = mapper.readTree(engine.packInfo(packInfoParams)).path("result")
         val catalogParams = mapper.writeValueAsString(mapOf("metadataPackRoot" to packRoot))

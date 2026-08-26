@@ -82,6 +82,11 @@ internal class ProjectEngineService(
         return engineProcess.request("aosp/pack/info", params)
     }
 
+    fun packValidate(params: String): ByteArray {
+        if (!engineProcess.isRunning) start()
+        return engineProcess.request("aosp/pack/validate", params)
+    }
+
     override fun dispose() {
         stop()
     }

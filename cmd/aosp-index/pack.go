@@ -19,6 +19,7 @@ import (
 	"github.com/i-rtfsc/as-aosp/core/metadata"
 	"github.com/i-rtfsc/as-aosp/core/model"
 	coremodules "github.com/i-rtfsc/as-aosp/core/modules"
+	corepack "github.com/i-rtfsc/as-aosp/core/pack"
 )
 
 type packManifest struct {
@@ -418,142 +419,15 @@ func runPackValidate(args []string) {
 }
 
 func validatePack(root string) error {
-	required := []string{
-		"manifest.json", "checksums.sha256",
-		filepath.Join("generated", "manifest.json"),
-		filepath.Join("modules", "catalog.json"),
-		filepath.Join("modules", "dependency-graph.json"),
-		filepath.Join("aidl", "symbols.json"),
-		filepath.Join("aidl", "index.json"),
-		filepath.Join("aidl", "modules.json"),
+	result := corepack.Validate(root)
+	if result.Valid {
+		return nil
 	}
-	for _, file := range required {
-		if _, err := os.Stat(filepath.Join(root, file)); err != nil {
-			return fmt.Errorf("pack file missing: %s", file)
-		}
+	if len(result.Diagnostics) == 0 {
+		return fmt.Errorf("metadata pack validation failed")
 	}
-	data, err := os.ReadFile(filepath.Join(root, "manifest.json"))
-	if err != nil {
-		return err
-	}
-	var manifest packManifest
-	if err := json.Unmarshal(data, &manifest); err != nil {
-		return fmt.Errorf("manifest parse failed: %w", err)
-	}
-	if manifest.SchemaVersion != 1 {
-		return fmt.Errorf("unsupported pack schema: %d", manifest.SchemaVersion)
-	}
-	if _, err := coremodules.LoadPackCatalog(root); err != nil {
-		return fmt.Errorf("module catalog invalid: %w", err)
-	}
-	if err := validateAIDLFiles(root); err != nil {
-		return err
-	}
-	if err := validateGeneratedManifest(root); err != nil {
-		return err
-	}
-	if containsString(manifest.Packs, "native") {
-		if err := validateJNIIndex(root); err != nil {
-			return err
-		}
-	}
-	checksums, err := os.ReadFile(filepath.Join(root, "checksums.sha256"))
-	if err != nil {
-		return err
-	}
-	covered := make(map[string]bool)
-	for _, line := range strings.Split(strings.TrimSpace(string(checksums)), "\n") {
-		parts := strings.SplitN(line, "  ", 2)
-		if len(parts) != 2 {
-			return fmt.Errorf("invalid checksum line")
-		}
-		name := filepath.ToSlash(parts[1])
-		if name == "" || strings.HasPrefix(name, "/") || strings.Contains(name, "../") || covered[name] {
-			return fmt.Errorf("invalid checksum path: %s", name)
-		}
-		covered[name] = true
-		sum, err := fileSHA256(filepath.Join(root, filepath.FromSlash(name)))
-		if err != nil {
-			return err
-		}
-		if sum != parts[0] {
-			return fmt.Errorf("checksum mismatch: %s", name)
-		}
-	}
-	files, err := packFiles(root)
-	if err != nil {
-		return err
-	}
-	for _, file := range files {
-		if !covered[file] {
-			return fmt.Errorf("checksum entry missing: %s", file)
-		}
-	}
-	if len(covered) != len(files) {
-		return fmt.Errorf("checksum manifest contains unknown files")
-	}
-	return nil
-}
-
-func validateAIDLFiles(root string) error {
-	var index aidl.Index
-	if err := readPackJSON(root, filepath.Join("aidl", "index.json"), &index); err != nil || index.Documents == nil || index.Symbols == nil {
-		return fmt.Errorf("AIDL index invalid")
-	}
-	var symbols map[string][]aidl.Symbol
-	if err := readPackJSON(root, filepath.Join("aidl", "symbols.json"), &symbols); err != nil || symbols == nil {
-		return fmt.Errorf("AIDL symbols invalid")
-	}
-	var modules []string
-	if err := readPackJSON(root, filepath.Join("aidl", "modules.json"), &modules); err != nil || modules == nil {
-		return fmt.Errorf("AIDL modules invalid")
-	}
-	return nil
-}
-
-func validateGeneratedManifest(root string) error {
-	var entries []struct {
-		Path    string   `json:"path"`
-		Entries []string `json:"entries"`
-	}
-	if err := readPackJSON(root, filepath.Join("generated", "manifest.json"), &entries); err != nil || entries == nil {
-		return fmt.Errorf("generated manifest invalid")
-	}
-	for _, entry := range entries {
-		pathName := filepath.ToSlash(entry.Path)
-		if !strings.HasPrefix(pathName, "generated/srcjars/") || strings.Contains(pathName, "../") {
-			return fmt.Errorf("generated archive path invalid: %s", pathName)
-		}
-		if _, err := os.Stat(filepath.Join(root, filepath.FromSlash(pathName))); err != nil {
-			return fmt.Errorf("generated archive missing: %s", pathName)
-		}
-	}
-	return nil
-}
-
-func validateJNIIndex(root string) error {
-	var index jni.Index
-	if err := readPackJSON(root, filepath.Join("jni", "index.json"), &index); err != nil || index.Links == nil {
-		return fmt.Errorf("JNI index invalid")
-	}
-	return nil
-}
-
-func readPackJSON(root, relative string, destination any) error {
-	data, err := os.ReadFile(filepath.Join(root, relative))
-	if err != nil {
-		return err
-	}
-	return json.Unmarshal(data, destination)
-}
-
-func containsString(values []string, expected string) bool {
-	for _, value := range values {
-		if value == expected {
-			return true
-		}
-	}
-	return false
+	diagnostic := result.Diagnostics[0]
+	return fmt.Errorf("%s: %s: %s", diagnostic.Code, diagnostic.Path, diagnostic.Message)
 }
 
 func findPackMetadata(outRoot, relative string) (string, bool) {

@@ -99,6 +99,11 @@ export interface PackInfoResult {
   diagnostics: unknown[];
 }
 
+export interface PackValidateResult {
+  valid: boolean;
+  diagnostics: Array<{ code: string; message: string; path?: string }>;
+}
+
 export class EngineClient {
   private process?: ChildProcessWithoutNullStreams;
   private startPromise?: Promise<void>;
@@ -227,6 +232,10 @@ export class EngineClient {
 
   async packInfo(metadataPackRoot: string): Promise<PackInfoResult> {
     return this.request("aosp/pack/info", { metadataPackRoot });
+  }
+
+  async validatePack(metadataPackRoot: string): Promise<PackValidateResult> {
+    return this.request("aosp/pack/validate", { metadataPackRoot });
   }
 
   private request(method: string, params: unknown): Promise<any> {

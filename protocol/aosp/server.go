@@ -152,6 +152,8 @@ func (server *Server) Handle(request jsonrpc.Request) (jsonrpc.Response, bool) {
 		response = server.generatedMaterialize(request)
 	case "aosp/pack/info":
 		response = server.packInfo(request)
+	case "aosp/pack/validate":
+		response = server.packValidate(request)
 	case "aosp/aidl/pack/resolve":
 		response = server.aidlPackResolve(request)
 	case "aosp/aidl/pack/references":
