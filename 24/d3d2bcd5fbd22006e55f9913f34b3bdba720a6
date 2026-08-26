@@ -1,0 +1,83 @@
+cmd/aosp-index/pack_test.go
+  s_0fcc3f909ad4ee::t_585b514e681ce2 21
+docs/roadmap/current-state.md
+  s_0fcc3f909ad4ee::t_79f69b0e1eefba 74
+  h_8b376749578497 73
+protocol/aosp/server_test.go
+  s_0fcc3f909ad4ee::t_5589fc5e5610f2 96-103,111-129
+  h_8b376749578497 104-110,176-177,194
+docs/design/aosp-metadata-pack-design.md
+  s_0fcc3f909ad4ee::t_938e5227b98fbb 35
+  h_8b376749578497 33-34,55-56
+protocol/aosp/server.go
+  s_0fcc3f909ad4ee::t_401e7ea1ec5aa7 200
+  s_0fcc3f909ad4ee::t_9fd3e3544e52f3 161-162
+  h_8b376749578497 71
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/engine/ProjectEngineService.kt
+  s_0fcc3f909ad4ee::t_79f69b0e1eefba 74
+  h_8b376749578497 70-73
+core/pack/validate_test.go
+  s_0fcc3f909ad4ee::t_65851c8be5ea07 76
+clients/vscode/src/engine/client.ts
+  s_0fcc3f909ad4ee::t_79f69b0e1eefba 78-81,89-96
+  h_8b376749578497 82-88,245-248
+core/pack/validate.go
+  s_5f30dac179bcb2::t_93e9ddd1aec82d 58
+  h_8b376749578497 33,55-57
+protocol/aosp/project_graph.go
+  s_0fcc3f909ad4ee::t_9fd3e3544e52f3 8-16,29-36
+  h_8b376749578497 1-7,17-28,37-57
+docs/design/protocol-and-profile-design.md
+  s_0fcc3f909ad4ee::t_cc69c57f8a7d83 119
+  h_8b376749578497 122-124
+cmd/aosp-index/pack.go
+  s_0fcc3f909ad4ee::t_7585fad5e67c6c 324-327
+  h_8b376749578497 18,211-213,316-323,328-331
+docs/roadmap/target-driven-project-graph-plan.md
+  h_8b376749578497 25
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "24d3d2bcd5fbd22006e55f9913f34b3bdba720a6",
+  "prompts": {},
+  "humans": {
+    "h_8b376749578497": {
+      "author": "Solo <anqi.huang@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    },
+    "s_45523d6cdd74f1": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a0137d-ebb1-79b2-abfb-ac185f54e4f5",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    },
+    "s_5f30dac179bcb2": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "019ffe38-b3cd-77e3-8987-f48bc62a086c",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    },
+    "s_e9dd769d815b63": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a03183-9fdd-7f72-b2c6-acb6e5382f11",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
