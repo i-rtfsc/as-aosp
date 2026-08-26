@@ -162,8 +162,9 @@ aosp-index pack export --aosp-root "$ANDROID_BUILD_TOP" \
 引用的 archive 才是可选项；不能把 `--generated` 作为 Java/AIDL 基础能力的开关。
 
 `--module` 必须按 ModuleCatalog dependency closure 选择 source roots。AIDL/JNI
-源码 facts 只扫描 closure 覆盖的 RepoPath；未知模块必须失败，不能退化为全树扫描。
-首版 generated srcjar 仍全量保留，直到 archive owner facts 可以被可靠证明。
+源码 facts 只扫描 closure 覆盖的 RepoPath；generated srcjar 只保留 closure 中
+`SrcJars/Generated` 明确引用的 archive。未知模块必须失败，不能退化为全树扫描
+或按 basename 猜 archive owner。
 
 建议命令：
 

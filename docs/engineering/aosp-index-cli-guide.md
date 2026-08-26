@@ -96,8 +96,9 @@ aosp-index pack export \
 --module framework-minus-apex --module services
 ```
 
-选择模块后，AIDL 和 `--native` JNI facts 只扫描 closure 覆盖的 source roots。
-模块名不存在时导出失败，不会退化为全树扫描。generated srcjar 当前仍全量保留。
+选择模块后，AIDL 和 `--native` JNI facts 只扫描 closure 覆盖的 source roots，
+generated srcjar 只保留 closure 明确引用的 archive。模块名不存在时导出失败，
+不会退化为全树扫描或按 basename 猜 owner。
 
 首版输出：
 
