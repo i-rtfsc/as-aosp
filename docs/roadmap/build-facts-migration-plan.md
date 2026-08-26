@@ -22,6 +22,7 @@
 ## Phase 3：IndexCoordinator
 
 - profile 保存后启动后台 coordinator；
+- VS Code workspace 激活时对已有 profile 自动启动，配置变化 debounce 后重建；
 - 阶段：discover、metadata、module graph、Java/AIDL/JNI、generated、compdb；
 - 增加 `aosp/index/status`、`aosp/index/rebuild`、`aosp/index/cancel`；
 - 首版先完成可查询的阶段状态和 Metadata Pack catalog/generate 计数，再接 IDE 原生索引；

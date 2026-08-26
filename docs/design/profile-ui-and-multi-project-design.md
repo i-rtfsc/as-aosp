@@ -51,6 +51,11 @@ Palette 和状态栏继续作为备用入口。
 3. 没有已保存 profile 时自动打开一次 panel；
 4. 已保存 profile 不重复弹窗；
 5. 保存后写 workspace-scoped `aospIde.*`，并触发 engine session 重启。
+6. 已保存 Workspace View 的窗口激活后自动启动 coordinator；不要求用户点击
+   `Start Index`。profile 相关配置变化合并为一次 cancel/restart，手动按钮仍用于
+   显式 rebuild 和故障恢复。
+7. 侧边栏 provider 保存最后一个 coordinator snapshot，view 关闭并重新打开后立即
+   恢复 state、stage、progress、module/generated/diagnostic counts。
 
 ## 4. JetBrains
 
