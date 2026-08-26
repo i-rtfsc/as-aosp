@@ -69,7 +69,8 @@
 - VS Code 和 JetBrains 当前已支持 Selected Modules 兼容字段；TargetSpec/ArtifactResolver/
   ProjectGraph 尚未完整实现；`core/model` 已加入 TargetSpec/ArtifactSelector 与 legacy
   selectedModules 转换，`core/artifacts` 已加入基于 path/name/digest 的 Catalog/Resolver，
-  selected module closure 仍是客户端过渡投影。
+  `core/projects` 已能从 target/module/artifact facts 构建首个 ProjectGraph 和 source
+  ownership decisions；selected module closure 仍是客户端过渡投影。
 - pack export 已复制 ModuleCatalog 明确引用的 out 内 Java jars 到 `pack/out/**`；
   两端可在没有本机 out 时使用 pack classpath，inspect 会报告 jar/srcjar 统计。
 - Native Pack 的 `compile_commands.json` 已可在 VS Code compdb overlay 中直接消费；
