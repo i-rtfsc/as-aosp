@@ -21,6 +21,7 @@
 14. [AOSP Metadata Pack 设计](design/aosp-metadata-pack-design.md)。
 15. [Build Facts 迁移实施计划](roadmap/build-facts-migration-plan.md)。
 16. [aosp-index CLI 使用指南](engineering/aosp-index-cli-guide.md)。
+17. [AOSP 多 IDE 导航方案重新审计](research/aosp-ide-navigation-reaudit-2026-08.md)。
 
 ## 2. 文档权威性
 

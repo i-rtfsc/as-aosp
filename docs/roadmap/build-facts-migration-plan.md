@@ -31,6 +31,9 @@
 
 ## Phase 4：JetBrains project projection
 
+- re-audit 后增加 `ProjectGraph` 作为 ModuleCatalog 到 IDE 的稳定投影层；
+- 实现 duplicate source ownership、framework srcjars 和 dependency module 规则；
+
 - 使用 Workspace Model/ModuleRootModel facade 投影 source roots、jars、srcjars、generated；
 - 当前 JetBrains slice 先复用 ModuleRootModel 投影 source/generated roots；libraries 和
   Workspace Model closure 后续接入；
@@ -41,6 +44,8 @@
   Java LS 完整 classpath 作为下一验收。
 
 ## Phase 5：VS Code language integration
+
+- 当前 `java.project.sourcePaths` 保留为 fallback；目标改为 JDT LS 多 project/importer；
 
 - Java：生成 workspace-scoped source paths/referenced libraries，优先交给 Java LS；
 - AIDL：继续使用 shared engine provider；
