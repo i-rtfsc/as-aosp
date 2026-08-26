@@ -51,6 +51,8 @@ aosp-metadata-pack/
 - `module_bp_cc_deps.json`：C/C++ source、include dirs、sysroot、flags；
 - `compile_commands.json`：clangd/CLion 编译数据库；
 - `generated/headers`：可选 generated headers manifest 或按需文件。
+- `jni/index.json`：`--native` 导出的 Java/Kotlin native declaration、C/C++ symbol、
+  registration 和 cross-language links；路径身份使用 RepoPath。
 
 ### AIDL/generated facts
 
