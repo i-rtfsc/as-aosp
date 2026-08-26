@@ -49,6 +49,10 @@ func (server *Server) generatedMaterialize(request jsonrpc.Request) jsonrpc.Resp
 		})
 		return jsonrpc.Success(request.ID, result)
 	}
+	result.Diagnostics = append(result.Diagnostics, diagnosticsToModel(server.validatePackIfDeclared(packRoot))...)
+	if len(result.Diagnostics) > 0 {
+		return jsonrpc.Success(request.ID, result)
+	}
 	roots, _, diagnostics := materializeGeneratedSources(packRoot, cacheRoot)
 	result.SourceRoots = roots
 	result.Diagnostics = append(result.Diagnostics, diagnostics...)

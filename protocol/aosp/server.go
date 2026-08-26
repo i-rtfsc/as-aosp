@@ -25,6 +25,7 @@ type Server struct {
 	aidlSnapshot          *aidlSnapshot
 	moduleCatalogSnapshot *moduleCatalogSnapshot
 	coordinator           *indexCoordinator
+	packValidation        packValidationCache
 }
 
 type jniSnapshot struct {

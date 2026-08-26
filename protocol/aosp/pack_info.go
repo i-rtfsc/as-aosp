@@ -36,6 +36,10 @@ func (server *Server) packInfo(request jsonrpc.Request) jsonrpc.Response {
 		})
 		return jsonrpc.Success(request.ID, result)
 	}
+	result.Diagnostics = append(result.Diagnostics, diagnosticsToModel(server.validatePackIfDeclared(root))...)
+	if len(result.Diagnostics) > 0 {
+		return jsonrpc.Success(request.ID, result)
+	}
 	data, err := os.ReadFile(filepath.Join(root, "manifest.json"))
 	if err != nil {
 		result.Diagnostics = append(result.Diagnostics, packDiagnostic("PACK_MANIFEST_READ_FAILED", err.Error(), root))

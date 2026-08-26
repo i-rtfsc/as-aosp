@@ -9,6 +9,7 @@ import (
 
 	"github.com/i-rtfsc/as-aosp/core/model"
 	"github.com/i-rtfsc/as-aosp/core/modules"
+	corepack "github.com/i-rtfsc/as-aosp/core/pack"
 	"github.com/i-rtfsc/as-aosp/protocol/jsonrpc"
 )
 
@@ -133,6 +134,9 @@ func (server *Server) loadModuleCatalog(root string) (modules.Catalog, []model.D
 			"METADATA_PACK_ROOT_MISSING", "metadataPackRoot is required", "",
 		)}
 	}
+	if diagnostics := server.validatePackIfDeclared(root); len(diagnostics) > 0 {
+		return modules.Catalog{}, diagnosticsToModel(diagnostics)
+	}
 	pathName := filepath.Join(root, "modules", "catalog.json")
 	info, err := os.Stat(pathName)
 	if err != nil {
@@ -156,6 +160,17 @@ func (server *Server) loadModuleCatalog(root string) (modules.Catalog, []model.D
 		path: pathName, size: info.Size(), modTime: info.ModTime().UnixNano(), catalog: catalog,
 	}
 	return catalog, nil
+}
+
+func diagnosticsToModel(values []corepack.Diagnostic) []model.Diagnostic {
+	result := make([]model.Diagnostic, 0, len(values))
+	for _, value := range values {
+		result = append(result, model.Diagnostic{
+			Code: value.Code, Severity: model.SeverityError, Stage: "pack-validation",
+			Message: value.Message, LocalPath: value.Path,
+		})
+	}
+	return result
 }
 
 func moduleDiagnostic(code, message, pathName string) model.Diagnostic {

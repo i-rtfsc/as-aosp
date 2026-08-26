@@ -55,6 +55,10 @@ func (server *Server) aidlPackResolve(request jsonrpc.Request) jsonrpc.Response 
 		result.Diagnostics = append(result.Diagnostics, model.Diagnostic{Code: "AIDL_PACK_PARAMS_MISSING", Severity: model.SeverityError, Stage: "aidl-pack-rpc", Message: "metadataPackRoot and name are required"})
 		return jsonrpc.Success(request.ID, result)
 	}
+	result.Diagnostics = append(result.Diagnostics, diagnosticsToModel(server.validatePackIfDeclared(params.MetadataPackRoot))...)
+	if len(result.Diagnostics) > 0 {
+		return jsonrpc.Success(request.ID, result)
+	}
 	data, err := os.ReadFile(filepath.Join(params.MetadataPackRoot, "aidl", "symbols.json"))
 	if err != nil {
 		result.Diagnostics = append(result.Diagnostics, model.Diagnostic{Code: "AIDL_PACK_SYMBOLS_READ_FAILED", Severity: model.SeverityWarning, Stage: "aidl-pack-rpc", Message: err.Error()})
@@ -102,6 +106,10 @@ func (server *Server) aidlPackReferences(request jsonrpc.Request) jsonrpc.Respon
 		return jsonrpc.Failure(request.ID, jsonrpc.InvalidParams(err.Error()))
 	}
 	index, diagnostics := loadAIDLPackIndex(params.MetadataPackRoot)
+	diagnostics = append(diagnostics, diagnosticsToModel(server.validatePackIfDeclared(params.MetadataPackRoot))...)
+	if len(diagnostics) > 0 {
+		return jsonrpc.Success(request.ID, AIDLPackReferencesResult{References: []aidl.Reference{}, Diagnostics: diagnostics})
+	}
 	return jsonrpc.Success(request.ID, AIDLPackReferencesResult{References: index.References(strings.TrimSpace(params.Name)), Diagnostics: diagnostics})
 }
 
@@ -111,7 +119,11 @@ func (server *Server) aidlPackPeers(request jsonrpc.Request) jsonrpc.Response {
 		return jsonrpc.Failure(request.ID, jsonrpc.InvalidParams(err.Error()))
 	}
 	index, diagnostics := loadAIDLPackIndex(params.MetadataPackRoot)
+	diagnostics = append(diagnostics, diagnosticsToModel(server.validatePackIfDeclared(params.MetadataPackRoot))...)
 	peers := make([]aidl.GeneratedPeer, 0)
+	if len(diagnostics) > 0 {
+		return jsonrpc.Success(request.ID, AIDLPackPeersResult{Peers: peers, Diagnostics: diagnostics})
+	}
 	archiveEntries := []aidl.ArchiveEntry{}
 	sourceArchives := []metadata.PathRef{}
 	if strings.TrimSpace(params.CacheRoot) != "" {

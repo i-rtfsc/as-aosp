@@ -33,6 +33,10 @@ func (server *Server) jniPackPeers(request jsonrpc.Request) jsonrpc.Response {
 		result.Diagnostics = append(result.Diagnostics, model.Diagnostic{Code: "JNI_PACK_ROOT_MISSING", Severity: model.SeverityError, Stage: "jni-pack-rpc", Message: "metadataPackRoot is required"})
 		return jsonrpc.Success(request.ID, result)
 	}
+	result.Diagnostics = append(result.Diagnostics, diagnosticsToModel(server.validatePackIfDeclared(params.MetadataPackRoot))...)
+	if len(result.Diagnostics) > 0 {
+		return jsonrpc.Success(request.ID, result)
+	}
 	data, err := os.ReadFile(filepath.Join(params.MetadataPackRoot, "jni", "index.json"))
 	if err != nil {
 		result.Diagnostics = append(result.Diagnostics, model.Diagnostic{Code: "JNI_PACK_INDEX_READ_FAILED", Severity: model.SeverityWarning, Stage: "jni-pack-rpc", Message: err.Error()})
