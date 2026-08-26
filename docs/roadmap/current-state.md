@@ -57,6 +57,8 @@
   未知模块 fail closed，不按 basename 猜 owner。
 - CLI、daemon、VS Code 和 JetBrains 现在复用 `core/pack` 校验；侧边栏检查和索引启动
   在消费 pack 前先 fail closed，避免损坏数据进入项目模型。
+- daemon 的 ModuleCatalog、generated、AIDL、JNI 和 pack identity 查询也会在服务端
+  校验正式 pack，并按 manifest/checksum 时间戳缓存结果；pack 原子替换后自动失效。
 - 当前 JNI 只覆盖 Java/Kotlin declaration、静态导出、常见 `JNINativeMethod` 注册表和有限注册调用；复杂宏、运行时 class 解析和完整 C++ 语义仍未覆盖；
 - 当前已有本地六平台 engine/JetBrains ZIP/VS Code VSIX 打包入口，以及 VS Code 显式/bundled/PATH engine 选择逻辑；尚未完成把 bundled engine 嵌入 VSIX、签名、公证、发布版下载和 marketplace verifier；
 - 当前没有任何远程执行服务；

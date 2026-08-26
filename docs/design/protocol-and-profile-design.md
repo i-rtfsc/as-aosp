@@ -164,7 +164,8 @@ pack kinds。客户端只有在 ExternalPath 位于 manifest 原始 outRoot 前�
 匹配或跨 root 猜测都不允许。
 
 `aosp/pack/validate` 调用 `core/pack` 的同一校验实现，返回 `valid` 和稳定
-diagnostics。CLI、VS Code 和 JetBrains 不各自实现 checksum 或 schema 解析。
+diagnostics。所有 pack-backed 查询在 daemon 内也会执行同一校验；CLI、VS Code
+和 JetBrains 不各自实现 checksum 或 schema 解析。
 
 进程入口统一为一个跨平台二进制：
 
