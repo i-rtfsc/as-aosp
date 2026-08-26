@@ -1,0 +1,42 @@
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/profile/EngineProfileState.kt
+  h_8b376749578497 11
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/profile/ProfileConfigurable.kt
+  s_0fcc3f909ad4ee::t_fd69bccfd34475 36,91
+  h_8b376749578497 64,105,122
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/workspace/AospWorkspaceToolWindowFactory.kt
+  s_0fcc3f909ad4ee::t_fd69bccfd34475 20-22,35,48
+  s_0fcc3f909ad4ee::t_4b253557f97f02 23-24,53,90-92,99-110,118-124
+  s_5f30dac179bcb2::t_e51d8150150fbf 125
+  h_8b376749578497 82-89,93-98,111-117
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/profile/ProfileJson.kt
+  s_0fcc3f909ad4ee::t_962ef7baad8930 24
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "23f4c2c580e69f02772c1386b20e737c4b58349f",
+  "prompts": {},
+  "humans": {
+    "h_8b376749578497": {
+      "author": "Solo <anqi.huang@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    },
+    "s_5f30dac179bcb2": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "019ffe38-b3cd-77e3-8987-f48bc62a086c",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
