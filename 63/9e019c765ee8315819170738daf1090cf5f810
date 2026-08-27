@@ -1,0 +1,39 @@
+packaging/package-vscode-target.sh
+  s_0fcc3f909ad4ee::t_aaea00ee501a62 7-14,23-39
+  h_8b376749578497 1-6,15-22
+packaging/verify.sh
+  s_0fcc3f909ad4ee::t_aaea00ee501a62 29-31
+  h_8b376749578497 22,26-28
+docs/design/packaging-and-release-design.md
+  s_0fcc3f909ad4ee::t_15b17c0a1bf20a 43
+  h_8b376749578497 15-16,41-42
+docs/roadmap/current-state.md
+  s_0fcc3f909ad4ee::t_15b17c0a1bf20a 120-121
+  h_8b376749578497 119
+packaging/build.sh
+  h_8b376749578497 38,40-43
+packaging/package-vscode-local.sh
+  s_0fcc3f909ad4ee::t_aaea00ee501a62 28-30
+  h_8b376749578497 25-27
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "639e019c765ee8315819170738daf1090cf5f810",
+  "prompts": {},
+  "humans": {
+    "h_8b376749578497": {
+      "author": "Solo <anqi.huang@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
