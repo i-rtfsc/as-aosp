@@ -1,0 +1,32 @@
+packaging/verify.sh
+  s_0fcc3f909ad4ee::t_9e995deb8d61e6 25
+  h_8b376749578497 23-24
+docs/design/packaging-and-release-design.md
+  h_8b376749578497 20-21
+docs/roadmap/current-state.md
+  h_8b376749578497 118-120
+packaging/build.sh
+  s_0fcc3f909ad4ee::t_9e995deb8d61e6 26-33
+  h_8b376749578497 24-25
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "86875688d8ef1a694a52cfba4be0dfe4632c7a06",
+  "prompts": {},
+  "humans": {
+    "h_8b376749578497": {
+      "author": "Solo <anqi.huang@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
