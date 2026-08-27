@@ -115,11 +115,15 @@ Build-Facts ModuleCatalog 查询 slice：
 aosp/modules/catalog
 aosp/modules/get
 aosp/modules/closure
+aosp/artifacts/catalog
 aosp/projects/graph
 ```
 
 `aosp/projects/graph` 接收非空 TargetSpec 集合，返回统一 ProjectGraph。客户端不得
 独立 flatten ModuleCatalog。
+
+`aosp/artifacts/catalog` 返回按 kind/name/path 稳定排序的 artifact facts，并支持可选
+kind/query 过滤，用于两个客户端的图形化 Target selector。
 
 三个方法都显式携带 `metadataPackRoot`，不依赖 daemon 当前工作目录或
 进程级全局 profile。`catalog` 返回按模块名排序的摘要，供 UI 选择模块和

@@ -7,6 +7,7 @@
 - 在 `core/model` 定义 TargetSpec、TargetKind、ArtifactSelector；
 - 在 `core/artifacts` 建 artifact catalog 和 resolver；
 - 支持 module、jar、apk、srcjar、source root selectors；
+- 从 module-info installed outputs 生成 jar/apk artifact facts；
 - targets 是唯一用户输入，不提供 selectedModules 兼容转换；
 - 验收：framework.jar、services.jar、SystemUI.apk fixture 可解析 owner/modules/sources。
 

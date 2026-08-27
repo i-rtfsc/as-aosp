@@ -94,6 +94,19 @@ export interface ProjectGraphResult {
   diagnostics: unknown[];
 }
 
+export interface ArtifactsCatalogResult {
+  artifacts: Array<{
+    id: string;
+    kind: string;
+    name: string;
+    path: { raw: string; repoPath?: string };
+    ownerModules?: string[];
+    size?: number;
+    sha256?: string;
+  }>;
+  diagnostics: unknown[];
+}
+
 export interface IndexSnapshot {
   profileId?: string;
   state: string;
@@ -240,6 +253,10 @@ export class EngineClient {
 
   async projectGraph(metadataPackRoot: string, targets: unknown[]): Promise<ProjectGraphResult> {
     return this.request("aosp/projects/graph", { metadataPackRoot, targets });
+  }
+
+  async artifactsCatalog(metadataPackRoot: string, kind?: string, query?: string): Promise<ArtifactsCatalogResult> {
+    return this.request("aosp/artifacts/catalog", { metadataPackRoot, kind, query });
   }
 
   async startIndex(profile: unknown, rebuild = false): Promise<IndexSnapshot> {

@@ -72,12 +72,16 @@
   `core/projects` 已能从 target/module/artifact facts 构建首个 ProjectGraph 和 source
   ownership decisions；`aosp/projects/graph` RPC 与 pack artifact catalog 已接入，
   VS Code/JetBrains 投影只使用 ProjectGraph，selectedModules 路径已移除。
+- Artifact Catalog 已通过 `aosp/artifacts/catalog` 提供真实 jar/srcjar/apk facts；
+  `module-info.installed` 会补充 artifact owner，图形 Target editor 仍待从 catalog 自动选择。
 - VS Code 侧边栏已提供 Targets 图形化列表、Add Target 和 Remove 操作；用户不再编辑
   Targets JSON，内部仍以 TargetSpec 数组持久化。
 - JetBrains Settings 已提供 Targets 图形化列表、Add Target 和 Remove Target 操作；
   raw targetsJson 仅作为内部持久化字段，不作为用户入口。
 - 两端 Target editor 已将 artifact kind 与 Target kind 分离，并可显式配置依赖、generated、
   resources、manifest 选项；当前列表编辑器尚未接入 artifact catalog 自动选择。
+- Artifact Catalog 已接入 `module-info.installed`，并提供 `aosp/artifacts/catalog` RPC；
+  VS Code/JetBrains engine client 已暴露查询方法，UI 自动选择仍待完成。
 - pack export 已复制 ModuleCatalog 明确引用的 out 内 Java jars 到 `pack/out/**`；
   两端可在没有本机 out 时使用 pack classpath，inspect 会报告 jar/srcjar 统计。
 - Native Pack 的 `compile_commands.json` 已可在 VS Code compdb overlay 中直接消费；

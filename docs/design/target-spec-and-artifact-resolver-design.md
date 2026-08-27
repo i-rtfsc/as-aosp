@@ -62,3 +62,8 @@ artifacts/dependency-graph.json
 
 Existing `modules/catalog.json`, `generated/manifest.json`, `aidl/index.json` and `jni/index.json`
 remain source facts; artifact catalog adds the user-target resolution layer.
+
+Artifact catalog consumes ModuleCatalog jars/srcjars and module-info installed outputs. Installed
+`.apk` facts provide Android target anchors such as `SystemUI.apk`; they are not copied into Java
+classpath or treated as jars. Clients query `aosp/artifacts/catalog` to populate graphical selectors
+and may still enter an explicit custom artifact path.

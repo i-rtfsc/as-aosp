@@ -160,6 +160,8 @@ func (server *Server) Handle(request jsonrpc.Request) (jsonrpc.Response, bool) {
 		response = server.packValidate(request)
 	case "aosp/projects/graph":
 		response = server.projectGraph(request)
+	case "aosp/artifacts/catalog":
+		response = server.artifactsCatalog(request)
 	case "aosp/aidl/pack/resolve":
 		response = server.aidlPackResolve(request)
 	case "aosp/aidl/pack/references":

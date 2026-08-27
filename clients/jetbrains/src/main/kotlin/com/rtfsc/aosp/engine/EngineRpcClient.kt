@@ -44,6 +44,14 @@ internal class EngineRpcClient(
         return request(method = "aosp/modules/catalog", params = params)
     }
 
+    fun projectGraph(params: String): ByteArray {
+        return request(method = "aosp/projects/graph", params = params)
+    }
+
+    fun artifactsCatalog(params: String): ByteArray {
+        return request(method = "aosp/artifacts/catalog", params = params)
+    }
+
     fun generatedMaterialize(params: String): ByteArray {
         return request(method = "aosp/generated/materialize", params = params)
     }

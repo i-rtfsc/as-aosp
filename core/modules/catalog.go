@@ -61,6 +61,9 @@ func Build(snapshot metadata.Snapshot) Catalog {
 		module.Sources = appendPathRefs(module.Sources, info.Sources...)
 		module.SourceRoots = appendPathRefs(module.SourceRoots, info.Paths...)
 		module.Generated = appendPathRefs(module.Generated, info.Generated...)
+		for _, installed := range info.Installed {
+			module.Generated = appendPathRefs(module.Generated, installed)
+		}
 		module.Dependencies = appendUnique(module.Dependencies, info.Dependencies...)
 		catalog.Modules[name] = normalize(module)
 	}

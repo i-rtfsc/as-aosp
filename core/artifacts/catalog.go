@@ -54,8 +54,28 @@ func Build(moduleCatalog modules.Catalog) Catalog {
 		for _, ref := range module.SrcJars {
 			catalog.add(moduleName, artifactFromRef(model.ArtifactSrcJar, ref))
 		}
+		for _, ref := range module.Generated {
+			if kind, ok := artifactKindForPath(ref.Raw); ok {
+				catalog.add(moduleName, artifactFromRef(kind, ref))
+			}
+		}
 	}
 	return catalog
+}
+
+func artifactKindForPath(pathName string) (model.ArtifactKind, bool) {
+	switch strings.ToLower(filepath.Ext(pathName)) {
+	case ".jar":
+		return model.ArtifactJar, true
+	case ".apk":
+		return model.ArtifactAPK, true
+	case ".srcjar":
+		return model.ArtifactSrcJar, true
+	case ".aar":
+		return model.ArtifactAAR, true
+	default:
+		return model.ArtifactOutput, false
+	}
 }
 
 func (catalog *Catalog) AddExternal(kind model.ArtifactKind, pathName string, owners []string) Artifact {
