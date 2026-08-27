@@ -20,4 +20,7 @@ test "$(find "$dist_root/engine" -type f -name 'aosp-index' | wc -l | tr -d ' ')
 test "$(find "$dist_root/engine" -type f -name 'aosp-index.exe' | wc -l | tr -d ' ')" -eq 2
 test "$(find "$dist_root/jetbrains" -type f -name '*.zip' | wc -l | tr -d ' ')" -ge 1
 test "$(find "$dist_root/vscode" -type f -name '*.vsix' | wc -l | tr -d ' ')" -ge 1
+jetbrains_zip=$(find "$dist_root/jetbrains" -type f -name '*.zip' | head -1)
+test "$(unzip -Z1 "$jetbrains_zip" | grep -c '/engine/darwin-arm64/aosp-index$')" -eq 1
+test "$(unzip -Z1 "$jetbrains_zip" | grep -c '/engine/windows-amd64/aosp-index.exe$')" -eq 1
 printf 'AOSP IDE artifacts verified\n'

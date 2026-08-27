@@ -17,7 +17,8 @@ Go core 当前不依赖 CGO，因此同一源码可以交叉编译。插件包�
 
 客户端 engine 解析优先级：用户显式 executable、用户公共 engine store 的
 `engines/aosp-index`、扩展目录内当前 `os-arch` bundled engine、PATH 中的
-`aosp-index`。首版平台无关客户端包通常走显式配置或 PATH；在
+`aosp-index`。JetBrains ZIP 与 VSIX 均可携带六平台 engine；客户端只执行当前
+平台目录中的一个文件。在
 manifest 签名和下载信任模型完成前，客户端不自动联网下载二进制。
 
 JetBrains 与 VS Code 使用相同的 bundled layout：

@@ -21,7 +21,16 @@ done
 (
   cd "$repo_root/clients/jetbrains"
   ./gradlew --no-daemon buildPlugin
-  cp build/distributions/*.zip "$dist_root/jetbrains/"
+  plugin_zip=$(find build/distributions -maxdepth 1 -type f -name '*.zip' | head -1)
+  test -n "$plugin_zip"
+  staging=$(mktemp -d)
+  trap 'rm -rf "$staging"' EXIT
+  unzip -q "$plugin_zip" -d "$staging"
+  plugin_root=$(find "$staging" -mindepth 1 -maxdepth 1 -type d | head -1)
+  mkdir -p "$plugin_root/engine"
+  cp -R "$dist_root/engine/." "$plugin_root/engine/"
+  rebuilt="$dist_root/jetbrains/$(basename "$plugin_zip")"
+  (cd "$staging" && zip -qr "$rebuilt" .)
 )
 (
   cd "$repo_root/clients/vscode"
