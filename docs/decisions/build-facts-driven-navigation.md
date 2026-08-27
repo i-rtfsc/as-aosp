@@ -4,12 +4,12 @@
 
 ## 1. 决策
 
-AOSP Workspace 的最终导航主路径必须使用 Build Facts：优先本地可见 `out`，其次用户从
-Linux 完整 AOSP 构建结果中复制的 Metadata Pack，再其次本地 Android.bp/Android.mk 静态
+AOSP Workspace 的最终导航主路径必须使用 Build Facts：优先本地完整 `out` 或从 Linux
+构建结果复制的稀疏 Portable Out，再其次本地 Android.bp/Android.mk 静态
 facts，最后才是 source-only fallback。
 
 ```text
-Local exact out / copied Metadata Pack
+Local exact out / copied Portable Out
         ↓
 Soong metadata + module catalog + generated/source facts
         ↓
@@ -52,7 +52,7 @@ QCOM  -> /work/qcom-view  -> profile qcom
 
 - Workspace View Root；
 - canonical root；
-- local out/metadata 或 pack；
+- Out Root；
 - path mappings；
 - target specs；legacy selected modules 作为兼容低级 selector；
 - target specs、artifact identity 和 resolved ProjectGraph；
@@ -78,12 +78,12 @@ MIUI、OPPO、QCOM 等不要求官方 pack 精确覆盖所有私有 module。产
 公益项目不需要提供动态下载服务器。支持三种输入：
 
 1. 用户本机完整 AOSP 的 `out`；
-2. 用户在 Linux 构建机导出的 Metadata Pack，通过 U 盘、网盘、挂载目录或内网复制；
-3. 用户自建私有 pack 制品仓库，协议格式与公共 pack 相同。
+2. 用户在 Linux 构建机导出的 Portable Out，通过 U 盘、网盘、挂载目录或内网复制；
+3. 用户自建稀疏 out 制品仓库。
 
 插件只读取用户已经放在本地的目录，不自动联网下载，也不把下载服务作为基础依赖。
 
-Pack 默认必须包含 Java/AIDL 导航所需的 generated source archives。AIDL、R、sysprop、
+Portable Out 默认必须包含 Java/AIDL 导航所需的 generated source archives。AIDL、R、sysprop、
 logtags、proto 等生成 Java 如果只保留路径 metadata 而不包含对应 srcjar/entry，不能
 视为完整 Core Pack；可选拆分只适用于 Native headers、超大非 Java generated 文件和
 未被 selected target 引用的额外产物。

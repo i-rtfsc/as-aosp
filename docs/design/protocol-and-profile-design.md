@@ -7,7 +7,7 @@
 Profile 至少包含：
 
 - schemaVersion、id；
-- workspaceViewRoot、canonicalRepoRoot、outRoot、metadataPackRoot；
+- workspaceViewRoot、canonicalRepoRoot、outRoot；
 - buildTarget product/release/variant；
 - scope include/exclude；
 - targets：用户定义的 TargetSpec 集合，可按 artifact、module、source root 组合；
@@ -125,7 +125,7 @@ aosp/projects/graph
 `aosp/artifacts/catalog` 返回按 kind/name/path 稳定排序的 artifact facts，并支持可选
 kind/query 过滤，用于两个客户端的图形化 Target selector。
 
-三个方法都显式携带 `metadataPackRoot`，不依赖 daemon 当前工作目录或
+三个方法都显式携带 `outRoot`，不依赖 daemon 当前工作目录或
 进程级全局 profile。`catalog` 返回按模块名排序的摘要，供 UI 选择模块和
 显示规模；`get` 返回一个模块的完整 facts；`closure` 返回选中模块及其传递
 依赖的完整模块列表，顺序按模块名稳定排序。

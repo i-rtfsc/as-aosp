@@ -1,306 +1,100 @@
-# AOSP Metadata Pack 设计
+# Portable Out 设计
 
-> 状态：Target；导出/导入脚本先于自动下载客户端实现。
+> 状态：Decision；替代旧 Metadata Pack 私有目录格式。
 
-## 1. 目标
+## 1. 定义
 
-Metadata Pack 是从 Linux 完整 AOSP/out 中导出的纯数据包，供另一台只挂载部分 AOSP 源码
-仓库的 macOS/Windows/Linux 使用。它不是完整 out，不包含可执行文件和编译产物，只包含
-能帮助 IDE 建立项目模型和导航的事实。
+Portable Out 是 AOSP `OUT_DIR` 的稀疏只读镜像。它只挑选 IDE 导航需要的 AOSP 构建
+产物，但必须保持每个文件相对于 `OUT_DIR` 的原始路径。
 
 ```text
-aosp-metadata-pack/
-├── manifest.json
-├── module-info.json
-├── module_bp_java_deps.json
-├── module_bp_cc_deps.json
-├── compile_commands.json
-├── aidl/
-│   ├── symbols.json
-│   ├── modules.json
-│   └── generated-peers.json
-├── generated/
-│   ├── srcjars/
-│   ├── java/
-│   ├── aidl/
-│   ├── sysprop/
-│   ├── logtags/
-│   ├── proto/
-│   ├── headers/
-│   └── manifest.json
-├── out/
-│   └── **/*.jar
-├── artifacts/
-│   ├── catalog.json
-│   └── dependency-graph.json
-├── modules/
-│   ├── catalog.json
-│   └── dependency-graph.json
-└── checksums.sha256
+服务器 OUT_DIR                          本机 Portable Out
+out/soong/module_bp_java_deps.json   -> out/soong/module_bp_java_deps.json
+out/target/product/x/module-info.json -> out/target/product/x/module-info.json
+out/soong/.intermediates/a.srcjar    -> out/soong/.intermediates/a.srcjar
 ```
 
-压缩包可以使用 zip/tar.zst；目录格式必须保持相同，方便用户直接复制目录而不是必须
-解压。插件不要求 pack 位于 AOSP 根目录。
+完整 out 和 Portable Out 对 engine 来说都是 `Out Root`，不存在不同 reader、不同 RPC
+参数或不同客户端配置。
 
-## 2. 文件职责
+## 2. 内容
 
-### Core Java facts
+Core Java 导航至少包含：
 
-- `module-info.json`：模块路径、source、generated、dependencies、classes、tags；
-- `module_bp_java_deps.json`：Java/Kotlin sources、jars、srcjars、AIDL include dirs、flags；
-- `modules/catalog.json`：规范化 ModuleCatalog，作为客户端首选输入；
-- `modules/dependency-graph.json`：模块依赖闭包。
-- `out/**/*.jar`：ModuleCatalog 明确引用且在导出 out 内存在的 Java classpath；
-  保留 out 相对路径，跨机器客户端按 manifest `outRoot` 严格重定位。
-- `artifacts/catalog.json`：jar、srcjar、apk 等用户 Target artifact 的 identity、owner
-  module、路径和匹配信息；不把 APK 当作普通 Java library。
-
-### Native facts
-
-- `module_bp_cc_deps.json`：C/C++ source、include dirs、sysroot、flags；
-- `compile_commands.json`：clangd/CLion 编译数据库；
-- `generated/headers`：可选 generated headers manifest 或按需文件。
-- `jni/index.json`：`--native` 导出的 Java/Kotlin native declaration、C/C++ symbol、
-  registration 和 cross-language links；路径身份使用 RepoPath。
-
-Native Pack 的 compdb 保持 `development/ide/compdb/compile_commands.json` 路径，
-客户端没有本机 out 时可直接读取；其中的构建机绝对路径仍需 profile pathMappings。
-
-### AIDL/generated facts
-
-- `aidl/symbols.json`：package、interface、parcelable、method、type ranges；
-- `aidl/index.json`：规范化 parsed documents 与 symbols，用于 references 和 generated peers；
-- `aidl/modules.json`：AIDL source 与 owning module；
-- `aidl/generated-peers.json`：Java/C++/NDK peer 和 confidence；
-- `generated/srcjars`：默认包含 Java/R/AIDL/proto/sysprop/logtags 等生成源码 archive；
-  这些是 Java/AIDL 导航的基础输入，不属于可选增强；
-- `generated/java`、`generated/aidl`、`generated/sysprop`、`generated/logtags`、
-  `generated/proto`：默认包含从 srcjar 解出的可索引源码或 entry manifest，便于 IDE
-  直接建立 generated source root；
-
-pack 中不放：`.o`、`.so`、dex、system image、ninja 临时文件、可执行程序和与 IDE 无关的
-大中间产物。
-
-## 3. manifest
-
-```json
-{
-  "schemaVersion": 1,
-  "release": "android-16",
-  "manifestDigest": "sha256:...",
-  "buildFacts": {
-    "product": "aosp_arm64",
-    "variant": "userdebug",
-    "architecture": "arm64"
-  },
-  "sourceIdentity": {
-    "buildMakeRevision": "...",
-    "buildSoongRevision": "...",
-    "frameworksBaseRevision": "..."
-  },
-  "packs": ["core", "native"],
-  "files": 1234,
-  "bytes": 987654321
-}
+```text
+soong/module_bp_java_deps.json
+target/product/<product>/module-info.json
+soong/.intermediates/**/*.srcjar
 ```
 
-`product/variant/architecture` 用于增强和诊断，不是基础 Java 导航的启用条件。
+Native 导航增加：
 
-## 4. 导出脚本
+```text
+soong/module_bp_cc_deps.json
+soong/development/ide/compdb/compile_commands.json
+```
 
-建议新增：
+可以包含 Java classpath jar：
+
+```text
+soong/.intermediates/**/*.jar
+```
+
+`.srcjar` 是 generated Java source，默认复制；`.jar` 是 classpath/ABI 编译产物，可以按
+导出策略选择，但不能改写路径。
+
+Portable Out 不包含插件私有文件：
+
+```text
+manifest.json
+checksums.sha256
+modules/catalog.json
+artifacts/catalog.json
+aidl/index.json
+jni/index.json
+generated/manifest.json
+```
+
+ModuleCatalog、ArtifactCatalog、AIDL/JNI index 和 srcjar 解压目录由本机 engine 按需生成，
+只写 IDE cache。
+
+## 3. 导出
 
 ```bash
 aosp-index pack export \
-  --aosp-root /srv/aosp \
-  --out-root /srv/aosp/out \
-  --destination /srv/packs/android-16-aosp \
+  --aosp-root "$ANDROID_BUILD_TOP" \
+  --out-root "$OUT_DIR" \
+  --destination /srv/aosp-packs/android-17-out \
   --native
 ```
 
-导出规则：
+导出器只读加载原始 out metadata，计算 selected module closure，并按原始 out-relative
+路径复制 metadata、srcjar 和所需 jar。它原子替换 destination，不修改 AOSP checkout/out，
+也不在 destination 内生成插件私有索引。
 
-1. 读取已存在的 out metadata；
-2. 复制 JSON 并归一化路径字段，保留原始 ExternalPath；
-3. 收集 AIDL/JNI/generated facts；
-4. 按 source/metadata/generated owner 过滤；
-5. 生成 manifest 和 SHA-256；
-6. 原子写入 destination；
-7. 不修改 AOSP checkout 和 out。
-
-用户手工复制方式等价于插件读取本地 pack，不要求服务端。
-
-### 4.1 out 候选位置
-
-导出器按候选路径查找，不要求所有文件同时存在：
+ZIP 和完整性校验属于传输层，放在 out 目录外：
 
 ```text
-<out>/module-info.json
-<out>/soong/module-info.json
-<out>/target/product/<product>/module-info.json
-<out>/module_bp_java_deps.json
-<out>/soong/module_bp_java_deps.json
-<out>/module_bp_cc_deps.json
-<out>/soong/module_bp_cc_deps.json
-<out>/development/ide/compdb/compile_commands.json
-<out>/soong/development/ide/compdb/compile_commands.json
-<out>/soong/.intermediates/**/{*.srcjar,*.jar,*.h,*.hpp,*.java}
+android-17-out.zip
+android-17-out.zip.sha256
+android-17-out.json
 ```
 
-缺失某一类只产生 diagnostic，不让整个 pack export 失败。例如只有 Java metadata 时仍可
-生成 Core Pack，没有 compdb 时只缺 Native Pack。
+## 4. 导入
 
-### 4.2 导出模式
+用户可以把 Portable Out 解压到 `<AOSP_ROOT>/out`，也可以放在任意目录并在 UI 中选择为
+`Out Root`。软链接、NFS、SMB、只读挂载和部分仓库 Workspace 都使用同一目录合同。
 
-```bash
-# 最小 framework/Java 导航包
-aosp-index pack export --aosp-root "$ANDROID_BUILD_TOP" \
-  --out-root "$OUT_DIR" --destination /tmp/aosp-pack --core
+## 5. 厂商 out
 
-# 加入 clangd/CLion 数据
-aosp-index pack export --aosp-root "$ANDROID_BUILD_TOP" \
-  --out-root "$OUT_DIR" --destination /tmp/aosp-pack \
-  --core --native
+MIUI、OPPO、QCOM 等厂商 out 仍是 Out Root。reader 按候选位置加载标准 AOSP facts，
+厂商额外文件不会被当成 Pack 标识，也不会和插件私有文件冲突。
 
-# 只保留 selected target/module closure，Java generated/srcjar 仍默认包含
-aosp-index pack export --aosp-root "$ANDROID_BUILD_TOP" \
-  --out-root "$OUT_DIR" --destination /tmp/aosp-pack \
-  --native \
-  --module framework-minus-apex --module services
-```
+## 6. 验收
 
-`--core` 是默认且推荐模式，并默认包含 Java/AIDL 相关 generated srcjar、entry manifest
-和必要的解出源码。Native headers、超大非 Java generated 文件和未被 selected target
-引用的 archive 才是可选项；不能把 `--generated` 作为 Java/AIDL 基础能力的开关。
-
-`--module` 必须按 ModuleCatalog dependency closure 选择 source roots。AIDL/JNI
-源码 facts 只扫描 closure 覆盖的 RepoPath；generated srcjar 只保留 closure 中
-`SrcJars/Generated` 明确引用的 archive。未知模块必须失败，不能退化为全树扫描
-或按 basename 猜 archive owner。
-
-建议命令：
-
-```bash
-# 默认：Core + Java/AIDL/generated source archives
-aosp-index pack export --aosp-root "$ANDROID_BUILD_TOP" \
-  --out-root "$OUT_DIR" --destination /tmp/aosp-pack
-
-# 额外加入 C/C++ compdb、headers 和 native facts
-aosp-index pack export --aosp-root "$ANDROID_BUILD_TOP" \
-  --out-root "$OUT_DIR" --destination /tmp/aosp-pack --native
-```
-
-### 4.3 复制到另一台机器
-
-```bash
-# 普通目录复制
-rsync -a --delete /tmp/aosp-pack/ \
-  user@mac:/Users/user/aosp-metadata/android-16/
-
-# 压缩后通过网盘/U盘
-tar -C /tmp -caf aosp-pack-android16.tar.zst aosp-pack
-
-# Mac 解压到任意只读/可写目录
-mkdir -p /Users/user/aosp-metadata/android-16
-tar -C /Users/user/aosp-metadata/android-16 \
-  --strip-components=1 -xaf aosp-pack-android16.tar.zst
-```
-
-插件 profile 只保存本机 pack path：
-
-```json
-{
-  "workspaceViewRoot": "/Users/user/code/aosp-view",
-  "metadataPackRoot": "/Users/user/aosp-metadata/android-16"
-}
-```
-
-不要求 pack 位于 Workspace View 或 canonical AOSP root 内。
-
-### 4.4 部分源码仓库场景
-
-Linux 构建机可以拥有完整 AOSP/out，而 Mac 只包含：
-
-```text
-frameworks/base
-system/core
-packages/modules/Connectivity
-```
-
-导入 pack 后：
-
-- ModuleCatalog 可以保留完整 module/dependency facts；
-- 只把本机 Workspace 可见 source root 投影给 IDE；
-- 不可见 module 标记 missing provider；
-- jars/srcjars/generated 默认作为 library/source attachment；
-- 不把 Linux 绝对路径直接写进 Mac IDE，必须经 RepoPath/PathMapping；
-- Java/framework baseline 优先启用，不因 C++ product/arch 不匹配而整体禁用。
-
-## 5. 导入与匹配
-
-匹配等级：
-
-```text
-exact       manifest digest / 核心 revision 完全匹配
-compatible  release 相同，核心 revision 或 product 有差异
-approximate release 接近或只有部分 identity
-incompatible schema 不兼容或明显不同 release
-```
-
-使用优先级：
-
-```text
-本地 out exact facts
-> 本地 Metadata Pack exact
-> 本地 out/pack compatible
-> Android.bp 静态 facts
-> source-only fallback
-```
-
-即使 `compatible/approximate`，framework Java source roots 仍可以启用；generated/compdb
-结果必须显示等级并允许关闭。
-
-### 5.1 Framework-first 宽松策略
-
-为了实现用户希望的“90% 公共代码先可跳”，导入时分域判断，不使用一个总开关：
-
-| 域 | compatible/approximate pack 默认行为 |
-|---|---|
-| Framework Java source roots | 启用，Workspace 本地源码优先 |
-| Java jars/srcjars | 默认启用并显示 pack match |
-| AIDL source symbols | 启用；本地 AIDL 优先，generated 标记 match |
-| JNI source links | 启用 source-only/baseline link |
-| C/C++ compdb | compatible 可启用，approximate 默认提示确认 |
-| product generated/R/sysprop | 仅 exact 默认启用，否则提示或降级 |
-| system image/runtime artifacts | 不进入 pack |
-
-这保证 product/variant/arch 是“精度与增强维度”，而不是阻止 Java/framework 导航的门槛。
-
-## 6. 路径与挂载
-
-pack 的 identity 使用 RepoPath，不使用构建机绝对路径。ExternalPath 通过用户 profile
-`pathMappings` 转换。用户可以只挂载：
-
-```text
-frameworks/base
-system/core
-vendor/qcom
-```
-
-pack 仍提供完整 module facts；不可见 source provider 标记 missing，不自动扫描 canonical
-root。generated source 只有在本机可见或 pack 自带时标记 exact，否则保留 inferred。
-
-## 7. 安全
-
-- pack 只包含数据；
-- checksum 校验；
-- checksum 清单必须完整覆盖 pack 文件，拒绝重复、遗漏、额外文件和逃逸路径；
-- Core Pack 必须包含合法 ModuleCatalog、AIDL index 和 generated manifest；
-- Native Pack 必须额外包含合法 JNI index；
-- generated manifest 的 entry 列表必须与 srcjar 实际普通文件完全一致，并拒绝
-  zip-slip、绝对路径和不安全 entry；
-- 解压拒绝绝对路径、`..`、symlink 和超大 entry；
-- 写入 `.aosp-ide/cache`，不写源码；
-- 导入失败不替换旧 pack；
-- 未签名 pack 显示 `unverified`，但允许用户显式启用；
-- 公共公益分发可用网盘/GitHub Release，动态下载服务不是前置条件。
+- 完整 out 与其 Portable Out 产生相同 ModuleCatalog/ArtifactCatalog；
+- 解压到 `<AOSP_ROOT>/out` 后无需额外格式配置；
+- 不出现 `out/out/soong`；
+- 不出现 `generated/srcjars` 重排；
+- 插件卸载后 out 中不残留 AOSP Workspace 文件；
+- Windows/macOS/Linux 路径均通过统一 PathRef 解析。

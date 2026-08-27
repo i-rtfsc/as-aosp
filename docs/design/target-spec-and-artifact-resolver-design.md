@@ -53,24 +53,22 @@ No basename guessing or whole-tree expansion is allowed after an unresolved sele
 
 ## 5. Fact source requirements
 
-本机 out 与 Metadata Pack 都必须产出同一 ArtifactCatalog 语义。本机 out 使用
-`module-info.json`、`module_bp_java_deps.json`、`module_bp_cc_deps.json` 等现有 reader
-即时构建；Pack 使用导出时写入的稳定 catalog。客户端只提交 roots 与 TargetSpec，不接触
-底层 Soong schema。
+本机完整 out 与稀疏 Portable Out 使用同一 reader，并产出同一 ArtifactCatalog 语义。
+两者都从 `module-info.json`、`module_bp_java_deps.json`、`module_bp_cc_deps.json` 等原始
+Soong facts 即时构建。客户端只提交 Out Root 与 TargetSpec，不接触底层 Soong schema。
 
-### Pack requirements
+### Portable Out requirements
 
-Pack export should include an artifact catalog:
+Portable Out 只复制原始 OUT_DIR 中需要的文件，并保持相对路径，例如：
 
 ```text
-artifacts/catalog.json
-artifacts/dependency-graph.json
+soong/module_bp_java_deps.json
+soong/module_bp_cc_deps.json
+soong/development/ide/compdb/compile_commands.json
+target/product/<product>/module-info.json
+soong/.intermediates/**/*.srcjar
+soong/.intermediates/**/*.jar
 ```
 
-Existing `modules/catalog.json`, `generated/manifest.json`, `aidl/index.json` and `jni/index.json`
-remain source facts; artifact catalog adds the user-target resolution layer.
-
-Artifact catalog consumes ModuleCatalog jars/srcjars and module-info installed outputs. Installed
-`.apk` facts provide Android target anchors such as `SystemUI.apk`; they are not copied into Java
-classpath or treated as jars. Clients query `aosp/artifacts/catalog` to populate graphical selectors
-and may still enter an explicit custom artifact path.
+ArtifactCatalog 在本机从 Java deps 与 module-info installed outputs 生成。`.apk` facts 提供
+`SystemUI.apk` 等 Android target anchor，但不作为 Java library。

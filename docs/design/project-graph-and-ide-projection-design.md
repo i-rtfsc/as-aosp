@@ -4,30 +4,28 @@
 
 ## 1. Build Facts Source
 
-ProjectGraph 接受两种等价的事实来源：
+ProjectGraph 只接受一个 Build Facts Root：`outRoot`。该目录可以是本机完整 AOSP out，
+也可以是从另一台机器复制来的稀疏 Portable Out。两者必须保持完全相同的 OUT_DIR
+相对路径，客户端和 engine 不区分来源，也不解析另一套 Pack schema。
 
-- `metadataPackRoot`：已复制到本机的正式 Metadata Pack；
-- `metadataRoot`：本机 AOSP `out` 或 `out/soong`，由 metadata reader 只读加载。
-
-Pack 存在时优先使用并执行完整校验；未配置 Pack 时直接从本机 out 构建临时
-ModuleCatalog 与 ArtifactCatalog。客户端不要求本机 out 用户先导出 Pack，也不自行解析
-Soong JSON。两者都未配置时返回明确诊断；不得通过扫描完整源码树猜测 artifact owner。
+ModuleCatalog、ArtifactCatalog、AIDL/JNI index 等派生数据由本机 engine 在 IDE cache 中
+生成，不写入源码树、out 或 Portable Out。两者都未配置时返回明确诊断；不得通过扫描
+完整源码树猜测 artifact owner。
 
 RPC 输入为：
 
 ```text
-metadataPackRoot?: string
-metadataRoot?: string
+outRoot: string
 targets: TargetSpec[]
 ```
 
-Artifact Catalog 查询遵循同一来源选择规则，因此图形 selector 在本机 out 和复制 Pack
-场景下保持一致。
+Artifact Catalog 查询使用同一 out reader，因此图形 selector 在本机完整 out 和复制来的
+稀疏 out 场景下保持一致。
 
-Generated source materialization 也遵循事实来源，但本机 out 必须是 target-scoped：客户端先
+Generated source materialization 必须是 target-scoped：客户端先
 取得 ProjectGraph，再把图中明确引用的 `.srcjar` archives 提交给 materialize RPC。服务端
 只接受位于 Out Root 内的绝对路径，或可安全解析到 Out Root 的 `out/...`、`soong/...`
-相对路径；不得遍历并解压 out 中所有 srcjar。Pack 场景继续使用已校验 manifest。
+相对路径；不得遍历并解压 out 中所有 srcjar。
 
 ## 2. JetBrains
 
