@@ -1,0 +1,31 @@
+clients/vscode/src/ui/profile_panel.ts
+  h_8b376749578497 130,135
+docs/design/profile-ui-and-multi-project-design.md
+  h_8b376749578497 47
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/profile/ProfileConfigurable.kt
+  s_0fcc3f909ad4ee::t_0fd17e570c4726 28,82,88-91,184,202-205,213-216
+  h_8b376749578497 47-51,210,228-230,233
+docs/roadmap/current-state.md
+  h_8b376749578497 79-80
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "52ef46fb74908f3231c3e1417fe393142b066f4d",
+  "prompts": {},
+  "humans": {
+    "h_8b376749578497": {
+      "author": "Solo <anqi.huang@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
