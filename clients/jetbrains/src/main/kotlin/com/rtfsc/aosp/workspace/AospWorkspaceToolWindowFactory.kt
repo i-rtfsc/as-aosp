@@ -34,7 +34,11 @@ internal class AospWorkspaceToolWindowFactory : ToolWindowFactory {
         val counts = JBLabel("0 source roots · 0 generated · 0 libraries")
         val diagnostics = JBLabel("0 diagnostics")
         val compdb = JBLabel("CompDB not refreshed")
-        val targetEditor = TargetEditorPanel(project) { settings.current.metadataPackRoot }
+        val targetEditor = TargetEditorPanel(
+            project,
+            { settings.current.metadataPackRoot },
+            { settings.current.outRoot },
+        )
         targetEditor.load(settings.current.targetsJson)
 
         val header = JBPanel<JBPanel<*>>(BorderLayout()).apply {

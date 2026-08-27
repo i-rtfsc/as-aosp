@@ -42,7 +42,7 @@ APK facts include manifest/resource metadata but are not entered as Java classpa
 ## 4. Resolution algorithm
 
 1. Normalize paths and target names.
-2. Match exact artifact path/digest from pack/out.
+2. Match exact artifact path/digest from validated Pack or local out facts.
 3. Resolve owning module from module-info/Java deps/CC facts.
 4. Add dependency closure only when requested.
 5. Add explicit source roots and generated/archive owners.
@@ -51,7 +51,14 @@ APK facts include manifest/resource metadata but are not entered as Java classpa
 
 No basename guessing or whole-tree expansion is allowed after an unresolved selector.
 
-## 5. Pack requirements
+## 5. Fact source requirements
+
+本机 out 与 Metadata Pack 都必须产出同一 ArtifactCatalog 语义。本机 out 使用
+`module-info.json`、`module_bp_java_deps.json`、`module_bp_cc_deps.json` 等现有 reader
+即时构建；Pack 使用导出时写入的稳定 catalog。客户端只提交 roots 与 TargetSpec，不接触
+底层 Soong schema。
+
+### Pack requirements
 
 Pack export should include an artifact catalog:
 

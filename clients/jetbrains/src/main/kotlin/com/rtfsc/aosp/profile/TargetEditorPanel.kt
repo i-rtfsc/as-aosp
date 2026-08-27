@@ -78,6 +78,7 @@ internal object TargetDraftCodec {
 internal class TargetEditorPanel(
     private val project: Project,
     private val metadataPackRoot: () -> String,
+    private val metadataRoot: () -> String = { "" },
 ) : JPanel(BorderLayout()) {
     private data class ArtifactChoice(
         val id: String,
@@ -205,8 +206,9 @@ internal class TargetEditorPanel(
 
     private fun loadArtifacts() {
         val packRoot = metadataPackRoot().trim()
-        if (packRoot.isBlank()) {
-            targetPreview.text = "Metadata Pack Root is required."
+        val outRoot = metadataRoot().trim()
+        if (packRoot.isBlank() && outRoot.isBlank()) {
+            targetPreview.text = "Metadata Pack Root or Out Root is required."
             return
         }
         loadArtifactsButton.isEnabled = false
@@ -215,7 +217,7 @@ internal class TargetEditorPanel(
 
             override fun run(indicator: ProgressIndicator) {
                 indicator.text = "Loading Artifact Catalog"
-                val params = mapper.writeValueAsString(mapOf("metadataPackRoot" to packRoot))
+                val params = mapper.writeValueAsString(mapOf("metadataPackRoot" to packRoot, "metadataRoot" to outRoot))
                 val result = mapper.readTree(project.getService(ProjectEngineService::class.java).artifactsCatalog(params)).path("result")
                 choices = result.path("artifacts").map { artifact ->
                     ArtifactChoice(
@@ -260,12 +262,13 @@ internal class TargetEditorPanel(
     private fun resolveTarget() {
         val target = currentDraft()
         val packRoot = metadataPackRoot().trim()
+        val outRoot = metadataRoot().trim()
         if (target.id.isBlank()) {
             targetPreview.text = "Enter a target name first."
             return
         }
-        if (packRoot.isBlank()) {
-            targetPreview.text = "Metadata Pack Root is required."
+        if (packRoot.isBlank() && outRoot.isBlank()) {
+            targetPreview.text = "Metadata Pack Root or Out Root is required."
             return
         }
         resolveTargetButton.isEnabled = false
@@ -275,7 +278,11 @@ internal class TargetEditorPanel(
             override fun run(indicator: ProgressIndicator) {
                 indicator.text = "Resolving target through ProjectGraph"
                 val params = mapper.writeValueAsString(
-                    mapOf("metadataPackRoot" to packRoot, "targets" to listOf(target.toTargetSpec())),
+                    mapOf(
+                        "metadataPackRoot" to packRoot,
+                        "metadataRoot" to outRoot,
+                        "targets" to listOf(target.toTargetSpec()),
+                    ),
                 )
                 val response = mapper.readTree(project.getService(ProjectEngineService::class.java).projectGraph(params)).path("result")
                 val graph = response.path("graph")

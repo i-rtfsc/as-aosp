@@ -127,6 +127,34 @@ func TestServerBuildsProjectGraphFromPack(t *testing.T) {
 	}
 }
 
+func TestServerBuildsProjectGraphFromLocalOut(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, "module-info.json", `{
+		"SystemUI":{"path":["frameworks/base/packages/SystemUI"],"installed":["out/target/product/demo/system_ext/priv-app/SystemUI/SystemUI.apk"]}
+	}`)
+	writeTestFile(t, root, "module_bp_java_deps.json", `{
+		"SystemUI":{"path":["frameworks/base/packages/SystemUI"]}
+	}`)
+	server := initializedServer(t)
+	response, _ := server.Handle(makeRequest(2, "aosp/projects/graph", ProjectGraphParams{
+		MetadataRoot: root,
+		Targets: []model.TargetSpec{{
+			ID: "systemui", Kind: model.TargetAndroid,
+			Selectors: model.TargetSelectors{Artifacts: []model.ArtifactSelector{{Kind: model.ArtifactAPK, Name: "SystemUI.apk"}}},
+		}},
+	}))
+	var result ProjectGraphResult
+	decodeResult(t, response, &result)
+	if len(result.Diagnostics) != 0 || len(result.Graph.Targets) != 1 {
+		t.Fatalf("result=%+v", result)
+	}
+	target := result.Graph.Targets[0]
+	if len(target.ResolvedArtifacts) != 1 || len(target.ResolvedModules) != 1 ||
+		len(target.SourceRoots) != 1 || len(target.Libraries) != 0 {
+		t.Fatalf("target=%+v", target)
+	}
+}
+
 func TestServerListsArtifactsByKindAndQuery(t *testing.T) {
 	root := t.TempDir()
 	pathName := filepath.Join(root, "artifacts", "catalog.json")
@@ -227,7 +255,7 @@ func TestServerReportsMissingModulePack(t *testing.T) {
 	response, _ := server.Handle(makeRequest(2, "aosp/modules/catalog", ModulesParams{}))
 	var result ModulesCatalogResult
 	decodeResult(t, response, &result)
-	if len(result.Diagnostics) != 1 || result.Diagnostics[0].Code != "METADATA_PACK_ROOT_MISSING" {
+	if len(result.Diagnostics) != 1 || result.Diagnostics[0].Code != "BUILD_FACTS_ROOT_MISSING" {
 		t.Fatalf("result=%+v", result)
 	}
 }
@@ -254,6 +282,20 @@ func TestServerBuildsIndexStatusFromMetadataPack(t *testing.T) {
 	if response.Error != nil {
 		t.Fatalf("start=%+v", response)
 	}
+	result := waitForIndexState(t, server, "ready")
+	if result.ModuleCount != 1 || result.GeneratedCount != 1 || result.Progress != 100 {
+		t.Fatalf("result=%+v", result)
+	}
+}
+
+func TestServerBuildsIndexStatusFromLocalOut(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, root, "module-info.json", `{"framework":{"path":["frameworks/base"]}}`)
+	writeTestFile(t, root, "module_bp_java_deps.json", `{"framework":{"srcjars":["out/soong/framework.srcjar"]}}`)
+	server := initializedServer(t)
+	server.Handle(makeRequest(2, "aosp/index/start", IndexStartParams{
+		Profile: model.Profile{ID: "framework", OutRoot: root},
+	}))
 	result := waitForIndexState(t, server, "ready")
 	if result.ModuleCount != 1 || result.GeneratedCount != 1 || result.Progress != 100 {
 		t.Fatalf("result=%+v", result)

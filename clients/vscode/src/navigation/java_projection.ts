@@ -21,9 +21,13 @@ export async function applyJavaProjection(
   outRoot = "",
   targets: unknown[] = [],
 ): Promise<JavaProjectionSummary> {
-  const generated = await engine.materializeGenerated(metadataPackRoot, cacheRoot);
-  const packInfo = await engine.packInfo(metadataPackRoot);
-  const graphResult = await engine.projectGraph(metadataPackRoot, targets);
+  const generated = metadataPackRoot
+    ? await engine.materializeGenerated(metadataPackRoot, cacheRoot)
+    : { sourceRoots: [], diagnostics: [] };
+  const packInfo: { outRoot?: string; diagnostics: unknown[] } = metadataPackRoot
+    ? await engine.packInfo(metadataPackRoot)
+    : { diagnostics: [] };
+  const graphResult = await engine.projectGraph(metadataPackRoot, targets, outRoot);
   const graphTargets = graphResult.diagnostics.length === 0 ? graphResult.graph.targets : [];
   const sourcePaths = new Set<string>();
   const referencedLibraries = new Set<string>();
@@ -65,7 +69,7 @@ function resolveRepoPath(workspaceRoot: string, ref: PathRef): string | undefine
 function resolveLocalPath(packRoot: string, outRoot: string, packOutRoot: string | undefined, ref: PathRef): string | undefined {
   let candidate: string | undefined;
   if (ref.kind === "external-absolute" && ref.raw) candidate = ref.raw;
-  if ((ref.kind === "repo-relative" || ref.kind === "generated") && ref.raw && !ref.raw.includes("..")) {
+  if (packRoot && (ref.kind === "repo-relative" || ref.kind === "generated") && ref.raw && !ref.raw.includes("..")) {
     candidate = path.join(packRoot, ...ref.raw.replaceAll("\\", "/").split("/"));
   }
   if (candidate && fs.existsSync(candidate)) return candidate;
@@ -84,6 +88,11 @@ function resolveLocalPath(packRoot: string, outRoot: string, packOutRoot: string
       const suffix = normalized.slice(packOutRoot.replaceAll("\\", "/").length + 1);
       const fallback = path.join(outRoot, ...suffix.split("/"));
       if (fs.existsSync(fallback)) return fallback;
+    }
+    if (!path.isAbsolute(normalized)) {
+      const suffix = normalized.startsWith("out/") ? normalized.slice(4) : normalized;
+      const localOut = path.join(outRoot, ...suffix.split("/"));
+      if (fs.existsSync(localOut)) return localOut;
     }
   }
   return undefined;

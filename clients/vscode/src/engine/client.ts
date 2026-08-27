@@ -247,16 +247,16 @@ export class EngineClient {
     return this.request("aosp/compdb/overlay", params);
   }
 
-  async modulesCatalog(metadataPackRoot: string): Promise<ModulesCatalogResult> {
-    return this.request("aosp/modules/catalog", { metadataPackRoot });
+  async modulesCatalog(metadataPackRoot: string, metadataRoot?: string): Promise<ModulesCatalogResult> {
+    return this.request("aosp/modules/catalog", { metadataPackRoot, metadataRoot });
   }
 
-  async projectGraph(metadataPackRoot: string, targets: unknown[]): Promise<ProjectGraphResult> {
-    return this.request("aosp/projects/graph", { metadataPackRoot, targets });
+  async projectGraph(metadataPackRoot: string, targets: unknown[], metadataRoot?: string): Promise<ProjectGraphResult> {
+    return this.request("aosp/projects/graph", { metadataPackRoot, metadataRoot, targets });
   }
 
-  async artifactsCatalog(metadataPackRoot: string, kind?: string, query?: string): Promise<ArtifactsCatalogResult> {
-    return this.request("aosp/artifacts/catalog", { metadataPackRoot, kind, query });
+  async artifactsCatalog(metadataPackRoot: string, kind?: string, query?: string, metadataRoot?: string): Promise<ArtifactsCatalogResult> {
+    return this.request("aosp/artifacts/catalog", { metadataPackRoot, metadataRoot, kind, query });
   }
 
   async startIndex(profile: unknown, rebuild = false): Promise<IndexSnapshot> {

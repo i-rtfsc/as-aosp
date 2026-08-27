@@ -48,7 +48,7 @@ export function activate(context: vscode.ExtensionContext): void {
     }
     if (current.state === "ready" || current.state === "partial") {
       const packRoot = profile.metadataPackRoot;
-      if (packRoot && profile.workspaceViewRoot) {
+      if ((packRoot || profile.outRoot) && profile.workspaceViewRoot) {
         const projection = await applyJavaProjection(engine, profile.workspaceViewRoot, packRoot, context.globalStorageUri.fsPath, profile.outRoot, profile.targets);
         current = await engine.reportProjection({
           profileId: profile.id,
@@ -69,26 +69,30 @@ export function activate(context: vscode.ExtensionContext): void {
       diagnostics: current.diagnostics.length,
     };
   };
-  const profileView = new ProfileViewProvider(context, async (metadataPackRoot) => {
+  const profileView = new ProfileViewProvider(context, async (metadataPackRoot, metadataRoot) => {
     await ensureEngine();
-    const validation = await engine.validatePack(metadataPackRoot);
-    if (!validation.valid) {
-      throw new Error(validation.diagnostics.map((item) => `${item.code}: ${item.message}`).join("; "));
+    metadataRoot = metadataRoot || vscode.workspace.getConfiguration("aospIde").get<string>("metadataRoot") || "";
+    if (metadataPackRoot) {
+      const validation = await engine.validatePack(metadataPackRoot);
+      if (!validation.valid) {
+        throw new Error(validation.diagnostics.map((item) => `${item.code}: ${item.message}`).join("; "));
+      }
     }
-    const result = await engine.modulesCatalog(metadataPackRoot);
-    const artifacts = await engine.artifactsCatalog(metadataPackRoot);
+    const modules = await engine.modulesCatalog(metadataPackRoot, metadataRoot);
+    const artifacts = await engine.artifactsCatalog(metadataPackRoot, undefined, undefined, metadataRoot);
     return {
-      modules: result.modules.length,
-      generated: result.modules.reduce((total, module) => total + module.generated, 0),
-      diagnostics: result.diagnostics.length,
+      modules: modules.modules.length,
+      generated: modules.modules.reduce((total, module) => total + module.generated, 0),
+      diagnostics: modules.diagnostics.length + artifacts.diagnostics.length,
       artifacts: artifacts.artifacts,
     };
-  }, startIndex, async (metadataPackRoot, target) => {
+  }, startIndex, async (metadataPackRoot, metadataRoot, target) => {
     await ensureEngine();
-    if (!metadataPackRoot?.trim()) {
-      throw new Error("Metadata Pack Root is required to resolve a target.");
+    metadataRoot = metadataRoot || vscode.workspace.getConfiguration("aospIde").get<string>("metadataRoot") || "";
+    if (!metadataPackRoot?.trim() && !metadataRoot.trim()) {
+      throw new Error("Metadata Pack Root or Out Root is required to resolve a target.");
     }
-    const result = await engine.projectGraph(metadataPackRoot, [target]);
+    const result = await engine.projectGraph(metadataPackRoot, [target], metadataRoot);
     const project = result.graph.targets[0];
     const diagnostics = [
       ...result.diagnostics,

@@ -31,25 +31,30 @@ internal object BuildFactsProjection {
         cacheRoot: Path,
     ): BuildFactsProjectionResult {
         val packRoot = state.metadataPackRoot.trim()
-        if (packRoot.isEmpty()) {
-            return BuildFactsProjectionResult(emptyList(), emptyList(), emptyList(), 0, listOf("Metadata Pack Root is required."))
+        val metadataRoot = state.outRoot.trim()
+        if (packRoot.isEmpty() && metadataRoot.isEmpty()) {
+            return BuildFactsProjectionResult(emptyList(), emptyList(), emptyList(), 0, listOf("Metadata Pack Root or Out Root is required."))
         }
-        val validation = mapper.readTree(engine.packValidate(mapper.writeValueAsString(mapOf("metadataPackRoot" to packRoot)))).path("result")
-        if (!validation.path("valid").asBoolean(false)) {
-            val diagnostics = validation.path("diagnostics").map { node ->
-                "${node.path("code").asText("PACK_INVALID")}: ${node.path("message").asText("invalid pack")}"
+        if (packRoot.isNotEmpty()) {
+            val validation = mapper.readTree(engine.packValidate(mapper.writeValueAsString(mapOf("metadataPackRoot" to packRoot)))).path("result")
+            if (!validation.path("valid").asBoolean(false)) {
+                val diagnostics = validation.path("diagnostics").map { node ->
+                    "${node.path("code").asText("PACK_INVALID")}: ${node.path("message").asText("invalid pack")}"
+                }
+                return BuildFactsProjectionResult(emptyList(), emptyList(), emptyList(), 0, diagnostics)
             }
-            return BuildFactsProjectionResult(emptyList(), emptyList(), emptyList(), 0, diagnostics)
         }
-        val packInfoParams = mapper.writeValueAsString(mapOf("metadataPackRoot" to packRoot))
-        val packInfo = mapper.readTree(engine.packInfo(packInfoParams)).path("result")
+        val packInfo = if (packRoot.isNotEmpty()) {
+            val params = mapper.writeValueAsString(mapOf("metadataPackRoot" to packRoot))
+            mapper.readTree(engine.packInfo(params)).path("result")
+        } else mapper.createObjectNode()
         val diagnostics = mutableListOf<String>()
         val targets = runCatching { mapper.readTree(state.targetsJson) }.getOrNull()
         if (targets == null || !targets.isArray || targets.size() == 0) {
             diagnostics += "PROJECT_GRAPH_TARGETS_MISSING: Targets JSON must contain at least one target."
             return BuildFactsProjectionResult(emptyList(), emptyList(), emptyList(), 0, diagnostics)
         }
-        val graphResponse = mapper.readTree(engine.projectGraph(mapper.writeValueAsString(mapOf("metadataPackRoot" to packRoot, "targets" to targets))))
+        val graphResponse = mapper.readTree(engine.projectGraph(mapper.writeValueAsString(mapOf("metadataPackRoot" to packRoot, "metadataRoot" to metadataRoot, "targets" to targets))))
         collectDiagnostics(graphResponse.path("result").path("diagnostics"), diagnostics)
         val graph = graphResponse.path("result").path("graph")
         val sourceRoots = linkedSetOf<Path>()
@@ -64,14 +69,16 @@ internal object BuildFactsProjection {
             val jars = item.path("libraries")
             collectLibraries(jars, workspaceRoot, packRoot, packInfo.path("outRoot").asText(), state.outRoot, libraries, skipped)
         }
-        val generatedParams = mapper.writeValueAsString(
-            mapOf("metadataPackRoot" to packRoot, "cacheRoot" to cacheRoot.toString()),
-        )
-        val generated = mapper.readTree(engine.generatedMaterialize(generatedParams)).path("result")
-        collectDiagnostics(generated.path("diagnostics"), diagnostics)
-        val generatedRoots = generated.path("sourceRoots").mapNotNull { node ->
-            node.path("root").asText().takeIf { it.isNotBlank() }?.let(Paths::get)
-        }.filter { Files.isDirectory(it) }
+        val generatedRoots = if (packRoot.isNotEmpty()) {
+            val generatedParams = mapper.writeValueAsString(
+                mapOf("metadataPackRoot" to packRoot, "cacheRoot" to cacheRoot.toString()),
+            )
+            val generated = mapper.readTree(engine.generatedMaterialize(generatedParams)).path("result")
+            collectDiagnostics(generated.path("diagnostics"), diagnostics)
+            generated.path("sourceRoots").mapNotNull { node ->
+                node.path("root").asText().takeIf { it.isNotBlank() }?.let(Paths::get)
+            }.filter { Files.isDirectory(it) }
+        } else emptyList()
         sourceRoots.addAll(generatedRoots)
         applyProjection(module, sourceRoots.toList(), libraries.toList())
         return BuildFactsProjectionResult(sourceRoots.toList(), generatedRoots, libraries.toList(), skipped[0], diagnostics)
@@ -112,7 +119,8 @@ internal object BuildFactsProjection {
             val raw = ref.path("raw").asText()
             val candidate = when (kind) {
                 "repo-relative" -> workspaceRoot.resolve(ref.path("repoPath").asText().replace('/', java.io.File.separatorChar))
-                "generated" -> Paths.get(packRoot).resolve(raw.replace('/', java.io.File.separatorChar))
+                "generated" -> packRoot.takeIf(String::isNotBlank)
+                    ?.let(Paths::get)?.resolve(raw.replace('/', java.io.File.separatorChar))
                 "external-absolute" -> Paths.get(raw)
                 else -> null
             }?.normalize()
@@ -126,9 +134,15 @@ internal object BuildFactsProjection {
                 val suffix = raw.removePrefix(packOutRoot.trimEnd('/', '\\') + java.io.File.separator)
                 Paths.get(packRoot).resolve("out").resolve(suffix.replace('/', java.io.File.separatorChar)).normalize()
             } else null
+            val localOut = if (outRoot.isNotBlank() && !Paths.get(raw).isAbsolute) {
+                val normalized = raw.replace('\\', '/')
+                val suffix = normalized.removePrefix("out/")
+                Paths.get(outRoot).resolve(suffix.replace('/', java.io.File.separatorChar)).normalize()
+            } else null
             val selected = when {
                 relocated != null && Files.isRegularFile(relocated) -> relocated
                 packed != null && Files.isRegularFile(packed) -> packed
+                localOut != null && Files.isRegularFile(localOut) -> localOut
                 else -> null
             }
             if (selected != null && selected.toString().endsWith(".jar")) {

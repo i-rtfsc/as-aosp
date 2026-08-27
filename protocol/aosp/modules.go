@@ -15,6 +15,7 @@ import (
 
 type ModulesParams struct {
 	MetadataPackRoot string   `json:"metadataPackRoot"`
+	MetadataRoot     string   `json:"metadataRoot,omitempty"`
 	Names            []string `json:"names,omitempty"`
 	Name             string   `json:"name,omitempty"`
 }
@@ -58,7 +59,7 @@ func (server *Server) modulesCatalog(request jsonrpc.Request) jsonrpc.Response {
 	if err := decodeParams(request, &params); err != nil {
 		return jsonrpc.Failure(request.ID, jsonrpc.InvalidParams(err.Error()))
 	}
-	catalog, diagnostics := server.loadModuleCatalog(params.MetadataPackRoot)
+	catalog, diagnostics := server.loadBuildFactModuleCatalog(params.MetadataPackRoot, params.MetadataRoot)
 	result := ModulesCatalogResult{Modules: []ModuleSummary{}, Diagnostics: diagnostics}
 	if len(diagnostics) != 0 {
 		return jsonrpc.Success(request.ID, result)
@@ -82,7 +83,7 @@ func (server *Server) moduleGet(request jsonrpc.Request) jsonrpc.Response {
 	if err := decodeParams(request, &params); err != nil {
 		return jsonrpc.Failure(request.ID, jsonrpc.InvalidParams(err.Error()))
 	}
-	catalog, diagnostics := server.loadModuleCatalog(params.MetadataPackRoot)
+	catalog, diagnostics := server.loadBuildFactModuleCatalog(params.MetadataPackRoot, params.MetadataRoot)
 	result := ModuleResult{Diagnostics: diagnostics}
 	if len(diagnostics) != 0 {
 		return jsonrpc.Success(request.ID, result)
@@ -105,7 +106,7 @@ func (server *Server) modulesClosure(request jsonrpc.Request) jsonrpc.Response {
 	if err := decodeParams(request, &params); err != nil {
 		return jsonrpc.Failure(request.ID, jsonrpc.InvalidParams(err.Error()))
 	}
-	catalog, diagnostics := server.loadModuleCatalog(params.MetadataPackRoot)
+	catalog, diagnostics := server.loadBuildFactModuleCatalog(params.MetadataPackRoot, params.MetadataRoot)
 	result := ModulesClosureResult{Modules: []modules.Module{}, Diagnostics: diagnostics}
 	if len(diagnostics) != 0 {
 		return jsonrpc.Success(request.ID, result)

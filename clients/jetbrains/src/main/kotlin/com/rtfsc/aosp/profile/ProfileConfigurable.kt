@@ -35,7 +35,7 @@ internal class ProfileConfigurable(
     private val outRoot = TextFieldWithBrowseButton()
     private val metadataPackRoot = TextFieldWithBrowseButton()
     private val pathMappings = JBTextField()
-    private val targetEditor = TargetEditorPanel(project) { metadataPackRoot.text }
+    private val targetEditor = TargetEditorPanel(project, { metadataPackRoot.text }, { outRoot.text })
     private val engineExecutable = TextFieldWithBrowseButton()
     private val validateButton = JButton("Validate")
     private val applyRootsButton = JButton("Apply Focused Roots")

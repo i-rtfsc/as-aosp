@@ -28,7 +28,8 @@
 
 ## 4. Negative capability
 
-- 当前不能在未配置 engine/profile 时打开完整 AOSP 并自动提供导航；
+- 当前仍要求至少配置一个 TargetSpec；engine 可由 bundled/shared/PATH 自动解析，Build Facts
+  可来自本机 out 或 Metadata Pack；没有任何 facts 时只能提供 source-only 能力。
 - 当前 JetBrains 插件已有 descriptor、Kotlin RPC framing/lifecycle client、EngineProcess、project-local profile state、profile UI、focused root planner/非持久投影模块、source-only AIDL fallback、异步 AIDL definition/generated peer/references 和 JNI peer actions，并查找公共 `engines/aosp-index`；VS Code 已有 Java/Kotlin source-only type fallback、AIDL providers、AIDL generated peer/JNI commands 和 JNI DefinitionProvider；仍没有 AIDL PSI 或 JNI gutter；
 - 当前 `aosp-index serve --stdio` 已启用 initialize、shutdown、profile validate、topology discover/validate、ModuleCatalog 查询、`aosp/jni/peers`、`aosp/aidl/resolve`、`aosp/aidl/peers` 和 `aosp/aidl/references`；长期增量索引尚未启用；
 - IndexCoordinator 首个状态 slice 已启用 `aosp/index/start|rebuild|status|cancel`；它能从 Metadata Pack 产生阶段、进度、模块和 generated 计数，尚未投影 Java source roots 或 IDE 原生索引。
@@ -67,7 +68,7 @@
 - coordinator 已支持 IDE projection 回报；VS Code 和 JetBrains 会上报 source/generated/
   library counts 与 diagnostics，snapshot 的最终状态覆盖 facts 与本机投影两段链路。
 - VS Code 和 JetBrains 已切换到 Targets；TargetSpec/ArtifactResolver/ProjectGraph
-  尚未完整实现；`core/model` 已加入 TargetSpec/ArtifactSelector，`core/artifacts` 已加入
+  已形成统一解析链；`core/model` 已加入 TargetSpec/ArtifactSelector，`core/artifacts` 已加入
   基于 path/name/digest 的 Catalog/Resolver，
   `core/projects` 已能从 target/module/artifact facts 构建首个 ProjectGraph 和 source
   ownership decisions；`aosp/projects/graph` RPC 与 pack artifact catalog 已接入，
@@ -88,6 +89,9 @@
 - ProjectGraph 会从已解析 artifact 的 owner module 继续收集 source/generated/dependency
   facts；因此只选择 `SystemUI.apk` 也能得到其源码根，而 APK 不会被投影为 Java library。
   缺失 artifact 会明确返回 `ARTIFACT_NOT_FOUND`，并由 core/protocol 测试覆盖。
+- ProjectGraph、ModuleCatalog 与 ArtifactCatalog RPC 已支持 `metadataRoot` 本机 out 输入；
+  Pack 存在时优先严格校验，未配置 Pack 时由服务端只读加载 out metadata 并构建相同
+  catalogs。VS Code/JetBrains 可直接使用自动发现的 out，不要求先导出 Metadata Pack。
 - Artifact Catalog 已接入 `module-info.installed`，并提供 `aosp/artifacts/catalog` RPC；
   VS Code/JetBrains engine client 已暴露查询方法。
 - pack export 已复制 ModuleCatalog 明确引用的 out 内 Java jars 到 `pack/out/**`；
