@@ -48,6 +48,10 @@ Targets 区域显示重复项目行，每行包含名称、kind、artifact/modul
 Soong modules、source roots 和 dependencies/generated/resources/manifest 开关。保存后生成
 TargetSpec；用户不编辑 JSON。
 
+配置 Metadata Pack 后，artifact selector 通过 `aosp/artifacts/catalog` 加载真实 jar、
+srcjar、apk、owner、path、size 和 digest；用户可选 catalog artifact，也可输入自定义
+selector。APK 只作为 Android Target anchor，不会被加入 Java classpath。
+
 主 view 声明 `type: webview` 和 `onView:<view-id>` activation event，确保用户点击 Activity Bar 时先激活
 扩展并注册 WebviewViewProvider，不依赖某个语言文件或其他 command 先触发 activation。
 
