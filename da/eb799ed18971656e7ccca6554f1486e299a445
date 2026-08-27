@@ -1,0 +1,47 @@
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/profile/ProfileConfigurable.kt
+  s_0fcc3f909ad4ee::t_a59d7dc5afcccb 50-51,83,108,224-262,271-275,278-282,293-301
+  s_49c115a093dc57::t_ccb633a4a4a142 302
+  h_8b376749578497 103,263-270,276-277,283-292
+docs/design/profile-ui-and-multi-project-design.md
+  s_0fcc3f909ad4ee::t_d6c8bf7d13affb 88-89
+  s_0fcc3f909ad4ee::t_f8310c45fa1755 90
+  h_8b376749578497 51-56
+clients/vscode/src/extension.ts
+  s_0fcc3f909ad4ee::t_aba7286a93876a 96
+  h_8b376749578497 86-95,97-106
+clients/vscode/src/ui/profile_panel.ts
+  s_0fcc3f909ad4ee::t_62a27441ad509e 145
+  s_0fcc3f909ad4ee::t_5e60a43b6cf110 10,140
+  h_8b376749578497 82-89
+docs/roadmap/current-state.md
+  h_8b376749578497 83-85
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "daeb799ed18971656e7ccca6554f1486e299a445",
+  "prompts": {},
+  "humans": {
+    "h_8b376749578497": {
+      "author": "Solo <anqi.huang@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    },
+    "s_49c115a093dc57": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a031a2-e317-7a43-aaea-11b526d619e4",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
