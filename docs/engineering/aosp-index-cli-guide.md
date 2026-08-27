@@ -32,6 +32,39 @@ aosp-index metadata --root /path/to/aosp/out > metadata-report.json
 主要读取 `module-info.json`、`module_bp_java_deps.json`、`module_bp_cc_deps.json` 和
 `development/ide/compdb/compile_commands.json`。缺少某类文件只产生 diagnostic。
 
+### 3.1 Android 17 CP2A 服务器构建
+
+对于 Android 17.0.0 Release 1、Build ID 为 `CP2A.*` 的完整 AOSP checkout，推荐使用
+Cuttlefish x86_64 phone 的 `eng` 配置生成开发期 facts：
+
+```bash
+cd /home/solo/code/aosp
+source build/envsetup.sh
+lunch aosp_cf_x86_64_phone cp2a eng
+export SOONG_GEN_COMPDB=1
+
+# 生成 Soong/Java/模块 metadata 和完整 compile_commands.json
+m -j"$(nproc)" nothing
+
+# 生成目标 Java/APK、srcjar 及其 out 中间产物
+m -j"$(nproc)" framework-minus-apex services SystemUI
+```
+
+`cp2a` 与当前 Android 17 release 对应；`trunk_staging` 会得到开发代号配置，不作为
+该 release 的首选。若需要完整系统镜像，再执行 `m -j"$(nproc)"`，但代码导航验证通常
+不需要等待完整镜像。
+
+编译后检查关键文件：
+
+```bash
+find out -type f \( \
+  -name module-info.json -o \
+  -name module_bp_java_deps.json -o \
+  -name module_bp_cc_deps.json -o \
+  -name compile_commands.json \
+\) -print
+```
+
 ## 4. AIDL
 
 ```bash
@@ -109,10 +142,14 @@ du -sh /srv/packs/android-framework
 如果还不确定服务器 out 是否生成了足够的 IDE facts，可先运行：
 
 ```bash
-aosp-index pack preflight --out-root "$OUT_DIR"
+aosp-index pack preflight --out-root "$OUT_DIR" \
+  --module framework-minus-apex \
+  --module services \
+  --module SystemUI
 ```
 
-重点确认 `module-info`、`java-deps` 和 `compdb`。若 compdb 显示缺失，建议在已完成
+除了确认 `module-info`、`java-deps`、`cc-deps` 和 `compdb`，输出还会逐模块报告
+source roots、generated、jar/srcjar 数量以及已识别的 artifact。若 compdb 显示缺失，建议在已完成
 lunch 的同一 shell 中执行 `SOONG_GEN_COMPDB=1 m nothing` 后再导出；Java 导航不因
 compdb 缺失而失效，但 C/C++/JNI 编译参数会降级。
 

@@ -68,6 +68,8 @@ func runPack(args []string) {
 func runPackPreflight(args []string) {
 	flags := flag.NewFlagSet("pack preflight", flag.ExitOnError)
 	outRoot := flags.String("out-root", "", "AOSP out root")
+	var requestedModules stringFlags
+	flags.Var(&requestedModules, "module", "Soong module to verify (repeatable)")
 	_ = flags.Parse(args)
 	if *outRoot == "" {
 		fatal(errors.New("--out-root is required"))
@@ -96,7 +98,29 @@ func runPackPreflight(args []string) {
 		}
 		checks = append(checks, map[string]any{"name": item.name, "found": found != "", "path": found})
 	}
-	srcjars, jars := 0, 0
+	report := metadata.LoadDirectory(outRootAbs)
+	catalog := coremodules.Build(report.Snapshot)
+	artifactCatalog := artifacts.Build(catalog)
+	moduleChecks := make([]map[string]any, 0, len(requestedModules))
+	for _, name := range requestedModules {
+		module, found := catalog.Modules[name]
+		artifactNames := make([]string, 0)
+		for _, artifact := range artifactCatalog.Artifacts {
+			for _, owner := range artifact.OwnerModules {
+				if owner == name {
+					artifactNames = append(artifactNames, artifact.Name)
+					break
+				}
+			}
+		}
+		sort.Strings(artifactNames)
+		moduleChecks = append(moduleChecks, map[string]any{
+			"name": name, "found": found, "sourceRoots": len(module.SourceRoots),
+			"generated": len(module.Generated), "jars": len(module.Jars),
+			"srcjars": len(module.SrcJars), "artifacts": artifactNames,
+		})
+	}
+	srcjars, jars, apks := 0, 0, 0
 	_ = filepath.WalkDir(outRootAbs, func(pathName string, entry os.DirEntry, walkErr error) error {
 		if walkErr != nil || entry.IsDir() {
 			return nil
@@ -106,6 +130,8 @@ func runPackPreflight(args []string) {
 			srcjars++
 		case ".jar":
 			jars++
+		case ".apk":
+			apks++
 		}
 		return nil
 	})
@@ -114,6 +140,9 @@ func runPackPreflight(args []string) {
 		"checks":      checks,
 		"srcjars":     srcjars,
 		"jars":        jars,
+		"apks":        apks,
+		"modules":     moduleChecks,
+		"diagnostics": report.Diagnostics,
 		"suggestions": []string{"If compdb is missing, run SOONG_GEN_COMPDB=1 m nothing."},
 	})
 }

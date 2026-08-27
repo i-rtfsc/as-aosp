@@ -2,11 +2,29 @@ package main
 
 import (
 	"archive/zip"
+	"bytes"
 	"encoding/json"
 	"os"
 	"path/filepath"
 	"testing"
 )
+
+func captureStdout(t *testing.T, action func()) string {
+	t.Helper()
+	old := os.Stdout
+	reader, writer, err := os.Pipe()
+	if err != nil {
+		t.Fatal(err)
+	}
+	os.Stdout = writer
+	action()
+	_ = writer.Close()
+	os.Stdout = old
+	var buffer bytes.Buffer
+	_, _ = buffer.ReadFrom(reader)
+	_ = reader.Close()
+	return buffer.String()
+}
 
 func TestExportPackIncludesCoreMetadataAndSrcjarsByDefault(t *testing.T) {
 	root := t.TempDir()
@@ -34,6 +52,35 @@ func TestExportPackIncludesCoreMetadataAndSrcjarsByDefault(t *testing.T) {
 	data, _ = os.ReadFile(filepath.Join(destination, "generated", "manifest.json"))
 	if err := json.Unmarshal(data, &generated); err != nil || len(generated) != 1 || len(generated[0].Entries) != 1 {
 		t.Fatalf("generated=%+v err=%v", generated, err)
+	}
+}
+
+func TestPackPreflightReportsRequestedModuleArtifacts(t *testing.T) {
+	out := t.TempDir()
+	writePackFixture(t, filepath.Join(out, "module-info.json"), `{
+		"SystemUI":{"path":["frameworks/base/packages/SystemUI"],"installed":["out/target/product/demo/SystemUI.apk"]}
+	}`)
+	writePackFixture(t, filepath.Join(out, "module_bp_java_deps.json"), `{
+		"SystemUI":{"jars":["out/soong/SystemUI.jar"],"srcjars":["out/soong/SystemUI.srcjar"]}
+	}`)
+	output := captureStdout(t, func() {
+		runPackPreflight([]string{"--out-root", out, "--module", "SystemUI"})
+	})
+	var result struct {
+		Modules []struct {
+			Name      string   `json:"name"`
+			Found     bool     `json:"found"`
+			Artifacts []string `json:"artifacts"`
+		} `json:"modules"`
+	}
+	if err := json.Unmarshal([]byte(output), &result); err != nil {
+		t.Fatal(err)
+	}
+	if len(result.Modules) != 1 || !result.Modules[0].Found || result.Modules[0].Name != "SystemUI" {
+		t.Fatalf("result=%+v", result)
+	}
+	if len(result.Modules[0].Artifacts) != 3 {
+		t.Fatalf("artifacts=%v", result.Modules[0].Artifacts)
 	}
 }
 
