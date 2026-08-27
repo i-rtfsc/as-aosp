@@ -16,7 +16,6 @@ data class EngineProfileState(
             if (profileId.isBlank()) add("Profile ID is required.")
             if (workspaceViewRoot.isBlank()) add("Workspace View Root is required.")
             if (targetsJson.isBlank()) add("At least one TargetSpec is required.")
-            if (engineExecutable.isBlank()) add("Engine executable is required.")
         }
     }
 }

@@ -140,8 +140,9 @@ engineExecutable
 项目设置页提供六个字段：profile id、Workspace View Root、Focused Source Paths、Canonical
 AOSP Root、Out Root 和 engine executable。Focused Source Paths 使用 Workspace View Root
 下的相对路径（逗号分隔），例如 `frameworks/base,system/core,ui`；空值表示只投影
-Workspace View Root。Canonical/Out 可以为空；engine executable 是验证和后续启动的唯一
-可执行文件，不根据 PATH 猜测。
+Workspace View Root。Canonical/Out 可以为空；engine executable 是可选覆盖项。未填写时
+按当前平台依次使用用户目录 `engines/aosp-index`、插件内置 engine 和 PATH 中的
+`aosp-index`。
 
 按钮语义：
 

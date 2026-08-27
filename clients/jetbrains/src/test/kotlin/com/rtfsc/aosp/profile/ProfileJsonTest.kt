@@ -32,6 +32,6 @@ class ProfileJsonTest {
     fun reportsRequiredLocalFieldsBeforeStartingTheEngine() {
         val errors = EngineProfileState().localValidationErrors()
 
-        assertEquals(4, errors.size)
+        assertEquals(3, errors.size)
     }
 }

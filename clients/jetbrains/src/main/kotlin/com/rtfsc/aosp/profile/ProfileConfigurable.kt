@@ -146,7 +146,11 @@ internal class ProfileConfigurable(
                 val process = EngineProcess()
                 try {
                     indicator.text = "Starting engine"
-                    EngineCommand.start(process, draft.engineExecutable)
+                    val executable = EngineCommand.resolveExecutable(
+                        draft.engineExecutable,
+                        System.getProperty("user.home"),
+                    )
+                    EngineCommand.start(process, executable)
                     indicator.text = "Validating profile"
                     val response = process.request(
                         "aosp/profile/validate",
