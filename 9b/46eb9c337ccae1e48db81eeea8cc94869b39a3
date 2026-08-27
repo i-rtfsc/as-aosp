@@ -1,0 +1,38 @@
+docs/roadmap/current-state.md
+  h_8b376749578497 77-78
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/profile/ProfileConfigurable.kt
+  s_0fcc3f909ad4ee::t_e1636b27c66ad0 81-87,98-103,143,167-169,174-191,208-215
+  h_8b376749578497 24-27,41-49,69-80,108,152,166,170-173,192-207,216-222
+docs/design/project-graph-and-ide-projection-design.md
+  s_0fcc3f909ad4ee::t_3fd2797ccf6a33 16
+  h_8b376749578497 12,39
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "9b46eb9c337ccae1e48db81eeea8cc94869b39a3",
+  "prompts": {},
+  "humans": {
+    "h_8b376749578497": {
+      "author": "Solo <anqi.huang@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    },
+    "s_5f30dac179bcb2": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "019ffe38-b3cd-77e3-8987-f48bc62a086c",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
