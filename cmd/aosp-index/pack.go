@@ -702,6 +702,9 @@ func srcJarEntries(pathName string) ([]string, error) {
 		if name == "" || strings.Contains(name, "../") {
 			continue
 		}
+		if file.FileInfo().IsDir() {
+			continue
+		}
 		entries = append(entries, name)
 	}
 	sort.Strings(entries)

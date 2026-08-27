@@ -389,3 +389,50 @@ func writeSrcJar(t *testing.T, pathName string) {
 	_ = writer.Close()
 	_ = file.Close()
 }
+
+func writeSrcJarWithDirectory(t *testing.T, pathName string) {
+	t.Helper()
+	if err := os.MkdirAll(filepath.Dir(pathName), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	file, err := os.Create(pathName)
+	if err != nil {
+		t.Fatal(err)
+	}
+	writer := zip.NewWriter(file)
+	if _, err := writer.Create("META-INF/"); err != nil {
+		t.Fatal(err)
+	}
+	entry, err := writer.Create("META-INF/MANIFEST.MF")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := entry.Write([]byte("Manifest-Version: 1.0\n")); err != nil {
+		t.Fatal(err)
+	}
+	entry, err = writer.Create("list")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := entry.Write([]byte("generated\n")); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.Close(); err != nil {
+		t.Fatal(err)
+	}
+	if err := file.Close(); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestSrcJarEntriesIgnoreDirectoryEntries(t *testing.T) {
+	archive := filepath.Join(t.TempDir(), "anno.srcjar")
+	writeSrcJarWithDirectory(t, archive)
+	entries, err := srcJarEntries(archive)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(entries) != 2 || entries[0] != "META-INF/MANIFEST.MF" || entries[1] != "list" {
+		t.Fatalf("entries=%v", entries)
+	}
+}
