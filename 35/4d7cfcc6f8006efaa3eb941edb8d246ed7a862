@@ -1,0 +1,61 @@
+clients/vscode/src/engine/client.ts
+  s_0fcc3f909ad4ee::t_8096cfc56dae37 259
+  s_0fcc3f909ad4ee::t_5e58eb37baef8d 260-261
+  h_8b376749578497 97-109,258
+core/artifacts/catalog.go
+  s_0fcc3f909ad4ee::t_da98aa996846d1 57-61,68-70
+  h_8b376749578497 66-67,71-80
+protocol/aosp/project_graph.go
+  s_0fcc3f909ad4ee::t_54ab51388438ee 39-44,47-64,71-76
+  s_0fcc3f909ad4ee::t_18c236a0f9b484 7
+  s_0fcc3f909ad4ee::t_4295f0508c78c1 65-70
+  h_8b376749578497 27-38,45-46
+docs/design/target-spec-and-artifact-resolver-design.md
+  s_0fcc3f909ad4ee::t_a0a3b9b03ad653 69
+  h_8b376749578497 65-68
+core/modules/catalog.go
+  h_8b376749578497 64-66
+protocol/aosp/server.go
+  h_8b376749578497 163-164
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/engine/ProjectEngineService.kt
+  s_0fcc3f909ad4ee::t_8096cfc56dae37 72-74
+  h_8b376749578497 70-71
+docs/design/protocol-and-profile-design.md
+  h_8b376749578497 118,125-127
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/engine/EngineRpcClient.kt
+  s_0fcc3f909ad4ee::t_8096cfc56dae37 50-53
+  h_8b376749578497 46-49
+docs/roadmap/current-state.md
+  h_8b376749578497 75-76,83-84
+docs/roadmap/target-driven-project-graph-plan.md
+  s_0fcc3f909ad4ee::t_1157bca6c20989 10
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "354d7cfcc6f8006efaa3eb941edb8d246ed7a862",
+  "prompts": {},
+  "humans": {
+    "h_8b376749578497": {
+      "author": "Solo <anqi.huang@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    },
+    "s_5f30dac179bcb2": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "019ffe38-b3cd-77e3-8987-f48bc62a086c",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
