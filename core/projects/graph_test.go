@@ -29,4 +29,26 @@ func TestBuildResolvesFrameworkServicesAndSystemUIProjects(t *testing.T) {
 	if len(graph.Targets) != 3 || len(graph.Diagnostics) != 0 || len(graph.Targets[0].ResolvedArtifacts) != 1 {
 		t.Fatalf("graph=%+v", graph)
 	}
+	systemUI := graph.Targets[2]
+	if len(systemUI.SourceRoots) != 1 || systemUI.SourceRoots[0].Raw != "frameworks/base/packages/SystemUI" {
+		t.Fatalf("SystemUI APK did not project its owner source root: %+v", systemUI)
+	}
+	if len(systemUI.Libraries) != 0 {
+		t.Fatalf("SystemUI APK must not become a Java library: %+v", systemUI.Libraries)
+	}
+}
+
+func TestBuildReportsMissingArtifact(t *testing.T) {
+	graph := Build(
+		modules.Catalog{Modules: map[string]modules.Module{}},
+		artifacts.Catalog{Artifacts: map[string]artifacts.Artifact{}},
+		[]model.TargetSpec{{
+			ID: "framework", Kind: model.TargetJava,
+			Selectors: model.TargetSelectors{Artifacts: []model.ArtifactSelector{{Kind: model.ArtifactJar, Name: "framework.jar"}}},
+		}},
+	)
+	if len(graph.Targets) != 1 || len(graph.Targets[0].Diagnostics) != 1 ||
+		graph.Targets[0].Diagnostics[0].Code != "ARTIFACT_NOT_FOUND" {
+		t.Fatalf("missing artifact diagnostics=%+v", graph)
+	}
 }

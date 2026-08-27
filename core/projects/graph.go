@@ -44,9 +44,22 @@ func Build(catalog modules.Catalog, artifactCatalog artifacts.Catalog, targets [
 			continue
 		}
 		moduleNames := append([]string(nil), spec.Selectors.Modules...)
-		for _, name := range moduleNames {
+		for _, name := range spec.Selectors.Modules {
 			if _, ok := catalog.Modules[name]; !ok {
 				project.Diagnostics = append(project.Diagnostics, projectDiagnostic("TARGET_MODULE_NOT_FOUND", "module is not present: "+name))
+			}
+		}
+		for _, selector := range spec.Selectors.Artifacts {
+			resolution := artifactCatalog.Resolve(selector)
+			project.ResolvedArtifacts = append(project.ResolvedArtifacts, resolution.Artifacts...)
+			project.Diagnostics = append(project.Diagnostics, resolution.Diagnostics...)
+			for _, artifact := range resolution.Artifacts {
+				moduleNames = append(moduleNames, artifact.OwnerModules...)
+				project.SourceRoots = append(project.SourceRoots, artifact.SourceAttachments...)
+				project.GeneratedRoots = append(project.GeneratedRoots, artifact.GeneratedRoots...)
+				if artifact.Kind == model.ArtifactJar || artifact.Kind == model.ArtifactAAR {
+					project.Libraries = append(project.Libraries, artifact.Path)
+				}
 			}
 		}
 		if spec.IncludeDependencies {
@@ -64,19 +77,6 @@ func Build(catalog modules.Catalog, artifactCatalog artifacts.Catalog, targets [
 			project.GeneratedRoots = append(project.GeneratedRoots, module.Generated...)
 			project.Libraries = append(project.Libraries, append(module.Jars, module.SrcJars...)...)
 			project.Dependencies = append(project.Dependencies, module.Dependencies...)
-		}
-		for _, selector := range spec.Selectors.Artifacts {
-			resolution := artifactCatalog.Resolve(selector)
-			project.ResolvedArtifacts = append(project.ResolvedArtifacts, resolution.Artifacts...)
-			project.Diagnostics = append(project.Diagnostics, resolution.Diagnostics...)
-			for _, artifact := range resolution.Artifacts {
-				project.ResolvedModules = append(project.ResolvedModules, artifact.OwnerModules...)
-				project.SourceRoots = append(project.SourceRoots, artifact.SourceAttachments...)
-				project.GeneratedRoots = append(project.GeneratedRoots, artifact.GeneratedRoots...)
-				if artifact.Kind == model.ArtifactJar || artifact.Kind == model.ArtifactAAR {
-					project.Libraries = append(project.Libraries, artifact.Path)
-				}
-			}
 		}
 		for _, path := range spec.Selectors.SourceRoots {
 			project.SourceRoots = append(project.SourceRoots, metadata.NewPathRef(string(path)))

@@ -85,6 +85,9 @@
   library/diagnostic 计数，不保存草稿、不启动完整索引。
 - VS Code 和 JetBrains Target editor 已能从已加载 pack 的 Artifact Catalog 选择 artifact，
   并回填 artifact name 与 owner module；自定义 artifact 仍可手动输入。
+- ProjectGraph 会从已解析 artifact 的 owner module 继续收集 source/generated/dependency
+  facts；因此只选择 `SystemUI.apk` 也能得到其源码根，而 APK 不会被投影为 Java library。
+  缺失 artifact 会明确返回 `ARTIFACT_NOT_FOUND`，并由 core/protocol 测试覆盖。
 - Artifact Catalog 已接入 `module-info.installed`，并提供 `aosp/artifacts/catalog` RPC；
   VS Code/JetBrains engine client 已暴露查询方法。
 - pack export 已复制 ModuleCatalog 明确引用的 out 内 Java jars 到 `pack/out/**`；
