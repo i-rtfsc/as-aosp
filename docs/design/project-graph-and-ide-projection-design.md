@@ -35,7 +35,10 @@ Generated source materialization 也遵循事实来源，但本机 out 必须是
 - multiple targets become multiple modules with stable names;
 - shared libraries and framework srcjars become dedicated library/modules;
 - module dependency graph becomes `ModuleOrderEntry`;
+- target-to-target dependency edges are computed by the engine from resolved module ownership;
 - duplicate source roots are assigned to one owner;
+- nested roots produce `excludedSourceRoots` on the parent target so a more specific target owns
+  Services/SystemUI without duplicate indexing inside Framework;
 - current non-persistent focused module remains the initial ProjectGraph implementation.
 
 ## 3. VS Code

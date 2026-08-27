@@ -18,6 +18,8 @@ internal class FocusedRootsService(
 ) : Disposable {
     private val settings = project.getService(EngineProfileSettings::class.java)
     private var focusedModule: Module? = null
+    private val targetModules = linkedMapOf<String, Module>()
+    private var generatedModule: Module? = null
 
     fun apply(): WorkspaceRootPlan {
         val plan = WorkspaceRootPlanner.plan(settings.current)
@@ -33,21 +35,48 @@ internal class FocusedRootsService(
 
     fun applyBuildFacts(): BuildFactsProjectionResult {
         val engine = project.getService(ProjectEngineService::class.java)
-        val module = WriteAction.compute<Module, RuntimeException> {
-            focusedModule ?: ModuleManager.getInstance(project)
-                .newNonPersistentModule("AOSP Focused", EmptyModuleType.EMPTY_MODULE)
-                .also { focusedModule = it }
-        }
         val cacheRoot = Paths.get(project.basePath ?: System.getProperty("java.io.tmpdir"), ".aosp-ide", "cache")
-        return BuildFactsProjection.apply(module, settings.current, engine, cacheRoot)
+        val result = BuildFactsProjection.apply(
+            settings.current,
+            engine,
+            cacheRoot,
+            targetModule = { id -> moduleForTarget(id) },
+            generatedModule = { moduleForGenerated() },
+        )
+        disposeUnusedTargetModules(result.targetIds)
+        return result
     }
 
     override fun dispose() {
-        val module = focusedModule ?: return
         WriteAction.run<RuntimeException> {
-            ModuleManager.getInstance(project).disposeModule(module)
+            focusedModule?.let { ModuleManager.getInstance(project).disposeModule(it) }
+            targetModules.values.forEach { ModuleManager.getInstance(project).disposeModule(it) }
+            generatedModule?.let { ModuleManager.getInstance(project).disposeModule(it) }
         }
         focusedModule = null
+        targetModules.clear()
+        generatedModule = null
+    }
+
+    private fun moduleForTarget(id: String): Module = targetModules.getOrPut(id) {
+        WriteAction.compute<Module, RuntimeException> {
+            ModuleManager.getInstance(project).newNonPersistentModule("AOSP Target $id", EmptyModuleType.EMPTY_MODULE)
+        }
+    }
+
+    private fun moduleForGenerated(): Module = generatedModule ?: WriteAction.compute<Module, RuntimeException> {
+        ModuleManager.getInstance(project).newNonPersistentModule("AOSP Generated", EmptyModuleType.EMPTY_MODULE)
+            .also { generatedModule = it }
+    }
+
+    private fun disposeUnusedTargetModules(activeIds: List<String>) {
+        val active = activeIds.toSet()
+        val unused = targetModules.filterKeys { it !in active }
+        if (unused.isEmpty()) return
+        WriteAction.run<RuntimeException> {
+            unused.values.forEach { ModuleManager.getInstance(project).disposeModule(it) }
+        }
+        unused.keys.forEach(targetModules::remove)
     }
 }
 

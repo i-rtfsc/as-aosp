@@ -13,7 +13,7 @@ func TestBuildResolvesFrameworkServicesAndSystemUIProjects(t *testing.T) {
 	catalog := modules.Catalog{Modules: map[string]modules.Module{
 		"framework": {Name: "framework", SourceRoots: []metadata.PathRef{metadata.NewPathRef("frameworks/base/core/java")}, Dependencies: []string{"base"}},
 		"base":      {Name: "base", SourceRoots: []metadata.PathRef{metadata.NewPathRef("frameworks/base")}},
-		"services":  {Name: "services", SourceRoots: []metadata.PathRef{metadata.NewPathRef("frameworks/base/services")}},
+		"services":  {Name: "services", SourceRoots: []metadata.PathRef{metadata.NewPathRef("frameworks/base/services")}, Dependencies: []string{"framework"}},
 		"SystemUI":  {Name: "SystemUI", SourceRoots: []metadata.PathRef{metadata.NewPathRef("frameworks/base/packages/SystemUI")}},
 	}}
 	artifactsCatalog := artifacts.Catalog{Artifacts: map[string]artifacts.Artifact{
@@ -35,6 +35,16 @@ func TestBuildResolvesFrameworkServicesAndSystemUIProjects(t *testing.T) {
 	}
 	if len(systemUI.Libraries) != 0 {
 		t.Fatalf("SystemUI APK must not become a Java library: %+v", systemUI.Libraries)
+	}
+	services := graph.Targets[1]
+	if len(services.TargetDependencies) != 1 || services.TargetDependencies[0] != "framework" {
+		t.Fatalf("services target dependencies=%v", services.TargetDependencies)
+	}
+	framework := graph.Targets[0]
+	if len(framework.ExcludedSourceRoots) != 2 ||
+		framework.ExcludedSourceRoots[0].Raw != "frameworks/base/packages/SystemUI" ||
+		framework.ExcludedSourceRoots[1].Raw != "frameworks/base/services" {
+		t.Fatalf("framework excluded roots=%v", framework.ExcludedSourceRoots)
 	}
 }
 

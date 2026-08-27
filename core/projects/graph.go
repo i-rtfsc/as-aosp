@@ -2,6 +2,7 @@ package projects
 
 import (
 	"sort"
+	"strings"
 
 	"github.com/i-rtfsc/as-aosp/core/artifacts"
 	"github.com/i-rtfsc/as-aosp/core/metadata"
@@ -10,14 +11,16 @@ import (
 )
 
 type TargetProject struct {
-	Spec              model.TargetSpec     `json:"spec"`
-	ResolvedModules   []string             `json:"resolvedModules,omitempty"`
-	ResolvedArtifacts []artifacts.Artifact `json:"resolvedArtifacts,omitempty"`
-	SourceRoots       []metadata.PathRef   `json:"sourceRoots,omitempty"`
-	GeneratedRoots    []metadata.PathRef   `json:"generatedRoots,omitempty"`
-	Libraries         []metadata.PathRef   `json:"libraries,omitempty"`
-	Dependencies      []string             `json:"dependencies,omitempty"`
-	Diagnostics       []model.Diagnostic   `json:"diagnostics"`
+	Spec                model.TargetSpec     `json:"spec"`
+	ResolvedModules     []string             `json:"resolvedModules,omitempty"`
+	ResolvedArtifacts   []artifacts.Artifact `json:"resolvedArtifacts,omitempty"`
+	SourceRoots         []metadata.PathRef   `json:"sourceRoots,omitempty"`
+	ExcludedSourceRoots []metadata.PathRef   `json:"excludedSourceRoots,omitempty"`
+	GeneratedRoots      []metadata.PathRef   `json:"generatedRoots,omitempty"`
+	Libraries           []metadata.PathRef   `json:"libraries,omitempty"`
+	Dependencies        []string             `json:"dependencies,omitempty"`
+	TargetDependencies  []string             `json:"targetDependencies,omitempty"`
+	Diagnostics         []model.Diagnostic   `json:"diagnostics"`
 }
 
 type Ownership struct {
@@ -104,6 +107,43 @@ func Build(catalog modules.Catalog, artifactCatalog artifacts.Catalog, targets [
 		graph.Targets = append(graph.Targets, project)
 	}
 	sort.Slice(graph.Targets, func(i, j int) bool { return graph.Targets[i].Spec.ID < graph.Targets[j].Spec.ID })
+	moduleOwners := map[string]string{}
+	for _, target := range graph.Targets {
+		for _, module := range target.ResolvedModules {
+			if _, exists := moduleOwners[module]; !exists {
+				moduleOwners[module] = target.Spec.ID
+			}
+		}
+	}
+	for index := range graph.Targets {
+		for _, dependency := range graph.Targets[index].Dependencies {
+			owner := moduleOwners[dependency]
+			if owner != "" && owner != graph.Targets[index].Spec.ID {
+				graph.Targets[index].TargetDependencies = append(graph.Targets[index].TargetDependencies, owner)
+			}
+		}
+		graph.Targets[index].TargetDependencies = unique(graph.Targets[index].TargetDependencies)
+	}
+	for index := range graph.Targets {
+		for _, root := range graph.Targets[index].SourceRoots {
+			parent := string(root.RepoPath)
+			if parent == "" {
+				continue
+			}
+			for otherIndex := range graph.Targets {
+				if index == otherIndex {
+					continue
+				}
+				for _, childRoot := range graph.Targets[otherIndex].SourceRoots {
+					child := string(childRoot.RepoPath)
+					if child != "" && strings.HasPrefix(child, parent+"/") {
+						graph.Targets[index].ExcludedSourceRoots = append(graph.Targets[index].ExcludedSourceRoots, childRoot)
+					}
+				}
+			}
+		}
+		graph.Targets[index].ExcludedSourceRoots = uniquePaths(graph.Targets[index].ExcludedSourceRoots)
+	}
 	sort.Slice(graph.Ownership, func(i, j int) bool { return graph.Ownership[i].RepoPath < graph.Ownership[j].RepoPath })
 	sort.Strings(graph.DuplicateSourceDecisions)
 	return graph

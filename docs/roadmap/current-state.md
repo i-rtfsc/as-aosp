@@ -114,6 +114,9 @@
 - JetBrains Tool Window 已直接提供 Targets 图形编辑、Artifact Catalog、Resolve Target、
   Add/Remove 和 Save Targets；TargetDraft codec 有独立 round-trip 测试。Settings 仍保留
   高级 profile 字段，日常 target 配置不再要求离开 Tool Window。
+- JetBrains Build Facts projection 已按 ProjectGraph target 创建独立非持久 modules，生成源码
+  使用独立 `AOSP Generated` module；engine 计算的 targetDependencies 转为 module order
+  entries，父级嵌套源码根通过 excludedSourceRoots 避免重复索引。
 - JetBrains profile 不再要求手动填写 Engine Executable；Validate 和项目级 engine service
   使用相同解析顺序：显式配置、`~/engines/aosp-index`、bundled engine、PATH。
 - JetBrains engine service 已从插件 descriptor 解析安装根目录，并按

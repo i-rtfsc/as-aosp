@@ -17,6 +17,7 @@ internal data class BuildFactsProjectionResult(
     val sourceRoots: List<Path>,
     val generatedRoots: List<Path>,
     val libraries: List<Path>,
+    val targetIds: List<String>,
     val skipped: Int,
     val diagnostics: List<String>,
 )
@@ -25,15 +26,16 @@ internal object BuildFactsProjection {
     private val mapper = ObjectMapper()
 
     fun apply(
-        module: Module,
         state: EngineProfileState,
         engine: ProjectEngineService,
         cacheRoot: Path,
+        targetModule: (String) -> Module,
+        generatedModule: () -> Module,
     ): BuildFactsProjectionResult {
         val packRoot = state.metadataPackRoot.trim()
         val metadataRoot = state.outRoot.trim()
         if (packRoot.isEmpty() && metadataRoot.isEmpty()) {
-            return BuildFactsProjectionResult(emptyList(), emptyList(), emptyList(), 0, listOf("Metadata Pack Root or Out Root is required."))
+            return emptyResult("Metadata Pack Root or Out Root is required.")
         }
         if (packRoot.isNotEmpty()) {
             val validation = mapper.readTree(engine.packValidate(mapper.writeValueAsString(mapOf("metadataPackRoot" to packRoot)))).path("result")
@@ -41,7 +43,7 @@ internal object BuildFactsProjection {
                 val diagnostics = validation.path("diagnostics").map { node ->
                     "${node.path("code").asText("PACK_INVALID")}: ${node.path("message").asText("invalid pack")}"
                 }
-                return BuildFactsProjectionResult(emptyList(), emptyList(), emptyList(), 0, diagnostics)
+                return BuildFactsProjectionResult(emptyList(), emptyList(), emptyList(), emptyList(), 0, diagnostics)
             }
         }
         val packInfo = if (packRoot.isNotEmpty()) {
@@ -52,22 +54,39 @@ internal object BuildFactsProjection {
         val targets = runCatching { mapper.readTree(state.targetsJson) }.getOrNull()
         if (targets == null || !targets.isArray || targets.size() == 0) {
             diagnostics += "PROJECT_GRAPH_TARGETS_MISSING: Targets JSON must contain at least one target."
-            return BuildFactsProjectionResult(emptyList(), emptyList(), emptyList(), 0, diagnostics)
+            return BuildFactsProjectionResult(emptyList(), emptyList(), emptyList(), emptyList(), 0, diagnostics)
         }
         val graphResponse = mapper.readTree(engine.projectGraph(mapper.writeValueAsString(mapOf("metadataPackRoot" to packRoot, "metadataRoot" to metadataRoot, "targets" to targets))))
         collectDiagnostics(graphResponse.path("result").path("diagnostics"), diagnostics)
         val graph = graphResponse.path("result").path("graph")
         val sourceRoots = linkedSetOf<Path>()
         val libraries = linkedSetOf<Path>()
+        val targetIds = mutableListOf<String>()
+        val targetDependencies = mutableMapOf<String, List<String>>()
         val skipped = intArrayOf(0)
         val workspaceRoot = Paths.get(state.workspaceViewRoot).toAbsolutePath().normalize()
         val graphItems = graph.path("targets")
-        val moduleItems = graphItems
-        for (item in moduleItems) {
-            collectRepoRoots(item.path("sourceRoots"), workspaceRoot, sourceRoots, skipped)
-            collectRepoRoots(item.path("sources"), workspaceRoot, sourceRoots, skipped)
-            val jars = item.path("libraries")
-            collectLibraries(jars, workspaceRoot, packRoot, packInfo.path("outRoot").asText(), state.outRoot, libraries, skipped)
+        val owners = graph.path("ownership").associate { ownership ->
+            ownership.path("repoPath").asText() to ownership.path("targetId").asText()
+        }
+        for (item in graphItems) {
+            val targetId = item.path("spec").path("id").asText().trim()
+            if (targetId.isBlank()) continue
+            val targetRoots = linkedSetOf<Path>()
+            val excludedRoots = linkedSetOf<Path>()
+            val targetLibraries = linkedSetOf<Path>()
+            collectRepoRoots(item.path("sourceRoots"), workspaceRoot, targetRoots, skipped, targetId, owners)
+            collectRepoRoots(item.path("sources"), workspaceRoot, targetRoots, skipped, targetId, owners)
+            collectExcludedRepoRoots(item.path("excludedSourceRoots"), workspaceRoot, excludedRoots, skipped)
+            collectLibraries(item.path("libraries"), workspaceRoot, packRoot, packInfo.path("outRoot").asText(), state.outRoot, targetLibraries, skipped)
+            applyProjection(
+                targetModule(targetId), targetRoots.toList(), targetLibraries.toList(),
+                emptyList(), excludedRoots.toList(),
+            )
+            targetIds += targetId
+            targetDependencies[targetId] = item.path("targetDependencies").map { it.asText() }
+            sourceRoots.addAll(targetRoots)
+            libraries.addAll(targetLibraries)
         }
         val generatedRoots = if (packRoot.isNotEmpty()) {
             val generatedParams = mapper.writeValueAsString(
@@ -97,16 +116,33 @@ internal object BuildFactsProjection {
                 node.path("root").asText().takeIf { it.isNotBlank() }?.let(Paths::get)
             }.filter { Files.isDirectory(it) }
         }
+        val generated = generatedModule()
+        applyProjection(generated, generatedRoots, emptyList(), emptyList(), emptyList())
+        for (targetId in targetIds) {
+            val module = targetModule(targetId)
+            addModuleDependency(module, generated)
+            targetDependencies[targetId].orEmpty().forEach { dependencyId ->
+                addModuleDependency(module, targetModule(dependencyId))
+            }
+        }
         sourceRoots.addAll(generatedRoots)
-        applyProjection(module, sourceRoots.toList(), libraries.toList())
-        return BuildFactsProjectionResult(sourceRoots.toList(), generatedRoots, libraries.toList(), skipped[0], diagnostics)
+        return BuildFactsProjectionResult(
+            sourceRoots.toList(), generatedRoots, libraries.toList(), targetIds.distinct().sorted(),
+            skipped[0], diagnostics,
+        )
     }
+
+    private fun emptyResult(message: String) = BuildFactsProjectionResult(
+        emptyList(), emptyList(), emptyList(), emptyList(), 0, listOf(message),
+    )
 
     private fun collectRepoRoots(
         refs: JsonNode,
         workspaceRoot: Path,
         roots: MutableSet<Path>,
         skipped: IntArray,
+        targetId: String,
+        owners: Map<String, String>,
     ) {
         for (ref in refs) {
             if (ref.path("kind").asText() != "repo-relative") {
@@ -116,6 +152,9 @@ internal object BuildFactsProjection {
             val repoPath = ref.path("repoPath").asText()
             if (repoPath.isBlank()) {
                 skipped[0]++
+                continue
+            }
+            if (owners[repoPath]?.let { it != targetId } == true) {
                 continue
             }
             val candidate = workspaceRoot.resolve(repoPath.replace('/', java.io.File.separatorChar)).normalize()
@@ -171,13 +210,38 @@ internal object BuildFactsProjection {
         }
     }
 
-    private fun applyProjection(module: Module, roots: List<Path>, libraries: List<Path>) {
+    private fun collectExcludedRepoRoots(
+        refs: JsonNode,
+        workspaceRoot: Path,
+        roots: MutableSet<Path>,
+        skipped: IntArray,
+    ) {
+        for (ref in refs) {
+            val repoPath = ref.path("repoPath").asText()
+            if (ref.path("kind").asText() != "repo-relative" || repoPath.isBlank()) {
+                skipped[0]++
+                continue
+            }
+            val candidate = workspaceRoot.resolve(repoPath.replace('/', java.io.File.separatorChar)).normalize()
+            if (candidate.startsWith(workspaceRoot)) roots.add(candidate) else skipped[0]++
+        }
+    }
+
+    private fun applyProjection(
+        module: Module,
+        roots: List<Path>,
+        libraries: List<Path>,
+        moduleDependencies: List<Module>,
+        excludedRoots: List<Path>,
+    ) {
         WriteAction.compute<Unit, RuntimeException> {
             val model = ModuleRootManager.getInstance(module).modifiableModel
             model.clear()
             roots.distinct().forEach { root ->
                 val content = model.addContentEntry(root.toString())
                 content.addSourceFolder(root.toString(), false)
+                excludedRoots.filter { it != root && it.startsWith(root) }
+                    .forEach { content.addExcludeFolder(it.toString()) }
             }
             val libraryTable = model.moduleLibraryTable
             libraries.distinct().forEach { libraryPath ->
@@ -188,6 +252,17 @@ internal object BuildFactsProjection {
                     libraryModel.addRoot(file, OrderRootType.CLASSES)
                 }
                 libraryModel.commit()
+            }
+            moduleDependencies.distinct().filter { it != module }.forEach(model::addModuleOrderEntry)
+            model.commit()
+        }
+    }
+
+    private fun addModuleDependency(module: Module, dependency: Module) {
+        WriteAction.compute<Unit, RuntimeException> {
+            val model = ModuleRootManager.getInstance(module).modifiableModel
+            if (model.orderEntries.none { it is com.intellij.openapi.roots.ModuleOrderEntry && it.module == dependency }) {
+                model.addModuleOrderEntry(dependency)
             }
             model.commit()
         }
