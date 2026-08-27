@@ -24,6 +24,11 @@ targets: TargetSpec[]
 Artifact Catalog 查询遵循同一来源选择规则，因此图形 selector 在本机 out 和复制 Pack
 场景下保持一致。
 
+Generated source materialization 也遵循事实来源，但本机 out 必须是 target-scoped：客户端先
+取得 ProjectGraph，再把图中明确引用的 `.srcjar` archives 提交给 materialize RPC。服务端
+只接受位于 Out Root 内的绝对路径，或可安全解析到 Out Root 的 `out/...`、`soong/...`
+相对路径；不得遍历并解压 out 中所有 srcjar。Pack 场景继续使用已校验 manifest。
+
 ## 2. JetBrains
 
 - one ProjectGraph target becomes one focused IDE module when feasible;

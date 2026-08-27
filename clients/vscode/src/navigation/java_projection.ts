@@ -21,13 +21,16 @@ export async function applyJavaProjection(
   outRoot = "",
   targets: unknown[] = [],
 ): Promise<JavaProjectionSummary> {
+  const graphResult = await engine.projectGraph(metadataPackRoot, targets, outRoot);
+  const archiveRefs = graphResult.graph.targets.flatMap((target) =>
+    target.libraries.filter((ref) => ref.raw?.toLowerCase().endsWith(".srcjar")).map((ref) => ref.raw),
+  );
   const generated = metadataPackRoot
     ? await engine.materializeGenerated(metadataPackRoot, cacheRoot)
-    : { sourceRoots: [], diagnostics: [] };
+    : await engine.materializeGenerated("", cacheRoot, outRoot, archiveRefs);
   const packInfo: { outRoot?: string; diagnostics: unknown[] } = metadataPackRoot
     ? await engine.packInfo(metadataPackRoot)
     : { diagnostics: [] };
-  const graphResult = await engine.projectGraph(metadataPackRoot, targets, outRoot);
   const graphTargets = graphResult.diagnostics.length === 0 ? graphResult.graph.targets : [];
   const sourcePaths = new Set<string>();
   const referencedLibraries = new Set<string>();

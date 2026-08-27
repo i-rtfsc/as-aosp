@@ -271,8 +271,8 @@ export class EngineClient {
     return this.request("aosp/index/projection", params);
   }
 
-  async materializeGenerated(metadataPackRoot: string, cacheRoot: string): Promise<GeneratedMaterializeResult> {
-    return this.request("aosp/generated/materialize", { metadataPackRoot, cacheRoot });
+  async materializeGenerated(metadataPackRoot: string, cacheRoot: string, metadataRoot?: string, archives?: string[]): Promise<GeneratedMaterializeResult> {
+    return this.request("aosp/generated/materialize", { metadataPackRoot, metadataRoot, archives, cacheRoot });
   }
 
   async packInfo(metadataPackRoot: string): Promise<PackInfoResult> {

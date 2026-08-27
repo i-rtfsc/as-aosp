@@ -78,7 +78,25 @@ internal object BuildFactsProjection {
             generated.path("sourceRoots").mapNotNull { node ->
                 node.path("root").asText().takeIf { it.isNotBlank() }?.let(Paths::get)
             }.filter { Files.isDirectory(it) }
-        } else emptyList()
+        } else {
+            val archives = graph.path("targets").flatMap { target ->
+                target.path("libraries").mapNotNull { ref ->
+                    ref.path("raw").asText().takeIf { it.endsWith(".srcjar", ignoreCase = true) }
+                }
+            }.distinct()
+            val generatedParams = mapper.writeValueAsString(
+                mapOf(
+                    "metadataRoot" to metadataRoot,
+                    "archives" to archives,
+                    "cacheRoot" to cacheRoot.toString(),
+                ),
+            )
+            val generated = mapper.readTree(engine.generatedMaterialize(generatedParams)).path("result")
+            collectDiagnostics(generated.path("diagnostics"), diagnostics)
+            generated.path("sourceRoots").mapNotNull { node ->
+                node.path("root").asText().takeIf { it.isNotBlank() }?.let(Paths::get)
+            }.filter { Files.isDirectory(it) }
+        }
         sourceRoots.addAll(generatedRoots)
         applyProjection(module, sourceRoots.toList(), libraries.toList())
         return BuildFactsProjectionResult(sourceRoots.toList(), generatedRoots, libraries.toList(), skipped[0], diagnostics)

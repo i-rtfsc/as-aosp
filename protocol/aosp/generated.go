@@ -14,8 +14,10 @@ import (
 )
 
 type GeneratedMaterializeParams struct {
-	MetadataPackRoot string `json:"metadataPackRoot"`
-	CacheRoot        string `json:"cacheRoot"`
+	MetadataPackRoot string   `json:"metadataPackRoot"`
+	MetadataRoot     string   `json:"metadataRoot,omitempty"`
+	Archives         []string `json:"archives,omitempty"`
+	CacheRoot        string   `json:"cacheRoot"`
 }
 
 type GeneratedSourceRoot struct {
@@ -41,16 +43,24 @@ func (server *Server) generatedMaterialize(request jsonrpc.Request) jsonrpc.Resp
 	}
 	result := GeneratedMaterializeResult{SourceRoots: []GeneratedSourceRoot{}, Diagnostics: []model.Diagnostic{}}
 	packRoot := strings.TrimSpace(params.MetadataPackRoot)
+	metadataRoot := strings.TrimSpace(params.MetadataRoot)
 	cacheRoot := strings.TrimSpace(params.CacheRoot)
-	if packRoot == "" || cacheRoot == "" {
+	if (packRoot == "" && metadataRoot == "") || cacheRoot == "" {
 		result.Diagnostics = append(result.Diagnostics, model.Diagnostic{
 			Code: "GENERATED_ROOT_MISSING", Severity: model.SeverityError,
-			Stage: "generated-rpc", Message: "metadataPackRoot and cacheRoot are required",
+			Stage: "generated-rpc", Message: "metadataPackRoot or metadataRoot and cacheRoot are required",
 		})
 		return jsonrpc.Success(request.ID, result)
 	}
-	result.Diagnostics = append(result.Diagnostics, diagnosticsToModel(server.validatePackIfDeclared(packRoot))...)
-	if len(result.Diagnostics) > 0 {
+	if packRoot != "" {
+		result.Diagnostics = append(result.Diagnostics, diagnosticsToModel(server.validatePackIfDeclared(packRoot))...)
+		if len(result.Diagnostics) > 0 {
+			return jsonrpc.Success(request.ID, result)
+		}
+	} else {
+		roots, diagnostics := materializeLocalGeneratedSources(metadataRoot, params.Archives, cacheRoot)
+		result.SourceRoots = roots
+		result.Diagnostics = append(result.Diagnostics, diagnostics...)
 		return jsonrpc.Success(request.ID, result)
 	}
 	roots, _, diagnostics := materializeGeneratedSources(packRoot, cacheRoot)
@@ -101,6 +111,60 @@ func materializeGeneratedSources(packRoot, cacheRoot string) ([]GeneratedSourceR
 		}
 	}
 	return roots, archiveEntries, diagnostics
+}
+
+func materializeLocalGeneratedSources(metadataRoot string, archives []string, cacheRoot string) ([]GeneratedSourceRoot, []model.Diagnostic) {
+	roots := []GeneratedSourceRoot{}
+	diagnostics := []model.Diagnostic{}
+	root, err := filepath.Abs(metadataRoot)
+	if err != nil {
+		return roots, []model.Diagnostic{generatedDiagnostic("GENERATED_OUT_ROOT_INVALID", err.Error(), metadataRoot)}
+	}
+	root = filepath.Clean(root)
+	seen := map[string]bool{}
+	for _, raw := range archives {
+		archive, ok := localGeneratedArchive(root, raw)
+		if !ok {
+			diagnostics = append(diagnostics, generatedDiagnostic(
+				"GENERATED_ARCHIVE_PATH_INVALID", "archive is outside metadataRoot", raw,
+			))
+			continue
+		}
+		if seen[archive] {
+			continue
+		}
+		seen[archive] = true
+		report := generated.ExtractSrcJar(archive, cacheRoot, generated.DefaultLimits())
+		diagnostics = append(diagnostics, report.Diagnostics...)
+		if report.Archive == nil {
+			continue
+		}
+		roots = append(roots, GeneratedSourceRoot{
+			Archive: archive, Root: string(report.Archive.Root), Hash: report.Archive.Hash,
+			Entries: len(report.Archive.Entries),
+		})
+	}
+	return roots, diagnostics
+}
+
+func localGeneratedArchive(metadataRoot, raw string) (string, bool) {
+	value := strings.TrimSpace(raw)
+	if value == "" || strings.Contains(filepath.ToSlash(value), "..") || !strings.HasSuffix(strings.ToLower(value), ".srcjar") {
+		return "", false
+	}
+	var candidate string
+	if filepath.IsAbs(value) {
+		candidate = filepath.Clean(value)
+	} else {
+		normalized := filepath.ToSlash(value)
+		normalized = strings.TrimPrefix(normalized, "out/")
+		candidate = filepath.Join(metadataRoot, filepath.FromSlash(normalized))
+	}
+	relative, err := filepath.Rel(metadataRoot, candidate)
+	if err != nil || relative == ".." || strings.HasPrefix(relative, ".."+string(filepath.Separator)) || filepath.IsAbs(relative) {
+		return "", false
+	}
+	return candidate, true
 }
 
 func generatedDiagnostic(code, message, pathName string) model.Diagnostic {

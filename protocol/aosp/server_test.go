@@ -339,6 +339,37 @@ func TestServerMaterializesPackSrcJars(t *testing.T) {
 	}
 }
 
+func TestServerMaterializesSelectedLocalOutSrcJar(t *testing.T) {
+	out := t.TempDir()
+	archive := filepath.Join(out, "soong", "framework.srcjar")
+	if err := os.MkdirAll(filepath.Dir(archive), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	writeProtocolSrcJar(t, archive, "android/os/Build.java", "package android.os; class Build {}")
+	server := initializedServer(t)
+	response, _ := server.Handle(makeRequest(2, "aosp/generated/materialize", GeneratedMaterializeParams{
+		MetadataRoot: out, Archives: []string{"soong/framework.srcjar"}, CacheRoot: t.TempDir(),
+	}))
+	var result GeneratedMaterializeResult
+	decodeResult(t, response, &result)
+	if len(result.Diagnostics) != 0 || len(result.SourceRoots) != 1 || result.SourceRoots[0].Entries != 1 {
+		t.Fatalf("result=%+v", result)
+	}
+}
+
+func TestServerRejectsLocalSrcJarOutsideOut(t *testing.T) {
+	out := t.TempDir()
+	server := initializedServer(t)
+	response, _ := server.Handle(makeRequest(2, "aosp/generated/materialize", GeneratedMaterializeParams{
+		MetadataRoot: out, Archives: []string{"../outside.srcjar"}, CacheRoot: t.TempDir(),
+	}))
+	var result GeneratedMaterializeResult
+	decodeResult(t, response, &result)
+	if len(result.SourceRoots) != 0 || len(result.Diagnostics) != 1 || result.Diagnostics[0].Code != "GENERATED_ARCHIVE_PATH_INVALID" {
+		t.Fatalf("result=%+v", result)
+	}
+}
+
 func TestServerResolvesAIDLFromPack(t *testing.T) {
 	pack := t.TempDir()
 	if err := os.MkdirAll(filepath.Join(pack, "aidl"), 0o755); err != nil {
