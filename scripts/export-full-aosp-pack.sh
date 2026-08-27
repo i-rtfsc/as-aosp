@@ -6,8 +6,10 @@ set -Eeuo pipefail
 
 AOSP_ROOT=${AOSP_ROOT:-/home/solo/code/aosp}
 OUT_ROOT=${OUT_ROOT:-$AOSP_ROOT/out}
-PACK_ROOT=${PACK_ROOT:-/home/solo/code/xx}
-ZIP_ROOT=${ZIP_ROOT:-/home/solo/code/xx.zip}
+PACK_BASE=${PACK_BASE:-/home/solo/code/aosp-packs}
+AOSP_PACK_NAME=${AOSP_PACK_NAME:-android-17-cp2a-aosp_cf_x86_64_phone-full}
+PACK_ROOT=${PACK_ROOT:-$PACK_BASE/$AOSP_PACK_NAME}
+ZIP_ROOT=${ZIP_ROOT:-$PACK_BASE/$AOSP_PACK_NAME.zip}
 ENGINE=${AOSP_INDEX_BIN:-$AOSP_ROOT/aosp-index}
 
 log() { printf '[aosp-pack] %s\n' "$*"; }

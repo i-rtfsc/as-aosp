@@ -190,16 +190,17 @@ cd /home/solo/code/aosp
 默认输出：
 
 ```text
-/home/solo/code/xx       # 完整 Metadata Pack 目录
-/home/solo/code/xx.zip   # 可复制的单文件归档
-/home/solo/code/xx.zip.sha256
+/home/solo/code/aosp-packs/android-17-cp2a-aosp_cf_x86_64_phone-full
+/home/solo/code/aosp-packs/android-17-cp2a-aosp_cf_x86_64_phone-full.zip
+/home/solo/code/aosp-packs/android-17-cp2a-aosp_cf_x86_64_phone-full.zip.sha256
 ```
 
 脚本不传 `--module`，因此会导出所有已生成的 ModuleCatalog、Java/CC metadata、jar、
 srcjar、AIDL/JNI facts 和完整 compdb。它会先执行 `m module-info`，再运行带
 `--scan-all-artifacts` 的 preflight；任何 blocking diagnostic 都会阻止导出，避免生成
-不完整压缩包。可通过 `AOSP_ROOT`、`OUT_ROOT`、`PACK_ROOT`、`ZIP_ROOT` 和
-`AOSP_INDEX_BIN` 覆盖默认路径。
+不完整压缩包。可通过 `AOSP_ROOT`、`OUT_ROOT`、`AOSP_PACK_NAME`、`PACK_ROOT`、
+`ZIP_ROOT` 和 `AOSP_INDEX_BIN` 覆盖默认路径。默认名称由 Android 版本、release、product
+和 full pack 组成，不使用 `xx` 之类的占位名称。
 脚本检测到 Soong/Ninja/Siso 仍在构建时会拒绝导出，避免复制正在变化的 out；通常不应使用
 `ALLOW_ACTIVE_BUILD=1` 绕过该保护。
 
