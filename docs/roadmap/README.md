@@ -1,4 +1,4 @@
-# AOSP IDE Roadmap
+# AOSP Workspace Roadmap
 
 本目录只记录 Current、Target、Gap、任务顺序和下一验收。实现证据在代码和测试入口，历史完成流水不写入 active roadmap。
 

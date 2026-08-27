@@ -55,7 +55,7 @@ export class ProfileViewProvider implements vscode.WebviewViewProvider {
         await config.update("targets", targets, vscode.ConfigurationTarget.Workspace);
         await config.update("engineExecutable", message.engineExecutable, vscode.ConfigurationTarget.Workspace);
         await config.update("pathMappings", mappings, vscode.ConfigurationTarget.Workspace);
-        void vscode.window.showInformationMessage("AOSP IDE profile saved.");
+        void vscode.window.showInformationMessage("AOSP Workspace profile saved.");
       }
       if (message.type === "inspectPack") {
         if (!this.inspectPack || !message.metadataPackRoot?.trim()) {
@@ -111,14 +111,14 @@ export function openProfilePanel(context: vscode.ExtensionContext): void {
     }
     if (message.type === "save") {
       let mappings: unknown[];
-      try { mappings = JSON.parse(message.pathMappings || "[]"); } catch { void vscode.window.showErrorMessage("AOSP IDE pathMappings must be valid JSON."); return; }
+      try { mappings = JSON.parse(message.pathMappings || "[]"); } catch { void vscode.window.showErrorMessage("AOSP Workspace path mappings must be valid JSON."); return; }
       await config.update("workspaceViewRoot", message.workspaceViewRoot, vscode.ConfigurationTarget.Workspace);
       await config.update("metadataRoot", message.metadataRoot, vscode.ConfigurationTarget.Workspace);
       await config.update("metadataPackRoot", message.metadataPackRoot, vscode.ConfigurationTarget.Workspace);
       await config.update("targets", parseJsonArray(message.targets), vscode.ConfigurationTarget.Workspace);
       await config.update("engineExecutable", message.engineExecutable, vscode.ConfigurationTarget.Workspace);
       await config.update("pathMappings", mappings, vscode.ConfigurationTarget.Workspace);
-      void vscode.window.showInformationMessage("AOSP IDE profile saved.");
+      void vscode.window.showInformationMessage("AOSP Workspace profile saved.");
     }
     if (message.type === "command" && typeof message.command === "string") {
       await vscode.commands.executeCommand(message.command);

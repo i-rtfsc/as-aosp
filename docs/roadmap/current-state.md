@@ -1,4 +1,4 @@
-# AOSP IDE 当前状态
+# AOSP Workspace 当前状态
 
 > 复核日期：2026-08-26。
 

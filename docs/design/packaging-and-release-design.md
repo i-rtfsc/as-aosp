@@ -28,8 +28,8 @@ JetBrains 与 VS Code 使用相同的 bundled layout：
 
 公共 store 的稳定入口必须保持为 `engines/aosp-index`，不能把版本目录作为唯一入口。
 客户端可在该文件旁读取版本/哈希元数据；更新时先写临时文件并原子替换，不能覆盖
-正在运行的 executable。默认位置为 macOS `~/Library/Application Support/AOSP IDE`、
-Linux `~/.local/share/aosp-ide`、Windows `%LOCALAPPDATA%/AOSP IDE`。
+正在运行的 executable。公共兼容入口始终是用户主目录下的 `engines/aosp-index[.exe]`；
+客户端专用缓存可使用各平台应用数据目录中的 `AOSP Workspace` 子目录。
 
 本机开发安装使用 `make install-vscode`：脚本自动识别当前 OS/架构、构建对应 engine、
 生成只包含当前平台 engine 的 VSIX，并调用 `code --install-extension` 安装。用户安装

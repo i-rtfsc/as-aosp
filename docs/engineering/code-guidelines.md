@@ -1,4 +1,4 @@
-# AOSP IDE 代码规范
+# AOSP Workspace 代码规范
 
 ## 1. 通用规则
 

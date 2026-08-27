@@ -29,4 +29,4 @@ for target in darwin-amd64 darwin-arm64 linux-amd64 linux-arm64 windows-amd64 wi
   [[ "$target" == windows-* ]] && engine_name=aosp-index.exe
   test "$(unzip -Z1 "$vsix" | grep -c "^extension/engine/$target/$engine_name$")" -eq 1
 done
-printf 'AOSP IDE artifacts verified\n'
+printf 'AOSP Workspace artifacts verified\n'

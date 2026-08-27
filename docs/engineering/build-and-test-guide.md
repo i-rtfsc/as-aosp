@@ -1,4 +1,4 @@
-# AOSP IDE 构建与测试指南
+# AOSP Workspace 构建与测试指南
 
 ## 1. 当前工程入口
 

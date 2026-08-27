@@ -1,4 +1,4 @@
-# AOSP IDE 术语表
+# AOSP Workspace 术语表
 
 | 术语 | 定义 |
 |---|---|

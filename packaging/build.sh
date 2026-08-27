@@ -50,4 +50,4 @@ done
   AOSP_IDE_VERSION="$version" node "$repo_root/packaging/manifest.js" "$dist_root"
 )
 
-printf 'AOSP IDE %s packaging complete\n' "$version"
+printf 'AOSP Workspace %s packaging complete\n' "$version"

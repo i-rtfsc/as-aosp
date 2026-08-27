@@ -80,7 +80,7 @@
       },
       {
         "command": "aospIde.openProfile",
-        "title": "AOSP: Configure AOSP IDE Profile"
+        "title": "AOSP Workspace: Configure Profile"
       }
     ],
     "languages": [

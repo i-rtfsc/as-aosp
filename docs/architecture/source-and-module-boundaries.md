@@ -1,4 +1,4 @@
-# AOSP IDE 源码与模块边界
+# AOSP Workspace 源码与模块边界
 
 > 文档职责：固定仓库目录、依赖方向和模块 owner。物理目录即当前 `dev-ide` 仓库根。
 

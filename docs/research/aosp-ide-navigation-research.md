@@ -1,4 +1,4 @@
-# AOSP IDE 跳转方案调研与架构调整
+# AOSP Workspace 跳转方案调研与架构调整
 
 > 复核日期：2026-08-25。调研对象：AOSP 官方 AIDEGen、Soong compdb/CLion generator、
 > `ide_query`、本地旧 Gradle/CMake 方案，以及 GitHub 上的 AOSP VS Code 配置项目。

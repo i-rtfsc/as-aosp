@@ -171,7 +171,7 @@ commit：
    - 删除旧 Gradle/CMake/脚本和旧资源；
    - 新增根 README 与通用 `.gitignore`；
    - 不包含 Go engine 实现。
-2. `docs(architecture): define the AOSP IDE product and system boundaries`
+2. `docs(architecture): define workspace product and system boundaries`
    - 产品、架构、决策、工程规范和 Roadmap；
    - 不包含生产代码。
 3. `feat(topology): add workspace topology and path mapping core`

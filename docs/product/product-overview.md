@@ -1,10 +1,10 @@
-# AOSP IDE 产品概览
+# AOSP Workspace 产品概览
 
 > 文档职责：说明产品目标、用户、核心价值和交付形态。实现细节见 `../architecture/` 和 `../design/`。
 
 ## 1. 产品结论
 
-AOSP IDE 是面向 AOSP 源码阅读与导航的跨 IDE 工具。用户安装插件后，配置源码视图、可选完整
+AOSP Workspace 是面向 AOSP 源码阅读与导航的跨编辑器工具。用户安装插件后，配置源码视图、可选完整
 AOSP 根目录、可选 `out` 和构建变体，即可获得 Java/Kotlin、AIDL、C/C++、生成代码和 JNI 的
 导航能力。
 

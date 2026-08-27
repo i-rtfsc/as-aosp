@@ -1,6 +1,6 @@
-# AOSP IDE
+# AOSP Workspace
 
-This branch contains the new AOSP IDE integration.
+This branch contains the new AOSP Workspace integration.
 
 The project will provide:
 

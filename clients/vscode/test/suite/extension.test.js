@@ -1,7 +1,7 @@
 const assert = require("node:assert/strict");
 const vscode = require("vscode");
 
-suite("AOSP IDE extension host", () => {
+suite("AOSP Workspace extension host", () => {
   test("activates and registers AIDL language", async () => {
     const extension = vscode.extensions.getExtension("rtfsc.aosp-ide-vscode");
     assert.ok(extension);

@@ -1,4 +1,4 @@
-# AOSP IDE 文档中心
+# AOSP Workspace 文档中心
 
 本目录是 `dev-ide` 分支的产品范围、架构、详细设计、工程规范、决策和交付计划入口。
 
@@ -16,7 +16,7 @@
 9. [当前状态](roadmap/current-state.md)和[当前交付计划](roadmap/delivery-plan.md)。
 10. [打包与发布设计](design/packaging-and-release-design.md)。
 11. [Profile UI 与多项目体验设计](design/profile-ui-and-multi-project-design.md)。
-12. [AOSP IDE 跳转方案调研与架构调整](research/aosp-ide-navigation-research.md)。
+12. [AOSP Workspace 跳转方案调研与架构调整](research/aosp-ide-navigation-research.md)。
 13. [Build Facts 驱动导航决策](decisions/build-facts-driven-navigation.md)。
 14. [AOSP Metadata Pack 设计](design/aosp-metadata-pack-design.md)。
 15. [Target-driven ProjectGraph 决策](decisions/target-driven-project-graph.md)。

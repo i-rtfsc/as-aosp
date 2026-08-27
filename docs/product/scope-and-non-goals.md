@@ -1,4 +1,4 @@
-# AOSP IDE 范围与非目标
+# AOSP Workspace 范围与非目标
 
 > 状态：Decision。本文限定首个可交付版本的产品边界。
 

@@ -265,7 +265,7 @@ VS Code 提供 `AOSP: Refresh clangd Compilation Database` command。command 调
 `aosp/compdb/overlay`，把返回 entries 写到 Workspace View 的
 `.aosp-ide/compdb-overlay/compile_commands.json`，并写入同目录 `.clangd` 的
 `CompilationDatabase: .`，不覆盖 AOSP out 或用户根目录 `.clangd`。用户可将 clangd
-工作目录指向该 overlay；command 通过 `AOSP IDE` OutputChannel 记录 entry 数、overlay
+工作目录指向该 overlay；command 通过 `AOSP Workspace` OutputChannel 记录 entry 数、overlay
 路径和每条 diagnostic，便于判断 compdb 是否只覆盖了部分 variant。
 `.clangd` 内容由独立纯函数生成并固定为 overlay-local `CompilationDatabase: .`，
 不会引用 workspace 外路径或覆盖用户配置。

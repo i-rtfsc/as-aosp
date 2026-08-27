@@ -14,7 +14,7 @@ import { applyJavaProjection } from "./navigation/java_projection";
 
 export function activate(context: vscode.ExtensionContext): void {
   const engine = new EngineClient();
-  const output = vscode.window.createOutputChannel("AOSP IDE");
+  const output = vscode.window.createOutputChannel("AOSP Workspace");
   output.appendLine("AOSP Workspace extension activated");
   context.subscriptions.push(output);
   const ensureEngine = async (): Promise<void> => {

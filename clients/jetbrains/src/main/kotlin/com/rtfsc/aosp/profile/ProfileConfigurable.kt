@@ -132,16 +132,16 @@ internal class ProfileConfigurable(
         val draft = draftState()
         val errors = draft.localValidationErrors()
         if (errors.isNotEmpty()) {
-            Messages.showWarningDialog(panel, errors.joinToString("\n"), "AOSP IDE")
+            Messages.showWarningDialog(panel, errors.joinToString("\n"), "AOSP Workspace")
             return
         }
         val plan = WorkspaceRootPlanner.plan(draft)
         if (plan.diagnostics.isNotEmpty()) {
-            Messages.showWarningDialog(panel, plan.diagnostics.joinToString("\n"), "AOSP IDE")
+            Messages.showWarningDialog(panel, plan.diagnostics.joinToString("\n"), "AOSP Workspace")
             return
         }
         validateButton.isEnabled = false
-        object : Task.Backgroundable(project, "Validating AOSP IDE profile", true) {
+        object : Task.Backgroundable(project, "Validating AOSP Workspace profile", true) {
             private var diagnosticCount: Int = 0
 
             override fun run(indicator: ProgressIndicator) {
@@ -171,7 +171,7 @@ internal class ProfileConfigurable(
                 Messages.showInfoMessage(
                     panel,
                     "Profile validation completed with $diagnosticCount diagnostic(s).",
-                    "AOSP IDE",
+                    "AOSP Workspace",
                 )
             }
 
@@ -179,7 +179,7 @@ internal class ProfileConfigurable(
                 Messages.showErrorDialog(
                     panel,
                     error.message ?: error.javaClass.simpleName,
-                    "AOSP IDE profile validation failed",
+                    "AOSP Workspace profile validation failed",
                 )
             }
 
@@ -192,19 +192,19 @@ internal class ProfileConfigurable(
     private fun applyFocusedRoots() {
         val errors = draftState().localValidationErrors()
         if (errors.isNotEmpty()) {
-            Messages.showWarningDialog(panel, errors.joinToString("\n"), "AOSP IDE")
+            Messages.showWarningDialog(panel, errors.joinToString("\n"), "AOSP Workspace")
             return
         }
         val plan = WorkspaceRootPlanner.plan(draftState())
         if (!plan.isUsable) {
-            Messages.showWarningDialog(panel, plan.diagnostics.joinToString("\n"), "AOSP IDE")
+            Messages.showWarningDialog(panel, plan.diagnostics.joinToString("\n"), "AOSP Workspace")
             return
         }
         val applied = project.getService(FocusedRootsService::class.java).apply()
         Messages.showInfoMessage(
             panel,
             "Applied ${applied.sourceRoots.size} focused source root(s).",
-            "AOSP IDE",
+            "AOSP Workspace",
         )
     }
 
@@ -226,7 +226,7 @@ internal class ProfileConfigurable(
             }
 
             override fun onSuccess() {
-                Messages.showInfoMessage(panel, message, "AOSP IDE")
+                Messages.showInfoMessage(panel, message, "AOSP Workspace")
             }
 
             override fun onThrowable(error: Throwable) {
