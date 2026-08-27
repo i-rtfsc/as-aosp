@@ -1,0 +1,45 @@
+clients/vscode/src/engine/client.ts
+  s_0fcc3f909ad4ee::t_4d403978352bda 275
+  h_8b376749578497 274
+clients/vscode/src/navigation/java_projection.ts
+  s_0fcc3f909ad4ee::t_4d403978352bda 27,30
+  h_8b376749578497 24-26
+protocol/aosp/generated.go
+  s_0fcc3f909ad4ee::t_184a79feead7df 19,46,48,51
+  s_0fcc3f909ad4ee::t_81537e373e43c2 17-18,20
+  s_0fcc3f909ad4ee::t_5812cbcd594f04 126-128,136-152
+  h_8b376749578497 55-63,116-125,129-135,153-169
+protocol/aosp/server_test.go
+  s_0fcc3f909ad4ee::t_a29f160627c113 342-344,346-353
+  h_8b376749578497 345,354-372
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/project/BuildFactsProjection.kt
+  s_0fcc3f909ad4ee::t_a29f160627c113 81-92,98-99
+  h_8b376749578497 93-97
+docs/design/project-graph-and-ide-projection-design.md
+  s_0fcc3f909ad4ee::t_45dcae62d71af0 29-31
+  h_8b376749578497 27-28
+docs/roadmap/current-state.md
+  s_0fcc3f909ad4ee::t_71de9df6b95664 103-104
+  h_8b376749578497 100-102
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "710be242f3d78fbe79ee1b7deec194d2e9adafd9",
+  "prompts": {},
+  "humans": {
+    "h_8b376749578497": {
+      "author": "Solo <anqi.huang@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
