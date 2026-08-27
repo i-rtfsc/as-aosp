@@ -1,0 +1,57 @@
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/project/BuildFactsProjection.kt
+  s_0fcc3f909ad4ee::t_1d77ae1aeb13b4 159,266
+  s_0fcc3f909ad4ee::t_2026ebd3ce5903 158
+  s_0fcc3f909ad4ee::t_b785aeb47fada7 38,46,57,135-138,157,261-265
+  h_8b376749578497 20,32-33,64-65,69-89,119-127,129-132,144-145,213-236,243-244,256-260
+clients/vscode/src/engine/client.ts
+  s_0fcc3f909ad4ee::t_1d77ae1aeb13b4 89
+  h_8b376749578497 85
+docs/design/project-graph-and-ide-projection-design.md
+  s_0fcc3f909ad4ee::t_c12afbf1109533 41
+  h_8b376749578497 38,40
+core/projects/graph.go
+  s_0fcc3f909ad4ee::t_d873d2ad99b57d 127-145
+  s_0fcc3f909ad4ee::t_a95be4872bb93a 116
+  s_0fcc3f909ad4ee::t_1dea39920ebe62 110-115,117-122,146
+  s_0fcc3f909ad4ee::t_2ee47adbe14c8f 15-23
+  h_8b376749578497 5,14,123-126
+docs/roadmap/current-state.md
+  s_0fcc3f909ad4ee::t_b30772fdba38d3 119
+  h_8b376749578497 117-118
+core/projects/graph_test.go
+  s_0fcc3f909ad4ee::t_d19613d756686c 16
+  s_0fcc3f909ad4ee::t_c12afbf1109533 46-48
+  h_8b376749578497 39-45
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/project/FocusedRootsService.kt
+  s_0fcc3f909ad4ee::t_bad375e216b867 21-22,39-47,57-67
+  h_8b376749578497 52-54,68-79
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "f65b78260b63b3373f50e51d684c35bf6fdb8802",
+  "prompts": {},
+  "humans": {
+    "h_8b376749578497": {
+      "author": "Solo <anqi.huang@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    },
+    "s_5f30dac179bcb2": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "019ffe38-b3cd-77e3-8987-f48bc62a086c",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
