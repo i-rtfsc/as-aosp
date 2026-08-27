@@ -260,23 +260,13 @@ func exportPack(aospRoot, outRoot, destination string, native bool, modules []st
 		return err
 	}
 	generatedManifest := make([]map[string]any, 0)
-	err = filepath.WalkDir(filepath.Join(outRoot, "soong", ".intermediates"), func(pathName string, entry os.DirEntry, walkErr error) error {
-		if walkErr != nil {
-			return nil
-		}
-		if entry.IsDir() || strings.ToLower(filepath.Ext(entry.Name())) != ".srcjar" {
+	copySrcJar := func(pathName, intermediateRelative string) error {
+		if info, statErr := os.Stat(pathName); statErr != nil || info.IsDir() || strings.ToLower(filepath.Ext(pathName)) != ".srcjar" {
 			return nil
 		}
 		relative, relErr := filepath.Rel(outRoot, pathName)
 		if relErr != nil {
 			return relErr
-		}
-		intermediateRelative, relErr := filepath.Rel(filepath.Join(outRoot, "soong", ".intermediates"), pathName)
-		if relErr != nil {
-			return relErr
-		}
-		if len(modules) > 0 && !selectedArchives[filepath.ToSlash(intermediateRelative)] {
-			return nil
 		}
 		packPath := filepath.Join("generated", "srcjars", intermediateRelative)
 		target := filepath.Join(tmp, packPath)
@@ -289,9 +279,31 @@ func exportPack(aospRoot, outRoot, destination string, native bool, modules []st
 		}
 		generatedManifest = append(generatedManifest, map[string]any{"source": filepath.ToSlash(relative), "path": filepath.ToSlash(packPath), "entries": entries})
 		return nil
-	})
-	if err != nil && !os.IsNotExist(err) {
-		return err
+	}
+	if len(modules) > 0 {
+		for intermediateRelative := range selectedArchives {
+			pathName := filepath.Join(outRoot, "soong", ".intermediates", filepath.FromSlash(intermediateRelative))
+			if err := copySrcJar(pathName, intermediateRelative); err != nil {
+				return err
+			}
+		}
+	} else {
+		err = filepath.WalkDir(filepath.Join(outRoot, "soong", ".intermediates"), func(pathName string, entry os.DirEntry, walkErr error) error {
+			if walkErr != nil {
+				return nil
+			}
+			if entry.IsDir() || strings.ToLower(filepath.Ext(entry.Name())) != ".srcjar" {
+				return nil
+			}
+			intermediateRelative, relErr := filepath.Rel(filepath.Join(outRoot, "soong", ".intermediates"), pathName)
+			if relErr != nil {
+				return relErr
+			}
+			return copySrcJar(pathName, filepath.ToSlash(intermediateRelative))
+		})
+		if err != nil && !os.IsNotExist(err) {
+			return err
+		}
 	}
 	manifestData, _ := json.MarshalIndent(manifest, "", "  ")
 	if err := os.WriteFile(filepath.Join(tmp, "manifest.json"), append(manifestData, '\n'), 0o644); err != nil {

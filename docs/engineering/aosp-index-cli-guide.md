@@ -180,7 +180,8 @@ aosp-index pack validate --root /Users/me/aosp-packs/android-framework
 ```
 
 选择模块后，AIDL 和 `--native` JNI facts 只扫描 closure 覆盖的 source roots，
-generated srcjar 只保留 closure 明确引用的 archive。模块名不存在时导出失败，
+generated srcjar 只保留 closure 明确引用的 archive，并直接按引用路径复制，不遍历整个
+`out/soong/.intermediates`。模块名不存在时导出失败，
 不会退化为全树扫描或按 basename 猜 owner。
 
 首版输出：

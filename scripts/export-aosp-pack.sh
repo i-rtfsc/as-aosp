@@ -15,7 +15,6 @@ if [[ -z "${AOSP_PACK_DESTINATION:-}" ]]; then
 fi
 
 engine="${AOSP_INDEX_BIN:-aosp-index}"
-"$engine" pack preflight --out-root "$OUT_DIR"
 args=(pack export
   --aosp-root "$ANDROID_BUILD_TOP"
   --out-root "$OUT_DIR"
@@ -29,6 +28,14 @@ if [[ -n "${AOSP_PACK_MODULES:-}" ]]; then
     [[ -n "${module//[[:space:]]/}" ]] && args+=(--module "${module// /}")
   done
 fi
+
+preflight_args=(pack preflight --out-root "$OUT_DIR")
+if [[ -n "${AOSP_PACK_MODULES:-}" ]]; then
+  for module in "${modules[@]}"; do
+    [[ -n "${module//[[:space:]]/}" ]] && preflight_args+=(--module "${module// /}")
+  done
+fi
+"$engine" "${preflight_args[@]}"
 
 "$engine" "${args[@]}"
 "$engine" pack validate --root "$AOSP_PACK_DESTINATION"

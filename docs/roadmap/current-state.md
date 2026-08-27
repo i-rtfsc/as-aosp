@@ -56,6 +56,8 @@
 - `pack export --module` 已按 ModuleCatalog dependency closure 限制 AIDL/JNI source
   facts，并按 closure 的 `SrcJars/Generated` 完整相对路径过滤 generated archives；
   未知模块 fail closed，不按 basename 猜 owner。
+- 指定 `--module` 导出时，srcjar 按 closure 中的精确 archive 路径复制，不再遍历整个
+  `out/soong/.intermediates`，适合大型 Android 17 out。
 - CLI、daemon、VS Code 和 JetBrains 现在复用 `core/pack` 校验；侧边栏检查和索引启动
   在消费 pack 前先 fail closed，避免损坏数据进入项目模型。
 - daemon 的 ModuleCatalog、generated、AIDL、JNI 和 pack identity 查询也会在服务端
