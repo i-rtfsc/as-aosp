@@ -83,7 +83,27 @@ export function activate(context: vscode.ExtensionContext): void {
       diagnostics: result.diagnostics.length,
       artifacts: artifacts.artifacts,
     };
-  }, startIndex);
+  }, startIndex, async (metadataPackRoot, target) => {
+    await ensureEngine();
+    if (!metadataPackRoot?.trim()) {
+      throw new Error("Metadata Pack Root is required to resolve a target.");
+    }
+    const result = await engine.projectGraph(metadataPackRoot, [target]);
+    const project = result.graph.targets[0];
+    const diagnostics = [
+      ...result.diagnostics,
+      ...(project?.diagnostics ?? []),
+    ];
+    return {
+      state: diagnostics.length ? "error" : project ? "exact" : "unresolved",
+      modules: project?.resolvedModules.length ?? 0,
+      artifacts: project?.resolvedArtifacts.length ?? 0,
+      sources: project?.sourceRoots.length ?? 0,
+      generated: project?.generatedRoots.length ?? 0,
+      libraries: project?.libraries.length ?? 0,
+      diagnostics: diagnostics.length,
+    };
+  });
   let autoGeneration = 0;
   let autoTimer: NodeJS.Timeout | undefined;
   const runAutomaticIndex = async (rebuild = false): Promise<void> => {

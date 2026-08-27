@@ -80,7 +80,9 @@
 - JetBrains Settings 已提供 Targets 图形化列表、Add Target 和 Remove Target 操作；
   raw targetsJson 仅作为内部持久化字段，不作为用户入口。
 - 两端 Target editor 已将 artifact kind 与 Target kind 分离，并可显式配置依赖、generated、
-  resources、manifest 选项；当前列表编辑器尚未接入 artifact catalog 自动选择。
+  resources、manifest 选项，并支持 `Resolve Target` 草稿预览；预览通过统一
+  `aosp/projects/graph` RPC 显示 exact/unresolved/error 与 modules/artifacts/source/generated/
+  library/diagnostic 计数，不保存草稿、不启动完整索引。
 - VS Code 和 JetBrains Target editor 已能从已加载 pack 的 Artifact Catalog 选择 artifact，
   并回填 artifact name 与 owner module；自定义 artifact 仍可手动输入。
 - Artifact Catalog 已接入 `module-info.installed`，并提供 `aosp/artifacts/catalog` RPC；

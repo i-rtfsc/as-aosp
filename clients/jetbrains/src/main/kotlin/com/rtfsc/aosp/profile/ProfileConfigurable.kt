@@ -47,6 +47,8 @@ internal class ProfileConfigurable(
     private val artifactKind = JComboBox(arrayOf("jar", "apk", "srcjar", "aar", "output"))
     private val artifactCatalog = JComboBox<String>()
     private val loadArtifactsButton = JButton("Load Artifacts")
+    private val resolveTargetButton = JButton("Resolve Target")
+    private val targetPreview = JLabel("Not resolved")
     private val artifactFacts = mutableMapOf<String, Pair<String, String>>()
     private val includeDependencies = JCheckBox("Dependencies", true)
     private val includeGenerated = JCheckBox("Generated sources", true)
@@ -78,6 +80,7 @@ internal class ProfileConfigurable(
         addTargetButton.addActionListener { addTarget() }
         removeTargetButton.addActionListener { removeTarget() }
         loadArtifactsButton.addActionListener { loadArtifacts() }
+        resolveTargetButton.addActionListener { resolveTarget() }
         artifactKind.addActionListener { refreshArtifactChoices() }
         artifactCatalog.addActionListener { selectArtifact() }
         val targetsPanel = JPanel(BorderLayout()).apply {
@@ -97,10 +100,12 @@ internal class ProfileConfigurable(
             buttons.add(includeResources)
             buttons.add(includeManifest)
             buttons.add(loadArtifactsButton)
+            buttons.add(resolveTargetButton)
             buttons.add(addTargetButton)
             buttons.add(removeTargetButton)
             val container = JPanel(BorderLayout())
             container.add(editor, BorderLayout.CENTER)
+            container.add(targetPreview, BorderLayout.NORTH)
             container.add(buttons, BorderLayout.SOUTH)
             add(container, BorderLayout.SOUTH)
         }
@@ -214,6 +219,85 @@ internal class ProfileConfigurable(
             artifactFacts[key] = artifact.path("kind").asText() to display
         }
         refreshArtifactChoices()
+    }
+
+    private fun resolveTarget() {
+        val id = targetId.text.trim()
+        val packRoot = metadataPackRoot.text.trim()
+        if (id.isBlank()) {
+            targetPreview.text = "Enter a target name first."
+            return
+        }
+        if (packRoot.isBlank()) {
+            targetPreview.text = "Metadata Pack Root is required."
+            return
+        }
+        val target = draftTarget()
+        resolveTargetButton.isEnabled = false
+        object : Task.Backgroundable(project, "Resolving AOSP target", true) {
+            private var preview = ""
+
+            override fun run(indicator: ProgressIndicator) {
+                indicator.text = "Resolving target through ProjectGraph"
+                val mapper = com.fasterxml.jackson.databind.ObjectMapper()
+                val params = mapper.writeValueAsString(
+                    mapOf("metadataPackRoot" to packRoot, "targets" to listOf(target)),
+                )
+                val response = mapper.readTree(
+                    project.getService(com.rtfsc.aosp.engine.ProjectEngineService::class.java)
+                        .projectGraph(params),
+                ).path("result")
+                val graph = response.path("graph")
+                val projectNode = graph.path("targets").firstOrNull()
+                val diagnostics = sequenceOf(response.path("diagnostics"), graph.path("diagnostics"), projectNode?.path("diagnostics"))
+                    .filterNotNull()
+                    .sumOf { it.size() }
+                val state = when {
+                    diagnostics > 0 -> "error"
+                    projectNode == null || projectNode.isMissingNode -> "unresolved"
+                    else -> "exact"
+                }
+                preview = "$state · ${projectNode?.path("resolvedModules")?.size() ?: 0} modules · " +
+                    "${projectNode?.path("resolvedArtifacts")?.size() ?: 0} artifacts · " +
+                    "${projectNode?.path("sourceRoots")?.size() ?: 0} sources · " +
+                    "${projectNode?.path("generatedRoots")?.size() ?: 0} generated · " +
+                    "${projectNode?.path("libraries")?.size() ?: 0} libraries · $diagnostics diagnostics"
+            }
+
+            override fun onSuccess() {
+                targetPreview.text = preview
+            }
+
+            override fun onThrowable(error: Throwable) {
+                targetPreview.text = "Resolve failed: ${error.message ?: error.javaClass.simpleName}"
+            }
+
+            override fun onFinished() {
+                resolveTargetButton.isEnabled = true
+            }
+        }.queue()
+    }
+
+    private fun draftTarget(): Map<String, Any> {
+        val artifact = targetArtifact.text.trim()
+        val module = targetModule.text.trim()
+        val sources = targetSources.text.split(',').map(String::trim).filter(String::isNotEmpty)
+        return mapOf(
+            "id" to targetId.text.trim(),
+            "displayName" to targetId.text.trim(),
+            "kind" to targetKind.selectedItem.toString(),
+            "selectors" to mapOf(
+                "modules" to if (module.isBlank()) emptyList<String>() else listOf(module),
+                "artifacts" to if (artifact.isBlank()) emptyList<Any>() else listOf(
+                    mapOf("kind" to artifactKind.selectedItem.toString(), "name" to artifact),
+                ),
+                "sourceRoots" to sources,
+            ),
+            "includeDependencies" to includeDependencies.isSelected,
+            "includeGeneratedSources" to includeGenerated.isSelected,
+            "includeResources" to includeResources.isSelected,
+            "includeManifest" to includeManifest.isSelected,
+        )
     }
 
     private fun refreshArtifactChoices() {

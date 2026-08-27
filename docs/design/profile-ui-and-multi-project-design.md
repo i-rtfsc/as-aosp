@@ -48,6 +48,12 @@ Targets 区域显示重复项目行，每行包含名称、kind、artifact/modul
 Soong modules、source roots 和 dependencies/generated/resources/manifest 开关。保存后生成
 TargetSpec；用户不编辑 JSON。
 
+编辑器同时提供 `Resolve Target` 预览。该操作不会保存配置，也不会启动完整索引；它将当前
+草稿直接提交给 `aosp/projects/graph`，显示 exact、unresolved 或 error，以及已解析的
+modules、artifacts、source roots、generated roots、libraries 和 diagnostics 数量。这样用户
+可以在保存或启动索引前确认 `framework.jar`、`services.jar`、`SystemUI.apk` 或自定义
+source/module 组合是否能被当前 Metadata Pack 解析。
+
 配置 Metadata Pack 后，artifact selector 通过 `aosp/artifacts/catalog` 加载真实 jar、
 srcjar、apk、owner、path、size 和 digest；用户可选 catalog artifact，也可输入自定义
 selector。APK 只作为 Android Target anchor，不会被加入 Java classpath。
@@ -78,6 +84,9 @@ Diagnostics 卡片。Settings Configurable 保留为高级编辑入口，默认�
 JetBrains startup activity 在已有 profile 时自动执行 Build-Facts projection；Tool Window
 提供状态、模块/generated 计数、diagnostics 和 `Apply/Rebuild` 操作。状态由项目级
 coordinator service 保存，窗口关闭后重新打开仍恢复最后快照。
+
+JetBrains Targets 编辑器与 VS Code 使用相同的 `Resolve Target` 预览语义和 ProjectGraph
+RPC；解析在后台任务中执行，结果显示在编辑器内，不阻塞 Swing UI。
 
 ## 5. 自动 out 检测
 
