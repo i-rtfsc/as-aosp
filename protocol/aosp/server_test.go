@@ -127,6 +127,27 @@ func TestServerBuildsProjectGraphFromPack(t *testing.T) {
 	}
 }
 
+func TestServerListsArtifactsByKindAndQuery(t *testing.T) {
+	root := t.TempDir()
+	pathName := filepath.Join(root, "artifacts", "catalog.json")
+	if err := os.MkdirAll(filepath.Dir(pathName), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	data := `{"artifacts":{"jar:framework.jar":{"id":"jar:framework.jar","kind":"jar","name":"framework.jar"},"apk:SystemUI.apk":{"id":"apk:SystemUI.apk","kind":"apk","name":"SystemUI.apk"}}}`
+	if err := os.WriteFile(pathName, []byte(data), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	server := initializedServer(t)
+	response, _ := server.Handle(makeRequest(2, "aosp/artifacts/catalog", ArtifactsCatalogParams{
+		MetadataPackRoot: root, Kind: "apk", Query: "system",
+	}))
+	var result ArtifactsCatalogResult
+	decodeResult(t, response, &result)
+	if len(result.Diagnostics) != 0 || len(result.Artifacts) != 1 || result.Artifacts[0].Name != "SystemUI.apk" {
+		t.Fatalf("result=%+v", result)
+	}
+}
+
 func TestServerInvalidatesPackValidationAfterInPlaceChange(t *testing.T) {
 	root := t.TempDir()
 	pathName := filepath.Join(root, "modules", "catalog.json")
