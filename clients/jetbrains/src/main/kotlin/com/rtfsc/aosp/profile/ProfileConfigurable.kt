@@ -25,6 +25,7 @@ import javax.swing.DefaultListModel
 import javax.swing.JList
 import javax.swing.JComboBox
 import javax.swing.JScrollPane
+import javax.swing.JCheckBox
 
 internal class ProfileConfigurable(
     private val project: Project,
@@ -43,6 +44,11 @@ internal class ProfileConfigurable(
     private val targetModule = JBTextField()
     private val targetSources = JBTextField()
     private val targetKind = JComboBox(arrayOf("java", "android", "native", "mixed"))
+    private val artifactKind = JComboBox(arrayOf("jar", "apk", "srcjar", "aar", "output"))
+    private val includeDependencies = JCheckBox("Dependencies", true)
+    private val includeGenerated = JCheckBox("Generated sources", true)
+    private val includeResources = JCheckBox("Resources")
+    private val includeManifest = JCheckBox("Manifest")
     private val targetListModel = DefaultListModel<String>()
     private val targetList = JList(targetListModel)
     private val addTargetButton = JButton("Add Target")
@@ -73,11 +79,16 @@ internal class ProfileConfigurable(
             val editor = FormBuilder.createFormBuilder()
                 .addLabeledComponent(JLabel("Target Name"), targetId)
                 .addLabeledComponent(JLabel("Kind"), targetKind)
+                .addLabeledComponent(JLabel("Artifact Kind"), artifactKind)
                 .addLabeledComponent(JLabel("Artifact"), targetArtifact)
                 .addLabeledComponent(JLabel("Soong Module"), targetModule)
                 .addLabeledComponent(JLabel("Source Roots"), targetSources)
                 .panel
             val buttons = JPanel(FlowLayout(FlowLayout.LEFT))
+            buttons.add(includeDependencies)
+            buttons.add(includeGenerated)
+            buttons.add(includeResources)
+            buttons.add(includeManifest)
             buttons.add(addTargetButton)
             buttons.add(removeTargetButton)
             val container = JPanel(BorderLayout())
@@ -170,7 +181,7 @@ internal class ProfileConfigurable(
         val artifact = targetArtifact.text.trim()
         val module = targetModule.text.trim()
         val sources = targetSources.text.trim()
-        val summary = listOf(id, kind, artifact, module, sources).joinToString("|")
+        val summary = listOf(id, kind, artifactKind.selectedItem.toString(), artifact, module, sources, includeDependencies.isSelected.toString(), includeGenerated.isSelected.toString(), includeResources.isSelected.toString(), includeManifest.isSelected.toString()).joinToString("|")
         targetListModel.addElement(summary)
         targetId.text = ""
         targetArtifact.text = ""
@@ -188,20 +199,21 @@ internal class ProfileConfigurable(
             val parts = value.split('|')
             val id = parts.getOrElse(0) { "" }
             val kind = parts.getOrElse(1) { "java" }
-            val artifact = parts.getOrElse(2) { "" }
-            val module = parts.getOrElse(3) { "" }
-            val sources = parts.getOrElse(4) { "" }.split(',').map(String::trim).filter(String::isNotEmpty)
+            val artifactType = parts.getOrElse(2) { "jar" }
+            val artifact = parts.getOrElse(3) { "" }
+            val module = parts.getOrElse(4) { "" }
+            val sources = parts.getOrElse(5) { "" }.split(',').map(String::trim).filter(String::isNotEmpty)
             mutableMapOf<String, Any>(
                 "id" to id, "displayName" to id, "kind" to kind,
                 "selectors" to mapOf(
                     "modules" to if (module.isBlank()) emptyList<String>() else listOf(module),
-                    "artifacts" to if (artifact.isBlank()) emptyList<Any>() else listOf(mapOf("kind" to if (kind == "android") "apk" else "jar", "name" to artifact)),
+                    "artifacts" to if (artifact.isBlank()) emptyList<Any>() else listOf(mapOf("kind" to artifactType, "name" to artifact)),
                     "sourceRoots" to sources,
                 ),
-                "includeDependencies" to true,
-                "includeGeneratedSources" to true,
-                "includeResources" to (kind == "android"),
-                "includeManifest" to (kind == "android"),
+                "includeDependencies" to parts.getOrElse(6) { "true" }.toBoolean(),
+                "includeGeneratedSources" to parts.getOrElse(7) { "true" }.toBoolean(),
+                "includeResources" to parts.getOrElse(8) { "false" }.toBoolean(),
+                "includeManifest" to parts.getOrElse(9) { "false" }.toBoolean(),
             )
         }
         return com.fasterxml.jackson.databind.ObjectMapper().writeValueAsString(targets)
@@ -213,10 +225,12 @@ internal class ProfileConfigurable(
         if (!node.isArray) return
         node.forEach { target ->
             val selectors = target.path("selectors")
-            val artifact = selectors.path("artifacts").firstOrNull()?.path("name")?.asText().orEmpty()
+            val artifactNode = selectors.path("artifacts").firstOrNull()
+            val artifact = artifactNode?.path("name")?.asText().orEmpty()
+            val artifactType = artifactNode?.path("kind")?.asText("jar") ?: "jar"
             val module = selectors.path("modules").firstOrNull()?.asText().orEmpty()
             val sources = selectors.path("sourceRoots").map { it.asText() }.joinToString(",")
-            targetListModel.addElement(listOf(target.path("id").asText(), target.path("kind").asText("java"), artifact, module, sources).joinToString("|"))
+            targetListModel.addElement(listOf(target.path("id").asText(), target.path("kind").asText("java"), artifactType, artifact, module, sources, target.path("includeDependencies").asBoolean(true).toString(), target.path("includeGeneratedSources").asBoolean(true).toString(), target.path("includeResources").asBoolean(false).toString(), target.path("includeManifest").asBoolean(false).toString()).joinToString("|"))
         }
     }
 

@@ -44,7 +44,7 @@ Webview sidebar view（使用新 id，避免旧版本 view 状态残留）。
 Palette 和状态栏继续作为备用入口。
 
 Targets 区域显示重复项目行，每行包含名称、kind、artifact/module/source 摘要、状态、
-编辑和删除操作。`Add Target` 打开内联 editor：Target name、kind、artifact kind/name、
+编辑和删除操作。`Add Target` 打开内联 editor：Target name、kind、独立 artifact kind/name、
 Soong modules、source roots 和 dependencies/generated/resources/manifest 开关。保存后生成
 TargetSpec；用户不编辑 JSON。
 
