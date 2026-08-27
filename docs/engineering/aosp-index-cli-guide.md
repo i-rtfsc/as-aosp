@@ -176,6 +176,33 @@ export AOSP_PACK_NATIVE=1
 make export-pack
 ```
 
+如果完整 AOSP 已经编译过但在末尾非关键目标失败，可以导出整个 out 的所有可用事实，
+而不是只选择几个模块。将 `scripts/export-full-aosp-pack.sh` 和 Linux 版 `aosp-index`
+放到服务器后执行：
+
+```bash
+chmod +x /home/solo/code/aosp/export-full-aosp-pack.sh \
+  /home/solo/code/aosp/aosp-index
+cd /home/solo/code/aosp
+./export-full-aosp-pack.sh
+```
+
+默认输出：
+
+```text
+/home/solo/code/xx       # 完整 Metadata Pack 目录
+/home/solo/code/xx.zip   # 可复制的单文件归档
+/home/solo/code/xx.zip.sha256
+```
+
+脚本不传 `--module`，因此会导出所有已生成的 ModuleCatalog、Java/CC metadata、jar、
+srcjar、AIDL/JNI facts 和完整 compdb。它会先执行 `m module-info`，再运行带
+`--scan-all-artifacts` 的 preflight；任何 blocking diagnostic 都会阻止导出，避免生成
+不完整压缩包。可通过 `AOSP_ROOT`、`OUT_ROOT`、`PACK_ROOT`、`ZIP_ROOT` 和
+`AOSP_INDEX_BIN` 覆盖默认路径。
+脚本检测到 Soong/Ninja/Siso 仍在构建时会拒绝导出，避免复制正在变化的 out；通常不应使用
+`ALLOW_ACTIVE_BUILD=1` 绕过该保护。
+
 pack 会把 ModuleCatalog 明确引用且实际存在的 Java jars 复制到
 `out/**/*.jar`。复制到 Mac 后，在图形界面选择该目录作为 Metadata Pack Root；
 如果 Mac 没有本机 out，Java classpath 会优先使用 pack 内这些 jars。
