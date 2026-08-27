@@ -1,0 +1,33 @@
+docs/roadmap/current-state.md
+  s_0fcc3f909ad4ee::t_1dc656f0512d5f 109
+  h_8b376749578497 108
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/profile/ProfileConfigurable.kt
+  s_0fcc3f909ad4ee::t_43db13bbec9b62 150-153
+  h_8b376749578497 149
+clients/jetbrains/src/test/kotlin/com/rtfsc/aosp/profile/ProfileJsonTest.kt
+  h_8b376749578497 35
+docs/design/ide-client-and-navigation-design.md
+  s_0fcc3f909ad4ee::t_43db13bbec9b62 145
+  h_8b376749578497 143-144
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "87d3e2bc227962210591ca864efd7c932682d683",
+  "prompts": {},
+  "humans": {
+    "h_8b376749578497": {
+      "author": "Solo <anqi.huang@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
