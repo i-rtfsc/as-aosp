@@ -1,0 +1,28 @@
+scripts/export-full-aosp-pack.sh
+  s_0fcc3f909ad4ee::t_93e9b479c2e19e 12-18,24-54,60-68
+  s_0fcc3f909ad4ee::t_d378a129c5cd4e 11,19-23
+  h_8b376749578497 1-10,55-59,69-80
+docs/engineering/aosp-index-cli-guide.md
+  h_8b376749578497 179-205
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "4e6aded3f4c5a72e9361224c663689ade7434e62",
+  "prompts": {},
+  "humans": {
+    "h_8b376749578497": {
+      "author": "Solo <anqi.huang@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
