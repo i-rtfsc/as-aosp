@@ -1,0 +1,39 @@
+core/projects/graph_test.go
+  s_0fcc3f909ad4ee::t_c3eb9f5590e49b 44-53
+  h_8b376749578497 32-43
+docs/roadmap/current-state.md
+  s_0fcc3f909ad4ee::t_49370ee199029d 88-90
+core/projects/graph.go
+  s_0fcc3f909ad4ee::t_a05423772d0acd 47,52-54,60-62
+  s_267910f8be38a3::t_39f9b47a3efe45 63-64
+  h_8b376749578497 55-59
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "a70f4643d52c804d84ac15e4a7ab0f79b5c3ec72",
+  "prompts": {},
+  "humans": {
+    "h_8b376749578497": {
+      "author": "Solo <anqi.huang@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    },
+    "s_267910f8be38a3": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "54a0878b-d37b-4115-b5dd-326dbc1e0e1f",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
