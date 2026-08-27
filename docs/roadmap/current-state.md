@@ -102,6 +102,9 @@
 - JetBrains 已有 `AOSP Workspace` Tool Window、startup auto-apply 和 Settings 保存后
   自动 rebuild；窗口显示 source/generated/library/skipped/diagnostic counts，完整
   persistent Workspace Model module closure 仍未闭合。
+- JetBrains Tool Window 已直接提供 Targets 图形编辑、Artifact Catalog、Resolve Target、
+  Add/Remove 和 Save Targets；TargetDraft codec 有独立 round-trip 测试。Settings 仍保留
+  高级 profile 字段，日常 target 配置不再要求离开 Tool Window。
 - JetBrains profile state 已可观察；Tool Window 路径标签随 Settings 更新，coordinator
   以 300ms debounce 自动重建，所有 Swing 标签更新切回 EDT。
 - `core/pack` 已对 generated manifest 与 srcjar entry 做内容一致性校验，拒绝 entry

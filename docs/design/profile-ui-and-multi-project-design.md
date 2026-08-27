@@ -81,6 +81,10 @@ Diagnostics 卡片。Settings Configurable 保留为高级编辑入口，默认�
 完成。打开项目时以项目根为 Workspace View 候选并自动检测 `out`；用户可以通过 Browse
 覆盖为外部 out 或选择 Source-only。
 
+Tool Window 直接嵌入 Targets 图形编辑器，支持加载 Artifact Catalog、选择 artifact、配置
+module/source selectors、解析草稿、增删并保存 Targets。Settings 与 Tool Window 复用同一
+`TargetDraft`/TargetSpec codec 和编辑组件，不允许复制一份字段映射或 JSON 拼装逻辑。
+
 JetBrains startup activity 在已有 profile 时自动执行 Build-Facts projection；Tool Window
 提供状态、模块/generated 计数、diagnostics 和 `Apply/Rebuild` 操作。状态由项目级
 coordinator service 保存，窗口关闭后重新打开仍恢复最后快照。

@@ -8,6 +8,7 @@ import com.intellij.ui.content.ContentFactory
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBPanel
 import com.rtfsc.aosp.profile.EngineProfileSettings
+import com.rtfsc.aosp.profile.TargetEditorPanel
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.FlowLayout
@@ -33,6 +34,8 @@ internal class AospWorkspaceToolWindowFactory : ToolWindowFactory {
         val counts = JBLabel("0 source roots · 0 generated · 0 libraries")
         val diagnostics = JBLabel("0 diagnostics")
         val compdb = JBLabel("CompDB not refreshed")
+        val targetEditor = TargetEditorPanel(project) { settings.current.metadataPackRoot }
+        targetEditor.load(settings.current.targetsJson)
 
         val header = JBPanel<JBPanel<*>>(BorderLayout()).apply {
             border = BorderFactory.createEmptyBorder(12, 12, 10, 12)
@@ -53,9 +56,26 @@ internal class AospWorkspaceToolWindowFactory : ToolWindowFactory {
             add(JButton("Refresh CompDB").apply { addActionListener { refreshCompdb(project, settings, compdb) } })
             add(JButton("Settings").apply { addActionListener { ShowSettingsUtil.getInstance().showSettingsDialog(project, "AOSP Workspace") } })
         }
+        val targetActions = JPanel(FlowLayout(FlowLayout.LEFT)).apply {
+            add(JButton("Save Targets").apply {
+                addActionListener {
+                    settings.update { it.targetsJson = targetEditor.serialize() }
+                    state.text = "CONFIGURED · Targets saved"
+                }
+            })
+        }
+        val targetSection = JPanel(BorderLayout()).apply {
+            add(JBLabel("TARGETS"), BorderLayout.NORTH)
+            add(targetEditor, BorderLayout.CENTER)
+            add(targetActions, BorderLayout.SOUTH)
+        }
+        val center = JPanel(BorderLayout()).apply {
+            add(statusPanel, BorderLayout.NORTH)
+            add(targetSection, BorderLayout.CENTER)
+        }
         val panel = JPanel(BorderLayout()).apply {
             add(header, BorderLayout.NORTH)
-            add(statusPanel, BorderLayout.CENTER)
+            add(center, BorderLayout.CENTER)
             add(actions, BorderLayout.SOUTH)
         }
         val listener = coordinator.addListener { value ->
