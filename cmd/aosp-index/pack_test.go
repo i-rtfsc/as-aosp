@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 )
 
@@ -84,9 +85,33 @@ func TestPackPreflightReportsRequestedModuleArtifacts(t *testing.T) {
 	}
 }
 
+func TestPackPreflightFindsProductModuleInfo(t *testing.T) {
+	out := t.TempDir()
+	writePackFixture(t, filepath.Join(out, "target", "product", "demo", "module-info.json"), `{}`)
+	writePackFixture(t, filepath.Join(out, "soong", "module_bp_java_deps.json"), `{}`)
+	output := captureStdout(t, func() {
+		runPackPreflight([]string{"--out-root", out})
+	})
+	var result struct {
+		Checks []struct {
+			Name  string `json:"name"`
+			Found bool   `json:"found"`
+			Path  string `json:"path"`
+		} `json:"checks"`
+	}
+	if err := json.Unmarshal([]byte(output), &result); err != nil {
+		t.Fatal(err)
+	}
+	if len(result.Checks) == 0 || result.Checks[0].Name != "module-info" ||
+		!result.Checks[0].Found || !strings.Contains(result.Checks[0].Path, "target/product/demo") {
+		t.Fatalf("checks=%+v", result.Checks)
+	}
+}
+
 func TestExportPackReadsSoongMetadataCandidate(t *testing.T) {
 	root := t.TempDir()
 	out := filepath.Join(root, "out")
+	writePackFixture(t, filepath.Join(out, "module-info.json"), `{}`)
 	writePackFixture(t, filepath.Join(out, "soong", "module_bp_java_deps.json"), `{}`)
 	destination := filepath.Join(root, "pack")
 	if err := exportPack(root, out, destination, false, nil); err != nil {
@@ -172,6 +197,7 @@ func TestValidatePackRejectsChecksumMismatch(t *testing.T) {
 	out := filepath.Join(root, "out")
 	destination := filepath.Join(root, "pack")
 	writePackFixture(t, filepath.Join(out, "module-info.json"), `{}`)
+	writePackFixture(t, filepath.Join(out, "module_bp_java_deps.json"), `{}`)
 	if err := exportPack(root, out, destination, false, nil); err != nil {
 		t.Fatal(err)
 	}
@@ -186,6 +212,7 @@ func TestValidatePackRejectsUntrackedFile(t *testing.T) {
 	out := filepath.Join(root, "out")
 	destination := filepath.Join(root, "pack")
 	writePackFixture(t, filepath.Join(out, "module-info.json"), `{}`)
+	writePackFixture(t, filepath.Join(out, "module_bp_java_deps.json"), `{}`)
 	if err := exportPack(root, out, destination, false, nil); err != nil {
 		t.Fatal(err)
 	}
@@ -199,6 +226,9 @@ func TestValidateNativePackRequiresJNIIndex(t *testing.T) {
 	root := t.TempDir()
 	out := filepath.Join(root, "out")
 	destination := filepath.Join(root, "pack")
+	writeCorePackMetadata(t, out)
+	writePackFixture(t, filepath.Join(out, "module_bp_cc_deps.json"), `{}`)
+	writePackFixture(t, filepath.Join(out, "development", "ide", "compdb", "compile_commands.json"), `[]`)
 	if err := exportPack(root, out, destination, true, nil); err != nil {
 		t.Fatal(err)
 	}
@@ -216,6 +246,7 @@ func TestExportPackAddsNativeFilesOnlyWhenRequested(t *testing.T) {
 	writePackFixture(t, filepath.Join(out, "module_bp_cc_deps.json"), `{}`)
 	writePackFixture(t, filepath.Join(out, "development", "ide", "compdb", "compile_commands.json"), `[]`)
 	destination := filepath.Join(root, "pack")
+	writeCorePackMetadata(t, out)
 	if err := exportPack(root, out, destination, true, nil); err != nil {
 		t.Fatal(err)
 	}
@@ -237,6 +268,7 @@ func TestExportPackFiltersAIDLBySelectedModuleClosure(t *testing.T) {
   "core": {"path":["system/core"]},
   "other": {"path":["packages/apps/Other"]}
 }`)
+	writePackFixture(t, filepath.Join(out, "module_bp_java_deps.json"), `{}`)
 	writePackFixture(t, filepath.Join(root, "frameworks", "base", "demo", "IFoo.aidl"), "package demo; interface IFoo {}")
 	writePackFixture(t, filepath.Join(root, "system", "core", "demo", "IBar.aidl"), "package demo; interface IBar {}")
 	writePackFixture(t, filepath.Join(root, "packages", "apps", "Other", "demo", "IOther.aidl"), "package demo; interface IOther {}")
@@ -279,9 +311,36 @@ func TestExportPackRejectsUnknownSelectedModule(t *testing.T) {
 	root := t.TempDir()
 	out := filepath.Join(root, "out")
 	writePackFixture(t, filepath.Join(out, "module-info.json"), `{}`)
+	writePackFixture(t, filepath.Join(out, "module_bp_java_deps.json"), `{}`)
 	if err := exportPack(root, out, filepath.Join(root, "pack"), false, []string{"missing"}); err == nil {
 		t.Fatal("unknown selected module was accepted")
 	}
+}
+
+func TestExportPackRequiresModuleInfo(t *testing.T) {
+	root := t.TempDir()
+	out := filepath.Join(root, "out")
+	writePackFixture(t, filepath.Join(out, "module_bp_java_deps.json"), `{}`)
+	if err := exportPack(root, out, filepath.Join(root, "pack"), false, nil); err == nil ||
+		!strings.Contains(err.Error(), "m module-info") {
+		t.Fatalf("error=%v", err)
+	}
+}
+
+func TestExportPackRequiresJavaDeps(t *testing.T) {
+	root := t.TempDir()
+	out := filepath.Join(root, "out")
+	writePackFixture(t, filepath.Join(out, "module-info.json"), `{}`)
+	if err := exportPack(root, out, filepath.Join(root, "pack"), false, nil); err == nil ||
+		!strings.Contains(err.Error(), "m nothing") {
+		t.Fatalf("error=%v", err)
+	}
+}
+
+func writeCorePackMetadata(t *testing.T, out string) {
+	t.Helper()
+	writePackFixture(t, filepath.Join(out, "module-info.json"), `{}`)
+	writePackFixture(t, filepath.Join(out, "module_bp_java_deps.json"), `{}`)
 }
 
 func writePackFixture(t *testing.T, pathName, content string) {

@@ -48,11 +48,18 @@ m -j"$(nproc)" nothing
 
 # 生成目标 Java/APK、srcjar 及其 out 中间产物
 m -j"$(nproc)" framework-minus-apex services SystemUI
+
+# 生成 APK installed/owner、module dependency 等 module-info facts
+m module-info
 ```
 
 `cp2a` 与当前 Android 17 release 对应；`trunk_staging` 会得到开发代号配置，不作为
 该 release 的首选。若需要完整系统镜像，再执行 `m -j"$(nproc)"`，但代码导航验证通常
 不需要等待完整镜像。
+
+`module-info` 是独立构建目标。即使 Java deps、CC deps 和 compdb 已生成，也必须显式执行
+`m module-info`，否则 `SystemUI.apk` 等 installed artifact 无法可靠映射到 owner module，
+Pack 导出会 fail closed。
 
 编译后检查关键文件：
 

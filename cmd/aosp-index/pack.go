@@ -80,21 +80,17 @@ func runPackPreflight(args []string) {
 	}
 	checks := []map[string]any{}
 	for _, item := range []struct {
-		name       string
-		candidates []string
+		name     string
+		relative string
 	}{
-		{"module-info", []string{"module-info.json", filepath.Join("soong", "module-info.json")}},
-		{"java-deps", []string{"module_bp_java_deps.json", filepath.Join("soong", "module_bp_java_deps.json")}},
-		{"cc-deps", []string{"module_bp_cc_deps.json", filepath.Join("soong", "module_bp_cc_deps.json")}},
-		{"compdb", []string{filepath.Join("development", "ide", "compdb", "compile_commands.json"), filepath.Join("soong", "development", "ide", "compdb", "compile_commands.json")}},
+		{"module-info", "module-info.json"},
+		{"java-deps", "module_bp_java_deps.json"},
+		{"cc-deps", "module_bp_cc_deps.json"},
+		{"compdb", filepath.Join("development", "ide", "compdb", "compile_commands.json")},
 	} {
-		found := ""
-		for _, candidate := range item.candidates {
-			pathName := filepath.Join(outRootAbs, candidate)
-			if info, statErr := os.Stat(pathName); statErr == nil && !info.IsDir() {
-				found = pathName
-				break
-			}
+		found, ok := findPackMetadata(outRootAbs, item.relative)
+		if !ok {
+			found = ""
 		}
 		checks = append(checks, map[string]any{"name": item.name, "found": found != "", "path": found})
 	}
@@ -143,7 +139,10 @@ func runPackPreflight(args []string) {
 		"apks":        apks,
 		"modules":     moduleChecks,
 		"diagnostics": report.Diagnostics,
-		"suggestions": []string{"If compdb is missing, run SOONG_GEN_COMPDB=1 m nothing."},
+		"suggestions": []string{
+			"If module-info is missing, run m module-info.",
+			"If compdb is missing, run SOONG_GEN_COMPDB=1 m nothing.",
+		},
 	})
 }
 
@@ -227,6 +226,12 @@ func exportPack(aospRoot, outRoot, destination string, native bool, modules []st
 	for _, relative := range coreFiles {
 		source, ok := findPackMetadata(outRoot, relative)
 		if !ok {
+			if relative == "module-info.json" {
+				return fmt.Errorf("required metadata missing: module-info.json; run `m module-info` in the lunch shell")
+			}
+			if relative == "module_bp_java_deps.json" {
+				return fmt.Errorf("required metadata missing: module_bp_java_deps.json; run `m nothing` in the lunch shell")
+			}
 			continue
 		}
 		target := filepath.Join(tmp, relative)
