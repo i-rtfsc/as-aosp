@@ -21,11 +21,6 @@ import javax.swing.JButton
 import javax.swing.JComponent
 import javax.swing.JLabel
 import javax.swing.JPanel
-import javax.swing.DefaultListModel
-import javax.swing.JList
-import javax.swing.JComboBox
-import javax.swing.JScrollPane
-import javax.swing.JCheckBox
 
 internal class ProfileConfigurable(
     private val project: Project,
@@ -38,26 +33,7 @@ internal class ProfileConfigurable(
     private val outRoot = TextFieldWithBrowseButton()
     private val metadataPackRoot = TextFieldWithBrowseButton()
     private val pathMappings = JBTextField()
-    private val targetsJson = JBTextField()
-    private val targetId = JBTextField()
-    private val targetArtifact = JBTextField()
-    private val targetModule = JBTextField()
-    private val targetSources = JBTextField()
-    private val targetKind = JComboBox(arrayOf("java", "android", "native", "mixed"))
-    private val artifactKind = JComboBox(arrayOf("jar", "apk", "srcjar", "aar", "output"))
-    private val artifactCatalog = JComboBox<String>()
-    private val loadArtifactsButton = JButton("Load Artifacts")
-    private val resolveTargetButton = JButton("Resolve Target")
-    private val targetPreview = JLabel("Not resolved")
-    private val artifactFacts = mutableMapOf<String, Pair<String, String>>()
-    private val includeDependencies = JCheckBox("Dependencies", true)
-    private val includeGenerated = JCheckBox("Generated sources", true)
-    private val includeResources = JCheckBox("Resources")
-    private val includeManifest = JCheckBox("Manifest")
-    private val targetListModel = DefaultListModel<String>()
-    private val targetList = JList(targetListModel)
-    private val addTargetButton = JButton("Add Target")
-    private val removeTargetButton = JButton("Remove Target")
+    private val targetEditor = TargetEditorPanel(project) { metadataPackRoot.text }
     private val engineExecutable = TextFieldWithBrowseButton()
     private val validateButton = JButton("Validate")
     private val applyRootsButton = JButton("Apply Focused Roots")
@@ -77,38 +53,6 @@ internal class ProfileConfigurable(
         validateButton.addActionListener(validateAction)
         applyRootsButton.addActionListener { applyFocusedRoots() }
         applyBuildFactsButton.addActionListener { applyBuildFacts() }
-        addTargetButton.addActionListener { addTarget() }
-        removeTargetButton.addActionListener { removeTarget() }
-        loadArtifactsButton.addActionListener { loadArtifacts() }
-        resolveTargetButton.addActionListener { resolveTarget() }
-        artifactKind.addActionListener { refreshArtifactChoices() }
-        artifactCatalog.addActionListener { selectArtifact() }
-        val targetsPanel = JPanel(BorderLayout()).apply {
-            add(JScrollPane(targetList), BorderLayout.CENTER)
-            val editor = FormBuilder.createFormBuilder()
-                .addLabeledComponent(JLabel("Target Name"), targetId)
-                .addLabeledComponent(JLabel("Kind"), targetKind)
-                .addLabeledComponent(JLabel("Artifact Kind"), artifactKind)
-                .addLabeledComponent(JLabel("Artifact From Pack"), artifactCatalog)
-                .addLabeledComponent(JLabel("Artifact"), targetArtifact)
-                .addLabeledComponent(JLabel("Soong Module"), targetModule)
-                .addLabeledComponent(JLabel("Source Roots"), targetSources)
-                .panel
-            val buttons = JPanel(FlowLayout(FlowLayout.LEFT))
-            buttons.add(includeDependencies)
-            buttons.add(includeGenerated)
-            buttons.add(includeResources)
-            buttons.add(includeManifest)
-            buttons.add(loadArtifactsButton)
-            buttons.add(resolveTargetButton)
-            buttons.add(addTargetButton)
-            buttons.add(removeTargetButton)
-            val container = JPanel(BorderLayout())
-            container.add(editor, BorderLayout.CENTER)
-            container.add(targetPreview, BorderLayout.NORTH)
-            container.add(buttons, BorderLayout.SOUTH)
-            add(container, BorderLayout.SOUTH)
-        }
         val form = FormBuilder.createFormBuilder()
             .addLabeledComponent(JLabel("Profile ID"), profileId)
             .addLabeledComponent(JLabel("Workspace View Root"), workspaceViewRoot)
@@ -119,12 +63,9 @@ internal class ProfileConfigurable(
             .addLabeledComponent(JLabel("Path Mappings JSON"), pathMappings)
             .addLabeledComponent(JLabel("Engine Executable"), engineExecutable)
             .panel
-        val targetsContainer = JPanel(BorderLayout())
-        targetsContainer.add(JLabel("Targets"), BorderLayout.NORTH)
-        targetsContainer.add(targetsPanel, BorderLayout.CENTER)
         val content = JPanel(BorderLayout())
         content.add(form, BorderLayout.NORTH)
-        content.add(targetsContainer, BorderLayout.CENTER)
+        content.add(targetEditor, BorderLayout.CENTER)
         val actions = JPanel(FlowLayout(FlowLayout.LEFT))
         actions.add(validateButton)
         actions.add(applyRootsButton)
@@ -163,8 +104,7 @@ internal class ProfileConfigurable(
         outRoot.text = state.outRoot
         metadataPackRoot.text = state.metadataPackRoot
         pathMappings.text = state.pathMappings
-        targetsJson.text = state.targetsJson
-        loadTargets(state.targetsJson)
+        targetEditor.load(state.targetsJson)
         engineExecutable.text = state.engineExecutable
     }
 
@@ -173,7 +113,6 @@ internal class ProfileConfigurable(
     }
 
     private fun draftState(): EngineProfileState {
-        targetsJson.text = serializeTargets()
         return EngineProfileState(
             profileId = profileId.text,
             workspaceViewRoot = workspaceViewRoot.text,
@@ -182,185 +121,9 @@ internal class ProfileConfigurable(
             outRoot = outRoot.text,
             metadataPackRoot = metadataPackRoot.text,
             pathMappings = pathMappings.text,
-            targetsJson = targetsJson.text,
+            targetsJson = targetEditor.serialize(),
             engineExecutable = engineExecutable.text,
         )
-    }
-
-    private fun addTarget() {
-        val id = targetId.text.trim()
-        if (id.isBlank()) return
-        val kind = targetKind.selectedItem.toString()
-        val artifact = targetArtifact.text.trim()
-        val module = targetModule.text.trim()
-        val sources = targetSources.text.trim()
-        val summary = listOf(id, kind, artifactKind.selectedItem.toString(), artifact, module, sources, includeDependencies.isSelected.toString(), includeGenerated.isSelected.toString(), includeResources.isSelected.toString(), includeManifest.isSelected.toString()).joinToString("|")
-        targetListModel.addElement(summary)
-        targetId.text = ""
-        targetArtifact.text = ""
-        targetModule.text = ""
-        targetSources.text = ""
-    }
-
-    private fun loadArtifacts() {
-        val packRoot = metadataPackRoot.text.trim()
-        if (packRoot.isBlank()) return
-        val mapper = com.fasterxml.jackson.databind.ObjectMapper()
-        val params = mapper.writeValueAsString(mapOf("metadataPackRoot" to packRoot))
-        val response = runCatching {
-            project.getService(com.rtfsc.aosp.engine.ProjectEngineService::class.java)
-                .artifactsCatalog(params)
-        }.getOrNull() ?: return
-        artifactFacts.clear()
-        mapper.readTree(response).path("result").path("artifacts").forEach { artifact ->
-            val key = artifact.path("id").asText()
-            val display = artifact.path("name").asText() + " · " +
-                artifact.path("ownerModules").map { it.asText() }.joinToString(", " )
-            artifactFacts[key] = artifact.path("kind").asText() to display
-        }
-        refreshArtifactChoices()
-    }
-
-    private fun resolveTarget() {
-        val id = targetId.text.trim()
-        val packRoot = metadataPackRoot.text.trim()
-        if (id.isBlank()) {
-            targetPreview.text = "Enter a target name first."
-            return
-        }
-        if (packRoot.isBlank()) {
-            targetPreview.text = "Metadata Pack Root is required."
-            return
-        }
-        val target = draftTarget()
-        resolveTargetButton.isEnabled = false
-        object : Task.Backgroundable(project, "Resolving AOSP target", true) {
-            private var preview = ""
-
-            override fun run(indicator: ProgressIndicator) {
-                indicator.text = "Resolving target through ProjectGraph"
-                val mapper = com.fasterxml.jackson.databind.ObjectMapper()
-                val params = mapper.writeValueAsString(
-                    mapOf("metadataPackRoot" to packRoot, "targets" to listOf(target)),
-                )
-                val response = mapper.readTree(
-                    project.getService(com.rtfsc.aosp.engine.ProjectEngineService::class.java)
-                        .projectGraph(params),
-                ).path("result")
-                val graph = response.path("graph")
-                val projectNode = graph.path("targets").firstOrNull()
-                val diagnostics = sequenceOf(response.path("diagnostics"), graph.path("diagnostics"), projectNode?.path("diagnostics"))
-                    .filterNotNull()
-                    .sumOf { it.size() }
-                val state = when {
-                    diagnostics > 0 -> "error"
-                    projectNode == null || projectNode.isMissingNode -> "unresolved"
-                    else -> "exact"
-                }
-                preview = "$state · ${projectNode?.path("resolvedModules")?.size() ?: 0} modules · " +
-                    "${projectNode?.path("resolvedArtifacts")?.size() ?: 0} artifacts · " +
-                    "${projectNode?.path("sourceRoots")?.size() ?: 0} sources · " +
-                    "${projectNode?.path("generatedRoots")?.size() ?: 0} generated · " +
-                    "${projectNode?.path("libraries")?.size() ?: 0} libraries · $diagnostics diagnostics"
-            }
-
-            override fun onSuccess() {
-                targetPreview.text = preview
-            }
-
-            override fun onThrowable(error: Throwable) {
-                targetPreview.text = "Resolve failed: ${error.message ?: error.javaClass.simpleName}"
-            }
-
-            override fun onFinished() {
-                resolveTargetButton.isEnabled = true
-            }
-        }.queue()
-    }
-
-    private fun draftTarget(): Map<String, Any> {
-        val artifact = targetArtifact.text.trim()
-        val module = targetModule.text.trim()
-        val sources = targetSources.text.split(',').map(String::trim).filter(String::isNotEmpty)
-        return mapOf(
-            "id" to targetId.text.trim(),
-            "displayName" to targetId.text.trim(),
-            "kind" to targetKind.selectedItem.toString(),
-            "selectors" to mapOf(
-                "modules" to if (module.isBlank()) emptyList<String>() else listOf(module),
-                "artifacts" to if (artifact.isBlank()) emptyList<Any>() else listOf(
-                    mapOf("kind" to artifactKind.selectedItem.toString(), "name" to artifact),
-                ),
-                "sourceRoots" to sources,
-            ),
-            "includeDependencies" to includeDependencies.isSelected,
-            "includeGeneratedSources" to includeGenerated.isSelected,
-            "includeResources" to includeResources.isSelected,
-            "includeManifest" to includeManifest.isSelected,
-        )
-    }
-
-    private fun refreshArtifactChoices() {
-        val kind = artifactKind.selectedItem?.toString().orEmpty()
-        artifactCatalog.removeAllItems()
-        artifactCatalog.addItem("Custom artifact")
-        artifactFacts.filterValues { it.first == kind }.toSortedMap().forEach { (id, value) ->
-            artifactCatalog.addItem(id + "|" + value.second)
-        }
-    }
-
-    private fun selectArtifact() {
-        val selected = artifactCatalog.selectedItem?.toString().orEmpty()
-        if (selected.isBlank() || selected == "Custom artifact") return
-        val id = selected.substringBefore('|')
-        targetArtifact.text = id.substringAfter(':').substringAfterLast('/')
-        val owner = selected.substringAfter('|').substringAfter(" · " ).substringBefore(',').trim()
-        if (owner.isNotBlank()) targetModule.text = owner
-    }
-
-    private fun removeTarget() {
-        val index = targetList.selectedIndex
-        if (index >= 0) targetListModel.remove(index)
-    }
-
-    private fun serializeTargets(): String {
-        val targets = targetListModel.elements().toList().map { value ->
-            val parts = value.split('|')
-            val id = parts.getOrElse(0) { "" }
-            val kind = parts.getOrElse(1) { "java" }
-            val artifactType = parts.getOrElse(2) { "jar" }
-            val artifact = parts.getOrElse(3) { "" }
-            val module = parts.getOrElse(4) { "" }
-            val sources = parts.getOrElse(5) { "" }.split(',').map(String::trim).filter(String::isNotEmpty)
-            mutableMapOf<String, Any>(
-                "id" to id, "displayName" to id, "kind" to kind,
-                "selectors" to mapOf(
-                    "modules" to if (module.isBlank()) emptyList<String>() else listOf(module),
-                    "artifacts" to if (artifact.isBlank()) emptyList<Any>() else listOf(mapOf("kind" to artifactType, "name" to artifact)),
-                    "sourceRoots" to sources,
-                ),
-                "includeDependencies" to parts.getOrElse(6) { "true" }.toBoolean(),
-                "includeGeneratedSources" to parts.getOrElse(7) { "true" }.toBoolean(),
-                "includeResources" to parts.getOrElse(8) { "false" }.toBoolean(),
-                "includeManifest" to parts.getOrElse(9) { "false" }.toBoolean(),
-            )
-        }
-        return com.fasterxml.jackson.databind.ObjectMapper().writeValueAsString(targets)
-    }
-
-    private fun loadTargets(raw: String) {
-        targetListModel.clear()
-        val node = runCatching { com.fasterxml.jackson.databind.ObjectMapper().readTree(raw) }.getOrNull() ?: return
-        if (!node.isArray) return
-        node.forEach { target ->
-            val selectors = target.path("selectors")
-            val artifactNode = selectors.path("artifacts").firstOrNull()
-            val artifact = artifactNode?.path("name")?.asText().orEmpty()
-            val artifactType = artifactNode?.path("kind")?.asText("jar") ?: "jar"
-            val module = selectors.path("modules").firstOrNull()?.asText().orEmpty()
-            val sources = selectors.path("sourceRoots").map { it.asText() }.joinToString(",")
-            targetListModel.addElement(listOf(target.path("id").asText(), target.path("kind").asText("java"), artifactType, artifact, module, sources, target.path("includeDependencies").asBoolean(true).toString(), target.path("includeGeneratedSources").asBoolean(true).toString(), target.path("includeResources").asBoolean(false).toString(), target.path("includeManifest").asBoolean(false).toString()).joinToString("|"))
-        }
     }
 
     private fun validateInBackground() {
