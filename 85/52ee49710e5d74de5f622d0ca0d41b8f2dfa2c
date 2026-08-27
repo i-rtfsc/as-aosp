@@ -1,0 +1,38 @@
+docs/engineering/aosp-index-cli-guide.md
+  s_0fcc3f909ad4ee::t_ebab92618b2240 192-194,209-211
+  s_0fcc3f909ad4ee::t_846cede387a6ac 188-189
+  h_8b376749578497 180-187
+scripts/export-full-aosp-pack.sh
+  s_0fcc3f909ad4ee::t_ebab92618b2240 14
+  s_5f30dac179bcb2::t_7527af79c3de3d 25
+  h_8b376749578497 7,23-24,52
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "8552ee49710e5d74de5f622d0ca0d41b8f2dfa2c",
+  "prompts": {},
+  "humans": {
+    "h_8b376749578497": {
+      "author": "Solo <anqi.huang@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    },
+    "s_5f30dac179bcb2": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "019ffe38-b3cd-77e3-8987-f48bc62a086c",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
