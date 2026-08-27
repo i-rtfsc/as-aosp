@@ -68,6 +68,7 @@ func TestPackPreflightReportsRequestedModuleArtifacts(t *testing.T) {
 		runPackPreflight([]string{"--out-root", out, "--module", "SystemUI"})
 	})
 	var result struct {
+		Ready   bool `json:"ready"`
 		Modules []struct {
 			Name      string   `json:"name"`
 			Found     bool     `json:"found"`
@@ -77,11 +78,29 @@ func TestPackPreflightReportsRequestedModuleArtifacts(t *testing.T) {
 	if err := json.Unmarshal([]byte(output), &result); err != nil {
 		t.Fatal(err)
 	}
-	if len(result.Modules) != 1 || !result.Modules[0].Found || result.Modules[0].Name != "SystemUI" {
+	if !result.Ready || len(result.Modules) != 1 || !result.Modules[0].Found || result.Modules[0].Name != "SystemUI" {
 		t.Fatalf("result=%+v", result)
 	}
 	if len(result.Modules[0].Artifacts) != 3 {
 		t.Fatalf("artifacts=%v", result.Modules[0].Artifacts)
+	}
+}
+
+func TestPackPreflightReportsBlockingMissingFacts(t *testing.T) {
+	out := t.TempDir()
+	output := captureStdout(t, func() {
+		runPackPreflight([]string{"--out-root", out, "--native", "--module", "SystemUI"})
+	})
+	var result struct {
+		Ready               bool     `json:"ready"`
+		BlockingDiagnostics []string `json:"blockingDiagnostics"`
+		ScannedAllArtifacts bool     `json:"scannedAllArtifacts"`
+	}
+	if err := json.Unmarshal([]byte(output), &result); err != nil {
+		t.Fatal(err)
+	}
+	if result.Ready || result.ScannedAllArtifacts || len(result.BlockingDiagnostics) != 5 {
+		t.Fatalf("result=%+v", result)
 	}
 }
 

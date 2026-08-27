@@ -30,6 +30,9 @@ if [[ -n "${AOSP_PACK_MODULES:-}" ]]; then
 fi
 
 preflight_args=(pack preflight --out-root "$OUT_DIR")
+if [[ "${AOSP_PACK_NATIVE:-0}" == "1" ]]; then
+  preflight_args+=(--native)
+fi
 if [[ -n "${AOSP_PACK_MODULES:-}" ]]; then
   for module in "${modules[@]}"; do
     [[ -n "${module//[[:space:]]/}" ]] && preflight_args+=(--module "${module// /}")

@@ -150,15 +150,20 @@ du -sh /srv/packs/android-framework
 
 ```bash
 aosp-index pack preflight --out-root "$OUT_DIR" \
+  --native \
   --module framework-minus-apex \
   --module services \
   --module SystemUI
 ```
 
-除了确认 `module-info`、`java-deps`、`cc-deps` 和 `compdb`，输出还会逐模块报告
+除了确认 `module-info`、`java-deps`、`cc-deps` 和 `compdb`，输出还会给出机器可判定的
+`ready`/`blockingDiagnostics`，并逐模块报告
 source roots、generated、jar/srcjar 数量以及已识别的 artifact。若 compdb 显示缺失，建议在已完成
 lunch 的同一 shell 中执行 `SOONG_GEN_COMPDB=1 m nothing` 后再导出；Java 导航不因
 compdb 缺失而失效，但 C/C++/JNI 编译参数会降级。
+
+preflight 默认不递归扫描整个 out；需要统计全局 jar/srcjar/APK 文件数时显式增加
+`--scan-all-artifacts`。
 
 也可以在服务器设置环境变量后使用仓库脚本：
 

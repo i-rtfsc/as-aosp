@@ -68,6 +68,8 @@ func runPack(args []string) {
 func runPackPreflight(args []string) {
 	flags := flag.NewFlagSet("pack preflight", flag.ExitOnError)
 	outRoot := flags.String("out-root", "", "AOSP out root")
+	native := flags.Bool("native", false, "require native metadata and compdb")
+	scanAllArtifacts := flags.Bool("scan-all-artifacts", false, "scan all jar, srcjar, and apk files")
 	var requestedModules stringFlags
 	flags.Var(&requestedModules, "module", "Soong module to verify (repeatable)")
 	_ = flags.Parse(args)
@@ -79,6 +81,7 @@ func runPackPreflight(args []string) {
 		fatal(err)
 	}
 	checks := []map[string]any{}
+	blocking := []string{}
 	for _, item := range []struct {
 		name     string
 		relative string
@@ -93,6 +96,10 @@ func runPackPreflight(args []string) {
 			found = ""
 		}
 		checks = append(checks, map[string]any{"name": item.name, "found": found != "", "path": found})
+		required := item.name == "module-info" || item.name == "java-deps" || (*native && (item.name == "cc-deps" || item.name == "compdb"))
+		if required && found == "" {
+			blocking = append(blocking, "missing required "+item.name)
+		}
 	}
 	report := metadata.LoadDirectory(outRootAbs)
 	catalog := coremodules.Build(report.Snapshot)
@@ -115,30 +122,38 @@ func runPackPreflight(args []string) {
 			"generated": len(module.Generated), "jars": len(module.Jars),
 			"srcjars": len(module.SrcJars), "artifacts": artifactNames,
 		})
+		if !found {
+			blocking = append(blocking, "module not found: "+name)
+		}
 	}
 	srcjars, jars, apks := 0, 0, 0
-	_ = filepath.WalkDir(outRootAbs, func(pathName string, entry os.DirEntry, walkErr error) error {
-		if walkErr != nil || entry.IsDir() {
+	if *scanAllArtifacts {
+		_ = filepath.WalkDir(outRootAbs, func(pathName string, entry os.DirEntry, walkErr error) error {
+			if walkErr != nil || entry.IsDir() {
+				return nil
+			}
+			switch strings.ToLower(filepath.Ext(entry.Name())) {
+			case ".srcjar":
+				srcjars++
+			case ".jar":
+				jars++
+			case ".apk":
+				apks++
+			}
 			return nil
-		}
-		switch strings.ToLower(filepath.Ext(entry.Name())) {
-		case ".srcjar":
-			srcjars++
-		case ".jar":
-			jars++
-		case ".apk":
-			apks++
-		}
-		return nil
-	})
+		})
+	}
 	writeJSON(map[string]any{
-		"outRoot":     outRootAbs,
-		"checks":      checks,
-		"srcjars":     srcjars,
-		"jars":        jars,
-		"apks":        apks,
-		"modules":     moduleChecks,
-		"diagnostics": report.Diagnostics,
+		"ready":               len(blocking) == 0,
+		"outRoot":             outRootAbs,
+		"checks":              checks,
+		"srcjars":             srcjars,
+		"jars":                jars,
+		"apks":                apks,
+		"modules":             moduleChecks,
+		"diagnostics":         report.Diagnostics,
+		"blockingDiagnostics": blocking,
+		"scannedAllArtifacts": *scanAllArtifacts,
 		"suggestions": []string{
 			"If module-info is missing, run m module-info.",
 			"If compdb is missing, run SOONG_GEN_COMPDB=1 m nothing.",

@@ -108,6 +108,9 @@
   `make export-pack` 服务器入口，自动执行 export、validate、inspect。
 - 服务器入口新增 `pack preflight`，导出前报告 module-info、Java/CC deps、compdb、
   srcjar 和 jar 可用性，并在 compdb 缺失时提示 `SOONG_GEN_COMPDB=1 m nothing`。
+- preflight 已提供 `ready` 与 blockingDiagnostics；默认只解析 metadata/catalog，不递归扫描
+  大型 out，`--scan-all-artifacts` 才统计全局 jar/srcjar/APK。Native Pack 会强制要求
+  CC deps 与 compdb。
 - JetBrains 已有 `AOSP Workspace` Tool Window、startup auto-apply 和 Settings 保存后
   自动 rebuild；窗口显示 source/generated/library/skipped/diagnostic counts，完整
   persistent Workspace Model module closure 仍未闭合。
