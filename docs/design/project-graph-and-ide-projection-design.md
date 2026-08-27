@@ -9,11 +9,11 @@
 - shared libraries and framework srcjars become dedicated library/modules;
 - module dependency graph becomes `ModuleOrderEntry`;
 - duplicate source roots are assigned to one owner;
-- current non-persistent focused module remains fallback during migration.
+- current non-persistent focused module remains the initial ProjectGraph implementation.
 
 ## 2. VS Code
 
-- current `java.project.sourcePaths/referencedLibraries` remains unmanaged fallback;
+- current `java.project.sourcePaths/referencedLibraries` is the initial ProjectGraph projection;
 - ProjectGraph targets become separate JDT project descriptions/importer inputs;
 - generated/source attachments are target-scoped;
 - clangd consumes target-scoped compdb overlays;
@@ -36,4 +36,4 @@ source root in multiple Java modules.
 2. Require explicit TargetSpec configuration before projection.
 3. Upgrade JetBrains module projection.
 4. Add VS Code JDT project/importer integration.
-5. Keep source-only and existing settings projection as degraded fallback.
+5. Keep source-only only for missing facts; do not add a separate project-selection fallback.

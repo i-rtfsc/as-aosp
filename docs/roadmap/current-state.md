@@ -74,6 +74,8 @@
   VS Code/JetBrains 投影只使用 ProjectGraph，selectedModules 路径已移除。
 - VS Code 侧边栏已提供 Targets 图形化列表、Add Target 和 Remove 操作；用户不再编辑
   Targets JSON，内部仍以 TargetSpec 数组持久化。
+- JetBrains Settings 已提供 Targets 图形化列表、Add Target 和 Remove Target 操作；
+  raw targetsJson 仅作为内部持久化字段，不作为用户入口。
 - pack export 已复制 ModuleCatalog 明确引用的 out 内 Java jars 到 `pack/out/**`；
   两端可在没有本机 out 时使用 pack classpath，inspect 会报告 jar/srcjar 统计。
 - Native Pack 的 `compile_commands.json` 已可在 VS Code compdb overlay 中直接消费；

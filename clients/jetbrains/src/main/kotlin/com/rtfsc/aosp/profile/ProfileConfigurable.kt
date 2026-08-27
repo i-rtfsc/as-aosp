@@ -21,6 +21,10 @@ import javax.swing.JButton
 import javax.swing.JComponent
 import javax.swing.JLabel
 import javax.swing.JPanel
+import javax.swing.DefaultListModel
+import javax.swing.JList
+import javax.swing.JComboBox
+import javax.swing.JScrollPane
 
 internal class ProfileConfigurable(
     private val project: Project,
@@ -34,6 +38,15 @@ internal class ProfileConfigurable(
     private val metadataPackRoot = TextFieldWithBrowseButton()
     private val pathMappings = JBTextField()
     private val targetsJson = JBTextField()
+    private val targetId = JBTextField()
+    private val targetArtifact = JBTextField()
+    private val targetModule = JBTextField()
+    private val targetSources = JBTextField()
+    private val targetKind = JComboBox(arrayOf("java", "android", "native", "mixed"))
+    private val targetListModel = DefaultListModel<String>()
+    private val targetList = JList(targetListModel)
+    private val addTargetButton = JButton("Add Target")
+    private val removeTargetButton = JButton("Remove Target")
     private val engineExecutable = TextFieldWithBrowseButton()
     private val validateButton = JButton("Validate")
     private val applyRootsButton = JButton("Apply Focused Roots")
@@ -53,6 +66,25 @@ internal class ProfileConfigurable(
         validateButton.addActionListener(validateAction)
         applyRootsButton.addActionListener { applyFocusedRoots() }
         applyBuildFactsButton.addActionListener { applyBuildFacts() }
+        addTargetButton.addActionListener { addTarget() }
+        removeTargetButton.addActionListener { removeTarget() }
+        val targetsPanel = JPanel(BorderLayout()).apply {
+            add(JScrollPane(targetList), BorderLayout.CENTER)
+            val editor = FormBuilder.createFormBuilder()
+                .addLabeledComponent(JLabel("Target Name"), targetId)
+                .addLabeledComponent(JLabel("Kind"), targetKind)
+                .addLabeledComponent(JLabel("Artifact"), targetArtifact)
+                .addLabeledComponent(JLabel("Soong Module"), targetModule)
+                .addLabeledComponent(JLabel("Source Roots"), targetSources)
+                .panel
+            val buttons = JPanel(FlowLayout(FlowLayout.LEFT))
+            buttons.add(addTargetButton)
+            buttons.add(removeTargetButton)
+            val container = JPanel(BorderLayout())
+            container.add(editor, BorderLayout.CENTER)
+            container.add(buttons, BorderLayout.SOUTH)
+            add(container, BorderLayout.SOUTH)
+        }
         val form = FormBuilder.createFormBuilder()
             .addLabeledComponent(JLabel("Profile ID"), profileId)
             .addLabeledComponent(JLabel("Workspace View Root"), workspaceViewRoot)
@@ -61,14 +93,19 @@ internal class ProfileConfigurable(
             .addLabeledComponent(JLabel("Out Root"), outRoot)
             .addLabeledComponent(JLabel("Metadata Pack Root"), metadataPackRoot)
             .addLabeledComponent(JLabel("Path Mappings JSON"), pathMappings)
-            .addLabeledComponent(JLabel("Targets JSON"), targetsJson)
             .addLabeledComponent(JLabel("Engine Executable"), engineExecutable)
             .panel
+        val targetsContainer = JPanel(BorderLayout())
+        targetsContainer.add(JLabel("Targets"), BorderLayout.NORTH)
+        targetsContainer.add(targetsPanel, BorderLayout.CENTER)
+        val content = JPanel(BorderLayout())
+        content.add(form, BorderLayout.NORTH)
+        content.add(targetsContainer, BorderLayout.CENTER)
         val actions = JPanel(FlowLayout(FlowLayout.LEFT))
         actions.add(validateButton)
         actions.add(applyRootsButton)
         actions.add(applyBuildFactsButton)
-        panel.add(form, BorderLayout.NORTH)
+        panel.add(content, BorderLayout.CENTER)
         panel.add(actions, BorderLayout.SOUTH)
     }
 
@@ -103,6 +140,7 @@ internal class ProfileConfigurable(
         metadataPackRoot.text = state.metadataPackRoot
         pathMappings.text = state.pathMappings
         targetsJson.text = state.targetsJson
+        loadTargets(state.targetsJson)
         engineExecutable.text = state.engineExecutable
     }
 
@@ -111,6 +149,7 @@ internal class ProfileConfigurable(
     }
 
     private fun draftState(): EngineProfileState {
+        targetsJson.text = serializeTargets()
         return EngineProfileState(
             profileId = profileId.text,
             workspaceViewRoot = workspaceViewRoot.text,
@@ -122,6 +161,63 @@ internal class ProfileConfigurable(
             targetsJson = targetsJson.text,
             engineExecutable = engineExecutable.text,
         )
+    }
+
+    private fun addTarget() {
+        val id = targetId.text.trim()
+        if (id.isBlank()) return
+        val kind = targetKind.selectedItem.toString()
+        val artifact = targetArtifact.text.trim()
+        val module = targetModule.text.trim()
+        val sources = targetSources.text.trim()
+        val summary = listOf(id, kind, artifact, module, sources).joinToString("|")
+        targetListModel.addElement(summary)
+        targetId.text = ""
+        targetArtifact.text = ""
+        targetModule.text = ""
+        targetSources.text = ""
+    }
+
+    private fun removeTarget() {
+        val index = targetList.selectedIndex
+        if (index >= 0) targetListModel.remove(index)
+    }
+
+    private fun serializeTargets(): String {
+        val targets = targetListModel.elements().toList().map { value ->
+            val parts = value.split('|')
+            val id = parts.getOrElse(0) { "" }
+            val kind = parts.getOrElse(1) { "java" }
+            val artifact = parts.getOrElse(2) { "" }
+            val module = parts.getOrElse(3) { "" }
+            val sources = parts.getOrElse(4) { "" }.split(',').map(String::trim).filter(String::isNotEmpty)
+            mutableMapOf<String, Any>(
+                "id" to id, "displayName" to id, "kind" to kind,
+                "selectors" to mapOf(
+                    "modules" to if (module.isBlank()) emptyList<String>() else listOf(module),
+                    "artifacts" to if (artifact.isBlank()) emptyList<Any>() else listOf(mapOf("kind" to if (kind == "android") "apk" else "jar", "name" to artifact)),
+                    "sourceRoots" to sources,
+                ),
+                "includeDependencies" to true,
+                "includeGeneratedSources" to true,
+                "includeResources" to (kind == "android"),
+                "includeManifest" to (kind == "android"),
+            )
+        }
+        return com.fasterxml.jackson.databind.ObjectMapper().writeValueAsString(targets)
+    }
+
+    private fun loadTargets(raw: String) {
+        targetListModel.clear()
+        val node = runCatching { com.fasterxml.jackson.databind.ObjectMapper().readTree(raw) }.getOrNull() ?: return
+        if (!node.isArray) return
+        node.forEach { target ->
+            val selectors = target.path("selectors")
+            val artifact = selectors.path("artifacts").firstOrNull()?.path("name")?.asText().orEmpty()
+            val module = selectors.path("modules").firstOrNull()?.asText().orEmpty()
+            val sources = selectors.path("sourceRoots").map { it.asText() }.joinToString(",")
+            targetListModel.addElement(listOf(target.path("id").asText(), target.path("kind").asText("java"), artifact, module, sources).joinToString("|"))
+        }
     }
 
     private fun validateInBackground() {
