@@ -45,6 +45,9 @@ internal class ProfileConfigurable(
     private val targetSources = JBTextField()
     private val targetKind = JComboBox(arrayOf("java", "android", "native", "mixed"))
     private val artifactKind = JComboBox(arrayOf("jar", "apk", "srcjar", "aar", "output"))
+    private val artifactCatalog = JComboBox<String>()
+    private val loadArtifactsButton = JButton("Load Artifacts")
+    private val artifactFacts = mutableMapOf<String, Pair<String, String>>()
     private val includeDependencies = JCheckBox("Dependencies", true)
     private val includeGenerated = JCheckBox("Generated sources", true)
     private val includeResources = JCheckBox("Resources")
@@ -74,12 +77,16 @@ internal class ProfileConfigurable(
         applyBuildFactsButton.addActionListener { applyBuildFacts() }
         addTargetButton.addActionListener { addTarget() }
         removeTargetButton.addActionListener { removeTarget() }
+        loadArtifactsButton.addActionListener { loadArtifacts() }
+        artifactKind.addActionListener { refreshArtifactChoices() }
+        artifactCatalog.addActionListener { selectArtifact() }
         val targetsPanel = JPanel(BorderLayout()).apply {
             add(JScrollPane(targetList), BorderLayout.CENTER)
             val editor = FormBuilder.createFormBuilder()
                 .addLabeledComponent(JLabel("Target Name"), targetId)
                 .addLabeledComponent(JLabel("Kind"), targetKind)
                 .addLabeledComponent(JLabel("Artifact Kind"), artifactKind)
+                .addLabeledComponent(JLabel("Artifact From Pack"), artifactCatalog)
                 .addLabeledComponent(JLabel("Artifact"), targetArtifact)
                 .addLabeledComponent(JLabel("Soong Module"), targetModule)
                 .addLabeledComponent(JLabel("Source Roots"), targetSources)
@@ -89,6 +96,7 @@ internal class ProfileConfigurable(
             buttons.add(includeGenerated)
             buttons.add(includeResources)
             buttons.add(includeManifest)
+            buttons.add(loadArtifactsButton)
             buttons.add(addTargetButton)
             buttons.add(removeTargetButton)
             val container = JPanel(BorderLayout())
@@ -187,6 +195,43 @@ internal class ProfileConfigurable(
         targetArtifact.text = ""
         targetModule.text = ""
         targetSources.text = ""
+    }
+
+    private fun loadArtifacts() {
+        val packRoot = metadataPackRoot.text.trim()
+        if (packRoot.isBlank()) return
+        val mapper = com.fasterxml.jackson.databind.ObjectMapper()
+        val params = mapper.writeValueAsString(mapOf("metadataPackRoot" to packRoot))
+        val response = runCatching {
+            project.getService(com.rtfsc.aosp.engine.ProjectEngineService::class.java)
+                .artifactsCatalog(params)
+        }.getOrNull() ?: return
+        artifactFacts.clear()
+        mapper.readTree(response).path("result").path("artifacts").forEach { artifact ->
+            val key = artifact.path("id").asText()
+            val display = artifact.path("name").asText() + " · " +
+                artifact.path("ownerModules").map { it.asText() }.joinToString(", " )
+            artifactFacts[key] = artifact.path("kind").asText() to display
+        }
+        refreshArtifactChoices()
+    }
+
+    private fun refreshArtifactChoices() {
+        val kind = artifactKind.selectedItem?.toString().orEmpty()
+        artifactCatalog.removeAllItems()
+        artifactCatalog.addItem("Custom artifact")
+        artifactFacts.filterValues { it.first == kind }.toSortedMap().forEach { (id, value) ->
+            artifactCatalog.addItem(id + "|" + value.second)
+        }
+    }
+
+    private fun selectArtifact() {
+        val selected = artifactCatalog.selectedItem?.toString().orEmpty()
+        if (selected.isBlank() || selected == "Custom artifact") return
+        val id = selected.substringBefore('|')
+        targetArtifact.text = id.substringAfter(':').substringAfterLast('/')
+        val owner = selected.substringAfter('|').substringAfter(" · " ).substringBefore(',').trim()
+        if (owner.isNotBlank()) targetModule.text = owner
     }
 
     private fun removeTarget() {

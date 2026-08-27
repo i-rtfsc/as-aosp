@@ -81,6 +81,8 @@
   raw targetsJson 仅作为内部持久化字段，不作为用户入口。
 - 两端 Target editor 已将 artifact kind 与 Target kind 分离，并可显式配置依赖、generated、
   resources、manifest 选项；当前列表编辑器尚未接入 artifact catalog 自动选择。
+- VS Code 和 JetBrains Target editor 已能从已加载 pack 的 Artifact Catalog 选择 artifact，
+  并回填 artifact name 与 owner module；自定义 artifact 仍可手动输入。
 - Artifact Catalog 已接入 `module-info.installed`，并提供 `aosp/artifacts/catalog` RPC；
   VS Code/JetBrains engine client 已暴露查询方法。
 - pack export 已复制 ModuleCatalog 明确引用的 out 内 Java jars 到 `pack/out/**`；
