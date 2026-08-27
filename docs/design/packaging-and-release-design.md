@@ -12,8 +12,8 @@ dist/
 ```
 
 engine 构建矩阵为 `darwin/linux/windows × amd64/arm64`。Windows 文件名带 `.exe`；
-Go core 当前不依赖 CGO，因此同一源码可以交叉编译。插件包不同时携带六个平台二进制，
-首版仍由用户配置 `aosp-index`；后续 marketplace/release 可按平台组合下载或发布。
+Go core 当前不依赖 CGO，因此同一源码可以交叉编译。JetBrains ZIP 携带六个平台二进制；
+VS Code 按平台发布六个 target-specific VSIX，每个 VSIX 只携带一个对应平台二进制。
 
 客户端 engine 解析优先级：用户显式 executable、用户公共 engine store 的
 `engines/aosp-index`、扩展目录内当前 `os-arch` bundled engine、PATH 中的
@@ -38,8 +38,9 @@ Linux `~/.local/share/aosp-ide`、Windows `%LOCALAPPDATA%/AOSP IDE`。
 
 ## 2. 客户端复用
 
-- JetBrains 使用同一 Kotlin 源码和插件 ZIP，IDE/JVM 提供平台抽象；
-- VS Code 使用同一 TypeScript 源码和平台无关 VSIX；
+- JetBrains 使用同一 Kotlin 源码和一个跨平台插件 ZIP，IDE/JVM 提供平台抽象；
+- VS Code 使用同一 TypeScript 源码和六个 target-specific VSIX，由 Marketplace 根据
+  当前平台选择包；
 - 两个客户端共享 `com.rtfsc.aosp` 产品命名和 JSON-RPC；
 - 插件安装包不同，因为 JetBrains 与 VS Code 扩展格式不兼容。
 

@@ -35,9 +35,12 @@ done
 (
   cd "$repo_root/clients/vscode"
   npm ci
-  npm run package
-  cp ./*.vsix "$dist_root/vscode/"
+  npm run compile
 )
+for target in darwin-amd64 darwin-arm64 linux-amd64 linux-arm64 windows-amd64 windows-arm64; do
+  AOSP_IDE_VERSION="$version" bash "$repo_root/packaging/package-vscode-target.sh" \
+    "$target" "$dist_root/engine"
+done
 
 (
   cd "$dist_root"

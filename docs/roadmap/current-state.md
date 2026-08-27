@@ -116,8 +116,9 @@
   漂移和 zip-slip；不要求部分 Workspace View 的源码实体位于 pack 内。
 - 当前 JNI 只覆盖 Java/Kotlin declaration、静态导出、常见 `JNINativeMethod` 注册表和有限注册调用；复杂宏、运行时 class 解析和完整 C++ 语义仍未覆盖；
 - 当前已有本地六平台 engine/JetBrains ZIP/VS Code VSIX 打包入口；JetBrains ZIP 打包后会
-  将六平台 engine 放入插件根目录，VS Code 保持当前平台 engine，客户端支持显式/shared/
-  bundled/PATH 选择；签名、公证、发布版下载和 marketplace verifier 仍未完成；
+  将六平台 engine 放入插件根目录，VS Code 正式打包生成六个 target-specific VSIX、每个
+  只携带当前平台 engine，客户端支持显式/shared/bundled/PATH 选择；签名、公证、发布版
+  下载和 marketplace verifier 仍未完成；
 - 当前没有任何远程执行服务；
 - 当前不声称 Android Studio/IDEA/VS Code 已支持；
 - 当前不声称真实 Android Studio/VS Code 已可跳转，也不声称 AIDL compiler 的 stable API/hash 或全部厂商 backend 已兼容。
