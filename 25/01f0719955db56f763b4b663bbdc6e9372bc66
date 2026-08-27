@@ -1,0 +1,28 @@
+docs/design/profile-ui-and-multi-project-design.md
+  s_0fcc3f909ad4ee::t_6b9181aaf5b02c 53-54
+  h_8b376749578497 51-52
+clients/vscode/src/ui/profile_panel.ts
+  s_0fcc3f909ad4ee::t_ba2d62c600f99b 8,66
+  h_8b376749578497 131,136
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "2501f0719955db56f763b4b663bbdc6e9372bc66",
+  "prompts": {},
+  "humans": {
+    "h_8b376749578497": {
+      "author": "Solo <anqi.huang@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
