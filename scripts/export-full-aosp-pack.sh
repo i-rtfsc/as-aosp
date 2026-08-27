@@ -4,13 +4,14 @@ set -Eeuo pipefail
 # Export every available build fact from a completed or partially completed AOSP out.
 # This script intentionally does not pass --module, so the pack is not module-filtered.
 
+SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 AOSP_ROOT=${AOSP_ROOT:-/home/solo/code/aosp}
 OUT_ROOT=${OUT_ROOT:-$AOSP_ROOT/out}
 PACK_BASE=${PACK_BASE:-/home/solo/code/aosp-packs}
 AOSP_PACK_NAME=${AOSP_PACK_NAME:-android-17-cp2a-aosp_cf_x86_64_phone-full}
 PACK_ROOT=${PACK_ROOT:-$PACK_BASE/$AOSP_PACK_NAME}
 ZIP_ROOT=${ZIP_ROOT:-$PACK_BASE/$AOSP_PACK_NAME.zip}
-ENGINE=${AOSP_INDEX_BIN:-$AOSP_ROOT/aosp-index}
+ENGINE="$SCRIPT_DIR/aosp-index"
 
 log() { printf '[aosp-pack] %s\n' "$*"; }
 fail() { printf '[aosp-pack] ERROR: %s\n' "$*" >&2; exit 1; }
@@ -18,6 +19,9 @@ fail() { printf '[aosp-pack] ERROR: %s\n' "$*" >&2; exit 1; }
 [[ -d "$AOSP_ROOT" ]] || fail "AOSP root does not exist: $AOSP_ROOT"
 [[ -d "$OUT_ROOT" ]] || fail "out root does not exist: $OUT_ROOT"
 [[ -x "$ENGINE" ]] || fail "aosp-index is missing or not executable: $ENGINE"
+
+log "using engine $ENGINE"
+log "engine sha256 $(sha256sum "$ENGINE" | awk '{print $1}')"
 
 if [[ "${ALLOW_ACTIVE_BUILD:-0}" != "1" ]] &&
   pgrep -af '(soong_ui\.bash|/ninja |/siso )' | grep -F "$AOSP_ROOT" >/dev/null 2>&1; then
@@ -45,8 +49,7 @@ preflight="$PACK_ROOT.preflight.json"
 mkdir -p "$(dirname "$PACK_ROOT")"
 "$ENGINE" pack preflight \
   --out-root "$OUT_ROOT" \
-  --native \
-  --scan-all-artifacts > "$preflight"
+  --native > "$preflight"
 
 if command -v jq >/dev/null 2>&1; then
   jq '.' "$preflight" | sed -n '1,180p'

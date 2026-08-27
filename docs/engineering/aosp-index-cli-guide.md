@@ -177,13 +177,21 @@ make export-pack
 ```
 
 如果完整 AOSP 已经编译过但在末尾非关键目标失败，可以导出整个 out 的所有可用事实，
-而不是只选择几个模块。将 `scripts/export-full-aosp-pack.sh` 和 Linux 版 `aosp-index`
-放到服务器后执行：
+而不是只选择几个模块。服务器使用独立工具目录，脚本和 engine 必须始终放在同一目录：
+
+```text
+/home/solo/code/aosp-pack-tools/
+├── aosp-index
+└── export-full-aosp-pack.sh
+```
+
+该目录是服务器唯一工具入口。更新 engine 或脚本时必须同时替换这两个文件；脚本通过
+自身目录定位 `aosp-index`，启动时打印 SHA-256，不读取 `/tmp` 或 AOSP 根目录中的副本。
 
 ```bash
-chmod +x /home/solo/code/aosp/export-full-aosp-pack.sh \
-  /home/solo/code/aosp/aosp-index
-cd /home/solo/code/aosp
+chmod +x /home/solo/code/aosp-pack-tools/export-full-aosp-pack.sh \
+  /home/solo/code/aosp-pack-tools/aosp-index
+cd /home/solo/code/aosp-pack-tools
 ./export-full-aosp-pack.sh
 ```
 
@@ -198,8 +206,9 @@ cd /home/solo/code/aosp
 脚本不传 `--module`，因此会导出所有已生成的 ModuleCatalog、Java/CC metadata、jar、
 srcjar、AIDL/JNI facts 和完整 compdb。它会先执行 `m module-info`，再运行带
 `--scan-all-artifacts` 的 preflight；任何 blocking diagnostic 都会阻止导出，避免生成
-不完整压缩包。可通过 `AOSP_ROOT`、`OUT_ROOT`、`AOSP_PACK_NAME`、`PACK_ROOT`、
-`ZIP_ROOT` 和 `AOSP_INDEX_BIN` 覆盖默认路径。默认名称由 Android 版本、release、product
+不完整压缩包。可通过 `AOSP_ROOT`、`OUT_ROOT`、`AOSP_PACK_NAME`、`PACK_ROOT` 和
+`ZIP_ROOT` 覆盖默认路径。engine 不允许通过环境变量覆盖，始终使用脚本同目录的
+`aosp-index`，脚本启动时会打印 engine SHA-256。默认名称由 Android 版本、release、product
 和 full pack 组成，不使用 `xx` 之类的占位名称。
 脚本检测到 Soong/Ninja/Siso 仍在构建时会拒绝导出，避免复制正在变化的 out；通常不应使用
 `ALLOW_ACTIVE_BUILD=1` 绕过该保护。
