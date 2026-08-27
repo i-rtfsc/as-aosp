@@ -76,10 +76,12 @@ export function activate(context: vscode.ExtensionContext): void {
       throw new Error(validation.diagnostics.map((item) => `${item.code}: ${item.message}`).join("; "));
     }
     const result = await engine.modulesCatalog(metadataPackRoot);
+    const artifacts = await engine.artifactsCatalog(metadataPackRoot);
     return {
       modules: result.modules.length,
       generated: result.modules.reduce((total, module) => total + module.generated, 0),
       diagnostics: result.diagnostics.length,
+      artifacts: artifacts.artifacts,
     };
   }, startIndex);
   let autoGeneration = 0;
