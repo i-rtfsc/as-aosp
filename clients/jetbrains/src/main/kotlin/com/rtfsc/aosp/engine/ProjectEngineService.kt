@@ -3,6 +3,8 @@ package com.rtfsc.aosp.engine
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.project.Project
+import com.intellij.ide.plugins.PluginManagerCore
+import com.intellij.openapi.extensions.PluginId
 import com.rtfsc.aosp.profile.EngineProfileSettings
 
 @Service(Service.Level.PROJECT)
@@ -14,7 +16,9 @@ internal class ProjectEngineService(
 
     fun start(): ByteArray {
         val executable = profileSettings.current.engineExecutable
-        val resolved = EngineCommand.resolveExecutable(executable, System.getProperty("user.home"))
+        val pluginRoot = PluginManagerCore.getPlugin(PluginId.getId("com.rtfsc.aosp"))?.pluginPath
+        val bundled = pluginRoot?.let(EngineCommand::bundledCandidate)
+        val resolved = EngineCommand.resolveExecutable(executable, System.getProperty("user.home"), bundled)
         return EngineCommand.start(engineProcess, resolved)
     }
 

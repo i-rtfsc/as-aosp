@@ -20,6 +20,11 @@ Go core 当前不依赖 CGO，因此同一源码可以交叉编译。插件包�
 `aosp-index`。首版平台无关客户端包通常走显式配置或 PATH；在
 manifest 签名和下载信任模型完成前，客户端不自动联网下载二进制。
 
+JetBrains 与 VS Code 使用相同的 bundled layout：
+`engine/<os>-<arch>/aosp-index[.exe]`。JetBrains 从已安装插件 descriptor 获取 plugin root，
+不依赖当前工作目录；OS/arch 归一化集中在 engine resolver，Windows 公共入口文件名为
+`~/engines/aosp-index.exe`。
+
 公共 store 的稳定入口必须保持为 `engines/aosp-index`，不能把版本目录作为唯一入口。
 客户端可在该文件旁读取版本/哈希元数据；更新时先写临时文件并原子替换，不能覆盖
 正在运行的 executable。默认位置为 macOS `~/Library/Application Support/AOSP IDE`、

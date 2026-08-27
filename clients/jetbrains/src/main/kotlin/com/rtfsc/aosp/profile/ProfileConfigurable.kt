@@ -12,6 +12,8 @@ import com.intellij.ui.components.JBTextField
 import com.intellij.util.ui.FormBuilder
 import com.rtfsc.aosp.engine.EngineProcess
 import com.rtfsc.aosp.engine.EngineCommand
+import com.intellij.ide.plugins.PluginManagerCore
+import com.intellij.openapi.extensions.PluginId
 import com.rtfsc.aosp.project.WorkspaceRootPlanner
 import com.rtfsc.aosp.project.FocusedRootsService
 import java.awt.BorderLayout
@@ -149,6 +151,8 @@ internal class ProfileConfigurable(
                     val executable = EngineCommand.resolveExecutable(
                         draft.engineExecutable,
                         System.getProperty("user.home"),
+                        PluginManagerCore.getPlugin(PluginId.getId("com.rtfsc.aosp"))?.pluginPath
+                            ?.let(EngineCommand::bundledCandidate),
                     )
                     EngineCommand.start(process, executable)
                     indicator.text = "Validating profile"
