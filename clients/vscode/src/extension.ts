@@ -69,7 +69,7 @@ export function activate(context: vscode.ExtensionContext): void {
       progress: current.progress,
       modules: current.moduleCount,
       generated: current.generatedCount,
-      diagnostics: current.diagnostics.length,
+      diagnostics: current.diagnostics?.length ?? 0,
     });
     onProgress?.(describe());
     for (let attempt = 0; attempt < 120 && current.state === "running"; attempt++) {

@@ -112,6 +112,15 @@ java_library {
 	}
 }
 
+func TestServerIndexStatusPreservesEmptyArrays(t *testing.T) {
+	server := initializedServer(t)
+	response, _ := server.Handle(makeRequest(2, "aosp/index/status", nil))
+	if bytes.Contains(response.Result, []byte(`"completedStages":null`)) ||
+		bytes.Contains(response.Result, []byte(`"diagnostics":null`)) {
+		t.Fatalf("index status collections must be arrays: %s", response.Result)
+	}
+}
+
 func TestServerPersistsBuildFactCatalogInWorkspaceCache(t *testing.T) {
 	out := t.TempDir()
 	cache := t.TempDir()
@@ -161,6 +170,9 @@ func TestServerMaterializesLocalRustProject(t *testing.T) {
 	response, _ := server.Handle(makeRequest(2, "aosp/rust/project", RustProjectParams{
 		WorkspaceViewRoot: workspace, OutRoot: out, CacheRoot: cache,
 	}))
+	if bytes.Contains(response.Result, []byte(`"diagnostics":null`)) {
+		t.Fatalf("rust diagnostics must be an array: %s", response.Result)
+	}
 	var result RustProjectResult
 	decodeResult(t, response, &result)
 	if result.Crates != 1 || result.ProjectPath == "" || len(result.Diagnostics) != 0 {

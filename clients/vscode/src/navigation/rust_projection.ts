@@ -23,15 +23,16 @@ export async function applyRustProjection(
   const result = await engine.rustProject({
     workspaceViewRoot, outRoot, cacheRoot, pathMappings,
   });
-  if (!result.projectPath || result.diagnostics.length > 0) {
-    return result;
+  const normalized = { ...result, diagnostics: result.diagnostics ?? [] };
+  if (!normalized.projectPath || normalized.diagnostics.length > 0) {
+    return normalized;
   }
   const configuration = vscode.workspace.getConfiguration("rust-analyzer");
   const current = configuration.get<unknown[]>("linkedProjects") ?? [];
-  const linked = current.some((value) => value === result.projectPath) ?
-    current : [...current, result.projectPath];
+  const linked = current.some((value) => value === normalized.projectPath) ?
+    current : [...current, normalized.projectPath];
   await configuration.update(
     "linkedProjects", linked, vscode.ConfigurationTarget.Workspace,
   );
-  return result;
+  return normalized;
 }

@@ -141,8 +141,14 @@ func (server *Server) indexStatusResult() IndexSnapshot {
 	server.coordinator.mu.RLock()
 	defer server.coordinator.mu.RUnlock()
 	snapshot := server.coordinator.snapshot
-	snapshot.CompletedStages = append([]string(nil), snapshot.CompletedStages...)
-	snapshot.Diagnostics = append([]model.Diagnostic(nil), snapshot.Diagnostics...)
+	snapshot.CompletedStages = append(
+		make([]string, 0, len(snapshot.CompletedStages)),
+		snapshot.CompletedStages...,
+	)
+	snapshot.Diagnostics = append(
+		make([]model.Diagnostic, 0, len(snapshot.Diagnostics)),
+		snapshot.Diagnostics...,
+	)
 	return snapshot
 }
 

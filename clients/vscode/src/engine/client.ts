@@ -123,7 +123,7 @@ export interface SourceModuleResult {
 export interface RustProjectResult {
   projectPath?: string;
   crates: number;
-  diagnostics: unknown[];
+  diagnostics: unknown[] | null;
 }
 
 export interface SelectionPreset {
@@ -152,7 +152,7 @@ export interface IndexSnapshot {
   profileId?: string;
   state: string;
   stage: string;
-  completedStages: string[];
+  completedStages: string[] | null;
   totalStages: number;
   progress: number;
   moduleCount: number;
@@ -161,7 +161,7 @@ export interface IndexSnapshot {
   generatedRootCount: number;
   libraryCount: number;
   skippedCount: number;
-  diagnostics: unknown[];
+  diagnostics: unknown[] | null;
 }
 
 export interface GeneratedMaterializeResult {

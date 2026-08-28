@@ -45,7 +45,13 @@ func (server *Server) rustProject(request jsonrpc.Request) jsonrpc.Response {
 	normalized := rustproject.Normalize(
 		data, params.WorkspaceViewRoot, params.OutRoot, params.PathMappings,
 	)
-	result := RustProjectResult{Crates: normalized.Crates, Diagnostics: normalized.Diagnostics}
+	result := RustProjectResult{
+		Crates: normalized.Crates,
+		Diagnostics: append(
+			make([]model.Diagnostic, 0, len(normalized.Diagnostics)),
+			normalized.Diagnostics...,
+		),
+	}
 	if len(normalized.Data) == 0 {
 		return jsonrpc.Success(request.ID, result)
 	}
