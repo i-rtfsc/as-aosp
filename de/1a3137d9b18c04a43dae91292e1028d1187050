@@ -1,0 +1,29 @@
+clients/vscode/src/engine/client.ts
+  s_0fcc3f909ad4ee::t_4dde6ef74ccf5a 153,158,179,218,340
+  h_8b376749578497 175-177,207-217
+clients/vscode/src/engine/client.test.ts
+  s_0fcc3f909ad4ee::t_413fcfb102ebb9 31-37
+  s_0fcc3f909ad4ee::t_4dde6ef74ccf5a 90-105
+  h_8b376749578497 80-89
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "de1a3137d9b18c04a43dae91292e1028d1187050",
+  "prompts": {},
+  "humans": {
+    "h_8b376749578497": {
+      "author": "Solo <anqi.huang@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
