@@ -48,8 +48,9 @@ if [[ "${REFRESH_IDE_METADATA:-0}" == "1" ]]; then
   m nothing
 fi
 
-module_info="$OUT_ROOT/target/product/vsoc_x86_64/module-info.json"
-if [[ ! -f "$module_info" ]]; then
+module_info=$(find "$OUT_ROOT/target/product" -mindepth 2 -maxdepth 2 \
+  -type f -name module-info.json -print -quit 2>/dev/null || true)
+if [[ -z "$module_info" ]]; then
   log "module-info.json is missing; attempting incremental m module-info"
   if ! m module-info; then
     fail "m module-info failed; inspect the AOSP build log before exporting"
