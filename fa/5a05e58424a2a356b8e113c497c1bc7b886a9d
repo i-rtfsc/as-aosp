@@ -1,0 +1,33 @@
+clients/vscode/src/navigation/java_projection_model.test.ts
+  s_0fcc3f909ad4ee::t_bd556b310f1b4c 4-12,15-17,24-35
+  h_8b376749578497 1-3,13-14,18-23
+clients/vscode/src/navigation/java_projection_model.ts
+  s_0fcc3f909ad4ee::t_bd556b310f1b4c 1-8,27-33
+  h_8b376749578497 9-26
+clients/vscode/src/navigation/java_projection.ts
+  h_8b376749578497 6,25-27,29,32-33,58
+clients/vscode/src/engine/client.ts
+  s_0fcc3f909ad4ee::t_bd556b310f1b4c 76-81
+  h_8b376749578497 70-71,73-75,83-85,87,146-147
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "fa5a05e58424a2a356b8e113c497c1bc7b886a9d",
+  "prompts": {},
+  "humans": {
+    "h_8b376749578497": {
+      "author": "Solo <anqi.huang@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
