@@ -1,0 +1,66 @@
+packaging/build.sh
+  s_0fcc3f909ad4ee::t_03957ae60ccaa6 11-12
+  h_8b376749578497 9-10
+Makefile
+  s_5f30dac179bcb2::t_19b57542cb23c4 33
+  h_8b376749578497 1,4,27-32
+packaging/build-engines.sh
+  s_0fcc3f909ad4ee::t_03957ae60ccaa6 6-21
+  h_8b376749578497 1-5
+packaging/package-jetbrains-thin.sh
+  s_0fcc3f909ad4ee::t_609a3e6fae5959 16-17
+  s_0fcc3f909ad4ee::t_03957ae60ccaa6 13-15
+  h_8b376749578497 1-12,18-27
+docs/engineering/build-and-test-guide.md
+  s_0fcc3f909ad4ee::t_f438eacd3bc58e 19
+  h_8b376749578497 18
+docs/roadmap/current-state.md
+  h_8b376749578497 31-32
+clients/jetbrains/build.gradle.kts
+  s_0fcc3f909ad4ee::t_d6d47261418965 3,54
+  h_8b376749578497 52-53
+packaging/package-jetbrains-full.sh
+  s_0fcc3f909ad4ee::t_609a3e6fae5959 12-16,27-29
+  s_0fcc3f909ad4ee::t_03957ae60ccaa6 7,11,17-20,30-34
+  s_0fcc3f909ad4ee::t_1795229bab6a06 8-9
+  s_0fcc3f909ad4ee::t_d6d47261418965 10
+  h_8b376749578497 1-6,21-26,35-47
+packaging/verify.sh
+  s_0fcc3f909ad4ee::t_d6d47261418965 26-28
+  s_0fcc3f909ad4ee::t_03957ae60ccaa6 24
+  h_8b376749578497 21,23
+docs/design/packaging-and-release-design.md
+  s_0fcc3f909ad4ee::t_f438eacd3bc58e 10-14,22-29,58-59,77-79
+  h_8b376749578497 21,32-33
+clients/jetbrains/settings.gradle.kts
+  h_8b376749578497 14
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "2cf4cc9a2e689c435f37cffdf2cf79e3db61656a",
+  "prompts": {},
+  "humans": {
+    "h_8b376749578497": {
+      "author": "Solo <anqi.huang@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    },
+    "s_5f30dac179bcb2": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "019ffe38-b3cd-77e3-8987-f48bc62a086c",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
