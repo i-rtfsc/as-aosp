@@ -1,0 +1,56 @@
+clients/jetbrains/src/main/resources/META-INF/plugin.xml
+  s_0fcc3f909ad4ee::t_2420d77c35933a 9
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/workspace/AospWorkspaceToolWindowFactory.kt
+  s_0fcc3f909ad4ee::t_4fc4a558e24ccc 42-48,55,73,135,175,177-180
+  s_0fcc3f909ad4ee::t_df3f3271e707c7 3,11-12,16,20-21,32-34,37-39,41,49-54,56-57,62-72,76-78,80-94,96-110,112-122,124-129,132-134,136,144,147,150-152,171-174,176,181,196,201,207
+  h_8b376749578497 5-6,23,155-170,192-195
+clients/jetbrains/src/main/resources/messages/AospWorkspaceBundle_zh_CN.properties
+  s_0fcc3f909ad4ee::t_2420d77c35933a 5-8
+  h_8b376749578497 1-4,9-21
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/profile/EngineProfileState.kt
+  h_8b376749578497 11-12
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/AospWorkspaceBundle.kt
+  s_0fcc3f909ad4ee::t_2420d77c35933a 4-11
+  h_8b376749578497 1-3
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/engine/ProjectEngineService.kt
+  s_0fcc3f909ad4ee::t_2420d77c35933a 74-78
+  h_8b376749578497 69-73
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/profile/SourceModulePanel.kt
+  s_0fcc3f909ad4ee::t_684728758f9bd9 4,22-27,47-51,82-87,96-101,115-117,130-131,147-151,154-161,215-226
+  h_8b376749578497 9-10,14-15,17,33-35,37-45,53-54,57-58,60-62,64-68,70-74,77,79,90-95,102-114,118-128,133-145,165-191,193-198,200-214,229-238
+docs/design/module-selection-planner-design.md
+  s_0fcc3f909ad4ee::t_848445acb3b0a8 334-335
+  h_8b376749578497 333
+clients/jetbrains/src/main/resources/messages/AospWorkspaceBundle.properties
+  s_0fcc3f909ad4ee::t_2420d77c35933a 1-8,17-21
+  h_8b376749578497 9-16
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/engine/EngineRpcClient.kt
+  s_0fcc3f909ad4ee::t_2420d77c35933a 52-58
+  h_8b376749578497 51
+docs/roadmap/current-state.md
+  h_8b376749578497 31-32,46-47
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/profile/ProfileConfigurable.kt
+  s_0fcc3f909ad4ee::t_063146cab0cd7e 122
+  h_8b376749578497 121
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "f910807f97ca3bb17bd114217a0e2ce379682aec",
+  "prompts": {},
+  "humans": {
+    "h_8b376749578497": {
+      "author": "Solo <anqi.huang@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
