@@ -162,6 +162,8 @@ func (server *Server) Handle(request jsonrpc.Request) (jsonrpc.Response, bool) {
 		response = server.artifactsCatalog(request)
 	case "aosp/source/modules":
 		response = server.sourceModules(request)
+	case "aosp/rust/project":
+		response = server.rustProject(request)
 	default:
 		response = jsonrpc.Failure(request.ID, jsonrpc.MethodNotFound(request.Method))
 	}

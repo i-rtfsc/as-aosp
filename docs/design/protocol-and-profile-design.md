@@ -167,6 +167,16 @@ aosp/generated/materialize
 明确引用的 `.srcjar`，通过 `core/generated` 按 archive hash 安全解压，并返回已发布的
 source roots 与 diagnostics。结果不写入 AOSP 源码或 out；重复请求复用相同 hash 目录。
 
+Rust project materialization：
+
+```text
+aosp/rust/project
+```
+
+请求携带 Workspace View Root、Out Root、cacheRoot 和 pathMappings。engine 把 Soong
+`rust-project.json` 中的源码、out、sysroot 和 proc macro 路径归一化到本机，并只在
+IDE cache 中发布可供 rust-analyzer 使用的 project JSON。
+
 进程入口统一为一个跨平台二进制：
 
 ```text

@@ -145,6 +145,28 @@ java_library { name: "two" }
 	}
 }
 
+func TestServerMaterializesLocalRustProject(t *testing.T) {
+	workspace := t.TempDir()
+	out := t.TempDir()
+	cache := t.TempDir()
+	writeTestFile(t, out, "soong/rust-project.json", `{
+  "sysroot":"prebuilts/rust",
+  "crates":[{"root_module":"system/lib.rs","env":{"OUT_DIR":"out/soong/gen"}}]
+}`)
+	server := initializedServer(t)
+	response, _ := server.Handle(makeRequest(2, "aosp/rust/project", RustProjectParams{
+		WorkspaceViewRoot: workspace, OutRoot: out, CacheRoot: cache,
+	}))
+	var result RustProjectResult
+	decodeResult(t, response, &result)
+	if result.Crates != 1 || result.ProjectPath == "" || len(result.Diagnostics) != 0 {
+		t.Fatalf("result=%+v", result)
+	}
+	if _, err := os.Stat(result.ProjectPath); err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestServerBuildsProjectGraphFromOut(t *testing.T) {
 	root := t.TempDir()
 	writeTestFile(t, root, "module-info.json", `{"framework":{"path":["frameworks/base/core/java"]}}`)

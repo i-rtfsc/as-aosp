@@ -87,6 +87,9 @@ func capabilities(module Module) []string {
 	if strings.Contains(lower, "cc") || strings.Contains(lower, "rust") {
 		values = append(values, "native")
 	}
+	if strings.Contains(lower, "rust") {
+		values = append(values, "rust")
+	}
 	if len(module.Dependencies) > 0 {
 		values = append(values, "generated")
 	}
