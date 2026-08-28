@@ -1,0 +1,52 @@
+clients/jetbrains/src/test/kotlin/com/rtfsc/aosp/profile/TargetDraftCodecTest.kt
+  h_8b376749578497 16
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/engine/EngineRpcClient.kt
+  s_0fcc3f909ad4ee::t_ae0c87721fedf1 48-50
+  h_8b376749578497 47
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/profile/TargetEditorPanel.kt
+  s_0fcc3f909ad4ee::t_c9418e464c642f 26,41-45
+  s_0fcc3f909ad4ee::t_3072fcf9cb8e85 88,219-221,280-281,292
+  s_0fcc3f909ad4ee::t_02029496a3e4f0 109,130,178,197,268
+  h_8b376749578497 72-74,230,275
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/profile/SourceModulePanel.kt
+  s_0fcc3f909ad4ee::t_f884c5f8b2503f 22-59,76-77,87-96
+  h_8b376749578497 1-21,60-75,78-86,97-105
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/workspace/AospWorkspaceToolWindowFactory.kt
+  s_0fcc3f909ad4ee::t_499d9231dfc051 36,38-39,41,64-65
+  s_0fcc3f909ad4ee::t_a204216437564f 42
+  h_8b376749578497 11,53,63,69,109
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/project/FocusedRootsService.kt
+  s_0fcc3f909ad4ee::t_350e5c57d28740 15,40-42
+  h_8b376749578497 10
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/profile/ProfileConfigurable.kt
+  s_0fcc3f909ad4ee::t_1c81cf25a6056c 37
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/project/BuildFactsProjection.kt
+  s_0fcc3f909ad4ee::t_7f8ab9162d7eed 80-87
+  h_8b376749578497 35-36,43,50-54,70,146-147,151
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/engine/ProjectEngineService.kt
+  s_0fcc3f909ad4ee::t_92e1e23887f234 71
+  h_8b376749578497 64,66,69
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/workspace/AospWorkspaceStartupActivity.kt
+  h_8b376749578497 10
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "44b7ed887c6d7b2c5669d1277c015cedb4938b20",
+  "prompts": {},
+  "humans": {
+    "h_8b376749578497": {
+      "author": "Solo <anqi.huang@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}

@@ -1,0 +1,103 @@
+protocol/aosp/source_modules.go
+  s_0fcc3f909ad4ee::t_c565e90dfa5f33 1-16,31-41,49-55
+  h_8b376749578497 17-30,42-48
+protocol/aosp/build_facts.go
+  s_0fcc3f909ad4ee::t_65a0c52a19fa82 24,27,37
+  h_8b376749578497 12-13,20-22
+core/sourcecatalog/module.go
+  s_0fcc3f909ad4ee::t_3cedaac16cd75e 12
+  s_0fcc3f909ad4ee::t_68c863ba989662 13-23
+  h_8b376749578497 1-11,24-38
+core/sourcecatalog/android_bp.go
+  s_0fcc3f909ad4ee::t_9a17a5bf7a669d 23,27-28,32-33,82-83,93-94
+  s_0fcc3f909ad4ee::t_3cedaac16cd75e 24-26,29-31,84,91-92
+  h_8b376749578497 1-22,34-81,85-90
+core/artifacts/catalog.go
+  s_0fcc3f909ad4ee::t_004d0144150fa2 117-121
+  h_8b376749578497 115-116
+core/sourcecatalog/discovery.go
+  s_0fcc3f909ad4ee::t_4b0ab743cf330f 57-63
+  s_0fcc3f909ad4ee::t_3cedaac16cd75e 33,71-73,91-95,99-100,102-105,120-122,154-156,158-161,163-165,170-176,182-184
+  s_0fcc3f909ad4ee::t_68c863ba989662 26-32,37-46,55-56,64-70,90,101,116-119,123-126,150-153,157,162,166-167,177-181,185-187
+  h_8b376749578497 1-25,34-36,47-54,74-89,96-98,106-115,127-149,168-169
+cmd/aosp-index/main.go
+  s_0fcc3f909ad4ee::t_c092ff46b8a146 273,299-300
+  h_8b376749578497 311-312
+cmd/aosp-index/pack_test.go
+  s_0fcc3f909ad4ee::t_601c464b91da70 97
+  s_0fcc3f909ad4ee::t_668dc165c1e50c 48-49,52-56
+  s_0fcc3f909ad4ee::t_27c60ccc142e60 50-51
+  h_8b376749578497 30,33-39,41-47,59-62,66-71,75,77-79,81-82,87,92-94
+protocol/aosp/index.go
+  s_0fcc3f909ad4ee::t_65a0c52a19fa82 155
+core/sourcecatalog/discovery_test.go
+  s_0fcc3f909ad4ee::t_16a221af435863 1-8,27,31-34
+  s_0fcc3f909ad4ee::t_3cedaac16cd75e 21-26,28-30,35-40
+  h_8b376749578497 9-20,41-48
+core/artifacts/catalog_test.go
+  s_0fcc3f909ad4ee::t_d099ab1d21c630 38
+  s_0fcc3f909ad4ee::t_4db52b8976072a 36-37
+  h_8b376749578497 35,39-49
+protocol/aosp/server.go
+  s_0fcc3f909ad4ee::t_fd9967af249565 193
+  s_0fcc3f909ad4ee::t_3723b96f5a23fe 161-162
+  s_0fcc3f909ad4ee::t_3cedaac16cd75e 192
+  h_8b376749578497 63-71,185-191
+protocol/aosp/project_graph.go
+  s_0fcc3f909ad4ee::t_65a0c52a19fa82 41
+  s_0fcc3f909ad4ee::t_48a1ebc18a1a2d 42-44,46
+  s_0fcc3f909ad4ee::t_ec4cf4e3e56257 15,24-26
+  h_8b376749578497 14,69
+protocol/aosp/generated.go
+  s_0fcc3f909ad4ee::t_0b90c824b74cee 36,38,45
+  s_0fcc3f909ad4ee::t_54a1dfa1b89a37 51,54,56,64,85,96,98
+  h_8b376749578497 13-15,41
+protocol/aosp/server_test.go
+  s_0fcc3f909ad4ee::t_0a0ad4480a362a 55,64,113,258
+  s_0fcc3f909ad4ee::t_03e4080e34afed 151
+  s_0fcc3f909ad4ee::t_7ffc14b3bbcc69 604
+  s_0fcc3f909ad4ee::t_c9e0e2fed4a496 49,51-52,84-85,172
+  h_8b376749578497 73,82,88,133-134,137,146,174-175,178,214,216,224,245,558,573,585
+protocol/aosp/modules.go
+  s_0fcc3f909ad4ee::t_65a0c52a19fa82 57
+  s_0fcc3f909ad4ee::t_ec4cf4e3e56257 13-15
+  h_8b376749578497 81,90-91,104,113-114
+core/sourcecatalog/android_mk.go
+  s_0fcc3f909ad4ee::t_4b0ab743cf330f 7-14
+  h_8b376749578497 1-6
+protocol/aosp/compdb.go
+  h_8b376749578497 14,35,37
+cmd/aosp-index/pack.go
+  s_0fcc3f909ad4ee::t_8691dc64bbdf33 88-90,93
+  s_0fcc3f909ad4ee::t_68bbd27e715acd 412
+  s_0fcc3f909ad4ee::t_c5fb63cd66e51a 46,166,336-342,345,347,351-352
+  s_0fcc3f909ad4ee::t_585c19e956f6ca 344
+  s_0fcc3f909ad4ee::t_d43533f708ec88 92,156-158,163-165
+  s_0fcc3f909ad4ee::t_20e9dda623c9d5 159-162
+  s_0fcc3f909ad4ee::t_092ab4c76e6e4a 422,430-432,437-439,441-442,444
+  s_0fcc3f909ad4ee::t_b7474b232245c6 237,272-281
+  s_0fcc3f909ad4ee::t_27a76d5769154d 91,94,170,180-181,184-185,420-421,427,467-468
+  s_0fcc3f909ad4ee::t_8d53e42597f5d6 95,167,418-419,423-425,428
+  h_8b376749578497 37,39,55,176-178,218,244-248,260-264,288,320-321,323-334,356,398,403-404,447-450,453-457,460-463,470-473,475
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "4e83b2c86c3bdcebae5972865af5e55b9fab2075",
+  "prompts": {},
+  "humans": {
+    "h_8b376749578497": {
+      "author": "Solo <anqi.huang@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
