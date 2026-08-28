@@ -1,0 +1,60 @@
+clients/vscode/src/navigation/aidl.ts
+  h_8b376749578497 20-21
+clients/vscode/src/navigation/jni.ts
+  h_8b376749578497 14,30
+clients/vscode/src/ui/profile_panel.ts
+  s_0fcc3f909ad4ee::t_5331f2b324ad09 11-20,23-28,36-37,57,65-68,75-84,95-98,100-101,119-128,130-152,154-170
+  h_8b376749578497 3-10,21-22,32-33,39,46,48-52,61,71,86-88,90-93,106-110,112-118,175-179,181-206,209-211
+clients/vscode/package.json
+  s_0fcc3f909ad4ee::t_2e57d3cbc9cdf4 43
+  s_0fcc3f909ad4ee::t_9f472898a0fc06 88-91
+  h_8b376749578497 13-17,54-59
+clients/vscode/src/engine/client.ts
+  s_0fcc3f909ad4ee::t_27188067f74751 243
+  h_8b376749578497 103-120,230,234-239,242,246-247,262-263
+clients/vscode/src/ui/overview.ts
+  h_8b376749578497 30,35
+clients/vscode/src/extension.ts
+  s_0fcc3f909ad4ee::t_27c3d636898c35 10
+  s_0fcc3f909ad4ee::t_68c17b89eab965 39-54
+  h_8b376749578497 32,37-38,56,64-66,86,88,90-93,95-96,98-103,157,168,176,188-189
+clients/vscode/src/navigation/aidl_peers.ts
+  h_8b376749578497 19
+clients/vscode/src/navigation/compdb.ts
+  s_0fcc3f909ad4ee::t_905c76c39b15cd 16
+  h_8b376749578497 10-12
+clients/vscode/src/navigation/aidl_references.ts
+  h_8b376749578497 14
+clients/vscode/src/navigation/java_projection.ts
+  s_0fcc3f909ad4ee::t_391be4ef88503a 19,23,46
+  h_8b376749578497 27,31,66
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "f6bced6c83bb01d24b2eb51378ccc6381ebc9cd4",
+  "prompts": {},
+  "humans": {
+    "h_8b376749578497": {
+      "author": "Solo <anqi.huang@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    },
+    "s_5f30dac179bcb2": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "019ffe38-b3cd-77e3-8987-f48bc62a086c",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
