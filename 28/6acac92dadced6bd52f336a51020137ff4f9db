@@ -1,0 +1,38 @@
+protocol/aosp/server_test.go
+  s_0fcc3f909ad4ee::t_5ebc96d5745353 174-178,189
+  h_8b376749578497 179-188
+core/selection/planner.go
+  s_0fcc3f909ad4ee::t_ed046105caa55b 12-33,45-46,48-54,56,65-69,78-128,146-153
+  s_0fcc3f909ad4ee::t_aa673a4e5292b8 55,70-77
+  s_0fcc3f909ad4ee::t_51ddafa3ae903a 47
+  h_8b376749578497 1-11,34-44,57-64,129-145,154-172
+core/selection/planner_test.go
+  s_0fcc3f909ad4ee::t_ed046105caa55b 1-16,28-34,39-43
+  h_8b376749578497 17-27,35-38
+protocol/aosp/server.go
+  h_8b376749578497 74,168-171,203
+protocol/aosp/selection.go
+  s_0fcc3f909ad4ee::t_aa673a4e5292b8 10-12
+  h_8b376749578497 1-9,13-69
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "286acac92dadced6bd52f336a51020137ff4f9db",
+  "prompts": {},
+  "humans": {
+    "h_8b376749578497": {
+      "author": "Solo <anqi.huang@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
