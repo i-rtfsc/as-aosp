@@ -11,4 +11,4 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "aosp-ide-jetbrains"
+rootProject.name = "aosp-workspace-jetbrains"

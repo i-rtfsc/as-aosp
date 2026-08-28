@@ -15,6 +15,8 @@ Phase 0 采用仓库根 Makefile 作为统一入口。不得把裸 `go build`、
 | 全部本地检查 | `make check` |
 | CLI smoke | `make smoke` |
 | JetBrains 验证 | `make test-jetbrains` |
+| JetBrains thin 开发包 | `make package-jetbrains-thin` |
+| JetBrains full 发布包 | `make package-jetbrains-full` |
 | VS Code 验证 | `make test-vscode` |
 | VS Code Extension Host | `cd clients/vscode && npm run host-test`（需要下载 VS Code runtime） |
 

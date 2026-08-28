@@ -1,5 +1,6 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
+import org.jetbrains.intellij.platform.gradle.tasks.BuildPluginTask
 
 plugins {
     kotlin("jvm") version "2.1.21"
@@ -48,6 +49,9 @@ kotlin {
 }
 
 tasks {
+    named<BuildPluginTask>("buildPlugin") {
+        archiveFileName.set("aosp-workspace-jetbrains-${project.version}-thin.zip")
+    }
     test {
         useJUnit()
     }

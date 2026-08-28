@@ -7,18 +7,30 @@
 ```text
 dist/
   engine/<os>-<arch>/aosp-index[.exe]
-  jetbrains/aosp-ide-jetbrains-<version>.zip
-  vscode/aosp-ide-vscode-<version>.vsix
+  jetbrains/aosp-workspace-jetbrains-<version>.zip
+  vscode/aosp-ide-vscode-<version>-<os>-<arch>.vsix
+
+clients/jetbrains/build/distributions/
+  aosp-workspace-jetbrains-<version>-thin.zip
 ```
 
 engine 构建矩阵为 `darwin/linux/windows × amd64/arm64`。Windows 文件名带 `.exe`；
 Go core 当前不依赖 CGO，因此同一源码可以交叉编译。JetBrains ZIP 携带六个平台二进制；
 VS Code 按平台发布六个 target-specific VSIX，每个 VSIX 只携带一个对应平台二进制。
 
+JetBrains 明确区分两种 ZIP：
+
+- `thin`：仅用于本地 Kotlin/IDE 开发，不包含 engine，不能作为普通用户安装包；
+- `full`：唯一允许上传 Marketplace 和交付用户的 ZIP，包含六个平台 engine。
+
+`./gradlew buildPlugin` 的原始 ZIP 只是 full 组装输入。开发入口
+`make package-jetbrains-thin` 会把它重命名为带 `-thin` 的产物，避免与发布包混淆。
+`make package-jetbrains-full` 构建六个平台 engine，并把它们组装到 `dist/jetbrains`。
+
 客户端 engine 解析优先级：用户显式 executable、用户公共 engine store 的
 `engines/aosp-index`、扩展目录内当前 `os-arch` bundled engine、PATH 中的
-`aosp-index`。JetBrains ZIP 与 VSIX 均可携带六平台 engine；客户端只执行当前
-平台目录中的一个文件。在
+`aosp-index`。JetBrains full ZIP 携带六平台 engine；每个 VSIX 只携带当前平台 engine。
+客户端只执行当前平台目录中的一个文件。在
 manifest 签名和下载信任模型完成前，客户端不自动联网下载二进制。
 
 JetBrains 与 VS Code 使用相同的 bundled layout：
@@ -43,6 +55,8 @@ JetBrains 与 VS Code 使用相同的 bundled layout：
   当前平台选择包；
 - 两个客户端共享 `com.rtfsc.aosp` 产品命名和 JSON-RPC；
 - 插件安装包不同，因为 JetBrains 与 VS Code 扩展格式不兼容。
+- 不提供 JetBrains 按 OS 拆分的不同 plugin IDs；平台差异只存在于 bundled engine 目录。
+- 不要求在线下载 engine，也不建设 engine 下载服务器。
 
 ## 3. 安全与可复验性
 
@@ -60,7 +74,9 @@ executable 文件名。两个 manifest 都不包含自身，
 
 - 六个平台 engine 文件名与 executable 格式正确；
 - Windows 只生成 `.exe`；
-- JetBrains ZIP 与 VSIX 能由仓库入口生成；
+- JetBrains thin/full ZIP 与六个 VSIX 能由仓库入口生成；
+- thin ZIP 不包含 engine，full ZIP 正好包含六个平台 engine；
+- `dist/jetbrains` 只存在一个可发布 full ZIP；
 - 打包脚本不依赖用户真实 AOSP；
 - `dist/` 不进入 Git。
 - manifest 能覆盖 engine、JetBrains ZIP 和 VSIX，且不包含临时文件。

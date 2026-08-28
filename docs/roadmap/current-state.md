@@ -28,6 +28,8 @@
   相同 source root、srcjar 和 library 必须只投影一次，Select All 不创建海量 IDE modules。
 - engine 支持 macOS、Linux、Windows 的 bundled/shared/PATH 解析；JetBrains
   插件和 VS Code VSIX 有跨平台 engine 打包入口。
+- JetBrains 打包已区分 thin 开发包和 full 发布包；full ZIP 内置六平台 engine，
+  thin ZIP 不允许作为用户发布包，VS Code 继续使用六个 target-specific VSIX。
 - 真实本地 Portable Out 已完成目录迁移并通过 `pack validate --native`，
   ModuleCatalog 约 126k 模块、ArtifactCatalog 约 44k 制品。
 

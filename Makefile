@@ -1,7 +1,7 @@
-.PHONY: help fmt fmt-check vet test-core test-protocol test-jetbrains test-vscode package package-vscode-local install-vscode smoke metadata-smoke aidl-smoke jni-smoke pack-smoke pack-validate-smoke rpc-smoke pack-preflight export-pack commit-message-check check
+.PHONY: help fmt fmt-check vet test-core test-protocol test-jetbrains test-vscode package package-jetbrains-thin package-jetbrains-full package-vscode-local install-vscode smoke metadata-smoke aidl-smoke jni-smoke pack-smoke pack-validate-smoke rpc-smoke pack-preflight export-pack commit-message-check check
 
 help:
-	@printf '%s\n' 'make fmt                  Format Go source' 'make fmt-check            Check Go formatting' 'make vet                   Run Go static checks' 'make test-core             Run core tests' 'make test-protocol         Run protocol tests' 'make test-jetbrains        Run JetBrains tests' 'make test-vscode           Run VS Code tests' 'make smoke                 Run CLI fixture smoke' 'make metadata-smoke        Read metadata fixture' 'make aidl-smoke             Read AIDL fixture' 'make jni-smoke              Read JNI fixture' 'make rpc-smoke             Run JSON-RPC daemon smoke' 'make commit-message-check  Check message width and Change-Id' 'make check                 Run all checks'
+	@printf '%s\n' 'make fmt                    Format Go source' 'make fmt-check              Check Go formatting' 'make vet                     Run Go static checks' 'make test-core               Run core tests' 'make test-protocol           Run protocol tests' 'make test-jetbrains          Run JetBrains tests' 'make test-vscode             Run VS Code tests' 'make package                 Build all release artifacts' 'make package-jetbrains-thin  Build development ZIP without engines' 'make package-jetbrains-full  Build release ZIP with six engines' 'make package-vscode-local    Build current-platform VSIX' 'make install-vscode          Install current-platform VSIX' 'make smoke                   Run CLI fixture smoke' 'make metadata-smoke          Read metadata fixture' 'make aidl-smoke              Read AIDL fixture' 'make jni-smoke               Read JNI fixture' 'make rpc-smoke               Run JSON-RPC daemon smoke' 'make commit-message-check    Check message width and Change-Id' 'make check                   Run all checks'
 
 fmt:
 	gofmt -w core protocol cmd
@@ -23,6 +23,13 @@ test-vscode:
 
 package:
 	bash packaging/build.sh
+
+package-jetbrains-thin:
+	bash packaging/package-jetbrains-thin.sh
+
+package-jetbrains-full:
+	bash packaging/build-engines.sh dist/engine >/dev/null
+	bash packaging/package-jetbrains-full.sh dist/engine dist/jetbrains
 
 package-vscode-local:
 	bash packaging/package-vscode-local.sh
