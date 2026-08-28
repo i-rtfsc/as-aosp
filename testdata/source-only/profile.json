@@ -7,6 +7,18 @@
     "mode": "selected-repositories",
     "include": ["frameworks/base"]
   },
+  "targets": [
+    {
+      "id": "framework-source",
+      "displayName": "Framework source",
+      "kind": "java",
+      "selectors": {
+        "sourceRoots": ["frameworks/base"]
+      },
+      "includeDependencies": false,
+      "includeGeneratedSources": false
+    }
+  ],
   "visibilityPolicy": {
     "mode": "strict-view",
     "allowOpenExternalFile": true,

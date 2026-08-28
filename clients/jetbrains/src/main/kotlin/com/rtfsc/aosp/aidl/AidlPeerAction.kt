@@ -52,12 +52,8 @@ class AidlPeerAction : AnAction("Go to AIDL Generated Peer") {
             override fun run(indicator: ProgressIndicator) {
                 indicator.text = "Resolving generated AIDL peers"
                 val engine = project.getService(ProjectEngineService::class.java)
-                val cacheRoot = Path.of(project.basePath ?: System.getProperty("java.io.tmpdir"), ".aosp-ide", "cache").toString()
-                val packed = runCatching { AidlPackQueries.peers(engine, settings.metadataPackRoot, name, cacheRoot) }.getOrNull()
-                val result = packed ?: run {
-                    val response = runCatching { engine.aidlPeers(request.toString()) }.getOrNull() ?: return
-                    mapper.readTree(response).path("result")
-                }
+                val response = runCatching { engine.aidlPeers(request.toString()) }.getOrNull() ?: return
+                val result = mapper.readTree(response).path("result")
                 target = selectTarget(result)
             }
 

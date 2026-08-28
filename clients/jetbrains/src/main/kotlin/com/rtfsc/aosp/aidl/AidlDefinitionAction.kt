@@ -57,12 +57,7 @@ class AidlDefinitionAction : AnAction("Go to AIDL Definition") {
                 indicator.text = "Resolving AIDL source symbol"
                 val engine = project.getService(ProjectEngineService::class.java)
                 val response = try {
-                    val packed = AidlPackQueries.resolve(engine, settings.metadataPackRoot, token)
-                    if (packed != null) {
-                        objectMapper.createObjectNode().set<JsonNode>("result", packed).toString().toByteArray()
-                    } else {
-                        engine.aidlResolve(request.toString())
-                    }
+                    engine.aidlResolve(request.toString())
                 } catch (failure: Throwable) {
                     failureMessage = "AIDL engine query failed: ${failure.message ?: failure.javaClass.simpleName}"
                     return

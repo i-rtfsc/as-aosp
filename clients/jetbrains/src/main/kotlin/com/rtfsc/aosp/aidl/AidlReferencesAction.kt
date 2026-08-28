@@ -31,11 +31,8 @@ class AidlReferencesAction : AnAction("Find AIDL Usages") {
             private var count = 0
             override fun run(indicator: ProgressIndicator) {
                 val engine = project.getService(ProjectEngineService::class.java)
-                val packed = runCatching { AidlPackQueries.references(engine, settings.metadataPackRoot, file.nameWithoutExtension) }.getOrNull()
-                count = if (packed != null) packed.path("references").size() else {
-                    val response = runCatching { engine.aidlReferences(request.toString()) }.getOrNull() ?: return
-                    mapper.readTree(response).path("result").path("references").size()
-                }
+                val response = runCatching { engine.aidlReferences(request.toString()) }.getOrNull() ?: return
+                count = mapper.readTree(response).path("result").path("references").size()
             }
             override fun onSuccess() { if (count == 0) Messages.showInfoMessage(project, "No AIDL usages were found.", "AOSP AIDL Navigation") else Messages.showInfoMessage(project, "$count AIDL usages found.", "AOSP AIDL Navigation") }
         }.queue()
