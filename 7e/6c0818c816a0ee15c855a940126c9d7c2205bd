@@ -1,0 +1,49 @@
+clients/vscode/src/ui/profile_panel.ts
+  s_0fcc3f909ad4ee::t_7f62bcdf4534f3 41-42,156,158-161,168-171
+  s_0fcc3f909ad4ee::t_3995327cb42712 2,72,87-89,150
+  s_5f30dac179bcb2::t_d8e6d8c38bb53c 172-173
+  h_8b376749578497 40,121-123
+clients/vscode/src/ui/overview.ts
+  s_0fcc3f909ad4ee::t_f9c6511695de13 2
+  h_8b376749578497 7-8
+clients/vscode/src/extension.ts
+  s_0fcc3f909ad4ee::t_3b1418c6d89177 27-30,83-85
+  s_0fcc3f909ad4ee::t_4994c0b60f2da5 15,121-122,215-221
+  h_8b376749578497 37,64-74,76-79,102,120,136-143,198
+clients/vscode/src/navigation/out_root.ts
+  s_0fcc3f909ad4ee::t_f9c6511695de13 1-4,8-18,37-40
+  s_0fcc3f909ad4ee::t_6868dbb42d5692 5-7
+  h_8b376749578497 19-36
+clients/vscode/src/navigation/out_root.test.ts
+  s_0fcc3f909ad4ee::t_f9c6511695de13 12-22
+  h_8b376749578497 1-11
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "7e6c0818c816a0ee15c855a940126c9d7c2205bd",
+  "prompts": {},
+  "humans": {
+    "h_8b376749578497": {
+      "author": "Solo <anqi.huang@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    },
+    "s_5f30dac179bcb2": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "019ffe38-b3cd-77e3-8987-f48bc62a086c",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
