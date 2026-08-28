@@ -21,6 +21,7 @@ import java.nio.file.Paths
 internal class SourceModulePanel(
     private val project: Project,
     private val workspaceRoot: () -> String,
+    private val outRoot: () -> String,
     private val onApply: (String) -> Unit,
 ) : JPanel(BorderLayout()) {
     private data class Entry(val name: String, val type: String, val status: String, val recommended: Boolean)
@@ -70,13 +71,15 @@ internal class SourceModulePanel(
                 val response = mapper.readTree(project.getService(ProjectEngineService::class.java).sourceModules(
                     mapper.writeValueAsString(mapOf(
                         "workspaceViewRoot" to root,
+                        "outRoot" to outRoot().trim(),
                         "cacheRoot" to Paths.get(PathManager.getSystemPath(), "aosp-workspace", projectKey).toString(),
                     )),
                 )).path("result")
                 loaded = response.path("modules").map { node ->
                     Entry(node.path("name").asText(), node.path("type").asText(), node.path("status").asText(), node.path("recommended").asBoolean())
                 }
-                message = "${loaded.size} modules · ${response.path("filesScanned").asInt()} files · " +
+                message = "${loaded.size} modules · ${response.path("buildBacked").asInt()} build-backed · " +
+                    "${response.path("filesScanned").asInt()} files · " +
                     if (response.path("cacheHit").asBoolean()) "cache reused" else "scanned"
             }
             override fun onSuccess() { entries = loaded; summary.text = message; if (selected.isEmpty()) selectRecommended() else render() }

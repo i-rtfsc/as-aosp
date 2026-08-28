@@ -36,6 +36,7 @@ internal class AospWorkspaceToolWindowFactory : ToolWindowFactory {
         val modulePanel = SourceModulePanel(
             project,
             { settings.current.workspaceViewRoot },
+            { settings.current.outRoot },
             { targets -> settings.update { it.targetsJson = targets } },
         )
         modulePanel.loadSelected(settings.current.targetsJson)
