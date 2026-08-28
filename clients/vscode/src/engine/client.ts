@@ -162,7 +162,7 @@ export class EngineClient {
   constructor(
     private readonly spawnProcess: SpawnProcess = (executable, arguments_) =>
       spawn(executable, arguments_, { stdio: "pipe" }),
-    private readonly timeoutMilliseconds = 5_000,
+    private readonly timeoutMilliseconds = 60_000,
   ) {}
 
   get status(): { state: string; error?: string } { return { state: this.state, error: this.lastError }; }
