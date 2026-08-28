@@ -1,0 +1,27 @@
+docs/design/rust-project-integration-design.md
+  s_0fcc3f909ad4ee::t_71c7b025d8b3cc 7-13,24-26,40-51,56-64
+  h_8b376749578497 1-6,14-23,27-39,52-55
+docs/README.md
+  h_8b376749578497 28
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "1db873378e1952965452ead1af15da93f377d39d",
+  "prompts": {},
+  "humans": {
+    "h_8b376749578497": {
+      "author": "Solo <anqi.huang@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
