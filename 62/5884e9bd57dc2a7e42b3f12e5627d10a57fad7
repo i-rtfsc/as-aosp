@@ -1,0 +1,90 @@
+protocol/aosp/source_modules.go
+  s_0fcc3f909ad4ee::t_c565e90dfa5f33 7-16,31-41
+  h_8b376749578497 1-6,17-30,42-55
+protocol/aosp/build_facts.go
+  s_0fcc3f909ad4ee::t_65a0c52a19fa82 27
+  h_8b376749578497 12-13,20-22,24,37
+core/sourcecatalog/module.go
+  s_0fcc3f909ad4ee::t_68c863ba989662 19-23
+  h_8b376749578497 1-18,24-38
+core/sourcecatalog/android_bp.go
+  s_0fcc3f909ad4ee::t_9a17a5bf7a669d 32-33,93-94
+  s_0fcc3f909ad4ee::t_3cedaac16cd75e 31,91-92
+  h_8b376749578497 1-30,34-90
+core/artifacts/catalog.go
+  s_0fcc3f909ad4ee::t_004d0144150fa2 117-121
+  h_8b376749578497 115-116
+core/sourcecatalog/discovery.go
+  s_0fcc3f909ad4ee::t_3cedaac16cd75e 33,71-73,91-95,99-100,102-105,120-122,154-156,158-161,163-165,170-176,182-184
+  s_0fcc3f909ad4ee::t_68c863ba989662 26-32,69-70,90,101,116-119,123-126,150-153,157,162,166-167,177-181,185-187
+  h_8b376749578497 1-25,34-68,74-89,96-98,106-115,127-149,168-169
+cmd/aosp-index/main.go
+  s_0fcc3f909ad4ee::t_c092ff46b8a146 300
+  h_8b376749578497 273,299,311-312
+cmd/aosp-index/pack_test.go
+  s_0fcc3f909ad4ee::t_601c464b91da70 97
+  s_0fcc3f909ad4ee::t_668dc165c1e50c 54-56
+  h_8b376749578497 30,33-39,41-53,59-62,66-71,75,77-79,81-82,87,92-94
+protocol/aosp/index.go
+  s_0fcc3f909ad4ee::t_65a0c52a19fa82 155
+core/sourcecatalog/discovery_test.go
+  s_0fcc3f909ad4ee::t_16a221af435863 1-8
+  s_0fcc3f909ad4ee::t_3cedaac16cd75e 35-39
+  h_8b376749578497 9-34,40-48
+core/artifacts/catalog_test.go
+  s_0fcc3f909ad4ee::t_d099ab1d21c630 38
+  h_8b376749578497 35-37,39-49
+protocol/aosp/server.go
+  s_0fcc3f909ad4ee::t_fd9967af249565 193
+  h_8b376749578497 63-71,161-162,185-192
+protocol/aosp/project_graph.go
+  s_0fcc3f909ad4ee::t_48a1ebc18a1a2d 46
+  s_0fcc3f909ad4ee::t_ec4cf4e3e56257 24-26
+  h_8b376749578497 14-15,41-44,69
+protocol/aosp/generated.go
+  s_0fcc3f909ad4ee::t_0b90c824b74cee 45
+  s_0fcc3f909ad4ee::t_54a1dfa1b89a37 51,54,64,96
+  h_8b376749578497 13-15,36,38,41,56,85,98
+protocol/aosp/server_test.go
+  s_0fcc3f909ad4ee::t_0a0ad4480a362a 55,64,258
+  s_0fcc3f909ad4ee::t_7ffc14b3bbcc69 604
+  s_0fcc3f909ad4ee::t_c9e0e2fed4a496 49,84-85
+  h_8b376749578497 51-52,73,82,88,113,133-134,137,146,151,172,174-175,178,214,216,224,245,558,573,585
+protocol/aosp/modules.go
+  s_0fcc3f909ad4ee::t_65a0c52a19fa82 57
+  s_0fcc3f909ad4ee::t_ec4cf4e3e56257 14-15
+  h_8b376749578497 13,81,90-91,104,113-114
+core/sourcecatalog/android_mk.go
+  s_0fcc3f909ad4ee::t_4b0ab743cf330f 11-14
+  h_8b376749578497 1-10
+protocol/aosp/compdb.go
+  h_8b376749578497 14,35,37
+cmd/aosp-index/pack.go
+  s_0fcc3f909ad4ee::t_c5fb63cd66e51a 166,351-352
+  s_0fcc3f909ad4ee::t_d43533f708ec88 156-158,163-165
+  s_0fcc3f909ad4ee::t_20e9dda623c9d5 159-162
+  s_0fcc3f909ad4ee::t_092ab4c76e6e4a 438-439,441-442
+  s_0fcc3f909ad4ee::t_8d53e42597f5d6 167
+  h_8b376749578497 37,39,46,55,88-95,170,176-178,180-181,184-185,218,237,244-248,260-264,272-281,288,320-321,323-334,336-342,344-345,347,356,398,403-404,412,418-425,427-428,430-432,437,444,447-450,453-457,460-463,467-468,470-473,475
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "625884e9bd57dc2a7e42b3f12e5627d10a57fad7",
+  "prompts": {},
+  "humans": {
+    "h_8b376749578497": {
+      "author": "Solo <anqi.huang@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
