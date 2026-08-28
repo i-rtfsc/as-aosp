@@ -71,6 +71,7 @@ type Capabilities struct {
 	IndexCoordinator      bool `json:"indexCoordinator"`
 	ProjectGraph          bool `json:"projectGraph"`
 	SourceModuleDiscovery bool `json:"sourceModuleDiscovery"`
+	SelectionPlanner      bool `json:"selectionPlanner"`
 }
 
 type ProfileResult struct {
@@ -164,6 +165,10 @@ func (server *Server) Handle(request jsonrpc.Request) (jsonrpc.Response, bool) {
 		response = server.sourceModules(request)
 	case "aosp/rust/project":
 		response = server.rustProject(request)
+	case "aosp/selection/catalog":
+		response = server.selectionCatalog(request)
+	case "aosp/selection/plan":
+		response = server.selectionPlan(request)
 	default:
 		response = jsonrpc.Failure(request.ID, jsonrpc.MethodNotFound(request.Method))
 	}
@@ -195,6 +200,7 @@ func (server *Server) initialize(request jsonrpc.Request) (jsonrpc.Response, boo
 			IndexCoordinator:      true,
 			ProjectGraph:          true,
 			SourceModuleDiscovery: true,
+			SelectionPlanner:      true,
 		},
 	}), !request.IsNotification()
 }

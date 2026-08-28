@@ -171,6 +171,22 @@ func TestServerMaterializesLocalRustProject(t *testing.T) {
 	}
 }
 
+func TestServerBuildsGroupedSelectionPlan(t *testing.T) {
+	server := initializedServer(t)
+	response, _ := server.Handle(makeRequest(2, "aosp/selection/plan", SelectionPlanParams{
+		PresetIDs:     []string{"java-foundation", "system-server-wms"},
+		ManualModules: []string{"framework"},
+	}))
+	var result struct {
+		Targets []model.TargetSpec `json:"targets"`
+	}
+	decodeResult(t, response, &result)
+	if len(result.Targets) != 2 || result.Targets[0].ID != "java-foundation" ||
+		result.Targets[1].ID != "system-server-wms" {
+		t.Fatalf("result=%+v", result)
+	}
+}
+
 func TestServerBuildsProjectGraphFromOut(t *testing.T) {
 	root := t.TempDir()
 	writeTestFile(t, root, "module-info.json", `{"framework":{"path":["frameworks/base/core/java"]}}`)
