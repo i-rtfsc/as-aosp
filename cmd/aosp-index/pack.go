@@ -1,10 +1,6 @@
 package main
 
 import (
-	"archive/zip"
-	"crypto/sha256"
-	"encoding/hex"
-	"encoding/json"
 	"errors"
 	"flag"
 	"fmt"
@@ -14,24 +10,10 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/i-rtfsc/as-aosp/core/aidl"
 	"github.com/i-rtfsc/as-aosp/core/artifacts"
-	"github.com/i-rtfsc/as-aosp/core/jni"
 	"github.com/i-rtfsc/as-aosp/core/metadata"
-	"github.com/i-rtfsc/as-aosp/core/model"
 	coremodules "github.com/i-rtfsc/as-aosp/core/modules"
-	corepack "github.com/i-rtfsc/as-aosp/core/pack"
 )
-
-type packManifest struct {
-	SchemaVersion int      `json:"schemaVersion"`
-	AOSPRoot      string   `json:"aospRoot,omitempty"`
-	OutRoot       string   `json:"outRoot,omitempty"`
-	Packs         []string `json:"packs"`
-	Files         int      `json:"files"`
-	Bytes         int64    `json:"bytes"`
-	Modules       []string `json:"modules,omitempty"`
-}
 
 func runPack(args []string) {
 	if len(args) == 0 || (args[0] != "export" && args[0] != "validate" && args[0] != "inspect" && args[0] != "preflight") {
@@ -52,15 +34,16 @@ func runPack(args []string) {
 	flags := flag.NewFlagSet("pack export", flag.ExitOnError)
 	aospRoot := flags.String("aosp-root", "", "AOSP source root")
 	outRoot := flags.String("out-root", "", "AOSP out root")
-	destination := flags.String("destination", "", "Metadata pack destination")
+	destination := flags.String("destination", "", "Portable Out destination")
 	native := flags.Bool("native", false, "include native metadata and compdb")
+	ide := flags.Bool("ide", false, "include generated CMake and Rust project metadata")
 	modules := stringFlags{}
 	flags.Var(&modules, "module", "selected module (repeatable)")
 	_ = flags.Parse(args[1:])
 	if *aospRoot == "" || *outRoot == "" || *destination == "" {
 		fatal(errors.New("--aosp-root, --out-root and --destination are required"))
 	}
-	if err := exportPack(*aospRoot, *outRoot, *destination, *native, []string(modules)); err != nil {
+	if err := exportPack(*aospRoot, *outRoot, *destination, *native, *ide, []string(modules)); err != nil {
 		fatal(err)
 	}
 }
@@ -69,6 +52,7 @@ func runPackPreflight(args []string) {
 	flags := flag.NewFlagSet("pack preflight", flag.ExitOnError)
 	outRoot := flags.String("out-root", "", "AOSP out root")
 	native := flags.Bool("native", false, "require native metadata and compdb")
+	ide := flags.Bool("ide", false, "require generated CMake and Rust metadata")
 	scanAllArtifacts := flags.Bool("scan-all-artifacts", false, "scan all jar, srcjar, and apk files")
 	var requestedModules stringFlags
 	flags.Var(&requestedModules, "module", "Soong module to verify (repeatable)")
@@ -99,6 +83,14 @@ func runPackPreflight(args []string) {
 		required := item.name == "module-info" || item.name == "java-deps" || (*native && (item.name == "cc-deps" || item.name == "compdb"))
 		if required && found == "" {
 			blocking = append(blocking, "missing required "+item.name)
+		}
+	}
+	if *ide {
+		if _, ok := findPackMetadata(outRootAbs, filepath.Join("soong", "rust-project.json")); !ok {
+			blocking = append(blocking, "missing required IDE metadata: soong/rust-project.json")
+		}
+		if !hasRegularFileUnder(filepath.Join(outRootAbs, "development", "ide", "clion")) {
+			blocking = append(blocking, "missing required IDE metadata: development/ide/clion")
 		}
 	}
 	report := metadata.LoadDirectory(outRootAbs)
@@ -161,23 +153,36 @@ func runPackPreflight(args []string) {
 	})
 }
 
+func hasRegularFileUnder(root string) bool {
+	found := false
+	_ = filepath.WalkDir(root, func(path string, entry os.DirEntry, err error) error {
+		if err == nil && !entry.IsDir() {
+			found = true
+			return filepath.SkipDir
+		}
+		return nil
+	})
+	return found
+}
+
 func runPackInspect(args []string) {
 	flags := flag.NewFlagSet("pack inspect", flag.ExitOnError)
-	root := flags.String("root", "", "Metadata pack root")
+	root := flags.String("root", "", "Portable Out root")
 	moduleName := flags.String("module", "", "module name")
 	_ = flags.Parse(args)
 	if *root == "" {
 		fatal(errors.New("--root is required"))
 	}
-	catalog, err := coremodules.LoadPackCatalog(*root)
-	if err != nil {
-		fatal(err)
-	}
+	report := metadata.LoadDirectory(*root)
+	catalog := coremodules.Build(report.Snapshot)
+	artifactCatalog := artifacts.Build(catalog)
 	output := map[string]any{"modules": len(catalog.Modules)}
-	jarFiles, jarBytes := packArtifactStats(*root, filepath.Join("out"), ".jar")
-	srcjarFiles, srcjarBytes := packArtifactStats(*root, filepath.Join("generated", "srcjars"), ".srcjar")
+	jarFiles, jarBytes := packArtifactStats(*root, filepath.Join("soong", ".intermediates"), ".jar")
+	srcjarFiles, srcjarBytes := packArtifactStats(*root, filepath.Join("soong", ".intermediates"), ".srcjar")
 	output["jars"] = map[string]any{"files": jarFiles, "bytes": jarBytes}
 	output["srcjars"] = map[string]any{"files": srcjarFiles, "bytes": srcjarBytes}
+	output["artifacts"] = len(artifactCatalog.Artifacts)
+	output["diagnostics"] = report.Diagnostics
 	if *moduleName != "" {
 		module, ok := catalog.Modules[*moduleName]
 		if !ok {
@@ -210,7 +215,7 @@ type stringFlags []string
 func (s *stringFlags) String() string         { return strings.Join(*s, ",") }
 func (s *stringFlags) Set(value string) error { *s = append(*s, value); return nil }
 
-func exportPack(aospRoot, outRoot, destination string, native bool, modules []string) error {
+func exportPack(aospRoot, outRoot, destination string, native, ide bool, modules []string) error {
 	var err error
 	aospRoot, err = filepath.Abs(aospRoot)
 	if err != nil {
@@ -229,14 +234,17 @@ func exportPack(aospRoot, outRoot, destination string, native bool, modules []st
 		return err
 	}
 	defer os.RemoveAll(tmp)
-	if err := os.MkdirAll(filepath.Join(tmp, "generated", "srcjars"), 0o755); err != nil {
+	if err := os.MkdirAll(tmp, 0o755); err != nil {
 		return err
 	}
-	manifest := packManifest{SchemaVersion: 1, AOSPRoot: aospRoot, OutRoot: outRoot, Packs: []string{"core"}, Modules: modules}
 	coreFiles := []string{"module-info.json", "module_bp_java_deps.json"}
 	if native {
-		manifest.Packs = append(manifest.Packs, "native")
 		coreFiles = append(coreFiles, "module_bp_cc_deps.json", filepath.Join("development", "ide", "compdb", "compile_commands.json"))
+	}
+	if ide {
+		if err := copyOptionalIDERoots(tmp, outRoot); err != nil {
+			return err
+		}
 	}
 	for _, relative := range coreFiles {
 		source, ok := findPackMetadata(outRoot, relative)
@@ -249,55 +257,39 @@ func exportPack(aospRoot, outRoot, destination string, native bool, modules []st
 			}
 			continue
 		}
-		target := filepath.Join(tmp, relative)
+		outRelative, relErr := filepath.Rel(outRoot, source)
+		if relErr != nil || strings.HasPrefix(outRelative, ".."+string(filepath.Separator)) {
+			return fmt.Errorf("metadata is outside out root: %s", source)
+		}
+		target := filepath.Join(tmp, outRelative)
 		if err := copyFile(source, target); err != nil {
 			return err
 		}
 	}
-	if err := writePackCatalog(tmp); err != nil {
-		return err
-	}
-	if err := writeArtifactCatalog(tmp); err != nil {
-		return err
-	}
 	if err := copyPackLibraries(tmp, outRoot, modules); err != nil {
 		return err
 	}
-	selectedPrefixes, err := selectedRepoPrefixes(tmp, modules)
-	if err != nil {
-		return err
-	}
-	if err := writeAIDLPack(aospRoot, tmp, selectedPrefixes); err != nil {
-		return err
-	}
-	if native {
-		if err := writeJNIPack(aospRoot, tmp, selectedPrefixes); err != nil {
-			return err
+	selectedArchives := map[string]bool{}
+	if len(modules) > 0 {
+		catalog := coremodules.Build(metadata.LoadDirectory(outRoot).Snapshot)
+		for _, name := range catalog.Closure(modules) {
+			for _, ref := range append(catalog.Modules[name].SrcJars, catalog.Modules[name].Generated...) {
+				raw := filepath.ToSlash(ref.Raw)
+				if marker := strings.Index(raw, ".intermediates/"); marker >= 0 {
+					selectedArchives[strings.TrimPrefix(raw[marker+len(".intermediates/"):], "/")] = true
+				}
+			}
 		}
 	}
-	selectedArchives, err := selectedSrcJars(tmp, modules)
-	if err != nil {
-		return err
-	}
-	generatedManifest := make([]map[string]any, 0)
 	copySrcJar := func(pathName, intermediateRelative string) error {
 		if info, statErr := os.Stat(pathName); statErr != nil || info.IsDir() || strings.ToLower(filepath.Ext(pathName)) != ".srcjar" {
 			return nil
 		}
-		relative, relErr := filepath.Rel(outRoot, pathName)
-		if relErr != nil {
-			return relErr
-		}
-		packPath := filepath.Join("generated", "srcjars", intermediateRelative)
+		packPath := filepath.Join("soong", ".intermediates", intermediateRelative)
 		target := filepath.Join(tmp, packPath)
 		if err := copyFile(pathName, target); err != nil {
 			return err
 		}
-		entries, zipErr := srcJarEntries(pathName)
-		if zipErr != nil {
-			return zipErr
-		}
-		generatedManifest = append(generatedManifest, map[string]any{"source": filepath.ToSlash(relative), "path": filepath.ToSlash(packPath), "entries": entries})
 		return nil
 	}
 	if len(modules) > 0 {
@@ -325,76 +317,43 @@ func exportPack(aospRoot, outRoot, destination string, native bool, modules []st
 			return err
 		}
 	}
-	manifestData, _ := json.MarshalIndent(manifest, "", "  ")
-	if err := os.WriteFile(filepath.Join(tmp, "manifest.json"), append(manifestData, '\n'), 0o644); err != nil {
-		return err
-	}
-	generatedData, _ := json.MarshalIndent(generatedManifest, "", "  ")
-	if err := os.WriteFile(filepath.Join(tmp, "generated", "manifest.json"), append(generatedData, '\n'), 0o644); err != nil {
-		return err
-	}
-	files, err := packFiles(tmp)
-	if err != nil {
-		return err
-	}
-	manifest.Files = len(files)
-	for _, file := range files {
-		if file == "manifest.json" {
-			continue
-		}
-		info, _ := os.Stat(filepath.Join(tmp, file))
-		if info != nil {
-			manifest.Bytes += info.Size()
-		}
-	}
-	manifestData, _ = json.MarshalIndent(manifest, "", "  ")
-	if err := os.WriteFile(filepath.Join(tmp, "manifest.json"), append(manifestData, '\n'), 0o644); err != nil {
-		return err
-	}
-	checksums := make([]string, 0, len(files))
-	for _, file := range files {
-		sum, err := fileSHA256(filepath.Join(tmp, file))
-		if err != nil {
-			return err
-		}
-		checksums = append(checksums, sum+"  "+file)
-	}
-	sort.Strings(checksums)
-	if err := os.WriteFile(filepath.Join(tmp, "checksums.sha256"), []byte(strings.Join(checksums, "\n")+"\n"), 0o644); err != nil {
-		return err
-	}
-	if result := corepack.Validate(tmp); !result.Valid {
-		if len(result.Diagnostics) == 0 {
-			return fmt.Errorf("exported metadata pack failed validation")
-		}
-		diagnostic := result.Diagnostics[0]
-		return fmt.Errorf("exported pack invalid: %s: %s: %s", diagnostic.Code, diagnostic.Path, diagnostic.Message)
+	if err := validatePortableOut(tmp, native, modules); err != nil {
+		return fmt.Errorf("exported portable out invalid: %w", err)
 	}
 	_ = os.RemoveAll(destination)
 	return os.Rename(tmp, destination)
 }
 
-func writeArtifactCatalog(root string) error {
-	catalog, err := coremodules.LoadPackCatalog(root)
-	if err != nil {
-		return err
+func copyOptionalIDERoots(destination, outRoot string) error {
+	for _, relative := range []string{"soong/rust-project.json", "soong/rust-project.kzip"} {
+		source := filepath.Join(outRoot, filepath.FromSlash(relative))
+		if info, err := os.Stat(source); err == nil && !info.IsDir() {
+			if err := copyFile(source, filepath.Join(destination, filepath.FromSlash(relative))); err != nil {
+				return err
+			}
+		}
 	}
-	artifactCatalog := artifacts.Build(catalog)
-	if err := os.MkdirAll(filepath.Join(root, "artifacts"), 0o755); err != nil {
-		return err
-	}
-	data, err := json.MarshalIndent(artifactCatalog, "", "  ")
-	if err != nil {
-		return err
-	}
-	return os.WriteFile(filepath.Join(root, "artifacts", "catalog.json"), append(data, '\n'), 0o644)
+	root := filepath.Join(outRoot, "development", "ide", "clion")
+	return filepath.WalkDir(root, func(pathName string, entry os.DirEntry, walkErr error) error {
+		if walkErr != nil {
+			if os.IsNotExist(walkErr) {
+				return nil
+			}
+			return walkErr
+		}
+		if entry.IsDir() {
+			return nil
+		}
+		relative, err := filepath.Rel(outRoot, pathName)
+		if err != nil {
+			return err
+		}
+		return copyFile(pathName, filepath.Join(destination, relative))
+	})
 }
 
 func copyPackLibraries(root, outRoot string, names []string) error {
-	catalog, err := coremodules.LoadPackCatalog(root)
-	if err != nil {
-		return err
-	}
+	catalog := coremodules.Build(metadata.LoadDirectory(outRoot).Snapshot)
 	selected := make([]string, 0)
 	if len(names) == 0 {
 		for name := range catalog.Modules {
@@ -436,12 +395,13 @@ func resolvePackArtifact(outRoot, raw string) (string, string, bool) {
 		if _, err := os.Stat(raw); err != nil {
 			return "", "", false
 		}
-		return raw, filepath.ToSlash(filepath.Join("out", filepath.FromSlash(suffix))), true
+		return raw, filepath.ToSlash(filepath.FromSlash(suffix)), true
 	}
 	if !strings.HasSuffix(strings.ToLower(normalized), ".jar") {
 		return "", "", false
 	}
-	candidates := []struct{ source, suffix string }{{filepath.Join(outRoot, filepath.FromSlash(normalized)), normalized}}
+	suffix := strings.TrimPrefix(normalized, "out/")
+	candidates := []struct{ source, suffix string }{{filepath.Join(outRoot, filepath.FromSlash(suffix)), suffix}}
 	outName := filepath.Base(outRoot)
 	if strings.HasPrefix(normalized, outName+"/") {
 		suffix := strings.TrimPrefix(normalized, outName+"/")
@@ -449,231 +409,70 @@ func resolvePackArtifact(outRoot, raw string) (string, string, bool) {
 	}
 	for _, candidate := range candidates {
 		if _, err := os.Stat(candidate.source); err == nil {
-			return candidate.source, filepath.ToSlash(filepath.Join("out", filepath.FromSlash(candidate.suffix))), true
+			return candidate.source, filepath.ToSlash(filepath.FromSlash(candidate.suffix)), true
 		}
 	}
 	return "", "", false
 }
 
-func selectedSrcJars(root string, names []string) (map[string]bool, error) {
-	result := make(map[string]bool)
-	if len(names) == 0 {
-		return result, nil
-	}
-	catalog, err := coremodules.LoadPackCatalog(root)
-	if err != nil {
-		return nil, err
-	}
-	for _, name := range names {
-		if _, ok := catalog.Modules[name]; !ok {
-			return nil, fmt.Errorf("selected module not found: %s", name)
-		}
-	}
-	for _, name := range catalog.Closure(names) {
-		for _, ref := range append(catalog.Modules[name].SrcJars, catalog.Modules[name].Generated...) {
-			raw := filepath.ToSlash(ref.Raw)
-			if marker := strings.Index(raw, ".intermediates/"); marker >= 0 {
-				result[strings.TrimPrefix(raw[marker+len(".intermediates/"):], "/")] = true
-			}
-		}
-	}
-	return result, nil
-}
-
-func selectedRepoPrefixes(root string, names []string) ([]string, error) {
-	if len(names) == 0 {
-		return nil, nil
-	}
-	catalog, err := coremodules.LoadPackCatalog(root)
-	if err != nil {
-		return nil, err
-	}
-	for _, name := range names {
-		if _, ok := catalog.Modules[name]; !ok {
-			return nil, fmt.Errorf("selected module not found: %s", name)
-		}
-	}
-	prefixes := make(map[string]bool)
-	for _, name := range catalog.Closure(names) {
-		module := catalog.Modules[name]
-		for _, ref := range append(module.SourceRoots, module.Paths...) {
-			if ref.RepoPath != "" {
-				prefixes[string(ref.RepoPath)] = true
-			}
-		}
-	}
-	result := make([]string, 0, len(prefixes))
-	for prefix := range prefixes {
-		result = append(result, prefix)
-	}
-	sort.Strings(result)
-	return result, nil
-}
-
-func writeJNIPack(aospRoot, destination string, prefixes []string) error {
-	javaFiles, cppFiles := map[model.RepoPath]string{}, map[model.RepoPath]string{}
-	err := filepath.WalkDir(aospRoot, func(pathName string, entry os.DirEntry, walkErr error) error {
-		if walkErr != nil || entry.IsDir() || strings.HasPrefix(filepath.ToSlash(pathName), filepath.ToSlash(filepath.Join(aospRoot, ".repo"))) || strings.Contains(filepath.ToSlash(pathName), "/.git/") || strings.Contains(filepath.ToSlash(pathName), "/out/") {
-			return nil
-		}
-		ext := strings.ToLower(filepath.Ext(entry.Name()))
-		if ext != ".java" && ext != ".kt" && ext != ".c" && ext != ".cc" && ext != ".cpp" && ext != ".cxx" && ext != ".h" && ext != ".hh" && ext != ".hpp" {
-			return nil
-		}
-		relative, err := filepath.Rel(aospRoot, pathName)
-		if err != nil {
-			return err
-		}
-		repoPath, err := model.NormalizeRepoPath(filepath.ToSlash(relative))
-		if err != nil {
-			return nil
-		}
-		if !repoPathAllowed(repoPath, prefixes) {
-			return nil
-		}
-		data, err := os.ReadFile(pathName)
-		if err != nil {
-			return nil
-		}
-		if ext == ".java" || ext == ".kt" {
-			javaFiles[repoPath] = string(data)
-		} else {
-			cppFiles[repoPath] = string(data)
-		}
-		return nil
-	})
-	if err != nil {
-		return err
-	}
-	index := jni.BuildIndex(javaFiles, cppFiles)
-	if err := os.MkdirAll(filepath.Join(destination, "jni"), 0o755); err != nil {
-		return err
-	}
-	data, err := json.MarshalIndent(index, "", "  ")
-	if err != nil {
-		return err
-	}
-	return os.WriteFile(filepath.Join(destination, "jni", "index.json"), append(data, '\n'), 0o644)
-}
-
-func writeAIDLPack(aospRoot, destination string, prefixes []string) error {
-	index := aidl.NewIndex()
-	err := filepath.WalkDir(aospRoot, func(pathName string, entry os.DirEntry, walkErr error) error {
-		if walkErr != nil || entry.IsDir() {
-			return nil
-		}
-		if strings.ToLower(filepath.Ext(entry.Name())) != ".aidl" {
-			return nil
-		}
-		relative, err := filepath.Rel(aospRoot, pathName)
-		if err != nil {
-			return err
-		}
-		repoPath, err := model.NormalizeRepoPath(filepath.ToSlash(relative))
-		if err != nil {
-			return nil
-		}
-		if !repoPathAllowed(repoPath, prefixes) {
-			return nil
-		}
-		data, err := os.ReadFile(pathName)
-		if err != nil {
-			return nil
-		}
-		index.Add(aidl.Parse(repoPath, string(data)))
-		return nil
-	})
-	if err != nil {
-		return err
-	}
-	if err := os.MkdirAll(filepath.Join(destination, "aidl"), 0o755); err != nil {
-		return err
-	}
-	symbols, err := json.MarshalIndent(index.Symbols, "", "  ")
-	if err != nil {
-		return err
-	}
-	if err := os.WriteFile(filepath.Join(destination, "aidl", "symbols.json"), append(symbols, '\n'), 0o644); err != nil {
-		return err
-	}
-	indexData, err := json.MarshalIndent(index, "", "  ")
-	if err != nil {
-		return err
-	}
-	if err := os.WriteFile(filepath.Join(destination, "aidl", "index.json"), append(indexData, '\n'), 0o644); err != nil {
-		return err
-	}
-	documents := make([]string, 0, len(index.Documents))
-	for path := range index.Documents {
-		documents = append(documents, string(path))
-	}
-	sort.Strings(documents)
-	data, err := json.MarshalIndent(documents, "", "  ")
-	if err != nil {
-		return err
-	}
-	return os.WriteFile(filepath.Join(destination, "aidl", "modules.json"), append(data, '\n'), 0o644)
-}
-
-func repoPathAllowed(path model.RepoPath, prefixes []string) bool {
-	if len(prefixes) == 0 {
-		return true
-	}
-	value := string(path)
-	for _, prefix := range prefixes {
-		if value == prefix || strings.HasPrefix(value, prefix+"/") {
-			return true
-		}
-	}
-	return false
-}
-
-func writePackCatalog(root string) error {
-	report := metadata.LoadDirectory(root)
-	catalog := coremodules.Build(report.Snapshot)
-	if err := os.MkdirAll(filepath.Join(root, "modules"), 0o755); err != nil {
-		return err
-	}
-	data, err := json.MarshalIndent(catalog, "", "  ")
-	if err != nil {
-		return err
-	}
-	if err := os.WriteFile(filepath.Join(root, "modules", "catalog.json"), append(data, '\n'), 0o644); err != nil {
-		return err
-	}
-	graph := make(map[string][]string, len(catalog.Modules))
-	for name, module := range catalog.Modules {
-		graph[name] = module.Dependencies
-	}
-	data, err = json.MarshalIndent(graph, "", "  ")
-	if err != nil {
-		return err
-	}
-	return os.WriteFile(filepath.Join(root, "modules", "dependency-graph.json"), append(data, '\n'), 0o644)
-}
-
 func runPackValidate(args []string) {
 	flags := flag.NewFlagSet("pack validate", flag.ExitOnError)
-	root := flags.String("root", "", "Metadata pack root")
+	root := flags.String("root", "", "Portable Out root")
+	native := flags.Bool("native", false, "require native metadata and compdb")
+	ide := flags.Bool("ide", false, "require generated CMake and Rust metadata")
 	_ = flags.Parse(args)
 	if *root == "" {
 		fatal(errors.New("--root is required"))
 	}
-	if err := validatePack(*root); err != nil {
+	if err := validatePortableOut(*root, *native, nil); err != nil {
 		fatal(err)
+	}
+	if *ide {
+		if err := validateIDERoot(*root); err != nil {
+			fatal(err)
+		}
 	}
 }
 
-func validatePack(root string) error {
-	result := corepack.Validate(root)
-	if result.Valid {
-		return nil
+func validateIDERoot(root string) error {
+	if _, ok := findPackMetadata(root, filepath.Join("soong", "rust-project.json")); !ok {
+		return errors.New("required IDE metadata is missing: soong/rust-project.json")
 	}
-	if len(result.Diagnostics) == 0 {
-		return fmt.Errorf("metadata pack validation failed")
+	if !hasRegularFileUnder(filepath.Join(root, "development", "ide", "clion")) {
+		return errors.New("required IDE metadata is missing: development/ide/clion")
 	}
-	diagnostic := result.Diagnostics[0]
-	return fmt.Errorf("%s: %s: %s", diagnostic.Code, diagnostic.Path, diagnostic.Message)
+	return nil
+}
+
+func validatePortableOut(root string, native bool, selectedModules []string) error {
+	for _, relative := range []string{"module-info.json", "module_bp_java_deps.json"} {
+		if _, ok := findPackMetadata(root, relative); !ok {
+			return fmt.Errorf("required build fact is missing: %s", relative)
+		}
+	}
+	if native {
+		for _, relative := range []string{"module_bp_cc_deps.json", filepath.Join("development", "ide", "compdb", "compile_commands.json")} {
+			if _, ok := findPackMetadata(root, relative); !ok {
+				return fmt.Errorf("required native build fact is missing: %s", relative)
+			}
+		}
+	}
+	report := metadata.LoadDirectory(root)
+	for _, diagnostic := range report.Diagnostics {
+		if diagnostic.Code == "METADATA_READ_FAILED" || diagnostic.Code == "METADATA_PARSE_FAILED" {
+			return fmt.Errorf("%s: %s", diagnostic.Code, diagnostic.Message)
+		}
+	}
+	catalog := coremodules.Build(report.Snapshot)
+	if len(catalog.Modules) == 0 {
+		return fmt.Errorf("module catalog is empty")
+	}
+	for _, name := range selectedModules {
+		if _, ok := catalog.Modules[name]; !ok {
+			return fmt.Errorf("selected module not found: %s", name)
+		}
+	}
+	return nil
 }
 
 func findPackMetadata(outRoot, relative string) (string, bool) {
@@ -688,27 +487,6 @@ func findPackMetadata(outRoot, relative string) (string, bool) {
 		}
 	}
 	return "", false
-}
-
-func srcJarEntries(pathName string) ([]string, error) {
-	reader, err := zip.OpenReader(pathName)
-	if err != nil {
-		return nil, err
-	}
-	defer reader.Close()
-	entries := make([]string, 0, len(reader.File))
-	for _, file := range reader.File {
-		name := strings.TrimPrefix(strings.ReplaceAll(file.Name, "\\", "/"), "/")
-		if name == "" || strings.Contains(name, "../") {
-			continue
-		}
-		if file.FileInfo().IsDir() {
-			continue
-		}
-		entries = append(entries, name)
-	}
-	sort.Strings(entries)
-	return entries, nil
 }
 
 func copyFile(source, target string) error {
@@ -727,31 +505,4 @@ func copyFile(source, target string) error {
 	defer out.Close()
 	_, err = io.Copy(out, in)
 	return err
-}
-func packFiles(root string) ([]string, error) {
-	result := []string{}
-	err := filepath.WalkDir(root, func(pathName string, entry os.DirEntry, err error) error {
-		if err != nil {
-			return err
-		}
-		if entry.IsDir() || entry.Name() == "checksums.sha256" {
-			return nil
-		}
-		relative, err := filepath.Rel(root, pathName)
-		if err != nil {
-			return err
-		}
-		result = append(result, filepath.ToSlash(relative))
-		return nil
-	})
-	sort.Strings(result)
-	return result, err
-}
-func fileSHA256(pathName string) (string, error) {
-	data, err := os.ReadFile(pathName)
-	if err != nil {
-		return "", err
-	}
-	sum := sha256.Sum256(data)
-	return hex.EncodeToString(sum[:]), nil
 }

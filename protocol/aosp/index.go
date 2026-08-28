@@ -152,7 +152,7 @@ func (server *Server) runIndex(profileID string, profile model.Profile, cancel c
 	if !server.indexStillRunning(cancel) {
 		return
 	}
-	catalog, diagnostics := server.loadBuildFactModuleCatalog(profile.MetadataPackRoot, profile.OutRoot)
+	catalog, diagnostics := server.loadBuildFactModuleCatalog(profile.OutRoot)
 	if !server.updateIndex(profileID, "catalog", 2, diagnostics, cancel) {
 		return
 	}

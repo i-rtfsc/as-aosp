@@ -270,7 +270,7 @@ func runAidl(args []string) {
 	root := flags.String("root", "", "AIDL source root")
 	file := flags.String("file", "", "RepoPath of the AIDL document")
 	typeName := flags.String("type", "", "canonical or imported type to resolve")
-	metadataRoot := flags.String("metadata-root", "", "Soong metadata root")
+	outRoot := flags.String("out-root", "", "AOSP out root")
 	moduleName := flags.String("module", "", "Soong module for generated peers")
 	cacheRoot := flags.String("cache-root", "", "generated source cache root")
 	summaryOnly := flags.Bool("summary", false, "print only summary and resolution")
@@ -296,8 +296,8 @@ func runAidl(args []string) {
 		}
 		resolution := report.Index.Resolve(document, *typeName)
 		output.Resolution = &resolution
-		if *metadataRoot != "" && *moduleName != "" {
-			metadataReport := metadata.LoadDirectory(*metadataRoot)
+		if *outRoot != "" && *moduleName != "" {
+			metadataReport := metadata.LoadDirectory(*outRoot)
 			moduleGraph := graph.Build(metadataReport.Snapshot)
 			peers := buildAidlPeers(
 				document,
@@ -308,8 +308,8 @@ func runAidl(args []string) {
 				rawMappings,
 			)
 			output.Peers = &peers
-		} else if *metadataRoot != "" {
-			metadataReport := metadata.LoadDirectory(*metadataRoot)
+		} else if *outRoot != "" {
+			metadataReport := metadata.LoadDirectory(*outRoot)
 			moduleGraph := graph.Build(metadataReport.Snapshot)
 			owner, found, ambiguous := moduleGraph.AidlOwner(document.Path)
 			if !found || ambiguous {

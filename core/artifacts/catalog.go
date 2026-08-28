@@ -112,8 +112,13 @@ func (catalog Catalog) Resolve(selector model.ArtifactSelector) Resolution {
 			candidates = append(candidates, artifact)
 			continue
 		}
-		if selector.Name != "" && selector.Name == artifact.Name {
-			candidates = append(candidates, artifact)
+		if selector.Name != "" {
+			nameMatches := selector.Name == artifact.Name
+			pathMatches := strings.Contains(filepath.ToSlash(selector.Name), "/") &&
+				normalizePath(selector.Name) == normalizePath(artifact.Path.Raw)
+			if nameMatches || pathMatches {
+				candidates = append(candidates, artifact)
+			}
 		}
 	}
 	sort.Slice(candidates, func(i, j int) bool { return candidates[i].ID < candidates[j].ID })

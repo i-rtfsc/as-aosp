@@ -1,9 +1,6 @@
 package aosp
 
 import (
-	"encoding/json"
-	"os"
-	"path/filepath"
 	"sort"
 	"strings"
 
@@ -14,9 +11,8 @@ import (
 )
 
 type ProjectGraphParams struct {
-	MetadataPackRoot string             `json:"metadataPackRoot"`
-	MetadataRoot     string             `json:"metadataRoot,omitempty"`
-	Targets          []model.TargetSpec `json:"targets"`
+	OutRoot string             `json:"outRoot"`
+	Targets []model.TargetSpec `json:"targets"`
 }
 
 type ProjectGraphResult struct {
@@ -25,10 +21,9 @@ type ProjectGraphResult struct {
 }
 
 type ArtifactsCatalogParams struct {
-	MetadataPackRoot string `json:"metadataPackRoot"`
-	MetadataRoot     string `json:"metadataRoot,omitempty"`
-	Kind             string `json:"kind,omitempty"`
-	Query            string `json:"query,omitempty"`
+	OutRoot string `json:"outRoot"`
+	Kind    string `json:"kind,omitempty"`
+	Query   string `json:"query,omitempty"`
 }
 
 type ArtifactsCatalogResult struct {
@@ -43,29 +38,12 @@ func (server *Server) artifactsCatalog(request jsonrpc.Request) jsonrpc.Response
 	}
 	result := ArtifactsCatalogResult{Artifacts: []artifacts.Artifact{}, Diagnostics: []model.Diagnostic{}}
 	var catalog artifacts.Catalog
-	if strings.TrimSpace(params.MetadataPackRoot) != "" {
-		root := strings.TrimSpace(params.MetadataPackRoot)
-		if diagnostics := diagnosticsToModel(server.validatePackIfDeclared(root)); len(diagnostics) > 0 {
-			result.Diagnostics = diagnostics
-			return jsonrpc.Success(request.ID, result)
-		}
-		data, err := os.ReadFile(filepath.Join(root, "artifacts", "catalog.json"))
-		if err != nil {
-			result.Diagnostics = []model.Diagnostic{buildFactsDiagnostic("ARTIFACT_CATALOG_READ_FAILED", err.Error(), filepath.Join(root, "artifacts", "catalog.json"))}
-			return jsonrpc.Success(request.ID, result)
-		}
-		if err := json.Unmarshal(data, &catalog); err != nil || catalog.Artifacts == nil {
-			result.Diagnostics = []model.Diagnostic{buildFactsDiagnostic("ARTIFACT_CATALOG_INVALID", "artifact catalog is invalid", filepath.Join(root, "artifacts", "catalog.json"))}
-			return jsonrpc.Success(request.ID, result)
-		}
-	} else {
-		_, loaded, diagnostics := server.loadBuildFactCatalogs("", params.MetadataRoot)
-		if len(diagnostics) > 0 {
-			result.Diagnostics = diagnostics
-			return jsonrpc.Success(request.ID, result)
-		}
-		catalog = loaded
+	_, loaded, diagnostics := server.loadBuildFactCatalogs(params.OutRoot)
+	if len(diagnostics) > 0 {
+		result.Diagnostics = diagnostics
+		return jsonrpc.Success(request.ID, result)
 	}
+	catalog = loaded
 	query := strings.ToLower(strings.TrimSpace(params.Query))
 	for _, artifact := range catalog.Artifacts {
 		if params.Kind != "" && string(artifact.Kind) != params.Kind {
@@ -88,7 +66,7 @@ func (server *Server) projectGraph(request jsonrpc.Request) jsonrpc.Response {
 	if len(params.Targets) == 0 {
 		return jsonrpc.Success(request.ID, ProjectGraphResult{Diagnostics: []model.Diagnostic{{Code: "PROJECT_GRAPH_TARGETS_MISSING", Severity: model.SeverityError, Stage: "project-graph-rpc", Message: "at least one target is required"}}})
 	}
-	moduleCatalog, artifactCatalog, diagnostics := server.loadBuildFactCatalogs(params.MetadataPackRoot, params.MetadataRoot)
+	moduleCatalog, artifactCatalog, diagnostics := server.loadBuildFactCatalogs(params.OutRoot)
 	if len(diagnostics) > 0 {
 		return jsonrpc.Success(request.ID, ProjectGraphResult{Diagnostics: diagnostics})
 	}

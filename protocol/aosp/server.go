@@ -25,7 +25,6 @@ type Server struct {
 	aidlSnapshot          *aidlSnapshot
 	moduleCatalogSnapshot *moduleCatalogSnapshot
 	coordinator           *indexCoordinator
-	packValidation        packValidationCache
 }
 
 type jniSnapshot struct {
@@ -61,14 +60,15 @@ type ServerInfo struct {
 }
 
 type Capabilities struct {
-	ProfileValidation  bool `json:"profileValidation"`
-	TopologyDiscovery  bool `json:"topologyDiscovery"`
-	TopologyValidation bool `json:"topologyValidation"`
-	AIDLNavigation     bool `json:"aidlNavigation"`
-	JNINavigation      bool `json:"jniNavigation"`
-	ModuleCatalog      bool `json:"moduleCatalog"`
-	IndexCoordinator   bool `json:"indexCoordinator"`
-	ProjectGraph       bool `json:"projectGraph"`
+	ProfileValidation     bool `json:"profileValidation"`
+	TopologyDiscovery     bool `json:"topologyDiscovery"`
+	TopologyValidation    bool `json:"topologyValidation"`
+	AIDLNavigation        bool `json:"aidlNavigation"`
+	JNINavigation         bool `json:"jniNavigation"`
+	ModuleCatalog         bool `json:"moduleCatalog"`
+	IndexCoordinator      bool `json:"indexCoordinator"`
+	ProjectGraph          bool `json:"projectGraph"`
+	SourceModuleDiscovery bool `json:"sourceModuleDiscovery"`
 }
 
 type ProfileResult struct {
@@ -154,22 +154,12 @@ func (server *Server) Handle(request jsonrpc.Request) (jsonrpc.Response, bool) {
 		response = server.indexProjection(request)
 	case "aosp/generated/materialize":
 		response = server.generatedMaterialize(request)
-	case "aosp/pack/info":
-		response = server.packInfo(request)
-	case "aosp/pack/validate":
-		response = server.packValidate(request)
 	case "aosp/projects/graph":
 		response = server.projectGraph(request)
 	case "aosp/artifacts/catalog":
 		response = server.artifactsCatalog(request)
-	case "aosp/aidl/pack/resolve":
-		response = server.aidlPackResolve(request)
-	case "aosp/aidl/pack/references":
-		response = server.aidlPackReferences(request)
-	case "aosp/aidl/pack/peers":
-		response = server.aidlPackPeers(request)
-	case "aosp/jni/pack/peers":
-		response = server.jniPackPeers(request)
+	case "aosp/source/modules":
+		response = server.sourceModules(request)
 	default:
 		response = jsonrpc.Failure(request.ID, jsonrpc.MethodNotFound(request.Method))
 	}
@@ -192,14 +182,15 @@ func (server *Server) initialize(request jsonrpc.Request) (jsonrpc.Response, boo
 		ProtocolVersion: ProtocolVersion,
 		ServerInfo:      ServerInfo{Name: "aosp-index", Version: "dev"},
 		Capabilities: Capabilities{
-			ProfileValidation:  true,
-			TopologyDiscovery:  true,
-			TopologyValidation: true,
-			AIDLNavigation:     true,
-			JNINavigation:      true,
-			ModuleCatalog:      true,
-			IndexCoordinator:   true,
-			ProjectGraph:       true,
+			ProfileValidation:     true,
+			TopologyDiscovery:     true,
+			TopologyValidation:    true,
+			AIDLNavigation:        true,
+			JNINavigation:         true,
+			ModuleCatalog:         true,
+			IndexCoordinator:      true,
+			ProjectGraph:          true,
+			SourceModuleDiscovery: true,
 		},
 	}), !request.IsNotification()
 }

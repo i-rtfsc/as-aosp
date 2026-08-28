@@ -2,8 +2,6 @@ package aosp
 
 import (
 	"archive/zip"
-	"crypto/sha256"
-	"encoding/hex"
 	"encoding/json"
 	"os"
 	"path/filepath"
@@ -11,9 +9,7 @@ import (
 	"time"
 
 	"github.com/i-rtfsc/as-aosp/core/aidl"
-	"github.com/i-rtfsc/as-aosp/core/metadata"
 	"github.com/i-rtfsc/as-aosp/core/model"
-	coremodules "github.com/i-rtfsc/as-aosp/core/modules"
 	"github.com/i-rtfsc/as-aosp/core/topology"
 	"github.com/i-rtfsc/as-aosp/protocol/jsonrpc"
 )
@@ -50,23 +46,13 @@ func TestServerLifecycleAndCapabilities(t *testing.T) {
 	}
 }
 
-func TestServerQueriesModuleCatalogFromPack(t *testing.T) {
+func TestServerQueriesModuleCatalogFromOut(t *testing.T) {
 	root := t.TempDir()
-	pathName := filepath.Join(root, "modules", "catalog.json")
-	if err := os.MkdirAll(filepath.Dir(pathName), 0o755); err != nil {
-		t.Fatal(err)
-	}
-	catalog := coremodules.Catalog{Modules: map[string]coremodules.Module{
-		"framework": {Name: "framework", Dependencies: []string{"core"}},
-		"core":      {Name: "core"},
-	}}
-	data, _ := json.Marshal(catalog)
-	if err := os.WriteFile(pathName, data, 0o644); err != nil {
-		t.Fatal(err)
-	}
+	writeTestFile(t, root, "module-info.json", `{"framework":{"dependencies":["core"]},"core":{}}`)
+	writeTestFile(t, root, "module_bp_java_deps.json", `{}`)
 	server := initializedServer(t)
 	response, _ := server.Handle(makeRequest(2, "aosp/modules/catalog", ModulesParams{
-		MetadataPackRoot: root,
+		OutRoot: root,
 	}))
 	var listed ModulesCatalogResult
 	decodeResult(t, response, &listed)
@@ -75,7 +61,7 @@ func TestServerQueriesModuleCatalogFromPack(t *testing.T) {
 		t.Fatalf("listed=%+v", listed)
 	}
 	response, _ = server.Handle(makeRequest(3, "aosp/modules/closure", ModulesParams{
-		MetadataPackRoot: root, Names: []string{"framework"},
+		OutRoot: root, Names: []string{"framework"},
 	}))
 	var closure ModulesClosureResult
 	decodeResult(t, response, &closure)
@@ -84,7 +70,7 @@ func TestServerQueriesModuleCatalogFromPack(t *testing.T) {
 		t.Fatalf("closure=%+v", closure)
 	}
 	response, _ = server.Handle(makeRequest(4, "aosp/modules/get", ModulesParams{
-		MetadataPackRoot: root, Name: "framework",
+		OutRoot: root, Name: "framework",
 	}))
 	var got ModuleResult
 	decodeResult(t, response, &got)
@@ -93,26 +79,13 @@ func TestServerQueriesModuleCatalogFromPack(t *testing.T) {
 	}
 }
 
-func TestServerBuildsProjectGraphFromPack(t *testing.T) {
+func TestServerBuildsProjectGraphFromOut(t *testing.T) {
 	root := t.TempDir()
-	modulePath := filepath.Join(root, "modules", "catalog.json")
-	artifactPath := filepath.Join(root, "artifacts", "catalog.json")
-	for _, pathName := range []string{modulePath, artifactPath} {
-		if err := os.MkdirAll(filepath.Dir(pathName), 0o755); err != nil {
-			t.Fatal(err)
-		}
-	}
-	moduleData := `{"modules":{"framework":{"name":"framework","sourceRoots":[{"raw":"frameworks/base/core/java","kind":"repo-relative","repoPath":"frameworks/base/core/java"}]}}}`
-	artifactData := `{"artifacts":{"jar:framework.jar":{"id":"jar:framework.jar","kind":"jar","name":"framework.jar","path":{"raw":"out/framework.jar","kind":"generated","repoPath":"out/framework.jar"},"ownerModules":["framework"]}}}`
-	if err := os.WriteFile(modulePath, []byte(moduleData), 0o644); err != nil {
-		t.Fatal(err)
-	}
-	if err := os.WriteFile(artifactPath, []byte(artifactData), 0o644); err != nil {
-		t.Fatal(err)
-	}
+	writeTestFile(t, root, "module-info.json", `{"framework":{"path":["frameworks/base/core/java"]}}`)
+	writeTestFile(t, root, "module_bp_java_deps.json", `{"framework":{"jars":["out/soong/framework.jar"]}}`)
 	server := initializedServer(t)
 	response, _ := server.Handle(makeRequest(2, "aosp/projects/graph", ProjectGraphParams{
-		MetadataPackRoot: root,
+		OutRoot: root,
 		Targets: []model.TargetSpec{{
 			ID: "framework", Kind: model.TargetJava,
 			Selectors: model.TargetSelectors{Artifacts: []model.ArtifactSelector{{Kind: model.ArtifactJar, Name: "framework.jar"}}},
@@ -137,7 +110,7 @@ func TestServerBuildsProjectGraphFromLocalOut(t *testing.T) {
 	}`)
 	server := initializedServer(t)
 	response, _ := server.Handle(makeRequest(2, "aosp/projects/graph", ProjectGraphParams{
-		MetadataRoot: root,
+		OutRoot: root,
 		Targets: []model.TargetSpec{{
 			ID: "systemui", Kind: model.TargetAndroid,
 			Selectors: model.TargetSelectors{Artifacts: []model.ArtifactSelector{{Kind: model.ArtifactAPK, Name: "SystemUI.apk"}}},
@@ -157,17 +130,11 @@ func TestServerBuildsProjectGraphFromLocalOut(t *testing.T) {
 
 func TestServerListsArtifactsByKindAndQuery(t *testing.T) {
 	root := t.TempDir()
-	pathName := filepath.Join(root, "artifacts", "catalog.json")
-	if err := os.MkdirAll(filepath.Dir(pathName), 0o755); err != nil {
-		t.Fatal(err)
-	}
-	data := `{"artifacts":{"jar:framework.jar":{"id":"jar:framework.jar","kind":"jar","name":"framework.jar"},"apk:SystemUI.apk":{"id":"apk:SystemUI.apk","kind":"apk","name":"SystemUI.apk"}}}`
-	if err := os.WriteFile(pathName, []byte(data), 0o644); err != nil {
-		t.Fatal(err)
-	}
+	writeTestFile(t, root, "module-info.json", `{"SystemUI":{"installed":["out/target/product/demo/SystemUI.apk"]}}`)
+	writeTestFile(t, root, "module_bp_java_deps.json", `{}`)
 	server := initializedServer(t)
 	response, _ := server.Handle(makeRequest(2, "aosp/artifacts/catalog", ArtifactsCatalogParams{
-		MetadataPackRoot: root, Kind: "apk", Query: "system",
+		OutRoot: root, Kind: "apk", Query: "system",
 	}))
 	var result ArtifactsCatalogResult
 	decodeResult(t, response, &result)
@@ -176,37 +143,12 @@ func TestServerListsArtifactsByKindAndQuery(t *testing.T) {
 	}
 }
 
-func TestServerInvalidatesPackValidationAfterInPlaceChange(t *testing.T) {
-	root := t.TempDir()
-	pathName := filepath.Join(root, "modules", "catalog.json")
-	if err := os.MkdirAll(filepath.Dir(pathName), 0o755); err != nil {
-		t.Fatal(err)
-	}
-	writeMinimalValidPack(t, root, pathName)
-	server := initializedServer(t)
-	first, _ := server.Handle(makeRequest(2, "aosp/pack/validate", PackValidateParams{MetadataPackRoot: root}))
-	var firstResult PackValidateResult
-	decodeResult(t, first, &firstResult)
-	if !firstResult.Valid {
-		t.Fatalf("first validation=%+v", firstResult)
-	}
-	if err := os.WriteFile(pathName, []byte(`{"modules":null}`), 0o644); err != nil {
-		t.Fatal(err)
-	}
-	second, _ := server.Handle(makeRequest(3, "aosp/modules/catalog", ModulesParams{MetadataPackRoot: root}))
-	var secondResult ModulesCatalogResult
-	decodeResult(t, second, &secondResult)
-	if len(secondResult.Diagnostics) == 0 {
-		t.Fatalf("in-place pack change was hidden: %+v", secondResult)
-	}
-}
-
-func TestServerReadsCompdbFromMetadataPack(t *testing.T) {
+func TestServerReadsCompdbFromOut(t *testing.T) {
 	root := t.TempDir()
 	writeTestFile(t, root, "compile_commands.json", `[{"directory":"/srv/aosp","arguments":["clang","-I","/srv/aosp/include"],"file":"/srv/aosp/demo.cpp"}]`)
 	server := initializedServer(t)
 	response, _ := server.Handle(makeRequest(2, "aosp/compdb/overlay", CompDBOverlayParams{
-		MetadataPackRoot:  root,
+		OutRoot:           root,
 		WorkspaceViewRoot: t.TempDir(),
 		PathMappings:      []model.PathMapping{{ExternalPrefix: "/srv/aosp", LocalPrefix: "/workspace/aosp"}},
 	}))
@@ -214,39 +156,6 @@ func TestServerReadsCompdbFromMetadataPack(t *testing.T) {
 	decodeResult(t, response, &result)
 	if len(result.Diagnostics) != 0 || len(result.Entries) != 1 || result.Entries[0].File != filepath.FromSlash("/workspace/aosp/demo.cpp") {
 		t.Fatalf("result=%+v", result)
-	}
-}
-
-func writeMinimalValidPack(t *testing.T, root, catalogPath string) {
-	t.Helper()
-	files := map[string]string{
-		"manifest.json":           `{"schemaVersion":1,"packs":["core"]}`,
-		"generated/manifest.json": `[]`, "modules/dependency-graph.json": `{}`,
-		"artifacts/catalog.json": `{"artifacts":{}}`,
-		"aidl/symbols.json":      `{}`, "aidl/index.json": `{"documents":{},"symbols":{}}`,
-		"aidl/modules.json": `[]`,
-	}
-	for pathName, data := range files {
-		full := filepath.Join(root, pathName)
-		if err := os.MkdirAll(filepath.Dir(full), 0o755); err != nil {
-			t.Fatal(err)
-		}
-		if err := os.WriteFile(full, []byte(data), 0o644); err != nil {
-			t.Fatal(err)
-		}
-	}
-	if err := os.WriteFile(catalogPath, []byte(`{"modules":{}}`), 0o644); err != nil {
-		t.Fatal(err)
-	}
-	// This fixture only exercises cache invalidation; the first validation must succeed.
-	checksums := ""
-	for _, pathName := range []string{"aidl/index.json", "aidl/modules.json", "aidl/symbols.json", "generated/manifest.json", "manifest.json", "modules/catalog.json", "modules/dependency-graph.json", "artifacts/catalog.json"} {
-		data, _ := os.ReadFile(filepath.Join(root, pathName))
-		sum := sha256.Sum256(data)
-		checksums += hex.EncodeToString(sum[:]) + "  " + pathName + "\n"
-	}
-	if err := os.WriteFile(filepath.Join(root, "checksums.sha256"), []byte(checksums), 0o644); err != nil {
-		t.Fatal(err)
 	}
 }
 
@@ -260,24 +169,13 @@ func TestServerReportsMissingModulePack(t *testing.T) {
 	}
 }
 
-func TestServerBuildsIndexStatusFromMetadataPack(t *testing.T) {
+func TestServerBuildsIndexStatusFromOut(t *testing.T) {
 	root := t.TempDir()
-	pathName := filepath.Join(root, "modules", "catalog.json")
-	if err := os.MkdirAll(filepath.Dir(pathName), 0o755); err != nil {
-		t.Fatal(err)
-	}
-	catalog := coremodules.Catalog{Modules: map[string]coremodules.Module{
-		"framework": {
-			Name: "framework", SrcJars: []metadata.PathRef{metadata.NewPathRef("out/framework.srcjar")},
-		},
-	}}
-	data, _ := json.Marshal(catalog)
-	if err := os.WriteFile(pathName, data, 0o644); err != nil {
-		t.Fatal(err)
-	}
+	writeTestFile(t, root, "module-info.json", `{}`)
+	writeTestFile(t, root, "module_bp_java_deps.json", `{"framework":{"srcjars":["out/soong/framework.srcjar"]}}`)
 	server := initializedServer(t)
 	response, _ := server.Handle(makeRequest(2, "aosp/index/start", IndexStartParams{
-		Profile: model.Profile{ID: "framework", MetadataPackRoot: root},
+		Profile: model.Profile{ID: "framework", OutRoot: root},
 	}))
 	if response.Error != nil {
 		t.Fatalf("start=%+v", response)
@@ -313,21 +211,17 @@ func TestServerKeepsMissingPackIndexPartial(t *testing.T) {
 	}
 }
 
-func TestServerMaterializesPackSrcJars(t *testing.T) {
+func TestServerMaterializesOutSrcJars(t *testing.T) {
 	pack := t.TempDir()
-	archive := filepath.Join(pack, "generated", "srcjars", "framework.srcjar")
+	archive := filepath.Join(pack, "soong", "framework.srcjar")
 	if err := os.MkdirAll(filepath.Dir(archive), 0o755); err != nil {
 		t.Fatal(err)
 	}
 	writeProtocolSrcJar(t, archive, "android/os/Build.java", "package android.os; class Build {}")
-	manifest, _ := json.Marshal([]map[string]string{{"path": "generated/srcjars/framework.srcjar"}})
-	if err := os.WriteFile(filepath.Join(pack, "generated", "manifest.json"), manifest, 0o644); err != nil {
-		t.Fatal(err)
-	}
 	server := initializedServer(t)
 	cache := t.TempDir()
 	response, _ := server.Handle(makeRequest(2, "aosp/generated/materialize", GeneratedMaterializeParams{
-		MetadataPackRoot: pack, CacheRoot: cache,
+		OutRoot: pack, Archives: []string{"soong/framework.srcjar"}, CacheRoot: cache,
 	}))
 	var result GeneratedMaterializeResult
 	decodeResult(t, response, &result)
@@ -348,7 +242,7 @@ func TestServerMaterializesSelectedLocalOutSrcJar(t *testing.T) {
 	writeProtocolSrcJar(t, archive, "android/os/Build.java", "package android.os; class Build {}")
 	server := initializedServer(t)
 	response, _ := server.Handle(makeRequest(2, "aosp/generated/materialize", GeneratedMaterializeParams{
-		MetadataRoot: out, Archives: []string{"soong/framework.srcjar"}, CacheRoot: t.TempDir(),
+		OutRoot: out, Archives: []string{"soong/framework.srcjar"}, CacheRoot: t.TempDir(),
 	}))
 	var result GeneratedMaterializeResult
 	decodeResult(t, response, &result)
@@ -361,93 +255,11 @@ func TestServerRejectsLocalSrcJarOutsideOut(t *testing.T) {
 	out := t.TempDir()
 	server := initializedServer(t)
 	response, _ := server.Handle(makeRequest(2, "aosp/generated/materialize", GeneratedMaterializeParams{
-		MetadataRoot: out, Archives: []string{"../outside.srcjar"}, CacheRoot: t.TempDir(),
+		OutRoot: out, Archives: []string{"../outside.srcjar"}, CacheRoot: t.TempDir(),
 	}))
 	var result GeneratedMaterializeResult
 	decodeResult(t, response, &result)
 	if len(result.SourceRoots) != 0 || len(result.Diagnostics) != 1 || result.Diagnostics[0].Code != "GENERATED_ARCHIVE_PATH_INVALID" {
-		t.Fatalf("result=%+v", result)
-	}
-}
-
-func TestServerResolvesAIDLFromPack(t *testing.T) {
-	pack := t.TempDir()
-	if err := os.MkdirAll(filepath.Join(pack, "aidl"), 0o755); err != nil {
-		t.Fatal(err)
-	}
-	symbols := map[string][]aidl.Symbol{"demo.IFoo": {{CanonicalName: "demo.IFoo", Kind: aidl.SymbolInterface, Path: "demo/IFoo.aidl", Origin: "parser", Confidence: "exact"}}}
-	data, _ := json.Marshal(symbols)
-	if err := os.WriteFile(filepath.Join(pack, "aidl", "symbols.json"), data, 0o644); err != nil {
-		t.Fatal(err)
-	}
-	server := initializedServer(t)
-	response, _ := server.Handle(makeRequest(2, "aosp/aidl/pack/resolve", AIDLPackResolveParams{MetadataPackRoot: pack, Name: "demo.IFoo"}))
-	var result AIDLPackResolveResult
-	decodeResult(t, response, &result)
-	if result.State != aidl.ResolutionFound || len(result.Symbols) != 1 || len(result.Diagnostics) != 0 {
-		t.Fatalf("result=%+v", result)
-	}
-	response, _ = server.Handle(makeRequest(3, "aosp/aidl/pack/resolve", AIDLPackResolveParams{MetadataPackRoot: pack, Name: "IFoo"}))
-	decodeResult(t, response, &result)
-	if result.State != aidl.ResolutionFound || len(result.Symbols) != 1 {
-		t.Fatalf("short name result=%+v", result)
-	}
-}
-
-func TestServerQueriesPackedAIDLReferences(t *testing.T) {
-	pack := t.TempDir()
-	if err := os.MkdirAll(filepath.Join(pack, "aidl"), 0o755); err != nil {
-		t.Fatal(err)
-	}
-	index := aidl.NewIndex()
-	index.Add(aidl.Parse("demo/Client.aidl", "package demo; import demo.IFoo; interface Client { IFoo value(); }"))
-	index.Add(aidl.Parse("demo/IFoo.aidl", "package demo; interface IFoo {}"))
-	data, _ := json.Marshal(index)
-	if err := os.WriteFile(filepath.Join(pack, "aidl", "index.json"), data, 0o644); err != nil {
-		t.Fatal(err)
-	}
-	server := initializedServer(t)
-	response, _ := server.Handle(makeRequest(2, "aosp/aidl/pack/references", AIDLPackReferencesParams{MetadataPackRoot: pack, Name: "IFoo"}))
-	var result AIDLPackReferencesResult
-	decodeResult(t, response, &result)
-	if len(result.Diagnostics) != 0 || len(result.References) != 2 {
-		t.Fatalf("result=%+v", result)
-	}
-}
-
-func TestServerMaterializesPackedAIDLJavaPeer(t *testing.T) {
-	pack := t.TempDir()
-	if err := os.MkdirAll(filepath.Join(pack, "aidl"), 0o755); err != nil {
-		t.Fatal(err)
-	}
-	index := aidl.NewIndex()
-	index.Add(aidl.Parse("demo/IFoo.aidl", "package demo; interface IFoo {}"))
-	data, _ := json.Marshal(index)
-	if err := os.WriteFile(filepath.Join(pack, "aidl", "index.json"), data, 0o644); err != nil {
-		t.Fatal(err)
-	}
-	archive := filepath.Join(pack, "generated", "srcjars", "framework.srcjar")
-	if err := os.MkdirAll(filepath.Dir(archive), 0o755); err != nil {
-		t.Fatal(err)
-	}
-	writeProtocolSrcJar(t, archive, "demo/IFoo.java", "package demo; class IFoo {}")
-	manifest, _ := json.Marshal([]map[string]string{{"path": "generated/srcjars/framework.srcjar"}})
-	if err := os.WriteFile(filepath.Join(pack, "generated", "manifest.json"), manifest, 0o644); err != nil {
-		t.Fatal(err)
-	}
-	server := initializedServer(t)
-	response, _ := server.Handle(makeRequest(2, "aosp/aidl/pack/peers", AIDLPackPeersParams{
-		MetadataPackRoot: pack, CacheRoot: t.TempDir(), Name: "IFoo",
-	}))
-	var result AIDLPackPeersResult
-	decodeResult(t, response, &result)
-	found := false
-	for _, peer := range result.Peers {
-		if peer.Language == aidl.PeerJava && peer.Confidence == "exact" && peer.LocalPath != "" {
-			found = true
-		}
-	}
-	if !found || len(result.Diagnostics) != 0 {
 		t.Fatalf("result=%+v", result)
 	}
 }
@@ -743,7 +555,7 @@ func TestServerMapsCompDBOverlayPaths(t *testing.T) {
 	root := t.TempDir()
 	writeTestFile(t, root, "compile_commands.json", `[{"directory":"/srv/aosp/out","arguments":["clang++","-I/srv/aosp/include"],"file":"/srv/aosp/frameworks/base/foo.cpp","output":"/srv/aosp/out/foo.o"}]`)
 	server := initializedServer(t)
-	response, _ := server.Handle(makeRequest(2, "aosp/compdb/overlay", CompDBOverlayParams{MetadataRoot: root, PathMappings: []model.PathMapping{{ExternalPrefix: "/srv/aosp", LocalPrefix: "/work/aosp"}}}))
+	response, _ := server.Handle(makeRequest(2, "aosp/compdb/overlay", CompDBOverlayParams{OutRoot: root, PathMappings: []model.PathMapping{{ExternalPrefix: "/srv/aosp", LocalPrefix: "/work/aosp"}}}))
 	var result CompDBOverlayResult
 	decodeResult(t, response, &result)
 	if len(result.Diagnostics) != 0 || len(result.Entries) != 1 {
@@ -758,7 +570,7 @@ func TestServerMapsWindowsCompDBPathsOnAnyHost(t *testing.T) {
 	root := t.TempDir()
 	writeTestFile(t, root, "compile_commands.json", `[{"directory":"C:\\build\\out","arguments":["clang++","-IC:\\build\\include"],"file":"C:\\build\\src\\foo.cpp"}]`)
 	server := initializedServer(t)
-	response, _ := server.Handle(makeRequest(2, "aosp/compdb/overlay", CompDBOverlayParams{MetadataRoot: root, PathMappings: []model.PathMapping{{ExternalPrefix: "C:\\build", LocalPrefix: "D:\\aosp"}}}))
+	response, _ := server.Handle(makeRequest(2, "aosp/compdb/overlay", CompDBOverlayParams{OutRoot: root, PathMappings: []model.PathMapping{{ExternalPrefix: "C:\\build", LocalPrefix: "D:\\aosp"}}}))
 	var result CompDBOverlayResult
 	decodeResult(t, response, &result)
 	if len(result.Entries) != 1 || filepath.ToSlash(result.Entries[0].File) != "D:/aosp/src/foo.cpp" {
@@ -770,7 +582,7 @@ func TestServerMapsSeparatedAndLongestCompDBArguments(t *testing.T) {
 	root := t.TempDir()
 	writeTestFile(t, root, "compile_commands.json", `[{"directory":"/srv/aosp/out","arguments":["clang++","-I","/srv/aosp/include","--sysroot=/srv/aosp/sysroot","@/srv/aosp/args.rsp"],"file":"/srv/aosp/src/foo.cpp"}]`)
 	server := initializedServer(t)
-	response, _ := server.Handle(makeRequest(2, "aosp/compdb/overlay", CompDBOverlayParams{MetadataRoot: root, PathMappings: []model.PathMapping{{ExternalPrefix: "/srv", LocalPrefix: "/short"}, {ExternalPrefix: "/srv/aosp", LocalPrefix: "/long"}}}))
+	response, _ := server.Handle(makeRequest(2, "aosp/compdb/overlay", CompDBOverlayParams{OutRoot: root, PathMappings: []model.PathMapping{{ExternalPrefix: "/srv", LocalPrefix: "/short"}, {ExternalPrefix: "/srv/aosp", LocalPrefix: "/long"}}}))
 	var result CompDBOverlayResult
 	decodeResult(t, response, &result)
 	if result.Entries[0].Arguments[2] != "/long/include" || result.Entries[0].Arguments[3] != "--sysroot=/long/sysroot" || result.Entries[0].Arguments[4] != "@/long/args.rsp" {
@@ -789,7 +601,7 @@ func TestServerReportsDuplicateCompDBVariants(t *testing.T) {
 	root := t.TempDir()
 	writeTestFile(t, root, "compile_commands.json", `[{"directory":".","arguments":["clang++","-DHOST"],"file":"foo.cpp"},{"directory":".","arguments":["clang++","-DDEVICE"],"file":"foo.cpp"}]`)
 	server := initializedServer(t)
-	response, _ := server.Handle(makeRequest(2, "aosp/compdb/overlay", CompDBOverlayParams{MetadataRoot: root}))
+	response, _ := server.Handle(makeRequest(2, "aosp/compdb/overlay", CompDBOverlayParams{OutRoot: root}))
 	var result CompDBOverlayResult
 	decodeResult(t, response, &result)
 	if len(result.Entries) != 2 || len(result.Diagnostics) != 1 || result.Diagnostics[0].Code != "COMPDB_VARIANT_DUPLICATE" {

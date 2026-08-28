@@ -1,23 +1,18 @@
 package aosp
 
 import (
-	"fmt"
-	"os"
-	"path/filepath"
 	"sort"
 	"strings"
 
 	"github.com/i-rtfsc/as-aosp/core/model"
 	"github.com/i-rtfsc/as-aosp/core/modules"
-	corepack "github.com/i-rtfsc/as-aosp/core/pack"
 	"github.com/i-rtfsc/as-aosp/protocol/jsonrpc"
 )
 
 type ModulesParams struct {
-	MetadataPackRoot string   `json:"metadataPackRoot"`
-	MetadataRoot     string   `json:"metadataRoot,omitempty"`
-	Names            []string `json:"names,omitempty"`
-	Name             string   `json:"name,omitempty"`
+	OutRoot string   `json:"outRoot"`
+	Names   []string `json:"names,omitempty"`
+	Name    string   `json:"name,omitempty"`
 }
 
 type ModuleSummary struct {
@@ -59,7 +54,7 @@ func (server *Server) modulesCatalog(request jsonrpc.Request) jsonrpc.Response {
 	if err := decodeParams(request, &params); err != nil {
 		return jsonrpc.Failure(request.ID, jsonrpc.InvalidParams(err.Error()))
 	}
-	catalog, diagnostics := server.loadBuildFactModuleCatalog(params.MetadataPackRoot, params.MetadataRoot)
+	catalog, diagnostics := server.loadBuildFactModuleCatalog(params.OutRoot)
 	result := ModulesCatalogResult{Modules: []ModuleSummary{}, Diagnostics: diagnostics}
 	if len(diagnostics) != 0 {
 		return jsonrpc.Success(request.ID, result)
@@ -83,7 +78,7 @@ func (server *Server) moduleGet(request jsonrpc.Request) jsonrpc.Response {
 	if err := decodeParams(request, &params); err != nil {
 		return jsonrpc.Failure(request.ID, jsonrpc.InvalidParams(err.Error()))
 	}
-	catalog, diagnostics := server.loadBuildFactModuleCatalog(params.MetadataPackRoot, params.MetadataRoot)
+	catalog, diagnostics := server.loadBuildFactModuleCatalog(params.OutRoot)
 	result := ModuleResult{Diagnostics: diagnostics}
 	if len(diagnostics) != 0 {
 		return jsonrpc.Success(request.ID, result)
@@ -92,8 +87,8 @@ func (server *Server) moduleGet(request jsonrpc.Request) jsonrpc.Response {
 	module, ok := catalog.Modules[name]
 	if !ok || name == "" {
 		result.Diagnostics = []model.Diagnostic{moduleDiagnostic(
-			"MODULE_NOT_FOUND", "module is not present in the metadata pack: "+name,
-			params.MetadataPackRoot,
+			"MODULE_NOT_FOUND", "module is not present in out build facts: "+name,
+			params.OutRoot,
 		)}
 		return jsonrpc.Success(request.ID, result)
 	}
@@ -106,7 +101,7 @@ func (server *Server) modulesClosure(request jsonrpc.Request) jsonrpc.Response {
 	if err := decodeParams(request, &params); err != nil {
 		return jsonrpc.Failure(request.ID, jsonrpc.InvalidParams(err.Error()))
 	}
-	catalog, diagnostics := server.loadBuildFactModuleCatalog(params.MetadataPackRoot, params.MetadataRoot)
+	catalog, diagnostics := server.loadBuildFactModuleCatalog(params.OutRoot)
 	result := ModulesClosureResult{Modules: []modules.Module{}, Diagnostics: diagnostics}
 	if len(diagnostics) != 0 {
 		return jsonrpc.Success(request.ID, result)
@@ -115,8 +110,8 @@ func (server *Server) modulesClosure(request jsonrpc.Request) jsonrpc.Response {
 	for _, name := range requested {
 		if _, ok := catalog.Modules[name]; !ok {
 			result.Diagnostics = append(result.Diagnostics, moduleDiagnostic(
-				"MODULE_NOT_FOUND", "module is not present in the metadata pack: "+name,
-				params.MetadataPackRoot,
+				"MODULE_NOT_FOUND", "module is not present in out build facts: "+name,
+				params.OutRoot,
 			))
 		}
 	}
@@ -126,52 +121,6 @@ func (server *Server) modulesClosure(request jsonrpc.Request) jsonrpc.Response {
 		}
 	}
 	return jsonrpc.Success(request.ID, result)
-}
-
-func (server *Server) loadModuleCatalog(root string) (modules.Catalog, []model.Diagnostic) {
-	root = strings.TrimSpace(root)
-	if root == "" {
-		return modules.Catalog{}, []model.Diagnostic{moduleDiagnostic(
-			"METADATA_PACK_ROOT_MISSING", "metadataPackRoot is required", "",
-		)}
-	}
-	if diagnostics := server.validatePackIfDeclared(root); len(diagnostics) > 0 {
-		return modules.Catalog{}, diagnosticsToModel(diagnostics)
-	}
-	pathName := filepath.Join(root, "modules", "catalog.json")
-	info, err := os.Stat(pathName)
-	if err != nil {
-		return modules.Catalog{}, []model.Diagnostic{moduleDiagnostic(
-			"MODULE_CATALOG_READ_FAILED", fmt.Sprintf("read module catalog: %v", err),
-			pathName,
-		)}
-	}
-	if server.moduleCatalogSnapshot != nil && server.moduleCatalogSnapshot.path == pathName &&
-		server.moduleCatalogSnapshot.size == info.Size() &&
-		server.moduleCatalogSnapshot.modTime == info.ModTime().UnixNano() {
-		return server.moduleCatalogSnapshot.catalog, nil
-	}
-	catalog, err := modules.LoadPackCatalog(root)
-	if err != nil {
-		return modules.Catalog{}, []model.Diagnostic{moduleDiagnostic(
-			"MODULE_CATALOG_INVALID", err.Error(), pathName,
-		)}
-	}
-	server.moduleCatalogSnapshot = &moduleCatalogSnapshot{
-		path: pathName, size: info.Size(), modTime: info.ModTime().UnixNano(), catalog: catalog,
-	}
-	return catalog, nil
-}
-
-func diagnosticsToModel(values []corepack.Diagnostic) []model.Diagnostic {
-	result := make([]model.Diagnostic, 0, len(values))
-	for _, value := range values {
-		result = append(result, model.Diagnostic{
-			Code: value.Code, Severity: model.SeverityError, Stage: "pack-validation",
-			Message: value.Message, LocalPath: value.Path,
-		})
-	}
-	return result
 }
 
 func moduleDiagnostic(code, message, pathName string) model.Diagnostic {

@@ -32,6 +32,21 @@ func TestCatalogRejectsAmbiguousBasename(t *testing.T) {
 	}
 }
 
+func TestCatalogResolvesNameContainingPathAsExactPath(t *testing.T) {
+	catalog := Build(modules.Catalog{Modules: map[string]modules.Module{
+		"framework": {Name: "framework", Jars: []metadata.PathRef{
+			metadata.NewPathRef("soong/.intermediates/framework/turbine/framework.jar"),
+		}},
+	}})
+	resolution := catalog.Resolve(model.ArtifactSelector{
+		Kind: model.ArtifactJar,
+		Name: "soong/.intermediates/framework/turbine/framework.jar",
+	})
+	if resolution.Match != MatchExact || len(resolution.Artifacts) != 1 {
+		t.Fatalf("resolution=%+v", resolution)
+	}
+}
+
 func TestCatalogSupportsExplicitAPKFacts(t *testing.T) {
 	root := t.TempDir()
 	pathName := filepath.Join(root, "SystemUI.apk")
