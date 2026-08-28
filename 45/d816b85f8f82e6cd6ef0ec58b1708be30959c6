@@ -1,0 +1,27 @@
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/workspace/AospWorkspaceToolWindowFactory.kt
+  h_8b376749578497 39
+clients/jetbrains/src/main/kotlin/com/rtfsc/aosp/profile/SourceModulePanel.kt
+  s_0fcc3f909ad4ee::t_1685375f35b677 24,74,82
+  h_8b376749578497 81
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "45d816b85f8f82e6cd6ef0ec58b1708be30959c6",
+  "prompts": {},
+  "humans": {
+    "h_8b376749578497": {
+      "author": "Solo <anqi.huang@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
