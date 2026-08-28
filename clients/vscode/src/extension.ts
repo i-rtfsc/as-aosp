@@ -11,6 +11,7 @@ import { ProfileViewProvider } from "./ui/profile_panel";
 import { detectOut } from "./ui/overview";
 import { JavaSourceDefinitionProvider } from "./navigation/java";
 import { applyJavaProjection } from "./navigation/java_projection";
+import { applyRustProjection } from "./navigation/rust_projection";
 
 export function activate(context: vscode.ExtensionContext): void {
   const engine = new EngineClient();
@@ -64,13 +65,17 @@ export function activate(context: vscode.ExtensionContext): void {
       if (profile.outRoot && profile.workspaceViewRoot) {
         const cacheRoot = context.storageUri?.fsPath || context.globalStorageUri.fsPath;
         const projection = await applyJavaProjection(engine, profile.workspaceViewRoot, profile.outRoot, cacheRoot, profile.targets);
+        const rust = await applyRustProjection(
+          engine, profile.workspaceViewRoot, profile.outRoot, cacheRoot,
+          profile.pathMappings,
+        );
         current = await engine.reportProjection({
           profileId: profile.id,
           sourceRoots: projection.sourcePaths.length,
           generatedRoots: projection.generatedRoots,
           libraries: projection.referencedLibraries.length,
           skipped: projection.skipped,
-          diagnostics: [],
+          diagnostics: rust.diagnostics,
         });
       }
     }

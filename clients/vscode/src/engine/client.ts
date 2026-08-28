@@ -120,6 +120,12 @@ export interface SourceModuleResult {
   total: number;
 }
 
+export interface RustProjectResult {
+  projectPath?: string;
+  crates: number;
+  diagnostics: unknown[];
+}
+
 export interface IndexSnapshot {
   profileId?: string;
   state: string;
@@ -247,6 +253,10 @@ export class EngineClient {
 
   async sourceModules(workspaceViewRoot: string, outRoot?: string, cacheRoot?: string, query?: string, limit = 500): Promise<SourceModuleResult> {
     return this.request("aosp/source/modules", { workspaceViewRoot, outRoot, cacheRoot, query, limit });
+  }
+
+  async rustProject(params: { workspaceViewRoot: string; outRoot: string; cacheRoot: string; pathMappings: unknown[] }): Promise<RustProjectResult> {
+    return this.request("aosp/rust/project", params);
   }
 
   async startIndex(profile: unknown, rebuild = false): Promise<IndexSnapshot> {
