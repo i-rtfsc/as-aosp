@@ -19,6 +19,10 @@ outRoot: string
 targets: TargetSpec[]
 ```
 
+用户的 presets、manual modules 和 Select All 不直接生成该数组。Selection Planner 先执行
+全局 module/closure/path 去重、ownership 和 bounded target grouping，再把稳定 TargetSpec
+集合提交给 ProjectGraph。详细规则见 `module-selection-planner-design.md`。
+
 Artifact Catalog 查询使用同一 out reader，因此图形 selector 在本机完整 out 和复制来的
 稀疏 out 场景下保持一致。
 
@@ -52,8 +56,11 @@ Generated source materialization 必须是 target-scoped：客户端先
 Source ownership key is normalized RepoPath. Resolution priority is:
 
 ```text
-more specific target root > framework priority > explicit user priority > lexical stable tie-break
+pinned > more specific root > manual > preset > dependency-only > stable tie-break
 ```
+
+该 priority 由 Selection Planner 编译。多个 targets 引用同一 source root 时只能有一个
+owner，其他 targets 通过 dependency edge 使用它。
 
 Conflicting physical providers produce diagnostics; clients must not silently duplicate the same
 source root in multiple Java modules.

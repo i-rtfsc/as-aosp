@@ -26,6 +26,7 @@
 19. [Target-driven ProjectGraph 实施计划](roadmap/target-driven-project-graph-plan.md)。
 20. [源码模块发现与工作区隔离](design/source-module-discovery-and-workspace-isolation-design.md)。
 21. [Rust Project 集成](design/rust-project-integration-design.md)。
+22. [Module Selection Planner 与去重](design/module-selection-planner-design.md)。
 
 ## 2. 文档权威性
 

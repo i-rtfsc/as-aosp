@@ -24,6 +24,8 @@
   generated/AIDL/artifact 能力；Build Facts 派生 catalog 写 workspace/project IDE cache。
 - `aosp/rust/project` 已能把 Soong Rust project 归一化到本机 cache；VS Code 将其加入
   workspace-scoped rust-analyzer linked projects，缺少 Rust metadata 时不影响其他语言。
+- Workbench/Manage Modules、双语 UI、presets 和 Selection Planner 去重合同已确定；
+  相同 source root、srcjar 和 library 必须只投影一次，Select All 不创建海量 IDE modules。
 - engine 支持 macOS、Linux、Windows 的 bundled/shared/PATH 解析；JetBrains
   插件和 VS Code VSIX 有跨平台 engine 打包入口。
 - 真实本地 Portable Out 已完成目录迁移并通过 `pack validate --native`，
@@ -35,6 +37,8 @@
   不存在旧版私有 Pack reader。
 - JetBrains Settings 仍保留高级 Target 编辑器；日常入口已切换为 Tool Window 的模块发现
   列表。Android.bp parser 当前是有限属性解析器，复杂 Soong 表达式仍返回部分结果或诊断。
+- 客户端尚未实现 preset grouped targets 和 custom buckets；当前 selected module 仍主要
+  一对一生成 TargetSpec，不能把 Select All 视为已完成能力。
 - 真实 IDE host 的完整 Java Language Server/Workspace Model 接线仍在完善，
   目前以 focused source roots、generated roots 和 libraries 投影为主。
 - JNI 采用静态源码和常见注册表分析；复杂宏、运行时 class 拼接和完整 C++
@@ -44,10 +48,11 @@
 
 ## 下一步
 
-1. 增强 Android.bp defaults、namespace、glob 和 vendor 属性解析。
-2. 完成 VS Code/JetBrains 真实宿主中的模块勾选、ProjectGraph 和 Java classpath 验证。
-3. 补充真实 AOSP framework、services、SystemUI、AIDL、JNI 导航验收夹具。
-4. 完成 Portable Out 发布说明、校验工具和跨平台插件发行流程。
+1. 实现 Selection Planner、preset grouped targets、custom buckets 和 pinned targets。
+2. 实现紧凑 Workbench、Manage Modules 和 VS Code/JetBrains 中英文资源。
+3. 完成真实宿主中的 ProjectGraph、Java classpath 和 IDE index 状态验证。
+4. 增强 Android.bp defaults、namespace、glob 和 vendor 属性解析。
+5. 补充 framework、services、SystemUI、AIDL、JNI 和 Rust 导航验收夹具。
 
 ## 验证命令
 

@@ -62,9 +62,10 @@ core/sourcecatalog/
 View 与 SourceMount 边界，支持软链接、挂载和只读目录，排除 `.git`、`.repo`、out 内部
 源码扫描和 IDE cache。
 
-推荐模块按名称、源码路径、module type、依赖数量和可用产物评分，不硬编码唯一集合。
-`framework-minus-apex`、`services`、`SystemUI` 等常见模块在匹配时默认勾选，用户可以
-搜索、分组、全选或取消。
+推荐结果分为 presets 和 individual modules。默认 `Platform` scope 包含 Java Foundation、
+System Server & WMS、System UI、Native Foundation、Graphics & SurfaceFlinger 和
+Input Stack；Automotive 始终显示 Recommended，并按 product 决定是否默认启用。完整列表、
+条件和去重规则见 `module-selection-planner-design.md`。
 
 ## 4. VS Code 工作区隔离
 
