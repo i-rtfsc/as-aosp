@@ -1,18 +1,11 @@
 import * as vscode from "vscode";
-import * as path from "node:path";
+import { detectOutRoot } from "../navigation/out_root";
 
 export type OutDetection = { root?: string; mode: "detected" | "source-only"; files: string[] };
 
 export async function detectOut(root: string): Promise<OutDetection> {
-  const candidates = [root, path.join(root, "out"), path.join(root, "out", "soong")];
-  const names = ["compile_commands.json", "module-info.json", "module_bp_java_deps.json", "module_bp_cc_deps.json"];
-  for (const candidate of candidates) {
-    const files: string[] = [];
-    for (const name of names) {
-      try { await vscode.workspace.fs.stat(vscode.Uri.file(path.join(candidate, name))); files.push(name); } catch { /* missing */ }
-    }
-    if (files.length > 0) return { root: candidate, mode: "detected", files };
-  }
+  const detection = detectOutRoot(root);
+  if (detection.root) return { root: detection.root, mode: "detected", files: detection.files };
   return { mode: "source-only", files: [] };
 }
 

@@ -12,6 +12,7 @@ import { detectOut } from "./ui/overview";
 import { JavaSourceDefinitionProvider } from "./navigation/java";
 import { applyJavaProjection } from "./navigation/java_projection";
 import { applyRustProjection } from "./navigation/rust_projection";
+import { normalizeOutRoot } from "./navigation/out_root";
 
 export function activate(context: vscode.ExtensionContext): void {
   const engine = new EngineClient();
@@ -23,14 +24,17 @@ export function activate(context: vscode.ExtensionContext): void {
     const executable = resolveEngineExecutable({ configured, extensionPath: context.extensionPath });
     await engine.start(executable);
   };
-  const startIndex = async (rebuild: boolean) => {
+  const startIndex = async (
+    rebuild: boolean,
+    onProgress?: (status: { state: string; stage: string; progress: number; modules: number; generated: number; diagnostics: number }) => void,
+  ) => {
     await ensureEngine();
     const config = vscode.workspace.getConfiguration("aospIde");
     const profile = {
       schemaVersion: 1,
       id: vscode.workspace.name || "vscode-workspace",
       workspaceViewRoot: config.get<string>("workspaceViewRoot") || vscode.workspace.workspaceFolders?.[0]?.uri.fsPath || "",
-      outRoot: config.get<string>("outRoot") || "",
+      outRoot: normalizeOutRoot(config.get<string>("outRoot") || ""),
       targets: config.get<unknown[]>("targets") || [],
       pathMappings: config.get<unknown[]>("pathMappings") || [],
       buildIntegration: { mode: "read-only" },
@@ -57,12 +61,28 @@ export function activate(context: vscode.ExtensionContext): void {
     if (profile.targets.length === 0) throw new Error("No Android.bp modules selected for indexing.");
     const status = await engine.startIndex(profile, rebuild);
     let current = status;
-    for (let attempt = 0; attempt < 40 && current.state === "running"; attempt++) {
-      await new Promise((resolve) => setTimeout(resolve, 50));
+    const describe = () => ({
+      state: current.state,
+      stage: current.stage,
+      progress: current.progress,
+      modules: current.moduleCount,
+      generated: current.generatedCount,
+      diagnostics: current.diagnostics.length,
+    });
+    onProgress?.(describe());
+    for (let attempt = 0; attempt < 120 && current.state === "running"; attempt++) {
+      await new Promise((resolve) => setTimeout(resolve, 500));
       current = await engine.indexStatus();
+      if (current.state === "running") onProgress?.(describe());
+    }
+    if (current.state === "running") {
+      throw new Error("AOSP build facts did not finish loading within 60 seconds.");
     }
     if (current.state === "ready" || current.state === "partial") {
       if (profile.outRoot && profile.workspaceViewRoot) {
+        onProgress?.({
+          ...describe(), state: "running", stage: "projection", progress: 90,
+        });
         const cacheRoot = context.storageUri?.fsPath || context.globalStorageUri.fsPath;
         const projection = await applyJavaProjection(engine, profile.workspaceViewRoot, profile.outRoot, cacheRoot, profile.targets);
         const rust = await applyRustProjection(
@@ -79,14 +99,7 @@ export function activate(context: vscode.ExtensionContext): void {
         });
       }
     }
-    return {
-      state: current.state,
-      stage: current.stage,
-      progress: current.progress,
-      modules: current.moduleCount,
-      generated: current.generatedCount,
-      diagnostics: current.diagnostics.length,
-    };
+    return describe();
   };
   const profileView = new ProfileViewProvider(context, async (workspaceRoot, outRoot, query) => {
     await ensureEngine();
@@ -104,7 +117,9 @@ export function activate(context: vscode.ExtensionContext): void {
     await ensureEngine();
     const root = vscode.workspace.getConfiguration("aospIde").get<string>("workspaceViewRoot")?.trim()
       || vscode.workspace.workspaceFolders?.[0]?.uri.fsPath || "";
-    const outRoot = vscode.workspace.getConfiguration("aospIde").get<string>("outRoot") || "";
+    const outRoot = normalizeOutRoot(
+      vscode.workspace.getConfiguration("aospIde").get<string>("outRoot") || "",
+    );
     const result = await engine.sourceModules(root, outRoot, context.storageUri?.fsPath);
     output.appendLine(`source modules: ${result.modules.length}; files: ${result.filesScanned}; cache: ${result.cacheHit}`);
     output.show(true);
@@ -118,7 +133,14 @@ export function activate(context: vscode.ExtensionContext): void {
     if (!root) return;
     profileView.updateIndexStatus("Starting automatically…");
     try {
-      const status = await startIndex(rebuild);
+      const status = await startIndex(rebuild, (progress) => {
+        if (generation !== autoGeneration) return;
+        profileView.updateIndexStatus(
+          `${progress.state} · ${progress.stage} · ${progress.progress}% · ` +
+          `${progress.modules} modules · ${progress.generated} generated · ` +
+          `${progress.diagnostics} diagnostics`,
+        );
+      });
       if (generation !== autoGeneration) return;
       profileView.updateIndexStatus(`${status.state} · ${status.stage} · ${status.progress}% · ${status.modules} modules · ${status.generated} generated · ${status.diagnostics} diagnostics`);
     } catch (error) {
@@ -173,7 +195,7 @@ export function activate(context: vscode.ExtensionContext): void {
       const config = vscode.workspace.getConfiguration("aospIde");
       output.appendLine(`engine: ${config.get<string>("engineExecutable") || "aosp-index"}`);
       output.appendLine(`workspaceViewRoot: ${config.get<string>("workspaceViewRoot") || "<workspace>"}`);
-      output.appendLine(`outRoot: ${config.get<string>("outRoot") || "<unset>"}`);
+      output.appendLine(`outRoot: ${normalizeOutRoot(config.get<string>("outRoot") || "") || "<unset>"}`);
       output.appendLine(`status: ${engine.status.state}${engine.status.error ? ` (${engine.status.error})` : ""}`);
       output.show(true);
     }),
@@ -190,6 +212,13 @@ export function activate(context: vscode.ExtensionContext): void {
     { dispose: () => { if (autoTimer) clearTimeout(autoTimer); void engine.stop(); } },
   );
   const configuredRoot = vscode.workspace.getConfiguration("aospIde").get<string>("workspaceViewRoot")?.trim();
+  const configuredOut = vscode.workspace.getConfiguration("aospIde").get<string>("outRoot") || "";
+  const normalizedOut = normalizeOutRoot(configuredOut);
+  if (configuredOut && configuredOut !== normalizedOut) {
+    void vscode.workspace.getConfiguration("aospIde").update(
+      "outRoot", normalizedOut, vscode.ConfigurationTarget.Workspace,
+    );
+  }
   if (vscode.workspace.workspaceFolders?.length && !configuredRoot) {
     const root = vscode.workspace.workspaceFolders[0].uri.fsPath;
     void detectOut(root).then(async (detection) => {

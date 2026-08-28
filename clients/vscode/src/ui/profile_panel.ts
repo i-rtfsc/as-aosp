@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import { normalizeOutRoot } from "../navigation/out_root";
 
 export interface WorkspaceModule {
   name: string;
@@ -36,7 +37,9 @@ export class ProfileViewProvider implements vscode.WebviewViewProvider {
   constructor(
     private readonly context: vscode.ExtensionContext,
     private readonly discoverModules: (workspaceRoot: string, outRoot: string, query?: string) => Promise<ModuleDiscoveryResult>,
-    private readonly startIndex: (rebuild: boolean) => Promise<IndexResult>,
+    private readonly startIndex: (
+      rebuild: boolean, onProgress?: (status: IndexResult) => void,
+    ) => Promise<IndexResult>,
   ) {}
 
   resolveWebviewView(view: vscode.WebviewView): void {
@@ -66,7 +69,7 @@ export class ProfileViewProvider implements vscode.WebviewViewProvider {
     return {
       workspaceViewRoot: config.get<string>("workspaceViewRoot") ||
         vscode.workspace.workspaceFolders?.[0]?.uri.fsPath || "",
-      outRoot: config.get<string>("outRoot") ?? "",
+      outRoot: normalizeOutRoot(config.get<string>("outRoot") ?? ""),
       selectedModules: JSON.stringify(config.get<string[]>("selectedModules") ?? []),
     };
   }
@@ -81,7 +84,9 @@ export class ProfileViewProvider implements vscode.WebviewViewProvider {
           openLabel: "Select directory",
         });
         if (selected?.[0]) {
-          await webview.postMessage({ type: "set", field: message.field, value: selected[0].fsPath });
+          const value = message.field === "outRoot" ?
+            normalizeOutRoot(selected[0].fsPath) : selected[0].fsPath;
+          await webview.postMessage({ type: "set", field: message.field, value });
         }
         return;
       }
@@ -113,7 +118,9 @@ export class ProfileViewProvider implements vscode.WebviewViewProvider {
     }
     await webview.postMessage({ type: "moduleLoading" });
     try {
-      const outRoot = String(rawOutRoot ?? vscode.workspace.getConfiguration("aospIde").get<string>("outRoot") ?? "");
+      const outRoot = normalizeOutRoot(String(
+        rawOutRoot ?? vscode.workspace.getConfiguration("aospIde").get<string>("outRoot") ?? "",
+      ));
       const result = await this.discoverModules(root, outRoot, query);
       this.discovered = new Map(result.modules.map((module) => [module.name, module]));
       await webview.postMessage({
@@ -140,23 +147,28 @@ export class ProfileViewProvider implements vscode.WebviewViewProvider {
     const targets = selected.map((name: string) => moduleTarget(this.discovered.get(name), name));
     const config = vscode.workspace.getConfiguration("aospIde");
     await config.update("workspaceViewRoot", String(message.workspaceViewRoot ?? ""), vscode.ConfigurationTarget.Workspace);
-    await config.update("outRoot", String(message.outRoot ?? ""), vscode.ConfigurationTarget.Workspace);
+    await config.update("outRoot", normalizeOutRoot(String(message.outRoot ?? "")), vscode.ConfigurationTarget.Workspace);
     await config.update("selectedModules", selected, vscode.ConfigurationTarget.Workspace);
     await config.update("targets", targets, vscode.ConfigurationTarget.Workspace);
   }
 
   private async runIndex(rebuild: boolean): Promise<void> {
+    this.updateIndexStatus(rebuild ? "Rebuilding workspace index..." : "Applying module selection...");
     try {
-      const status = await this.startIndex(rebuild);
-      this.updateIndexStatus(
-        `${status.state} · ${status.stage} · ${status.progress}% · ` +
-        `${status.modules} modules · ${status.generated} generated · ` +
-        `${status.diagnostics} diagnostics`,
-      );
+      const status = await this.startIndex(rebuild, (progress) => {
+        this.updateIndexStatus(formatIndexStatus(progress));
+      });
+      this.updateIndexStatus(formatIndexStatus(status));
     } catch (error) {
       this.updateIndexStatus(`Index unavailable: ${error instanceof Error ? error.message : String(error)}`);
     }
   }
+}
+
+function formatIndexStatus(status: IndexResult): string {
+  return `${status.state} · ${status.stage} · ${status.progress}% · ` +
+    `${status.modules} modules · ${status.generated} generated · ` +
+    `${status.diagnostics} diagnostics`;
 }
 
 function moduleTarget(module: WorkspaceModule | undefined, name: string): unknown {
