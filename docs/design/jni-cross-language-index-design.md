@@ -7,8 +7,8 @@
 本 bounded context 负责把 Java/Kotlin native declaration 与 C/C++ JNI implementation 关联起来。
 它不负责完整 C++ 类型系统、宏求值、链接器符号证明或运行时反射。
 
-Metadata Pack 的 native slice 可保存规范化 `jni/index.json`。客户端配置 pack
-后优先查询其中的 exact links；pack 缺失、损坏、无唯一 peer 或 peer 在 Workspace
+Portable Out 不保存 JNI 私有索引；engine 在本机 cache 中生成规范化 JNI index。客户端配置 Out Root 后
+优先查询其中的 exact links；Build Facts 缺失、损坏、无唯一 peer 或 peer 在 Workspace
 View 中不可见时，继续使用 source-only workspace index。
 
 ## 2. Java/Kotlin 输入

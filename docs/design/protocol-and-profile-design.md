@@ -130,10 +130,10 @@ kind/query 过滤，用于两个客户端的图形化 Target selector。
 显示规模；`get` 返回一个模块的完整 facts；`closure` 返回选中模块及其传递
 依赖的完整模块列表，顺序按模块名稳定排序。
 
-Metadata Pack 缺失、catalog JSON 损坏或模块不存在属于业务诊断，结果仍是
+Out Root 缺失、Build Facts JSON 损坏或模块不存在属于业务诊断，结果仍是
 成功的 JSON-RPC response。服务端不得回退扫描整个 Workspace View 来伪造
-Build-Facts 结果。首版每次请求按 pack catalog 文件的路径、大小和修改时间
-判断是否复用 daemon 内存快照；pack 被原子替换后必须重新加载。
+Build-Facts 结果。首版每次请求按 Out Root 下 Build Facts 文件的路径、大小和修改时间
+判断是否复用 daemon 内存快照；文件被原子替换后必须重新加载。
 
 IndexCoordinator 状态方法：
 
@@ -163,32 +163,9 @@ Generated source materialization：
 aosp/generated/materialize
 ```
 
-请求携带 `metadataPackRoot` 和本机 `cacheRoot`。engine 只读取 pack 的
-`generated/manifest.json`，通过 `core/generated` 按 archive hash 安全解压
-srcjar，并返回已发布的 source roots 与 diagnostics。结果不写入 AOSP 源码
-或 out；重复请求复用相同 hash 目录。
-
-Metadata Pack identity 查询：
-
-```text
-aosp/pack/info
-aosp/pack/validate
-```
-
-请求携带 `metadataPackRoot`，返回 schema、原始 `aospRoot`、原始 `outRoot` 和
-pack kinds。客户端只有在 ExternalPath 位于 manifest 原始 outRoot 前缀下时，
-才能把其相对后缀重定位到 profile 的本机 `outRoot`。普通字符串替换、basename
-匹配或跨 root 猜测都不允许。
-
-`aosp/pack/validate` 调用 `core/pack` 的同一校验实现，返回 `valid` 和稳定
-diagnostics。所有 pack-backed 查询在 daemon 内也会执行同一校验；CLI、VS Code
-和 JetBrains 不各自实现 checksum 或 schema 解析。
-daemon 可缓存校验结果，但缓存指纹必须覆盖 pack 内每个文件的相对路径、大小和
-mtime，并同时覆盖 manifest/checksum identity。指纹变化后重新执行完整 checksum；
-缓存只是性能优化，不能改变 `core/pack` 的权威结果。
-同一 pack/fingerprint 的并发请求合并为一次校验；不同 pack 可以并行校验。
-`core/pack.Validate` 执行期间不得持有全局 cache lock。若校验前后 fingerprint
-不同，结果不得写入 cache，必须针对新 fingerprint 重新校验。
+请求携带 `outRoot` 和本机 `cacheRoot`。engine 只读取 Out Root 中由 ProjectGraph
+明确引用的 `.srcjar`，通过 `core/generated` 按 archive hash 安全解压，并返回已发布的
+source roots 与 diagnostics。结果不写入 AOSP 源码或 out；重复请求复用相同 hash 目录。
 
 进程入口统一为一个跨平台二进制：
 
@@ -243,12 +220,6 @@ source declaration，再调用 `core/aidl.GeneratedPeers` 生成 Java/C++/NDK �
 
 首个 AIDL references slice：
 
-配置 Metadata Pack 后可读取 `aidl/index.json` 进行 references 和 generated peer
-查询；缺少 index 或 schema 不兼容时必须回退 Workspace parser。
-Pack generated peer 请求可选携带 `cacheRoot`。提供时 engine materialize srcjar，
-将匹配的 Java peer 返回为 `build-srcjar`、`exact` 和 `localPath`；不提供时只返回
-命名候选，客户端必须按可见性规则回退。
-
 ```text
 aosp/aidl/references
 ```
@@ -264,15 +235,14 @@ aosp/aidl/references
 aosp/compdb/overlay
 ```
 
-请求携带 `metadataRoot`、可选 `metadataPackRoot`、`workspaceViewRoot` 和显式
+请求携带 `outRoot`、`workspaceViewRoot` 和显式
 `pathMappings`。engine 读取
 compilation database，映射 `directory`、`file`、`output` 以及 argv 中的构建机绝对
 路径；`@response-file` 会被读取、转换并作为 overlay-side response file 返回。原始
 out/compdb 不被修改。不能证明映射的参数保留原值并标记 `COMPDB_PATH_UNMAPPED`，
 同一 `file` 的多条 variant 全部保留并标记 `COMPDB_VARIANT_DUPLICATE`，
 response file 无法读取时标记 `COMPDB_RESPONSE_READ_FAILED`，不会猜测本机路径。
-当 `metadataRoot` 为空时，engine 可以从已校验的 Native Metadata Pack 读取 compdb；
-pack 中的构建机绝对路径仍必须通过显式 mapping。
+Portable Out 中的构建机绝对路径仍必须通过显式 mapping。
 
 后续索引 slice：
 

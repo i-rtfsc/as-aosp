@@ -1,7 +1,7 @@
 # aosp-index CLI 使用指南
 
 `aosp-index` 是共享 Go engine 的命令行入口，用于 profile/topology 检查、metadata、
-AIDL/JNI、Metadata Pack 和 IDE JSON-RPC。
+AIDL/JNI、Portable Out 导出和 IDE JSON-RPC。
 
 ## 1. 构建
 
@@ -40,8 +40,12 @@ Cuttlefish x86_64 phone 的 `eng` 配置生成开发期 facts：
 ```bash
 cd /home/solo/code/aosp
 source build/envsetup.sh
-lunch aosp_cf_x86_64_phone cp2a eng
+lunch aosp_cf_x86_64_phone cp2a userdebug
 export SOONG_GEN_COMPDB=1
+export SOONG_GEN_COMPDB_DEBUG=1
+export SOONG_GEN_CMAKEFILES=1
+export SOONG_GEN_CMAKEFILES_DEBUG=1
+export SOONG_GEN_RUST_PROJECT=1
 
 # 生成 Soong/Java/模块 metadata 和完整 compile_commands.json
 m -j"$(nproc)" nothing
@@ -89,7 +93,7 @@ aosp-index aidl \
   --root /path/to/sources \
   --file android/os/IFoo.aidl \
   --type android.os.IFoo \
-  --metadata-root /path/to/out \
+  --out-root /path/to/out \
   --path-map /srv/aosp/out=/Users/me/aosp/out \
   --cache-root /Users/me/.cache/aosp-workspace/srcjar
 ```
@@ -109,9 +113,10 @@ aosp-index jni \
 
 结果包含 Java/Kotlin native declaration、静态 export、常见注册表和双向 links。
 
-## 6. Metadata Pack 导出
+## 6. Portable Out 导出
 
-默认导出 Core metadata，以及 AIDL/R/sysprop/logtags/proto 等 Java generated srcjar：
+默认导出 Core metadata，以及 AIDL/R/sysprop/logtags/proto 等 Java generated srcjar，
+并保持 OUT_DIR 相对路径：
 
 ```bash
 aosp-index pack export \
@@ -127,7 +132,8 @@ aosp-index pack export \
   --aosp-root /srv/aosp \
   --out-root /srv/aosp/out \
   --destination /srv/packs/android-16 \
-  --native
+  --native \
+  --ide
 ```
 
 服务器导出后建议直接校验并查看 artifact 统计：
@@ -151,6 +157,7 @@ du -sh /srv/packs/android-framework
 ```bash
 aosp-index pack preflight --out-root "$OUT_DIR" \
   --native \
+  --ide \
   --module framework-minus-apex \
   --module services \
   --module SystemUI
@@ -203,9 +210,8 @@ cd /home/solo/code/aosp-pack-tools
 /home/solo/code/aosp-packs/android-17-cp2a-aosp_cf_x86_64_phone-full.zip.sha256
 ```
 
-脚本不传 `--module`，因此会导出所有已生成的 ModuleCatalog、Java/CC metadata、jar、
-srcjar、AIDL/JNI facts 和完整 compdb。它会先执行 `m module-info`，再运行带
-`--scan-all-artifacts` 的 preflight；任何 blocking diagnostic 都会阻止导出，避免生成
+脚本不传 `--module`，因此会导出所有已生成的 Java/CC metadata、jar、srcjar 和完整
+compdb。它会先执行 `m module-info`，再运行 preflight；任何 blocking diagnostic 都会阻止生成
 不完整压缩包。可通过 `AOSP_ROOT`、`OUT_ROOT`、`AOSP_PACK_NAME`、`PACK_ROOT` 和
 `ZIP_ROOT` 覆盖默认路径。engine 不允许通过环境变量覆盖，始终使用脚本同目录的
 `aosp-index`，脚本启动时会打印 engine SHA-256。默认名称由 Android 版本、release、product
@@ -213,13 +219,13 @@ srcjar、AIDL/JNI facts 和完整 compdb。它会先执行 `m module-info`，再
 脚本检测到 Soong/Ninja/Siso 仍在构建时会拒绝导出，避免复制正在变化的 out；通常不应使用
 `ALLOW_ACTIVE_BUILD=1` 绕过该保护。
 
-pack 会把 ModuleCatalog 明确引用且实际存在的 Java jars 复制到
-`out/**/*.jar`。复制到 Mac 后，在图形界面选择该目录作为 Metadata Pack Root；
-如果 Mac 没有本机 out，Java classpath 会优先使用 pack 内这些 jars。
+Portable Out 会把 ModuleCatalog 明确引用且实际存在的 Java jars 复制到
+`soong/.intermediates/**/*.jar`。复制到 Mac 后，直接选择 Portable Out 目录作为 Out Root；
+它与本机完整 AOSP out 使用完全相同的相对路径和 reader。
 
 ```bash
-# Mac：pack 可以放在任意目录，不需要放进 AOSP Workspace View
-aosp-index pack validate --root /Users/me/aosp-packs/android-framework
+# Portable Out 可以放在任意目录，不需要放进 AOSP Workspace View
+aosp-index pack validate --root /Users/me/aosp-packs/android-framework --native
 ```
 
 可重复选择目标模块及其 dependency closure：
@@ -233,32 +239,31 @@ generated srcjar 只保留 closure 明确引用的 archive，并直接按引用�
 `out/soong/.intermediates`。模块名不存在时导出失败，
 不会退化为全树扫描或按 basename 猜 owner。
 
-首版输出：
+Portable Out 输出：
 
 ```text
-manifest.json
-checksums.sha256
-module-info.json
-module_bp_java_deps.json
-generated/srcjars/**
-generated/manifest.json
-out/**/*.jar
-aidl/index.json
-jni/index.json  # 仅 --native
+target/product/<product>/module-info.json
+soong/module_bp_java_deps.json
+soong/module_bp_cc_deps.json
+soong/development/ide/compdb/compile_commands.json
+soong/.intermediates/**/*.srcjar
+soong/.intermediates/**/*.jar
+soong/rust-project.json
+development/ide/clion/**/CMakeLists.txt
 ```
 
 可以通过网盘、U 盘、rsync 或挂载目录复制到 Mac/Windows，不需要下载服务器。
 
-## 7. Metadata Pack 校验
+## 7. Portable Out 校验
 
 ```bash
-aosp-index pack validate --root /Users/me/aosp-metadata/android-16
+aosp-index pack validate --root /Users/me/aosp-metadata/android-16 --native
 ```
 
-校验 manifest/schema、checksum 完整覆盖、ModuleCatalog、AIDL index、generated
-manifest，以及 Native Pack 的 JNI index。损坏或多出的未声明文件都会失败。
+校验原始 module-info、Java deps，以及 Native 模式下的 CC deps/compdb；同时解析
+ModuleCatalog 和 artifact facts。
 
-## 8. Metadata Pack 查看
+## 8. Portable Out 查看
 
 查看 pack ModuleCatalog：
 
@@ -288,7 +293,7 @@ stdin/stdout 使用 Content-Length JSON-RPC framing。stdout 只写协议，日�
 
 ## 10. 常见问题
 
-- 没有 out：先用 source-only，或复制 Linux 导出的 Metadata Pack；
+- 没有 out：先用 source-only；也可以复制 Linux 导出的 Portable Out；
 - Linux 绝对路径：使用 `--path-map external=local`；
 - generated Java 缺失：确认 pack 中存在对应 srcjar/entry；
 - compdb 路径不完整：检查 `COMPDB_PATH_UNMAPPED` 和 variant diagnostics；

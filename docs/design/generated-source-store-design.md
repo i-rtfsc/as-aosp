@@ -44,9 +44,8 @@ SHA-256 基于 archive 内容，不使用绝对路径或 mtime。相同内容在
 
 ## 5. AIDL peer 接线
 
-IndexCoordinator 的 generated materialization 也复用本 Store：pack 的
-`generated/manifest.json` 只提供 archive 路径，engine 在本机 cache 中解压，
-客户端只消费返回的 cache source roots。
+IndexCoordinator 的 generated materialization 复用本 Store：ProjectGraph 只提供 Out Root
+中明确引用的 archive 路径，engine 在本机 cache 中解压，客户端只消费返回的 cache source roots。
 
 - Java expected entry 为 `package/path/Outer.java`；
 - nested declaration 仍匹配外层 Java entry；

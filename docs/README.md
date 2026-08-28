@@ -18,12 +18,13 @@
 11. [Profile UI 与多项目体验设计](design/profile-ui-and-multi-project-design.md)。
 12. [AOSP Workspace 跳转方案调研与架构调整](research/aosp-ide-navigation-research.md)。
 13. [Build Facts 驱动导航决策](decisions/build-facts-driven-navigation.md)。
-14. [AOSP Metadata Pack 设计](design/aosp-metadata-pack-design.md)。
+14. [Portable Out 设计](design/aosp-metadata-pack-design.md)。
 15. [Target-driven ProjectGraph 决策](decisions/target-driven-project-graph.md)。
 16. [aosp-index CLI 使用指南](engineering/aosp-index-cli-guide.md)。
 17. [TargetSpec 与 ArtifactResolver](design/target-spec-and-artifact-resolver-design.md)。
 18. [ProjectGraph 与 IDE Projection](design/project-graph-and-ide-projection-design.md)。
 19. [Target-driven ProjectGraph 实施计划](roadmap/target-driven-project-graph-plan.md)。
+20. [源码模块发现与工作区隔离](design/source-module-discovery-and-workspace-isolation-design.md)。
 
 ## 2. 文档权威性
 

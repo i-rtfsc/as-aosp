@@ -1,6 +1,6 @@
 # Portable Out 设计
 
-> 状态：Decision；替代旧 Metadata Pack 私有目录格式。
+> 状态：Decision；唯一有效的构建产物交换格式。
 
 ## 1. 定义
 

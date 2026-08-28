@@ -6,12 +6,13 @@
 
 1. Shared Index Engine 是 AOSP 事实和索引查询的唯一核心 owner。
 2. JetBrains 和 VS Code 只是客户端，不直接解析 Soong JSON，不拥有另一套符号索引。
-3. Workspace Topology 负责“用户打开的目录”和“真实 AOSP/构建目录”的映射。
+3. Workspace Topology 负责“用户打开的目录”和“真实 AOSP/构建目录”的映射；Source
+   Module Catalog 负责从 Android.bp 发现可选模块。
 4. IDE ProjectView 是索引图的投影，不是 AOSP 构建图的替代品。
 5. C/C++ 类型语义由 clangd/IDE 负责，JNI 只作为共享跨语言边。
 6. 远程执行服务是可选的 Linux 构建辅助，不是核心索引必需进程。
-7. 用户意图由 TargetSpec 表达，ArtifactResolver 将其解析为 ProjectGraph；IDE 客户端
-   不把 Soong module 直接当作用户目标。
+7. 用户通过发现的模块勾选表达意图，engine 将其转换为 TargetSpec；ArtifactResolver
+   再解析为 ProjectGraph，IDE 客户端不重复拼装 Soong 图。
 
 ## 2. 逻辑架构
 
@@ -57,11 +58,14 @@ engine 崩溃不应破坏 IDE；客户端负责重启、重新初始化和状态
 
 1. 客户端提交 Workspace View Root 和 profile。
 2. engine 发现 SourceMount，构建 active provider 表。
-3. engine 读取 metadata；不可用时执行 scope 限制的源码扫描。
-4. engine 生成 ModuleGraph、SymbolIndex、AidlIndex 和 JniIndex。
-5. 客户端请求 Definition/References/Symbols。
-6. engine 返回 RepoPath 和来源/置信度；客户端映射回 IDE URI。
-7. generated source 写入缓存，只有 ProjectView 需要的文件进入 IDE。
+3. engine 在可见范围内解析 Android.bp，生成 Source Module Catalog。
+4. engine 读取 Out Root metadata，与 Source Module Catalog 合并；没有 out 时保留
+   source-only 模块。
+5. 用户勾选模块，engine 将选择转换为 TargetSpec、ProjectGraph 和索引范围。
+6. engine 生成 ModuleGraph、SymbolIndex、AidlIndex 和 JniIndex。
+7. 客户端请求 Definition/References/Symbols。
+8. engine 返回 RepoPath 和来源/置信度；客户端映射回 IDE URI。
+9. generated source 写入缓存，只有 ProjectView 需要的文件进入 IDE。
 
 ## 5. 部署形态
 

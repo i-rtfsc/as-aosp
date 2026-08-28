@@ -28,7 +28,7 @@
 | `core/modules` | ModuleCatalog、source roots、generated/classpath facts 和 dependency closure |
 | `core/buildfiles` | Android.bp/Android.mk fallback scanner |
 | `core/generated` | srcjar、generated file cache 和 depfile |
-| `core/pack` | Metadata Pack schema、结构和 checksum 完整性校验 |
+| `core/generated` | srcjar 安全解压与 IDE cache materialization |
 | `core/aidl` | AIDL parser、resolver 和 generated mapping |
 | `core/jni` | Java native、C++ registration 和 cross-language links |
 | `core/graph` | ModuleGraph、dependency closure 和 ProjectView |
