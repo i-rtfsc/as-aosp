@@ -42,7 +42,8 @@ func (server *Server) sourceModules(request jsonrpc.Request) jsonrpc.Response {
 		})
 	}
 	report := sourcecatalog.Discover(root, params.CacheRoot)
-	diagnostics := append([]model.Diagnostic(nil), report.Diagnostics...)
+	diagnostics := make([]model.Diagnostic, 0, len(report.Diagnostics))
+	diagnostics = append(diagnostics, report.Diagnostics...)
 	if outRoot := strings.TrimSpace(params.OutRoot); outRoot != "" {
 		buildCatalog, buildDiagnostics := server.loadBuildFactModuleCatalogCached(
 			outRoot, params.CacheRoot,

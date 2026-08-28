@@ -113,7 +113,7 @@ export interface SourceModuleResult {
     capabilities?: string[];
     recommended: boolean;
   }>;
-  diagnostics: unknown[];
+  diagnostics: unknown[] | null;
   filesScanned: number;
   cacheHit: boolean;
   buildBacked: number;

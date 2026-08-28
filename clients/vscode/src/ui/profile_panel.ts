@@ -124,7 +124,7 @@ export class ProfileViewProvider implements vscode.WebviewViewProvider {
           ` · showing ${result.modules.length}` +
           ` · ${result.filesScanned} files` +
           ` · ${result.cacheHit ? "cache reused" : "scanned"}` +
-          ` · ${result.diagnostics} diagnostics`,
+          ` · ${result.diagnostics ?? 0} diagnostics`,
       });
     } catch (error) {
       await webview.postMessage({

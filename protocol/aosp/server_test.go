@@ -2,6 +2,7 @@ package aosp
 
 import (
 	"archive/zip"
+	"bytes"
 	"encoding/json"
 	"os"
 	"path/filepath"
@@ -100,6 +101,9 @@ java_library {
 	response, _ := server.Handle(makeRequest(2, "aosp/source/modules", SourceModulesParams{
 		WorkspaceViewRoot: workspace, OutRoot: out, CacheRoot: t.TempDir(),
 	}))
+	if bytes.Contains(response.Result, []byte(`"diagnostics":null`)) {
+		t.Fatalf("diagnostics must be an array: %s", response.Result)
+	}
 	var result SourceModuleResult
 	decodeResult(t, response, &result)
 	if len(result.Modules) != 1 || result.BuildBacked != 1 ||

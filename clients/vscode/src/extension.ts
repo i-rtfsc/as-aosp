@@ -93,7 +93,7 @@ export function activate(context: vscode.ExtensionContext): void {
     const result = await engine.sourceModules(workspaceRoot, outRoot, context.storageUri?.fsPath, query);
     return {
       modules: result.modules,
-      diagnostics: result.diagnostics.length,
+      diagnostics: result.diagnostics?.length ?? 0,
       filesScanned: result.filesScanned,
       cacheHit: result.cacheHit,
       buildBacked: result.buildBacked,
