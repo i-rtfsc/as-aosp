@@ -43,7 +43,7 @@ metadata-smoke:
 	go run ./cmd/aosp-index metadata --root testdata/metadata/out --summary
 
 aidl-smoke:
-	go run ./cmd/aosp-index aidl --root testdata/aidl/source --file android/demo/IFoo.aidl --type android.demo.IFoo --metadata-root testdata/metadata/out --path-map /srv/aosp/out/soong/generated=testdata/aidl/generated --path-map /srv/aosp/out/soong/.intermediates/frameworks/base/framework-minus-apex/gen=testdata/aidl/generated --cache-root .aosp-ide/cache/smoke --summary
+	go run ./cmd/aosp-index aidl --root testdata/aidl/source --file android/demo/IFoo.aidl --type android.demo.IFoo --out-root testdata/metadata/out --path-map /srv/aosp/out/soong/generated=testdata/aidl/generated --path-map /srv/aosp/out/soong/.intermediates/frameworks/base/framework-minus-apex/gen=testdata/aidl/generated --cache-root .aosp-ide/cache/smoke --summary
 
 jni-smoke:
 	go run ./cmd/aosp-index jni --java-root testdata/jni/source/java --cpp-root testdata/jni/source/cpp --class android.security.Scrypt --method nativeScrypt --summary
