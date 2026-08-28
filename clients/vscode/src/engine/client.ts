@@ -116,6 +116,7 @@ export interface SourceModuleResult {
   diagnostics: unknown[];
   filesScanned: number;
   cacheHit: boolean;
+  buildBacked: number;
 }
 
 export interface IndexSnapshot {
@@ -243,8 +244,8 @@ export class EngineClient {
     return this.request("aosp/artifacts/catalog", { outRoot, kind, query });
   }
 
-  async sourceModules(workspaceViewRoot: string, cacheRoot?: string, query?: string): Promise<SourceModuleResult> {
-    return this.request("aosp/source/modules", { workspaceViewRoot, cacheRoot, query });
+  async sourceModules(workspaceViewRoot: string, outRoot?: string, cacheRoot?: string, query?: string): Promise<SourceModuleResult> {
+    return this.request("aosp/source/modules", { workspaceViewRoot, outRoot, cacheRoot, query });
   }
 
   async startIndex(profile: unknown, rebuild = false): Promise<IndexSnapshot> {

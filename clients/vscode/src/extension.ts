@@ -35,7 +35,7 @@ export function activate(context: vscode.ExtensionContext): void {
       buildIntegration: { mode: "read-only" },
     };
     if (profile.targets.length === 0 && profile.workspaceViewRoot) {
-      const discovered = await engine.sourceModules(profile.workspaceViewRoot, context.storageUri?.fsPath);
+      const discovered = await engine.sourceModules(profile.workspaceViewRoot, profile.outRoot, context.storageUri?.fsPath);
       const recommended = discovered.modules.filter((module) => module.recommended);
       if (recommended.length > 0) {
         profile.targets = recommended.map((module) => ({
@@ -83,21 +83,23 @@ export function activate(context: vscode.ExtensionContext): void {
       diagnostics: current.diagnostics.length,
     };
   };
-  const profileView = new ProfileViewProvider(context, async (workspaceRoot, query) => {
+  const profileView = new ProfileViewProvider(context, async (workspaceRoot, outRoot, query) => {
     await ensureEngine();
-    const result = await engine.sourceModules(workspaceRoot, context.storageUri?.fsPath, query);
+    const result = await engine.sourceModules(workspaceRoot, outRoot, context.storageUri?.fsPath, query);
     return {
       modules: result.modules,
       diagnostics: result.diagnostics.length,
       filesScanned: result.filesScanned,
       cacheHit: result.cacheHit,
+      buildBacked: result.buildBacked,
     };
   }, startIndex);
   context.subscriptions.push(vscode.commands.registerCommand("aospIde.refreshModules", async () => {
     await ensureEngine();
     const root = vscode.workspace.getConfiguration("aospIde").get<string>("workspaceViewRoot")?.trim()
       || vscode.workspace.workspaceFolders?.[0]?.uri.fsPath || "";
-    const result = await engine.sourceModules(root, context.storageUri?.fsPath);
+    const outRoot = vscode.workspace.getConfiguration("aospIde").get<string>("outRoot") || "";
+    const result = await engine.sourceModules(root, outRoot, context.storageUri?.fsPath);
     output.appendLine(`source modules: ${result.modules.length}; files: ${result.filesScanned}; cache: ${result.cacheHit}`);
     output.show(true);
   }));

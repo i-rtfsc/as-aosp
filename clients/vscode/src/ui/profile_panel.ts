@@ -15,6 +15,7 @@ export interface ModuleDiscoveryResult {
   diagnostics: number;
   filesScanned: number;
   cacheHit: boolean;
+  buildBacked: number;
 }
 
 type IndexResult = {
@@ -33,7 +34,7 @@ export class ProfileViewProvider implements vscode.WebviewViewProvider {
 
   constructor(
     private readonly context: vscode.ExtensionContext,
-    private readonly discoverModules: (workspaceRoot: string, query?: string) => Promise<ModuleDiscoveryResult>,
+    private readonly discoverModules: (workspaceRoot: string, outRoot: string, query?: string) => Promise<ModuleDiscoveryResult>,
     private readonly startIndex: (rebuild: boolean) => Promise<IndexResult>,
   ) {}
 
@@ -84,7 +85,7 @@ export class ProfileViewProvider implements vscode.WebviewViewProvider {
         return;
       }
       if (message.type === "refreshModules") {
-        await this.refreshModules(webview, message.workspaceViewRoot, message.query);
+        await this.refreshModules(webview, message.workspaceViewRoot, message.outRoot, message.query);
         return;
       }
       if (message.type === "applyModules") {
@@ -103,7 +104,7 @@ export class ProfileViewProvider implements vscode.WebviewViewProvider {
     }, undefined, this.context.subscriptions);
   }
 
-  private async refreshModules(webview: vscode.Webview, rawRoot?: string, query?: string): Promise<void> {
+  private async refreshModules(webview: vscode.Webview, rawRoot?: string, rawOutRoot?: string, query?: string): Promise<void> {
     const root = String(rawRoot || this.initial().workspaceViewRoot).trim();
     if (!root) {
       await webview.postMessage({ type: "moduleError", text: "Open or choose a workspace first." });
@@ -111,13 +112,15 @@ export class ProfileViewProvider implements vscode.WebviewViewProvider {
     }
     await webview.postMessage({ type: "moduleLoading" });
     try {
-      const result = await this.discoverModules(root, query);
+      const outRoot = String(rawOutRoot ?? vscode.workspace.getConfiguration("aospIde").get<string>("outRoot") ?? "");
+      const result = await this.discoverModules(root, outRoot, query);
       this.discovered = new Map(result.modules.map((module) => [module.name, module]));
       await webview.postMessage({
         type: "moduleCatalog",
         modules: result.modules,
         selected: vscode.workspace.getConfiguration("aospIde").get<string[]>("selectedModules") ?? [],
-        summary: `${result.modules.length} modules from ${result.filesScanned} files` +
+        summary: `${result.modules.length} modules · ${result.buildBacked} build-backed` +
+          ` · ${result.filesScanned} files` +
           ` · ${result.cacheHit ? "cache reused" : "scanned"}` +
           ` · ${result.diagnostics} diagnostics`,
       });
@@ -197,7 +200,7 @@ export function profileHtml(initial: Record<string, string>): string {
   const render=()=>{const query=byId('query').value.trim().toLowerCase();const visible=modules.filter(m=>!query||m.name.toLowerCase().includes(query)||m.blueprint.toLowerCase().includes(query)||m.type.toLowerCase().includes(query));byId('modules').innerHTML=visible.map(m=>'<label class="module"><input type="checkbox" data-module="'+escapeText(m.name)+'" '+(selected.has(m.name)?'checked':'')+'><div><div class="name">'+escapeText(m.name)+(m.recommended?' <span class="recommended">recommended</span>':'')+'</div><div class="meta">'+escapeText(m.type)+' · '+escapeText(m.blueprint)+' · '+escapeText(m.status)+'</div><div class="badges">'+(m.capabilities||[]).map(v=>'<span class="badge">'+escapeText(v)+'</span>').join('')+'</div></div></label>').join('');document.querySelectorAll('[data-module]').forEach(input=>input.onchange=()=>{input.checked?selected.add(input.dataset.module):selected.delete(input.dataset.module)})};
   const escapeText=value=>String(value||'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
   document.querySelectorAll('[data-browse]').forEach(button=>button.onclick=()=>api.postMessage({type:'browse',field:button.dataset.browse}));
-  byId('refresh').onclick=()=>api.postMessage({type:'refreshModules',workspaceViewRoot:byId('workspaceRoot').value,query:byId('query').value});
+  byId('refresh').onclick=()=>api.postMessage({type:'refreshModules',workspaceViewRoot:byId('workspaceRoot').value,outRoot:byId('outRoot').value,query:byId('query').value});
   byId('recommended').onclick=()=>{selected=new Set(modules.filter(m=>m.recommended).map(m=>m.name));render()};
   byId('clear').onclick=()=>{selected.clear();render()};byId('query').oninput=render;
   const apply=type=>api.postMessage({type,workspaceViewRoot:byId('workspaceRoot').value,outRoot:byId('outRoot').value,selectedModules:[...selected]});
