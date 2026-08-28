@@ -6,6 +6,7 @@
         Focused AOSP source navigation and cross-language indexing.
     ]]></description>
     <depends>com.intellij.modules.platform</depends>
+    <resource-bundle>messages.AospWorkspaceBundle</resource-bundle>
     <extensions defaultExtensionNs="com.intellij">
         <fileType name="AIDL" language="AIDL" implementationClass="com.rtfsc.aosp.aidl.AidlFileType" extensions="aidl"/>
         <gotoDeclarationHandler language="AIDL" implementationClass="com.rtfsc.aosp.aidl.AidlGotoDeclarationHandler"/>

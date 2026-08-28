@@ -330,9 +330,9 @@ Estimated memory: High
 - nested root exclusion；
 - exact artifact path resolution。
 
-当前 Go Selection Planner 和 VS Code 已实现 preset grouped targets、manual kind buckets 和
-module identity 去重。下一阶段仍需实现 pinned targets、Select All 影响预估、product-aware
-Automotive 默认策略，并让 JetBrains 消费相同 Workbench/Selection Plan。
+当前 Go Selection Planner、VS Code 和 JetBrains 已实现 preset grouped targets、manual
+kind buckets 和 module identity 去重。下一阶段仍需实现 pinned targets、Select All 影响
+预估和 product-aware Automotive 默认策略。
 
 ## 14. Acceptance
 

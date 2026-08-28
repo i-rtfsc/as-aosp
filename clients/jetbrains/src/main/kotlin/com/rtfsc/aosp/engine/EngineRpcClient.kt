@@ -48,6 +48,14 @@ internal class EngineRpcClient(
         return request(method = "aosp/source/modules", params = params)
     }
 
+    fun selectionCatalog(): ByteArray {
+        return request(method = "aosp/selection/catalog", params = "null")
+    }
+
+    fun selectionPlan(params: String): ByteArray {
+        return request(method = "aosp/selection/plan", params = params)
+    }
+
     fun projectGraph(params: String): ByteArray {
         return request(method = "aosp/projects/graph", params = params)
     }

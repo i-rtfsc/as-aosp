@@ -118,6 +118,8 @@ internal class ProfileConfigurable(
             outRoot = outRoot.text,
             pathMappings = pathMappings.text,
             targetsJson = targetEditor.serialize(),
+            selectedPresetsJson = settings.current.selectedPresetsJson,
+            selectedModulesJson = settings.current.selectedModulesJson,
             engineExecutable = engineExecutable.text,
         )
     }

@@ -66,6 +66,16 @@ internal class ProjectEngineService(
         return engineProcess.request("aosp/source/modules", params)
     }
 
+    fun selectionCatalog(): ByteArray {
+        if (!engineProcess.isRunning) start()
+        return engineProcess.request("aosp/selection/catalog", "null")
+    }
+
+    fun selectionPlan(params: String): ByteArray {
+        if (!engineProcess.isRunning) start()
+        return engineProcess.request("aosp/selection/plan", params)
+    }
+
     fun generatedMaterialize(params: String): ByteArray {
         if (!engineProcess.isRunning) start()
         return engineProcess.request("aosp/generated/materialize", params)
