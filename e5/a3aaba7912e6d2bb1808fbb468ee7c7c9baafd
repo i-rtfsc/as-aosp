@@ -1,0 +1,39 @@
+clients/vscode/src/engine/client.ts
+  s_0fcc3f909ad4ee::t_2981b1a2062c26 126
+  s_0fcc3f909ad4ee::t_d93ce53cd0e0a6 155,164
+clients/vscode/src/extension.ts
+  s_0fcc3f909ad4ee::t_d93ce53cd0e0a6 72
+protocol/aosp/index.go
+  s_0fcc3f909ad4ee::t_d93ce53cd0e0a6 149-151
+  h_8b376749578497 144-148
+protocol/aosp/server_test.go
+  s_0fcc3f909ad4ee::t_2981b1a2062c26 117-123,173-175
+  h_8b376749578497 115-116
+protocol/aosp/rust_project.go
+  s_0fcc3f909ad4ee::t_2981b1a2062c26 53-54
+  h_8b376749578497 48-52
+clients/vscode/src/navigation/rust_projection.ts
+  s_0fcc3f909ad4ee::t_2981b1a2062c26 33,37
+  h_8b376749578497 26-28,32
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "e5a3aaba7912e6d2bb1808fbb468ee7c7c9baafd",
+  "prompts": {},
+  "humans": {
+    "h_8b376749578497": {
+      "author": "Solo <anqi.huang@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
