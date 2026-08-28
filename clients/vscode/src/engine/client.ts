@@ -150,11 +150,12 @@ export interface GeneratedMaterializeResult {
 export class EngineClient {
   private process?: ChildProcessWithoutNullStreams;
   private startPromise?: Promise<void>;
+  private stopPromise?: Promise<void>;
   private decoder = new FrameDecoder();
   private nextId = 1;
   private pending = new Map<number, PendingRequest>();
   private queue = Promise.resolve();
-  private state: "stopped" | "starting" | "running" | "error" = "stopped";
+  private state: "stopped" | "starting" | "running" | "stopping" | "error" = "stopped";
   private lastError?: string;
   private listeners = new Set<(state: string, error?: string) => void>();
 
@@ -171,8 +172,11 @@ export class EngineClient {
   }
 
   async start(executable: string): Promise<void> {
+    if (this.stopPromise) {
+      await this.stopPromise;
+    }
     if (this.startPromise) return this.startPromise;
-    if (this.process) return;
+    if (this.process && this.state === "running") return;
     this.setStatus("starting");
     const operation = this.launch(executable);
     this.startPromise = operation;
@@ -200,6 +204,18 @@ export class EngineClient {
   }
 
   async stop(): Promise<void> {
+    if (this.stopPromise) return this.stopPromise;
+    const operation = this.performStop();
+    this.stopPromise = operation;
+    try {
+      await operation;
+    } finally {
+      if (this.stopPromise === operation) this.stopPromise = undefined;
+    }
+  }
+
+  private async performStop(): Promise<void> {
+    this.setStatus("stopping");
     try {
       await this.startPromise;
     } catch {
@@ -321,7 +337,7 @@ export class EngineClient {
     this.setStatus("error", error.message);
   }
 
-  private setStatus(state: "stopped" | "starting" | "running" | "error", error?: string): void {
+  private setStatus(state: "stopped" | "starting" | "running" | "stopping" | "error", error?: string): void {
     this.state = state;
     this.lastError = error;
     for (const listener of this.listeners) listener(state, error);

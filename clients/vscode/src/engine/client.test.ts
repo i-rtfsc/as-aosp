@@ -28,11 +28,13 @@ function respondingProcess(responseFactory: (request: any) => any): FakeProcess 
   process.stdin.on("data", (chunk: Buffer) => {
     for (const message of decoder.push(chunk)) {
       const request = JSON.parse(message);
-      process.stdout.write(encodeFrame(JSON.stringify({
-        jsonrpc: "2.0",
-        id: request.id,
-        result: responseFactory(request),
-      })));
+      void Promise.resolve(responseFactory(request)).then((result) => {
+        process.stdout.write(encodeFrame(JSON.stringify({
+          jsonrpc: "2.0",
+          id: request.id,
+          result,
+        })));
+      });
     }
   });
   return process;
@@ -72,6 +74,32 @@ test("restarts after an unexpected process exit", async () => {
   await client.start("aosp-index");
   first.emit("exit", 1);
   await client.start("aosp-index");
+  assert.equal(spawns, 2);
+  await client.stop();
+});
+
+test("waits for an active stop before restarting", async () => {
+  let releaseShutdown: (() => void) | undefined;
+  const first = respondingProcess((request) => {
+    if (request.method === "aosp/shutdown") {
+      return new Promise<void>((resolve) => { releaseShutdown = resolve; });
+    }
+    return {};
+  });
+  const second = respondingProcess(() => ({}));
+  let spawns = 0;
+  const client = new EngineClient(() => {
+    spawns++;
+    return (spawns === 1 ? first : second).asChild();
+  });
+  await client.start("aosp-index");
+  const stopping = client.stop();
+  await new Promise((resolve) => setImmediate(resolve));
+  const restarting = client.start("aosp-index");
+  assert.equal(spawns, 1);
+  releaseShutdown?.();
+  await stopping;
+  await restarting;
   assert.equal(spawns, 2);
   await client.stop();
 });
