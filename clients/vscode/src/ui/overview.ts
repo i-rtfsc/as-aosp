@@ -27,12 +27,12 @@ export class OverviewProvider implements vscode.TreeDataProvider<OverviewItem> {
     if (!root) return [new OverviewItem("Open a workspace folder", "aospIde.openProfile")];
     const config = vscode.workspace.getConfiguration("aospIde");
     const detection = await detectOut(root);
-    const saved = config.get<string>("metadataRoot")?.trim();
+    const saved = config.get<string>("outRoot")?.trim();
     return [
       new OverviewItem(`Workspace: ${root}`, "aospIde.openProfile"),
       new OverviewItem(`Profile: ${saved ? "Build-backed" : detection.mode === "detected" ? "Out detected" : "Source-only"}`, "aospIde.openProfile"),
       new OverviewItem(`Engine: ${config.get<string>("engineExecutable") || "bundled / PATH"}`, "aospIde.showStatus"),
-      new OverviewItem(`Out: ${saved || detection.root || "not detected"}`, "aospIde.openProfile"),
+      new OverviewItem(`Build facts: ${saved || detection.root || "not detected"}`, "aospIde.openProfile"),
       new OverviewItem("Configure Profile", "aospIde.openProfile"),
       new OverviewItem("Refresh clangd Database", "aospIde.refreshCompdbOverlay"),
     ];

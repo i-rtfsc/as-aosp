@@ -16,12 +16,6 @@ export interface AidlResolveResult {
   diagnostics: unknown[];
 }
 
-export interface AidlPackResolveResult {
-  state: string;
-  symbols?: Array<{ path: string; range: { start: { offset: number } } }>;
-  diagnostics: unknown[];
-}
-
 export interface JniPeersResult {
   peers: Array<{
     java: { path: string; range: { start: number } };
@@ -30,7 +24,6 @@ export interface JniPeersResult {
   diagnostics: unknown[];
 }
 
-export interface JniPackPeersResult extends JniPeersResult {}
 
 export interface AidlPeersResult {
   peers: Array<{
@@ -47,8 +40,6 @@ export interface AidlReferencesResult {
   diagnostics: unknown[];
 }
 
-export interface AidlPackReferencesResult { references: AidlReferencesResult["references"]; diagnostics: unknown[]; }
-export interface AidlPackPeersResult { peers: AidlPeersResult["peers"]; diagnostics: unknown[]; }
 
 export interface CompdbOverlayResult {
   entries: Array<{ directory: string; arguments: string[]; file: string; output?: string }>;
@@ -109,6 +100,24 @@ export interface ArtifactsCatalogResult {
   diagnostics: unknown[];
 }
 
+export interface SourceModuleResult {
+  modules: Array<{
+    name: string;
+    type: string;
+    blueprint: string;
+    directory: string;
+    sourceRoots?: string[];
+    sources?: string[];
+    dependencies?: string[];
+    status: string;
+    capabilities?: string[];
+    recommended: boolean;
+  }>;
+  diagnostics: unknown[];
+  filesScanned: number;
+  cacheHit: boolean;
+}
+
 export interface IndexSnapshot {
   profileId?: string;
   state: string;
@@ -128,19 +137,6 @@ export interface IndexSnapshot {
 export interface GeneratedMaterializeResult {
   sourceRoots: Array<{ archive: string; root: string; hash: string; entries: number }>;
   diagnostics: unknown[];
-}
-
-export interface PackInfoResult {
-  schemaVersion: number;
-  aospRoot?: string;
-  outRoot?: string;
-  packs: string[];
-  diagnostics: unknown[];
-}
-
-export interface PackValidateResult {
-  valid: boolean;
-  diagnostics: Array<{ code: string; message: string; path?: string }>;
 }
 
 export class EngineClient {
@@ -217,25 +213,11 @@ export class EngineClient {
     return this.request("aosp/aidl/resolve", params);
   }
 
-  async aidlPackResolve(metadataPackRoot: string, name: string): Promise<AidlPackResolveResult> {
-    return this.request("aosp/aidl/pack/resolve", { metadataPackRoot, name });
-  }
-
-  async aidlPackReferences(metadataPackRoot: string, name: string): Promise<AidlPackReferencesResult> {
-    return this.request("aosp/aidl/pack/references", { metadataPackRoot, name });
-  }
-
-  async aidlPackPeers(metadataPackRoot: string, name: string, cacheRoot?: string): Promise<AidlPackPeersResult> {
-    return this.request("aosp/aidl/pack/peers", { metadataPackRoot, name, cacheRoot });
-  }
 
   async jniPeers(params: { workspaceViewRoot: string; currentPath: string }): Promise<JniPeersResult> {
     return this.request("aosp/jni/peers", params);
   }
 
-  async jniPackPeers(metadataPackRoot: string, className?: string, methodName?: string, functionName?: string): Promise<JniPackPeersResult> {
-    return this.request("aosp/jni/pack/peers", { metadataPackRoot, className, methodName, functionName });
-  }
 
   async aidlPeers(params: { workspaceViewRoot: string; currentPath: string; name: string }): Promise<AidlPeersResult> {
     return this.request("aosp/aidl/peers", params);
@@ -245,20 +227,24 @@ export class EngineClient {
     return this.request("aosp/aidl/references", params);
   }
 
-  async compdbOverlay(params: { metadataRoot?: string; metadataPackRoot?: string; workspaceViewRoot: string; pathMappings: unknown[] }): Promise<CompdbOverlayResult> {
+  async compdbOverlay(params: { outRoot?: string; workspaceViewRoot: string; pathMappings: unknown[] }): Promise<CompdbOverlayResult> {
     return this.request("aosp/compdb/overlay", params);
   }
 
-  async modulesCatalog(metadataPackRoot: string, metadataRoot?: string): Promise<ModulesCatalogResult> {
-    return this.request("aosp/modules/catalog", { metadataPackRoot, metadataRoot });
+  async modulesCatalog(outRoot: string): Promise<ModulesCatalogResult> {
+    return this.request("aosp/modules/catalog", { outRoot });
   }
 
-  async projectGraph(metadataPackRoot: string, targets: unknown[], metadataRoot?: string): Promise<ProjectGraphResult> {
-    return this.request("aosp/projects/graph", { metadataPackRoot, metadataRoot, targets });
+  async projectGraph(outRoot: string, targets: unknown[]): Promise<ProjectGraphResult> {
+    return this.request("aosp/projects/graph", { outRoot, targets });
   }
 
-  async artifactsCatalog(metadataPackRoot: string, kind?: string, query?: string, metadataRoot?: string): Promise<ArtifactsCatalogResult> {
-    return this.request("aosp/artifacts/catalog", { metadataPackRoot, metadataRoot, kind, query });
+  async artifactsCatalog(outRoot: string, kind?: string, query?: string): Promise<ArtifactsCatalogResult> {
+    return this.request("aosp/artifacts/catalog", { outRoot, kind, query });
+  }
+
+  async sourceModules(workspaceViewRoot: string, cacheRoot?: string, query?: string): Promise<SourceModuleResult> {
+    return this.request("aosp/source/modules", { workspaceViewRoot, cacheRoot, query });
   }
 
   async startIndex(profile: unknown, rebuild = false): Promise<IndexSnapshot> {
@@ -273,17 +259,10 @@ export class EngineClient {
     return this.request("aosp/index/projection", params);
   }
 
-  async materializeGenerated(metadataPackRoot: string, cacheRoot: string, metadataRoot?: string, archives?: string[]): Promise<GeneratedMaterializeResult> {
-    return this.request("aosp/generated/materialize", { metadataPackRoot, metadataRoot, archives, cacheRoot });
+  async materializeGenerated(outRoot: string, cacheRoot: string, archives?: string[]): Promise<GeneratedMaterializeResult> {
+    return this.request("aosp/generated/materialize", { outRoot, archives, cacheRoot });
   }
 
-  async packInfo(metadataPackRoot: string): Promise<PackInfoResult> {
-    return this.request("aosp/pack/info", { metadataPackRoot });
-  }
-
-  async validatePack(metadataPackRoot: string): Promise<PackValidateResult> {
-    return this.request("aosp/pack/validate", { metadataPackRoot });
-  }
 
   private request(method: string, params: unknown): Promise<any> {
     const operation = this.queue.then(() => new Promise((resolve, reject) => {

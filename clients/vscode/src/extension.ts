@@ -7,7 +7,7 @@ import { goToJniPeer, JniDefinitionProvider } from "./navigation/jni";
 import { refreshCompdbOverlay } from "./navigation/compdb";
 import { createAospStatusBar } from "./status";
 import { resolveEngineExecutable } from "./engine/resolve";
-import { openProfilePanel, ProfileViewProvider } from "./ui/profile_panel";
+import { ProfileViewProvider } from "./ui/profile_panel";
 import { detectOut } from "./ui/overview";
 import { JavaSourceDefinitionProvider } from "./navigation/java";
 import { applyJavaProjection } from "./navigation/java_projection";
@@ -29,17 +29,31 @@ export function activate(context: vscode.ExtensionContext): void {
       schemaVersion: 1,
       id: vscode.workspace.name || "vscode-workspace",
       workspaceViewRoot: config.get<string>("workspaceViewRoot") || vscode.workspace.workspaceFolders?.[0]?.uri.fsPath || "",
-      outRoot: config.get<string>("metadataRoot") || "",
-      metadataPackRoot: config.get<string>("metadataPackRoot") || "",
+      outRoot: config.get<string>("outRoot") || "",
       targets: config.get<unknown[]>("targets") || [],
       pathMappings: config.get<unknown[]>("pathMappings") || [],
       buildIntegration: { mode: "read-only" },
     };
-    if (profile.targets.length === 0) throw new Error("Configure at least one TargetSpec before indexing.");
-    if (profile.metadataPackRoot) {
-      const validation = await engine.validatePack(profile.metadataPackRoot);
-      if (!validation.valid) throw new Error(validation.diagnostics.map((item) => `${item.code}: ${item.message}`).join("; "));
+    if (profile.targets.length === 0 && profile.workspaceViewRoot) {
+      const discovered = await engine.sourceModules(profile.workspaceViewRoot, context.storageUri?.fsPath);
+      const recommended = discovered.modules.filter((module) => module.recommended);
+      if (recommended.length > 0) {
+        profile.targets = recommended.map((module) => ({
+          id: module.name,
+          displayName: module.name,
+          kind: module.type.toLowerCase().includes("cc_") ? "native" :
+            module.type.toLowerCase().includes("android_") ? "android" : "java",
+          selectors: { modules: [module.name] },
+          includeDependencies: true,
+          includeGeneratedSources: true,
+          includeResources: module.type.toLowerCase().includes("android_"),
+          includeManifest: module.type.toLowerCase().includes("android_"),
+        }));
+        await config.update("targets", profile.targets, vscode.ConfigurationTarget.Workspace);
+        await config.update("selectedModules", recommended.map((module) => module.name), vscode.ConfigurationTarget.Workspace);
+      }
     }
+    if (profile.targets.length === 0) throw new Error("No Android.bp modules selected for indexing.");
     const status = await engine.startIndex(profile, rebuild);
     let current = status;
     for (let attempt = 0; attempt < 40 && current.state === "running"; attempt++) {
@@ -47,9 +61,9 @@ export function activate(context: vscode.ExtensionContext): void {
       current = await engine.indexStatus();
     }
     if (current.state === "ready" || current.state === "partial") {
-      const packRoot = profile.metadataPackRoot;
-      if ((packRoot || profile.outRoot) && profile.workspaceViewRoot) {
-        const projection = await applyJavaProjection(engine, profile.workspaceViewRoot, packRoot, context.globalStorageUri.fsPath, profile.outRoot, profile.targets);
+      if (profile.outRoot && profile.workspaceViewRoot) {
+        const cacheRoot = context.storageUri?.fsPath || context.globalStorageUri.fsPath;
+        const projection = await applyJavaProjection(engine, profile.workspaceViewRoot, profile.outRoot, cacheRoot, profile.targets);
         current = await engine.reportProjection({
           profileId: profile.id,
           sourceRoots: projection.sourcePaths.length,
@@ -69,45 +83,24 @@ export function activate(context: vscode.ExtensionContext): void {
       diagnostics: current.diagnostics.length,
     };
   };
-  const profileView = new ProfileViewProvider(context, async (metadataPackRoot, metadataRoot) => {
+  const profileView = new ProfileViewProvider(context, async (workspaceRoot, query) => {
     await ensureEngine();
-    metadataRoot = metadataRoot || vscode.workspace.getConfiguration("aospIde").get<string>("metadataRoot") || "";
-    if (metadataPackRoot) {
-      const validation = await engine.validatePack(metadataPackRoot);
-      if (!validation.valid) {
-        throw new Error(validation.diagnostics.map((item) => `${item.code}: ${item.message}`).join("; "));
-      }
-    }
-    const modules = await engine.modulesCatalog(metadataPackRoot, metadataRoot);
-    const artifacts = await engine.artifactsCatalog(metadataPackRoot, undefined, undefined, metadataRoot);
+    const result = await engine.sourceModules(workspaceRoot, context.storageUri?.fsPath, query);
     return {
-      modules: modules.modules.length,
-      generated: modules.modules.reduce((total, module) => total + module.generated, 0),
-      diagnostics: modules.diagnostics.length + artifacts.diagnostics.length,
-      artifacts: artifacts.artifacts,
+      modules: result.modules,
+      diagnostics: result.diagnostics.length,
+      filesScanned: result.filesScanned,
+      cacheHit: result.cacheHit,
     };
-  }, startIndex, async (metadataPackRoot, metadataRoot, target) => {
+  }, startIndex);
+  context.subscriptions.push(vscode.commands.registerCommand("aospIde.refreshModules", async () => {
     await ensureEngine();
-    metadataRoot = metadataRoot || vscode.workspace.getConfiguration("aospIde").get<string>("metadataRoot") || "";
-    if (!metadataPackRoot?.trim() && !metadataRoot.trim()) {
-      throw new Error("Metadata Pack Root or Out Root is required to resolve a target.");
-    }
-    const result = await engine.projectGraph(metadataPackRoot, [target], metadataRoot);
-    const project = result.graph.targets[0];
-    const diagnostics = [
-      ...result.diagnostics,
-      ...(project?.diagnostics ?? []),
-    ];
-    return {
-      state: diagnostics.length ? "error" : project ? "exact" : "unresolved",
-      modules: project?.resolvedModules.length ?? 0,
-      artifacts: project?.resolvedArtifacts.length ?? 0,
-      sources: project?.sourceRoots.length ?? 0,
-      generated: project?.generatedRoots.length ?? 0,
-      libraries: project?.libraries.length ?? 0,
-      diagnostics: diagnostics.length,
-    };
-  });
+    const root = vscode.workspace.getConfiguration("aospIde").get<string>("workspaceViewRoot")?.trim()
+      || vscode.workspace.workspaceFolders?.[0]?.uri.fsPath || "";
+    const result = await engine.sourceModules(root, context.storageUri?.fsPath);
+    output.appendLine(`source modules: ${result.modules.length}; files: ${result.filesScanned}; cache: ${result.cacheHit}`);
+    output.show(true);
+  }));
   let autoGeneration = 0;
   let autoTimer: NodeJS.Timeout | undefined;
   const runAutomaticIndex = async (rebuild = false): Promise<void> => {
@@ -161,7 +154,7 @@ export function activate(context: vscode.ExtensionContext): void {
     }),
     vscode.commands.registerCommand("aospIde.goToAidlGeneratedPeer", async () => {
       await ensureEngine();
-      await goToAidlGeneratedPeer(engine, context.globalStorageUri.fsPath);
+      await goToAidlGeneratedPeer(engine, context.storageUri?.fsPath || context.globalStorageUri.fsPath);
     }),
     vscode.commands.registerCommand("aospIde.refreshCompdbOverlay", async () => {
       await ensureEngine();
@@ -172,8 +165,7 @@ export function activate(context: vscode.ExtensionContext): void {
       const config = vscode.workspace.getConfiguration("aospIde");
       output.appendLine(`engine: ${config.get<string>("engineExecutable") || "aosp-index"}`);
       output.appendLine(`workspaceViewRoot: ${config.get<string>("workspaceViewRoot") || "<workspace>"}`);
-      output.appendLine(`metadataRoot: ${config.get<string>("metadataRoot") || "<unset>"}`);
-      output.appendLine(`metadataPackRoot: ${config.get<string>("metadataPackRoot") || "<unset>"}`);
+      output.appendLine(`outRoot: ${config.get<string>("outRoot") || "<unset>"}`);
       output.appendLine(`status: ${engine.status.state}${engine.status.error ? ` (${engine.status.error})` : ""}`);
       output.show(true);
     }),
@@ -181,8 +173,7 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.workspace.onDidChangeConfiguration((event) => {
       if (event.affectsConfiguration("aospIde.engineExecutable") ||
         event.affectsConfiguration("aospIde.workspaceViewRoot") ||
-        event.affectsConfiguration("aospIde.metadataRoot") ||
-        event.affectsConfiguration("aospIde.metadataPackRoot") ||
+        event.affectsConfiguration("aospIde.outRoot") ||
         event.affectsConfiguration("aospIde.pathMappings")) {
         autoGeneration++;
         void engine.stop().finally(() => scheduleAutomaticIndex(true));
@@ -194,8 +185,8 @@ export function activate(context: vscode.ExtensionContext): void {
   if (vscode.workspace.workspaceFolders?.length && !configuredRoot) {
     const root = vscode.workspace.workspaceFolders[0].uri.fsPath;
     void detectOut(root).then(async (detection) => {
-      if (detection.root && !vscode.workspace.getConfiguration("aospIde").get<string>("metadataRoot")?.trim()) {
-        await vscode.workspace.getConfiguration("aospIde").update("metadataRoot", detection.root, vscode.ConfigurationTarget.Workspace);
+      if (detection.root && !vscode.workspace.getConfiguration("aospIde").get<string>("outRoot")?.trim()) {
+        await vscode.workspace.getConfiguration("aospIde").update("outRoot", detection.root, vscode.ConfigurationTarget.Workspace);
       }
       setTimeout(() => profileView.reveal(), 300);
       scheduleAutomaticIndex(false);

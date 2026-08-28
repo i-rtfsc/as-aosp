@@ -16,11 +16,7 @@ export async function goToAidlGeneratedPeer(engine: EngineClient, cacheRoot?: st
     return;
   }
   const name = editor.document.getText(word);
-  const packRoot = vscode.workspace.getConfiguration("aospIde").get<string>("metadataPackRoot")?.trim();
-  const packed = packRoot ? await engine.aidlPackPeers(packRoot, name, cacheRoot) : undefined;
-  const result = packed && packed.diagnostics.length === 0 && packed.peers.length > 0
-    ? packed
-    : await engine.aidlPeers({ workspaceViewRoot: root, currentPath, name });
+  const result = await engine.aidlPeers({ workspaceViewRoot: root, currentPath, name });
   const localPath = selectAidlPeerLocalPath(result);
   if (localPath) {
     const target = vscode.Uri.file(localPath);

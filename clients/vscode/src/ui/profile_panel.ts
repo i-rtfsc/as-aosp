@@ -1,154 +1,212 @@
 import * as vscode from "vscode";
 
+export interface WorkspaceModule {
+  name: string;
+  type: string;
+  blueprint: string;
+  directory: string;
+  status: string;
+  capabilities?: string[];
+  recommended: boolean;
+}
+
+export interface ModuleDiscoveryResult {
+  modules: WorkspaceModule[];
+  diagnostics: number;
+  filesScanned: number;
+  cacheHit: boolean;
+}
+
+type IndexResult = {
+  state: string;
+  stage: string;
+  progress: number;
+  modules: number;
+  generated: number;
+  diagnostics: number;
+};
+
 export class ProfileViewProvider implements vscode.WebviewViewProvider {
   private view?: vscode.WebviewView;
   private indexStatus = "Not started";
+  private discovered = new Map<string, WorkspaceModule>();
+
   constructor(
     private readonly context: vscode.ExtensionContext,
-    private readonly inspectPack?: (packRoot: string, metadataRoot: string) => Promise<{ modules: number; generated: number; diagnostics: number; artifacts?: unknown[] }>,
-    private readonly startIndex?: (rebuild: boolean) => Promise<{ state: string; stage: string; progress: number; modules: number; generated: number; diagnostics: number }>,
-    private readonly resolveTarget?: (packRoot: string, metadataRoot: string, target: unknown) => Promise<{ state: string; modules: number; artifacts: number; sources: number; generated: number; libraries: number; diagnostics: number }>,
+    private readonly discoverModules: (workspaceRoot: string, query?: string) => Promise<ModuleDiscoveryResult>,
+    private readonly startIndex: (rebuild: boolean) => Promise<IndexResult>,
   ) {}
+
   resolveWebviewView(view: vscode.WebviewView): void {
     this.view = view;
     view.webview.options = { enableScripts: true };
     view.webview.html = profileHtml(this.initial());
     this.attachMessages(view.webview);
     void view.webview.postMessage({ type: "indexStatus", text: this.indexStatus });
+    void this.refreshModules(view.webview);
   }
-  reveal(): void { this.view?.show?.(true); }
+
+  reveal(): void {
+    this.view?.show?.(true);
+  }
+
   updateIndexStatus(text: string): void {
     this.indexStatus = text;
     void this.view?.webview.postMessage({ type: "indexStatus", text });
   }
+
   showCurrentIndexStatus(): void {
     this.updateIndexStatus(this.indexStatus);
   }
+
   private initial(): Record<string, string> {
     const config = vscode.workspace.getConfiguration("aospIde");
     return {
-      workspaceViewRoot: config.get<string>("workspaceViewRoot") || vscode.workspace.workspaceFolders?.[0]?.uri.fsPath || "",
-      metadataRoot: config.get<string>("metadataRoot") ?? "",
-      metadataPackRoot: config.get<string>("metadataPackRoot") ?? "",
-      targets: JSON.stringify(config.get<unknown[]>("targets") ?? [], null, 2),
-      engineExecutable: config.get<string>("engineExecutable") ?? "",
-      pathMappings: JSON.stringify(config.get<unknown[]>("pathMappings") ?? [], null, 2),
+      workspaceViewRoot: config.get<string>("workspaceViewRoot") ||
+        vscode.workspace.workspaceFolders?.[0]?.uri.fsPath || "",
+      outRoot: config.get<string>("outRoot") ?? "",
+      selectedModules: JSON.stringify(config.get<string[]>("selectedModules") ?? []),
     };
   }
+
   private attachMessages(webview: vscode.Webview): void {
     webview.onDidReceiveMessage(async (message) => {
       if (message.type === "browse") {
-        const selected = await vscode.window.showOpenDialog({ canSelectFolders: true, canSelectFiles: false, canSelectMany: false, openLabel: "Select directory" });
-        if (selected?.[0]) webview.postMessage({ type: "set", field: message.field, value: selected[0].fsPath });
-      }
-      if (message.type === "save") {
-        let mappings: unknown[];
-        let targets: unknown[];
-        try {
-          mappings = JSON.parse(message.pathMappings || "[]");
-          targets = parseJsonArray(message.targets);
-        } catch { void vscode.window.showErrorMessage("AOSP Workspace targets and path mappings must be valid JSON."); return; }
-        const config = vscode.workspace.getConfiguration("aospIde");
-        await config.update("workspaceViewRoot", message.workspaceViewRoot, vscode.ConfigurationTarget.Workspace);
-        await config.update("metadataRoot", message.metadataRoot, vscode.ConfigurationTarget.Workspace);
-        await config.update("metadataPackRoot", message.metadataPackRoot, vscode.ConfigurationTarget.Workspace);
-        await config.update("targets", targets, vscode.ConfigurationTarget.Workspace);
-        await config.update("engineExecutable", message.engineExecutable, vscode.ConfigurationTarget.Workspace);
-        await config.update("pathMappings", mappings, vscode.ConfigurationTarget.Workspace);
-        void vscode.window.showInformationMessage("AOSP Workspace profile saved.");
-      }
-      if (message.type === "inspectPack") {
-        if (!this.inspectPack || (!message.metadataPackRoot?.trim() && !message.metadataRoot?.trim())) {
-          webview.postMessage({ type: "catalogStatus", text: "Choose a Metadata Pack or Out Root first." });
-        } else {
-          try {
-            const summary = await this.inspectPack(message.metadataPackRoot, message.metadataRoot);
-            webview.postMessage({ type: "catalogStatus", text: `${summary.modules} modules · ${summary.generated} generated entries · ${summary.diagnostics} diagnostics` });
-            webview.postMessage({ type: "artifactCatalog", artifacts: summary.artifacts ?? [] });
-          } catch (error) {
-            webview.postMessage({ type: "catalogStatus", text: `Catalog unavailable: ${error instanceof Error ? error.message : String(error)}` });
-          }
+        const selected = await vscode.window.showOpenDialog({
+          canSelectFolders: true,
+          canSelectFiles: false,
+          canSelectMany: false,
+          openLabel: "Select directory",
+        });
+        if (selected?.[0]) {
+          await webview.postMessage({ type: "set", field: message.field, value: selected[0].fsPath });
         }
+        return;
       }
-      if (message.type === "startIndex") {
-        if (!this.startIndex) return;
-        try {
-          const status = await this.startIndex(Boolean(message.rebuild));
-          this.updateIndexStatus(`${status.state} · ${status.stage} · ${status.progress}% · ${status.modules} modules · ${status.generated} generated · ${status.diagnostics} diagnostics`);
-        } catch (error) {
-          this.updateIndexStatus(`Index unavailable: ${error instanceof Error ? error.message : String(error)}`);
-        }
+      if (message.type === "refreshModules") {
+        await this.refreshModules(webview, message.workspaceViewRoot, message.query);
+        return;
       }
-      if (message.type === "resolveTarget" && this.resolveTarget) {
-        try {
-          const preview = await this.resolveTarget(message.metadataPackRoot, message.metadataRoot, message.target);
-          webview.postMessage({ type: "targetPreview", text: `${preview.state} · ${preview.modules} modules · ${preview.artifacts} artifacts · ${preview.sources} sources · ${preview.generated} generated · ${preview.libraries} libraries · ${preview.diagnostics} diagnostics` });
-        } catch (error) {
-          webview.postMessage({ type: "targetPreview", text: `Resolve failed: ${error instanceof Error ? error.message : String(error)}` });
-        }
+      if (message.type === "applyModules") {
+        await this.applyModules(message);
+        await this.runIndex(false);
+        return;
       }
-      if (message.type === "command" && typeof message.command === "string") await vscode.commands.executeCommand(message.command);
+      if (message.type === "rebuildIndex") {
+        await this.applyModules(message);
+        await this.runIndex(true);
+        return;
+      }
+      if (message.type === "command" && typeof message.command === "string") {
+        await vscode.commands.executeCommand(message.command);
+      }
     }, undefined, this.context.subscriptions);
+  }
+
+  private async refreshModules(webview: vscode.Webview, rawRoot?: string, query?: string): Promise<void> {
+    const root = String(rawRoot || this.initial().workspaceViewRoot).trim();
+    if (!root) {
+      await webview.postMessage({ type: "moduleError", text: "Open or choose a workspace first." });
+      return;
+    }
+    await webview.postMessage({ type: "moduleLoading" });
+    try {
+      const result = await this.discoverModules(root, query);
+      this.discovered = new Map(result.modules.map((module) => [module.name, module]));
+      await webview.postMessage({
+        type: "moduleCatalog",
+        modules: result.modules,
+        selected: vscode.workspace.getConfiguration("aospIde").get<string[]>("selectedModules") ?? [],
+        summary: `${result.modules.length} modules from ${result.filesScanned} files` +
+          ` · ${result.cacheHit ? "cache reused" : "scanned"}` +
+          ` · ${result.diagnostics} diagnostics`,
+      });
+    } catch (error) {
+      await webview.postMessage({
+        type: "moduleError",
+        text: error instanceof Error ? error.message : String(error),
+      });
+    }
+  }
+
+  private async applyModules(message: any): Promise<void> {
+    const selected = Array.isArray(message.selectedModules) ?
+      message.selectedModules.filter((value: unknown): value is string => typeof value === "string") : [];
+    const targets = selected.map((name: string) => moduleTarget(this.discovered.get(name), name));
+    const config = vscode.workspace.getConfiguration("aospIde");
+    await config.update("workspaceViewRoot", String(message.workspaceViewRoot ?? ""), vscode.ConfigurationTarget.Workspace);
+    await config.update("outRoot", String(message.outRoot ?? ""), vscode.ConfigurationTarget.Workspace);
+    await config.update("selectedModules", selected, vscode.ConfigurationTarget.Workspace);
+    await config.update("targets", targets, vscode.ConfigurationTarget.Workspace);
+  }
+
+  private async runIndex(rebuild: boolean): Promise<void> {
+    try {
+      const status = await this.startIndex(rebuild);
+      this.updateIndexStatus(
+        `${status.state} · ${status.stage} · ${status.progress}% · ` +
+        `${status.modules} modules · ${status.generated} generated · ` +
+        `${status.diagnostics} diagnostics`,
+      );
+    } catch (error) {
+      this.updateIndexStatus(`Index unavailable: ${error instanceof Error ? error.message : String(error)}`);
+    }
   }
 }
 
-export function openProfilePanel(context: vscode.ExtensionContext): void {
-  const panel = vscode.window.createWebviewPanel("aospWorkspaceProfile", "AOSP Workspace", vscode.ViewColumn.One, { enableScripts: true, retainContextWhenHidden: true });
-  const config = vscode.workspace.getConfiguration("aospIde");
-  const initial = {
-    workspaceViewRoot: config.get<string>("workspaceViewRoot") || vscode.workspace.workspaceFolders?.[0]?.uri.fsPath || "",
-    metadataRoot: config.get<string>("metadataRoot") ?? "",
-    metadataPackRoot: config.get<string>("metadataPackRoot") ?? "",
-    targets: JSON.stringify(config.get<unknown[]>("targets") ?? [], null, 2),
-    engineExecutable: config.get<string>("engineExecutable") ?? "",
-    pathMappings: JSON.stringify(config.get<unknown[]>("pathMappings") ?? [], null, 2),
+function moduleTarget(module: WorkspaceModule | undefined, name: string): unknown {
+  const type = module?.type.toLowerCase() ?? "";
+  const kind = type.includes("cc_") || type.includes("rust_") ? "native" :
+    type.includes("android_") ? "android" : "java";
+  return {
+    id: name,
+    displayName: name,
+    kind,
+    selectors: { modules: [name] },
+    includeDependencies: true,
+    includeGeneratedSources: true,
+    includeResources: kind === "android",
+    includeManifest: kind === "android",
   };
-  panel.webview.html = profileHtml(initial);
-  panel.webview.onDidReceiveMessage(async (message) => {
-    if (message.type === "browse") {
-      const selected = await vscode.window.showOpenDialog({ canSelectFolders: true, canSelectFiles: false, canSelectMany: false, openLabel: "Select directory" });
-      if (selected?.[0]) panel.webview.postMessage({ type: "set", field: message.field, value: selected[0].fsPath });
-    }
-    if (message.type === "save") {
-      let mappings: unknown[];
-      try { mappings = JSON.parse(message.pathMappings || "[]"); } catch { void vscode.window.showErrorMessage("AOSP Workspace path mappings must be valid JSON."); return; }
-      await config.update("workspaceViewRoot", message.workspaceViewRoot, vscode.ConfigurationTarget.Workspace);
-      await config.update("metadataRoot", message.metadataRoot, vscode.ConfigurationTarget.Workspace);
-      await config.update("metadataPackRoot", message.metadataPackRoot, vscode.ConfigurationTarget.Workspace);
-      await config.update("targets", parseJsonArray(message.targets), vscode.ConfigurationTarget.Workspace);
-      await config.update("engineExecutable", message.engineExecutable, vscode.ConfigurationTarget.Workspace);
-      await config.update("pathMappings", mappings, vscode.ConfigurationTarget.Workspace);
-      void vscode.window.showInformationMessage("AOSP Workspace profile saved.");
-    }
-    if (message.type === "command" && typeof message.command === "string") {
-      await vscode.commands.executeCommand(message.command);
-    }
-  }, undefined, context.subscriptions);
 }
 
 export function profileHtml(initial: Record<string, string>): string {
   const nonce = String(Date.now());
-  return `<!doctype html><html><head><meta charset="UTF-8"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'nonce-${nonce}'"><style>
-  :root{--purple:#a855f7;--blue:#38bdf8;--teal:#2dd4bf;--card:color-mix(in srgb,var(--vscode-editor-background) 88%,#172554);--muted:var(--vscode-descriptionForeground)}
-  *{box-sizing:border-box}body{margin:0;padding:14px;background:var(--vscode-sideBar-background);color:var(--vscode-foreground);font:12px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-  .hero{padding:15px;border-radius:13px;background:linear-gradient(125deg,#581c87,#1d4ed8 56%,#0f766e);margin-bottom:10px}.hero h1{margin:0;font-size:19px;color:white}.hero p{margin:4px 0 0;color:#e0f2fe;font-size:11px}.pill{display:inline-block;margin-bottom:7px;padding:4px 8px;border-radius:99px;background:#ffffff24;color:#d1fae5;font-size:10px;font-weight:700}.grid{display:flex;flex-direction:column;gap:8px}.card{background:var(--card);border:1px solid #ffffff14;border-radius:11px;padding:12px}.eyebrow{font-size:10px;letter-spacing:1.1px;color:#7dd3fc;font-weight:800;margin-bottom:6px}.value{font-size:12px;font-weight:650;word-break:break-all}.hint{color:var(--muted);margin-top:5px;line-height:1.35;font-size:11px}.ok{color:var(--teal);font-weight:700}.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--teal);margin-right:5px}.field{margin-top:9px}.field label{display:block;color:#c4b5fd;font-weight:700;margin-bottom:4px}.row{display:flex;gap:5px}.row input{flex:1}input,textarea{width:100%;padding:7px 8px;border-radius:7px;border:1px solid #ffffff1f;background:var(--vscode-input-background);color:var(--vscode-input-foreground);outline:none}input:focus,textarea:focus{border-color:var(--blue)}button{border:0;border-radius:7px;padding:7px 9px;background:#334155;color:white;font-weight:700;cursor:pointer;font-size:11px}button:hover{background:#475569}.primary{background:linear-gradient(100deg,var(--purple),#2563eb)}.actions{display:flex;flex-direction:column;gap:6px;margin-top:10px}.cap{display:flex;flex-direction:column;gap:5px;margin-top:6px}.cap div{padding:7px 8px;border-radius:7px;background:#ffffff08}.cap b{display:block;margin-bottom:2px}.footer{margin-top:10px;color:var(--muted);font-size:10px;line-height:1.35}
+  return `<!doctype html><html><head><meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'nonce-${nonce}'">
+  <style>
+  :root{--cyan:#22d3ee;--violet:#8b5cf6;--pink:#ec4899;--green:#34d399;--muted:var(--vscode-descriptionForeground);--panel:color-mix(in srgb,var(--vscode-sideBar-background) 86%,#172554)}
+  *{box-sizing:border-box}body{margin:0;padding:12px;background:var(--vscode-sideBar-background);color:var(--vscode-foreground);font:12px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.hero{padding:12px;border-radius:8px;background:linear-gradient(120deg,#7c3aed,#2563eb 55%,#0891b2);color:white}.hero h1{margin:0;font-size:17px}.hero p{margin:4px 0 0;color:#e0f2fe}.section{margin-top:10px;padding:10px;border:1px solid #ffffff18;border-radius:8px;background:var(--panel)}.title{font-size:10px;font-weight:800;color:var(--cyan);letter-spacing:0;margin-bottom:7px}.field{margin-top:7px}label{display:block;margin-bottom:4px;color:var(--muted)}input{width:100%;padding:6px;border:1px solid #ffffff25;border-radius:6px;background:var(--vscode-input-background);color:var(--vscode-input-foreground)}.row{display:flex;gap:5px}.row input{flex:1}button{padding:6px 8px;border:0;border-radius:6px;background:#334155;color:white;font-weight:700;cursor:pointer}.primary{background:linear-gradient(100deg,var(--violet),var(--pink))}.toolbar{display:flex;gap:5px;margin:7px 0}.summary,.status{color:var(--muted);line-height:1.4}.modules{max-height:390px;overflow:auto;border-top:1px solid #ffffff12}.module{display:grid;grid-template-columns:18px 1fr;gap:6px;padding:8px 2px;border-bottom:1px solid #ffffff0d}.module input{width:14px}.name{font-weight:700}.meta{font-size:10px;color:var(--muted);word-break:break-all}.badges{display:flex;gap:4px;flex-wrap:wrap;margin-top:3px}.badge{padding:2px 4px;border-radius:4px;background:#ffffff12;color:#bae6fd}.recommended{color:#f9a8d4}.actions{display:flex;gap:6px;margin-top:10px}.actions button{flex:1}
   </style></head><body>
-  <section class="hero"><span class="pill">SOURCE-READY</span><h1>AOSP Workspace</h1><p>Focused source navigation for AOSP, MIUI and QCOM</p></section>
-  <div class="grid">
-    <section class="card"><div class="eyebrow">WORKSPACE VIEW</div><div class="value" id="workspaceValue">${escapeHtml(initial.workspaceViewRoot)}</div><div class="hint"><span class="dot"></span>Only the visible folder is indexed. Symlinks and mounted repositories are supported.</div><div class="field"><label for="workspaceViewRoot">Workspace View Root</label><div class="row"><input id="workspaceViewRoot" value="${escapeHtml(initial.workspaceViewRoot)}"><button data-browse="workspaceViewRoot">Browse</button></div></div></section>
-    <section class="card"><div class="eyebrow">OUT / METADATA</div><div class="value" id="outValue">${initial.metadataRoot ? "BUILD-BACKED" : "SOURCE-ONLY"}</div><div class="hint">${initial.metadataRoot ? escapeHtml(initial.metadataRoot) : "No out configured yet. AIDL and JNI source navigation still works."}</div><div class="field"><label for="metadataRoot">Out / compdb Root</label><div class="row"><input id="metadataRoot" value="${escapeHtml(initial.metadataRoot)}"><button data-browse="metadataRoot">Browse</button></div></div><div class="field"><label for="metadataPackRoot">Metadata Pack Root</label><div class="row"><input id="metadataPackRoot" value="${escapeHtml(initial.metadataPackRoot)}"><button data-browse="metadataPackRoot">Browse</button></div><div class="hint">Use a pack exported on another machine for module and generated-source facts.</div><div class="hint" id="catalogStatus">Not inspected</div></div></section>
-    <section class="card wide"><div class="eyebrow">TARGETS</div><div id="targetList"></div><div class="field"><label for="targetId">Target name</label><input id="targetId" placeholder="Framework"><label for="targetKind">Target kind</label><select id="targetKind"><option value="java">Java</option><option value="android">Android</option><option value="native">Native</option><option value="mixed">Mixed</option></select><label for="artifactKind">Artifact kind</label><select id="artifactKind"><option value="jar">JAR</option><option value="apk">APK</option><option value="srcjar">SrcJar</option><option value="aar">AAR</option><option value="output">Output</option></select><label for="artifactSelect">Artifact from pack</label><select id="artifactSelect"><option value="">Custom artifact</option></select><label for="targetArtifact">Artifact name</label><input id="targetArtifact" placeholder="framework.jar or SystemUI.apk"><div class="hint" id="artifactInfo">Inspect a Metadata Pack to load artifacts.</div><label for="targetModule">Soong module</label><input id="targetModule" placeholder="framework-minus-apex"><label for="targetSources">Source roots</label><input id="targetSources" placeholder="frameworks/base/core/java"><div class="hint"><label><input type="checkbox" id="includeDependencies" checked> Dependencies</label><label><input type="checkbox" id="includeGenerated" checked> Generated sources</label><label><input type="checkbox" id="includeResources"> Resources</label><label><input type="checkbox" id="includeManifest"> Manifest</label></div><div class="row"><button id="resolveTarget">Resolve Target</button><button id="addTarget">Add Target</button></div><div class="hint" id="targetPreview">Not resolved</div></div></section>
-    <section class="card wide"><div class="eyebrow">INDEX STATUS</div><div class="hint" id="indexStatus">Not started</div></section>
-    <section class="card wide"><div class="eyebrow">NAVIGATION CAPABILITIES</div><div class="cap"><div><b><span class="ok">✓</span> AIDL definition</b><span class="hint">Package, import and type resolution</span></div><div><b><span class="ok">✓</span> AIDL references</b><span class="hint">Exact type ranges when available</span></div><div><b><span class="ok">✓</span> Generated peers</b><span class="hint">Java, C++ and NDK candidates</span></div><div><b><span class="ok">✓</span> JNI Java ↔ C++</b><span class="hint">Static and common registration forms</span></div></div></section>
-    <section class="card wide"><div class="eyebrow">ADVANCED</div><div class="field"><label for="engineExecutable">Engine executable (optional)</label><input id="engineExecutable" value="${escapeHtml(initial.engineExecutable)}" placeholder="Bundled engine → engines/aosp-index → PATH"></div><div class="field"><label for="pathMappings">Path mappings</label><textarea id="pathMappings" rows="5">${escapeHtml(initial.pathMappings)}</textarea><div class="hint">Use JSON only when build-machine paths differ from this computer.</div></div></section>
-  </div><div class="actions"><button class="primary" id="save">Save &amp; Verify Profile</button><button id="startIndex">Start Index</button><button id="rebuildIndex">Rebuild Index</button><button id="inspectPack">Inspect Build Facts</button><button id="compdb">Refresh clangd Database</button><button id="status">Show Status</button></div><div class="footer">AOSP Workspace keeps configuration workspace-scoped. Reopen it from the AOSP Workspace icon in the Activity Bar.</div>
-  <script nonce="${nonce}">const api=acquireVsCodeApi();const $=id=>document.getElementById(id);let targets=JSON.parse(${JSON.stringify(initial.targets||"[]")});const artifacts=[];const renderArtifacts=()=>{const kind=$("artifactKind").value;$("artifactSelect").innerHTML='<option value="">Custom artifact</option>'+artifacts.filter(a=>!kind||a.kind===kind).map(a=>'<option value="'+a.name+'">'+a.name+' · '+(a.ownerModules||[]).join(', ')+'</option>').join('')};const renderTargets=()=>{$('targetList').innerHTML=targets.map((t,i)=>'<div class="cap"><b>'+String(t.displayName||t.id)+' · '+String(t.kind)+'</b><span class="hint">'+((t.selectors&&t.selectors.artifacts||[]).map(a=>(a.kind||'artifact')+':'+(a.name||a.relativePath)).join(', ')||'source/module target')+' <button data-remove="'+i+'">Remove</button></span></div>').join('');document.querySelectorAll('[data-remove]').forEach(b=>b.onclick=()=>{targets.splice(Number(b.dataset.remove),1);renderTargets()})};const draftTarget=()=>{const id=$("targetId").value.trim();const artifact=$("targetArtifact").value.trim();const module=$("targetModule").value.trim();const sources=$("targetSources").value.split(',').map(v=>v.trim()).filter(Boolean);return {id,displayName:id,kind:$("targetKind").value,selectors:{modules:module?[module]:[],artifacts:artifact?[{kind:$("artifactKind").value,name:artifact}]:[],sourceRoots:sources},includeDependencies:$("includeDependencies").checked,includeGeneratedSources:$("includeGenerated").checked,includeResources:$("includeResources").checked,includeManifest:$("includeManifest").checked}};renderTargets();document.querySelectorAll('[data-browse]').forEach(b=>b.onclick=()=>api.postMessage({type:'browse',field:b.dataset.browse}));$('artifactKind').onchange=renderArtifacts;$('artifactSelect').onchange=()=>{const a=artifacts.find(v=>v.name===$('artifactSelect').value);if(a){$('targetArtifact').value=a.name;$('artifactInfo').textContent=(a.path?.raw||'')+' · '+((a.ownerModules||[]).join(', ')||'no owner')}};$('resolveTarget').onclick=()=>{const target=draftTarget();if(!target.id){$('targetPreview').textContent='Enter a target name first';return;}$('targetPreview').textContent='Resolving…';api.postMessage({type:'resolveTarget',metadataPackRoot:$('metadataPackRoot').value,metadataRoot:$('metadataRoot').value,target})};$('addTarget').onclick=()=>{const target=draftTarget();if(!target.id)return;targets.push(target);renderTargets();};$('save').onclick=()=>api.postMessage({type:'save',workspaceViewRoot:$('workspaceViewRoot').value,metadataRoot:$('metadataRoot').value,metadataPackRoot:$('metadataPackRoot').value,targets:JSON.stringify(targets),engineExecutable:$('engineExecutable').value,pathMappings:$('pathMappings').value});$('startIndex').onclick=()=>api.postMessage({type:'startIndex',rebuild:false});$('rebuildIndex').onclick=()=>api.postMessage({type:'startIndex',rebuild:true});$('inspectPack').onclick=()=>api.postMessage({type:'inspectPack',metadataPackRoot:$('metadataPackRoot').value,metadataRoot:$('metadataRoot').value});$('compdb').onclick=()=>api.postMessage({type:'command',command:'aospIde.refreshCompdbOverlay'});$('status').onclick=()=>api.postMessage({type:'command',command:'aospIde.showStatus'});$('workspaceViewRoot').oninput=e=>$('workspaceValue').textContent=e.target.value;window.addEventListener('message',e=>{if(e.data.type==='set'){ $(e.data.field).value=e.data.value;if(e.data.field==='workspaceViewRoot')$('workspaceValue').textContent=e.data.value}if(e.data.type==='catalogStatus')$('catalogStatus').textContent=e.data.text;if(e.data.type==='artifactCatalog'){artifacts.splice(0,artifacts.length,...e.data.artifacts);renderArtifacts();}if(e.data.type==='indexStatus')$('indexStatus').textContent=e.data.text;if(e.data.type==='targetPreview')$('targetPreview').textContent=e.data.text});</script></body></html>`;
+  <section class="hero"><h1>AOSP Workspace</h1><p>Discover modules, choose scope, apply navigation.</p></section>
+  <section class="section"><div class="title">WORKSPACE</div>
+    <div class="field"><label>Workspace View Root</label><div class="row"><input id="workspaceRoot" value="${escapeHtml(initial.workspaceViewRoot)}"><button data-browse="workspaceRoot">Browse</button></div></div>
+    <div class="field"><label>Out Root</label><div class="row"><input id="outRoot" value="${escapeHtml(initial.outRoot)}"><button data-browse="outRoot">Browse</button></div></div>
+  </section>
+  <section class="section"><div class="title">MODULES</div>
+    <input id="query" placeholder="Search module, path or type">
+    <div class="toolbar"><button id="refresh">Refresh</button><button id="recommended">Recommended</button><button id="clear">Clear</button></div>
+    <div id="moduleSummary" class="summary">Discovering Android.bp modules...</div>
+    <div id="modules" class="modules"></div>
+  </section>
+  <section class="section"><div class="title">INDEX STATUS</div><div id="indexStatus" class="status">Not started</div></section>
+  <div class="actions"><button class="primary" id="apply">Apply Modules</button><button id="rebuild">Rebuild</button></div>
+  <script nonce="${nonce}">
+  const api=acquireVsCodeApi(), byId=id=>document.getElementById(id);
+  let modules=[], selected=new Set(JSON.parse(${JSON.stringify(initial.selectedModules || "[]")}));
+  const render=()=>{const query=byId('query').value.trim().toLowerCase();const visible=modules.filter(m=>!query||m.name.toLowerCase().includes(query)||m.blueprint.toLowerCase().includes(query)||m.type.toLowerCase().includes(query));byId('modules').innerHTML=visible.map(m=>'<label class="module"><input type="checkbox" data-module="'+escapeText(m.name)+'" '+(selected.has(m.name)?'checked':'')+'><div><div class="name">'+escapeText(m.name)+(m.recommended?' <span class="recommended">recommended</span>':'')+'</div><div class="meta">'+escapeText(m.type)+' · '+escapeText(m.blueprint)+' · '+escapeText(m.status)+'</div><div class="badges">'+(m.capabilities||[]).map(v=>'<span class="badge">'+escapeText(v)+'</span>').join('')+'</div></div></label>').join('');document.querySelectorAll('[data-module]').forEach(input=>input.onchange=()=>{input.checked?selected.add(input.dataset.module):selected.delete(input.dataset.module)})};
+  const escapeText=value=>String(value||'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
+  document.querySelectorAll('[data-browse]').forEach(button=>button.onclick=()=>api.postMessage({type:'browse',field:button.dataset.browse}));
+  byId('refresh').onclick=()=>api.postMessage({type:'refreshModules',workspaceViewRoot:byId('workspaceRoot').value,query:byId('query').value});
+  byId('recommended').onclick=()=>{selected=new Set(modules.filter(m=>m.recommended).map(m=>m.name));render()};
+  byId('clear').onclick=()=>{selected.clear();render()};byId('query').oninput=render;
+  const apply=type=>api.postMessage({type,workspaceViewRoot:byId('workspaceRoot').value,outRoot:byId('outRoot').value,selectedModules:[...selected]});
+  byId('apply').onclick=()=>apply('applyModules');byId('rebuild').onclick=()=>apply('rebuildIndex');
+  window.addEventListener('message',event=>{const data=event.data;if(data.type==='set')byId(data.field).value=data.value;if(data.type==='moduleLoading')byId('moduleSummary').textContent='Scanning module files...';if(data.type==='moduleCatalog'){modules=data.modules;selected=new Set(data.selected?.length?data.selected:modules.filter(m=>m.recommended).map(m=>m.name));byId('moduleSummary').textContent=data.summary;render()}if(data.type==='moduleError')byId('moduleSummary').textContent='Module discovery failed: '+data.text;if(data.type==='indexStatus')byId('indexStatus').textContent=data.text});
+  </script></body></html>`;
 }
 
-function escapeHtml(value: string): string { return value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;"); }
-
-function parseJsonArray(value: unknown): unknown[] {
-  const parsed = JSON.parse(String(value ?? "[]"));
-  if (!Array.isArray(parsed)) throw new Error("Targets must be a JSON array.");
-  return parsed;
+function escapeHtml(value: string): string {
+  return value.replaceAll("&", "&amp;").replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 }

@@ -10,8 +10,11 @@
   },
   "categories": ["Programming Languages", "Other"],
   "activationEvents": [
-    "workspaceContains:**/*",
-    "onStartupFinished",
+    "workspaceContains:**/Android.bp",
+    "workspaceContains:**/Android.mk",
+    "workspaceContains:build/envsetup.sh",
+    "workspaceContains:build/soong",
+    "workspaceContains:soong/soong_ui.bash",
     "onView:aospWorkspace.setup",
     "onLanguage:aidl",
     "onCommand:aospIde.goToJniPeer",
@@ -37,21 +40,22 @@
           "default": "",
           "description": "Workspace View root containing selected AOSP repositories."
         },
-        "aospIde.metadataRoot": {
+        "aospIde.outRoot": {
           "type": "string",
           "default": "",
           "description": "AOSP out or metadata root containing compile_commands.json."
-        },
-        "aospIde.metadataPackRoot": {
-          "type": "string",
-          "default": "",
-          "description": "Imported AOSP Metadata Pack containing module facts."
         },
         "aospIde.targets": {
           "type": "array",
           "default": [],
           "description": "TargetSpec objects for Framework, Services, SystemUI, and custom targets.",
           "items": { "type": "object" }
+        },
+        "aospIde.selectedModules": {
+          "type": "array",
+          "default": [],
+          "description": "Workspace-local module selections discovered from Android.bp.",
+          "items": { "type": "string" }
         },
         "aospIde.pathMappings": {
           "type": "array",
@@ -81,6 +85,10 @@
       {
         "command": "aospIde.openProfile",
         "title": "AOSP Workspace: Configure Profile"
+      },
+      {
+        "command": "aospIde.refreshModules",
+        "title": "AOSP Workspace: Refresh Modules"
       }
     ],
     "languages": [

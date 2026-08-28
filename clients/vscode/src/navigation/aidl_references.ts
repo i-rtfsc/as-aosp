@@ -11,11 +11,7 @@ export class AidlReferenceProvider implements vscode.ReferenceProvider {
     const word = document.getWordRangeAtPosition(position, /[A-Za-z_]\w*/);
     if (!root || !currentPath || !word) return [];
     const name = document.getText(word);
-    const packRoot = vscode.workspace.getConfiguration("aospIde").get<string>("metadataPackRoot")?.trim();
-    const packed = packRoot ? await this.engine.aidlPackReferences(packRoot, name) : undefined;
-    const result = packed && packed.diagnostics.length === 0
-      ? packed
-      : await this.engine.aidlReferences({ workspaceViewRoot: root, currentPath, name });
+    const result = await this.engine.aidlReferences({ workspaceViewRoot: root, currentPath, name });
     const locations = await Promise.all(result.references.map(async (reference) => {
       const target = targetUri(root, reference.path);
       if (!target) return undefined;
