@@ -1,0 +1,33 @@
+protocol/aosp/source_modules.go
+  h_8b376749578497 45-46
+protocol/aosp/server_test.go
+  s_0fcc3f909ad4ee::t_71be6e7fbaaa3a 104-106
+  h_8b376749578497 5
+clients/vscode/src/engine/client.ts
+  h_8b376749578497 116
+clients/vscode/src/extension.ts
+  h_8b376749578497 96
+clients/vscode/src/ui/profile_panel.ts
+  s_0fcc3f909ad4ee::t_bb3fc44171901c 127
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "96c3e0ea2d4e82b7d1868b3e60e9b3d347ad8742",
+  "prompts": {},
+  "humans": {
+    "h_8b376749578497": {
+      "author": "Solo <anqi.huang@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
