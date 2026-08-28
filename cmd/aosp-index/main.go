@@ -33,7 +33,7 @@ type scanOutput struct {
 
 func main() {
 	if len(os.Args) < 2 {
-		fatal(errors.New("usage: aosp-index <doctor|scan|metadata|aidl|jni|serve> [options]"))
+		fatal(errors.New("usage: aosp-index <doctor|scan|metadata|modules|aidl|jni|pack|serve> [options]"))
 	}
 	switch os.Args[1] {
 	case "doctor":
@@ -42,6 +42,8 @@ func main() {
 		runScan(os.Args[2:])
 	case "metadata":
 		runMetadata(os.Args[2:])
+	case "modules":
+		runModules(os.Args[2:])
 	case "aidl":
 		runAidl(os.Args[2:])
 	case "jni":
@@ -297,7 +299,7 @@ func runAidl(args []string) {
 		resolution := report.Index.Resolve(document, *typeName)
 		output.Resolution = &resolution
 		if *outRoot != "" && *moduleName != "" {
-			metadataReport := metadata.LoadDirectory(*outRoot)
+			metadataReport := metadata.LoadModuleDirectory(*outRoot)
 			moduleGraph := graph.Build(metadataReport.Snapshot)
 			peers := buildAidlPeers(
 				document,
@@ -309,7 +311,7 @@ func runAidl(args []string) {
 			)
 			output.Peers = &peers
 		} else if *outRoot != "" {
-			metadataReport := metadata.LoadDirectory(*outRoot)
+			metadataReport := metadata.LoadModuleDirectory(*outRoot)
 			moduleGraph := graph.Build(metadataReport.Snapshot)
 			owner, found, ambiguous := moduleGraph.AidlOwner(document.Path)
 			if !found || ambiguous {

@@ -1,9 +1,8 @@
 package sourcecatalog
 
 import (
-	"crypto/sha256"
-	"encoding/hex"
 	"encoding/json"
+	"fmt"
 	"os"
 	"path/filepath"
 	"sort"
@@ -12,7 +11,7 @@ import (
 	"github.com/i-rtfsc/as-aosp/core/model"
 )
 
-const cacheSchema = 1
+const cacheSchema = 4
 
 type cacheEnvelope struct {
 	Schema       int               `json:"schema"`
@@ -57,7 +56,7 @@ func Discover(root, cacheRoot string) Report {
 		var parsed []Module
 		var parseErr error
 		if strings.HasSuffix(strings.ToLower(file), ".mk") {
-			parsed = parseMakefile(file)
+			parsed = parseMakefile(file, string(data))
 		} else {
 			parsed, parseErr = parseBlueprint(file, string(data))
 		}
@@ -98,8 +97,7 @@ func discoverFiles(root string) ([]string, map[string]string, []model.Diagnostic
 			}
 			return nil
 		}
-		ext := strings.ToLower(filepath.Ext(entry.Name()))
-		if ext != ".bp" && ext != ".mk" {
+		if entry.Name() != "Android.bp" && entry.Name() != "Android.mk" {
 			return nil
 		}
 		rel, err := filepath.Rel(root, path)
@@ -107,13 +105,12 @@ func discoverFiles(root string) ([]string, map[string]string, []model.Diagnostic
 			return nil
 		}
 		rel = filepath.ToSlash(rel)
-		data, err := os.ReadFile(path)
+		info, err := entry.Info()
 		if err != nil {
-			diagnostics = append(diagnostics, diagnostic("SOURCE_FILE_READ_FAILED", err.Error(), rel))
+			diagnostics = append(diagnostics, diagnostic("SOURCE_FILE_STAT_FAILED", err.Error(), rel))
 			return nil
 		}
-		sum := sha256.Sum256(data)
-		fingerprints[rel] = hex.EncodeToString(sum[:])
+		fingerprints[rel] = fmt.Sprintf("%d:%d", info.Size(), info.ModTime().UnixNano())
 		files = append(files, rel)
 		return nil
 	})
@@ -179,9 +176,11 @@ func sameFingerprints(a, b map[string]string) bool {
 
 func isRecommended(module Module) bool {
 	name := strings.ToLower(module.Name)
-	if name == "framework-minus-apex" || name == "services" || name == "systemui" {
+	switch name {
+	case "framework-minus-apex", "services", "systemui", "framework-res",
+		"libbinder", "libbase", "libutils", "surfaceflinger":
 		return true
+	default:
+		return false
 	}
-	path := strings.ToLower(string(module.Directory))
-	return strings.Contains(path, "frameworks/base") && (strings.Contains(module.Type, "java") || strings.Contains(module.Type, "android"))
 }

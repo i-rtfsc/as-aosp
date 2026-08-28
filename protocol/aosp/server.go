@@ -8,6 +8,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"sync"
 
 	"github.com/i-rtfsc/as-aosp/core/aidl"
 	"github.com/i-rtfsc/as-aosp/core/jni"
@@ -24,6 +25,7 @@ type Server struct {
 	jniSnapshot           *jniSnapshot
 	aidlSnapshot          *aidlSnapshot
 	moduleCatalogSnapshot *moduleCatalogSnapshot
+	moduleCatalogMu       sync.Mutex
 	coordinator           *indexCoordinator
 }
 

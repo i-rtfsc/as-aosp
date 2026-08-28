@@ -32,10 +32,16 @@ android_app { name: "SystemUI", srcs: ["src/**/*.java"], }`
 
 func TestDiscoverKeepsOtherFilesWhenOneBlueprintIsInvalid(t *testing.T) {
 	root := t.TempDir()
-	if err := os.WriteFile(filepath.Join(root, "good.bp"), []byte(`cc_library { name: "libbase", }`), 0o644); err != nil {
+	if err := os.MkdirAll(filepath.Join(root, "good"), 0o755); err != nil {
 		t.Fatal(err)
 	}
-	if err := os.WriteFile(filepath.Join(root, "bad.bp"), []byte(`java_library { name: "broken",`), 0o644); err != nil {
+	if err := os.MkdirAll(filepath.Join(root, "bad"), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(root, "good", "Android.bp"), []byte(`cc_library { name: "libbase", }`), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(root, "bad", "Android.bp"), []byte(`java_library { name: "broken",`), 0o644); err != nil {
 		t.Fatal(err)
 	}
 	report := Discover(root, "")

@@ -79,6 +79,55 @@ func TestServerQueriesModuleCatalogFromOut(t *testing.T) {
 	}
 }
 
+func TestServerEnhancesSourceModulesWithOutFacts(t *testing.T) {
+	workspace := t.TempDir()
+	out := t.TempDir()
+	writeTestFile(t, workspace, "frameworks/base/Android.bp", `
+java_library {
+    name: "framework-minus-apex",
+    srcs: ["core/java/**/*.java"],
+}`)
+	writeTestFile(t, out, "module-info.json", `{
+  "framework-minus-apex":{"path":["frameworks/base"]}
+}`)
+	writeTestFile(t, out, "module_bp_java_deps.json", `{
+  "framework-minus-apex":{
+    "path":["frameworks/base/core/java"],
+    "srcjars":["out/soong/framework.srcjar"]
+  }
+}`)
+	server := initializedServer(t)
+	response, _ := server.Handle(makeRequest(2, "aosp/source/modules", SourceModulesParams{
+		WorkspaceViewRoot: workspace, OutRoot: out, CacheRoot: t.TempDir(),
+	}))
+	var result SourceModuleResult
+	decodeResult(t, response, &result)
+	if len(result.Modules) != 1 || result.BuildBacked != 1 ||
+		result.Modules[0].Status != "build-backed" {
+		t.Fatalf("result=%+v", result)
+	}
+}
+
+func TestServerPersistsBuildFactCatalogInWorkspaceCache(t *testing.T) {
+	out := t.TempDir()
+	cache := t.TempDir()
+	writeTestFile(t, out, "module-info.json", `{"framework":{}}`)
+	writeTestFile(t, out, "module_bp_java_deps.json", `{"framework":{}}`)
+	server := initializedServer(t)
+	catalog, diagnostics := server.loadBuildFactModuleCatalogCached(out, cache)
+	if len(diagnostics) != 0 || len(catalog.Modules) != 1 {
+		t.Fatalf("catalog=%+v diagnostics=%+v", catalog, diagnostics)
+	}
+	if _, err := os.Stat(filepath.Join(cache, "build-facts", "catalog.json")); err != nil {
+		t.Fatalf("build facts cache missing: %v", err)
+	}
+	second := initializedServer(t)
+	catalog, diagnostics = second.loadBuildFactModuleCatalogCached(out, cache)
+	if len(diagnostics) != 0 || len(catalog.Modules) != 1 {
+		t.Fatalf("cached catalog=%+v diagnostics=%+v", catalog, diagnostics)
+	}
+}
+
 func TestServerBuildsProjectGraphFromOut(t *testing.T) {
 	root := t.TempDir()
 	writeTestFile(t, root, "module-info.json", `{"framework":{"path":["frameworks/base/core/java"]}}`)

@@ -10,6 +10,7 @@ import (
 
 type SourceModulesParams struct {
 	WorkspaceViewRoot string `json:"workspaceViewRoot"`
+	OutRoot           string `json:"outRoot,omitempty"`
 	CacheRoot         string `json:"cacheRoot,omitempty"`
 	Query             string `json:"query,omitempty"`
 }
@@ -19,6 +20,7 @@ type SourceModuleResult struct {
 	Diagnostics  []model.Diagnostic     `json:"diagnostics"`
 	FilesScanned int                    `json:"filesScanned"`
 	CacheHit     bool                   `json:"cacheHit"`
+	BuildBacked  int                    `json:"buildBacked"`
 }
 
 func (server *Server) sourceModules(request jsonrpc.Request) jsonrpc.Response {
@@ -37,6 +39,18 @@ func (server *Server) sourceModules(request jsonrpc.Request) jsonrpc.Response {
 		})
 	}
 	report := sourcecatalog.Discover(root, params.CacheRoot)
+	diagnostics := append([]model.Diagnostic(nil), report.Diagnostics...)
+	if outRoot := strings.TrimSpace(params.OutRoot); outRoot != "" {
+		buildCatalog, buildDiagnostics := server.loadBuildFactModuleCatalogCached(
+			outRoot, params.CacheRoot,
+		)
+		diagnostics = append(diagnostics, buildDiagnostics...)
+		if len(buildCatalog.Modules) > 0 {
+			report.Catalog.Modules = sourcecatalog.MergeBuildFacts(
+				report.Catalog.Modules, buildCatalog,
+			)
+		}
+	}
 	if query := strings.ToLower(strings.TrimSpace(params.Query)); query != "" {
 		filtered := make([]sourcecatalog.Module, 0)
 		for _, module := range report.Catalog.Modules {
@@ -48,8 +62,15 @@ func (server *Server) sourceModules(request jsonrpc.Request) jsonrpc.Response {
 		}
 		report.Catalog.Modules = filtered
 	}
+	buildBacked := 0
+	for _, module := range report.Catalog.Modules {
+		if module.Status == sourcecatalog.StatusBuildBacked {
+			buildBacked++
+		}
+	}
 	return jsonrpc.Success(request.ID, SourceModuleResult{
-		Modules: report.Catalog.Modules, Diagnostics: report.Diagnostics,
+		Modules: report.Catalog.Modules, Diagnostics: diagnostics,
 		FilesScanned: report.FilesScanned, CacheHit: report.CacheHit,
+		BuildBacked: buildBacked,
 	})
 }

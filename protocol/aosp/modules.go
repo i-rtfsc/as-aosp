@@ -43,10 +43,10 @@ type ModulesClosureResult struct {
 }
 
 type moduleCatalogSnapshot struct {
-	path    string
-	size    int64
-	modTime int64
-	catalog modules.Catalog
+	root        string
+	signature   string
+	catalog     modules.Catalog
+	diagnostics []model.Diagnostic
 }
 
 func (server *Server) modulesCatalog(request jsonrpc.Request) jsonrpc.Response {

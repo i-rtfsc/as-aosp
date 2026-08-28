@@ -93,7 +93,7 @@ func runPackPreflight(args []string) {
 			blocking = append(blocking, "missing required IDE metadata: development/ide/clion")
 		}
 	}
-	report := metadata.LoadDirectory(outRootAbs)
+	report := metadata.LoadModuleDirectory(outRootAbs)
 	catalog := coremodules.Build(report.Snapshot)
 	artifactCatalog := artifacts.Build(catalog)
 	moduleChecks := make([]map[string]any, 0, len(requestedModules))
@@ -173,7 +173,7 @@ func runPackInspect(args []string) {
 	if *root == "" {
 		fatal(errors.New("--root is required"))
 	}
-	report := metadata.LoadDirectory(*root)
+	report := metadata.LoadModuleDirectory(*root)
 	catalog := coremodules.Build(report.Snapshot)
 	artifactCatalog := artifacts.Build(catalog)
 	output := map[string]any{"modules": len(catalog.Modules)}
@@ -271,7 +271,7 @@ func exportPack(aospRoot, outRoot, destination string, native, ide bool, modules
 	}
 	selectedArchives := map[string]bool{}
 	if len(modules) > 0 {
-		catalog := coremodules.Build(metadata.LoadDirectory(outRoot).Snapshot)
+		catalog := coremodules.Build(metadata.LoadModuleDirectory(outRoot).Snapshot)
 		for _, name := range catalog.Closure(modules) {
 			for _, ref := range append(catalog.Modules[name].SrcJars, catalog.Modules[name].Generated...) {
 				raw := filepath.ToSlash(ref.Raw)
@@ -353,7 +353,7 @@ func copyOptionalIDERoots(destination, outRoot string) error {
 }
 
 func copyPackLibraries(root, outRoot string, names []string) error {
-	catalog := coremodules.Build(metadata.LoadDirectory(outRoot).Snapshot)
+	catalog := coremodules.Build(metadata.LoadModuleDirectory(outRoot).Snapshot)
 	selected := make([]string, 0)
 	if len(names) == 0 {
 		for name := range catalog.Modules {
@@ -457,7 +457,7 @@ func validatePortableOut(root string, native bool, selectedModules []string) err
 			}
 		}
 	}
-	report := metadata.LoadDirectory(root)
+	report := metadata.LoadModuleDirectory(root)
 	for _, diagnostic := range report.Diagnostics {
 		if diagnostic.Code == "METADATA_READ_FAILED" || diagnostic.Code == "METADATA_PARSE_FAILED" {
 			return fmt.Errorf("%s: %s", diagnostic.Code, diagnostic.Message)

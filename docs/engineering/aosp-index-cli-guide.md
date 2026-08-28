@@ -32,6 +32,20 @@ aosp-index metadata --root /path/to/aosp/out > metadata-report.json
 主要读取 `module-info.json`、`module_bp_java_deps.json`、`module_bp_cc_deps.json` 和
 `development/ide/compdb/compile_commands.json`。缺少某类文件只产生 diagnostic。
 
+源码模块发现和 Out Facts 增强可以独立验证：
+
+```bash
+aosp-index modules \
+  --root /path/to/aosp \
+  --out-root /path/to/aosp/out \
+  --cache-root /path/to/ide-cache \
+  --summary
+```
+
+输出报告源码模块数、`build-backed` 数、推荐模块、扫描文件数和 cache hit。
+模块发现只扫描名为 `Android.bp`、`Android.mk` 的文件；Android.mk 读取真实
+`LOCAL_MODULE`，不会为 Makefile 路径生成伪模块。
+
 ### 3.1 Android 17 CP2A 服务器构建
 
 对于 Android 17.0.0 Release 1、Build ID 为 `CP2A.*` 的完整 AOSP checkout，推荐使用

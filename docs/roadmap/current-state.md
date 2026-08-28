@@ -20,6 +20,8 @@
   fallback，Out Root 负责构建事实增强；模块勾选后由 engine 生成内部 TargetSpec。
 - `core/sourcecatalog` 已提供 Android.bp/Android.mk 发现、推荐标记、fingerprint cache
   和 `aosp/source/modules` RPC；VS Code 侧边栏与 JetBrains Tool Window 已接入模块列表。
+- Source Catalog 已与 Out ModuleCatalog 合并，UI 可显示 `build-backed` 和 Java/native/
+  generated/AIDL/artifact 能力；Build Facts 派生 catalog 写 workspace/project IDE cache。
 - engine 支持 macOS、Linux、Windows 的 bundled/shared/PATH 解析；JetBrains
   插件和 VS Code VSIX 有跨平台 engine 打包入口。
 - 真实本地 Portable Out 已完成目录迁移并通过 `pack validate --native`，

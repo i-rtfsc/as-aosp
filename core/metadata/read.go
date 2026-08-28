@@ -11,6 +11,18 @@ import (
 )
 
 func LoadDirectory(root string) ReadReport {
+	report := LoadModuleDirectory(root)
+	readJSONCandidate(root, "compdb", []string{
+		filepath.Join("development", "ide", "compdb", "compile_commands.json"),
+		filepath.Join("soong", "development", "ide", "compdb", "compile_commands.json"),
+		"compile_commands.json",
+	}, &report, func(data []byte) error {
+		return json.Unmarshal(data, &report.Snapshot.CompDB)
+	})
+	return report
+}
+
+func LoadModuleDirectory(root string) ReadReport {
 	report := ReadReport{Snapshot: Snapshot{
 		Java:       make(map[string]JavaModule),
 		CC:         make(map[string]CCModule),
@@ -28,13 +40,6 @@ func LoadDirectory(root string) ReadReport {
 	moduleInfoCandidates = append(moduleInfoCandidates, globCandidates(root, filepath.Join("target", "product", "*", "module-info.json"))...)
 	readJSONCandidate(root, "module-info", moduleInfoCandidates, &report, func(data []byte) error {
 		return decodeModuleInfo(data, &report.Snapshot.ModuleInfo)
-	})
-	readJSONCandidate(root, "compdb", []string{
-		filepath.Join("development", "ide", "compdb", "compile_commands.json"),
-		filepath.Join("soong", "development", "ide", "compdb", "compile_commands.json"),
-		"compile_commands.json",
-	}, &report, func(data []byte) error {
-		return json.Unmarshal(data, &report.Snapshot.CompDB)
 	})
 	return report
 }
