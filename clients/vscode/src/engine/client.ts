@@ -126,6 +126,28 @@ export interface RustProjectResult {
   diagnostics: unknown[];
 }
 
+export interface SelectionPreset {
+  id: string;
+  name: string;
+  kind: string;
+  modules: string[];
+  default: boolean;
+  recommended: boolean;
+  priority: number;
+}
+
+export interface SelectionCatalogResult {
+  presets: SelectionPreset[];
+  defaultPresetIds: string[];
+}
+
+export interface SelectionPlanResult {
+  targets: unknown[];
+  selectedModules: string[];
+  presetIds: string[];
+  diagnostics: unknown[] | null;
+}
+
 export interface IndexSnapshot {
   profileId?: string;
   state: string;
@@ -273,6 +295,14 @@ export class EngineClient {
 
   async rustProject(params: { workspaceViewRoot: string; outRoot: string; cacheRoot: string; pathMappings: unknown[] }): Promise<RustProjectResult> {
     return this.request("aosp/rust/project", params);
+  }
+
+  async selectionCatalog(): Promise<SelectionCatalogResult> {
+    return this.request("aosp/selection/catalog", null);
+  }
+
+  async selectionPlan(params: { workspaceViewRoot: string; outRoot: string; cacheRoot?: string; presetIds: string[]; manualModules: string[] }): Promise<SelectionPlanResult> {
+    return this.request("aosp/selection/plan", params);
   }
 
   async startIndex(profile: unknown, rebuild = false): Promise<IndexSnapshot> {

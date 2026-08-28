@@ -1,0 +1,19 @@
+{
+  "extension.displayName": "AOSP Workspace",
+  "extension.description": "面向 AOSP 的源码导航与跨语言索引。",
+  "view.workspaceSetup": "工作区",
+  "configuration.title": "AOSP Workspace",
+  "configuration.engineExecutable": "可选的 aosp-index 路径。留空时使用内置 engine 或 PATH。",
+  "configuration.workspaceViewRoot": "包含所选 AOSP 仓库的 Workspace View 根目录。",
+  "configuration.outRoot": "包含 Soong IDE metadata 的 AOSP OUT_DIR。",
+  "configuration.targets": "由 Selection Planner 生成的内部 TargetSpec。",
+  "configuration.selectedPresets": "当前工作区选择的 AOSP presets。",
+  "configuration.selectedModules": "当前工作区手动选择的 modules。",
+  "configuration.pathMappings": "构建机路径到本机路径的映射。",
+  "command.jniPeer": "AOSP：跳转到 JNI 对端",
+  "command.aidlPeer": "AOSP：跳转到 AIDL 生成代码",
+  "command.compdb": "AOSP：刷新 clangd Compilation Database",
+  "command.status": "AOSP：显示状态",
+  "command.configure": "AOSP Workspace：配置",
+  "command.refreshModules": "AOSP Workspace：刷新模块目录"
+}

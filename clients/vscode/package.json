@@ -1,7 +1,7 @@
 {
   "name": "aosp-ide-vscode",
-  "displayName": "AOSP Workspace",
-  "description": "Focused AOSP navigation and cross-language indexing.",
+  "displayName": "%extension.displayName%",
+  "description": "%extension.description%",
   "version": "0.1.0-dev",
   "publisher": "rtfsc",
   "license": "Apache-2.0",
@@ -24,43 +24,50 @@
     ,"onCommand:aospIde.openProfile"
   ],
   "main": "./out/extension.js",
+  "l10n": "./l10n",
   "contributes": {
     "viewsContainers": { "activitybar": [{ "id": "aospWorkspace", "title": "AOSP Workspace", "icon": "resources/aosp-ide.svg" }] },
-    "views": { "aospWorkspace": [{ "id": "aospWorkspace.setup", "name": "Workspace Setup", "type": "webview" }] },
+    "views": { "aospWorkspace": [{ "id": "aospWorkspace.setup", "name": "%view.workspaceSetup%", "type": "webview" }] },
     "configuration": {
-      "title": "AOSP Workspace",
+      "title": "%configuration.title%",
       "properties": {
         "aospIde.engineExecutable": {
           "type": "string",
           "default": "",
-          "description": "Optional path to aosp-index. Bundled engine and PATH are used when empty."
+          "description": "%configuration.engineExecutable%"
         },
         "aospIde.workspaceViewRoot": {
           "type": "string",
           "default": "",
-          "description": "Workspace View root containing selected AOSP repositories."
+          "description": "%configuration.workspaceViewRoot%"
         },
         "aospIde.outRoot": {
           "type": "string",
           "default": "",
-          "description": "AOSP out or metadata root containing compile_commands.json."
+          "description": "%configuration.outRoot%"
         },
         "aospIde.targets": {
           "type": "array",
           "default": [],
-          "description": "TargetSpec objects for Framework, Services, SystemUI, and custom targets.",
+          "description": "%configuration.targets%",
           "items": { "type": "object" }
+        },
+        "aospIde.selectedPresets": {
+          "type": "array",
+          "default": [],
+          "description": "%configuration.selectedPresets%",
+          "items": { "type": "string" }
         },
         "aospIde.selectedModules": {
           "type": "array",
           "default": [],
-          "description": "Workspace-local module selections discovered from Android.bp.",
+          "description": "%configuration.selectedModules%",
           "items": { "type": "string" }
         },
         "aospIde.pathMappings": {
           "type": "array",
           "default": [],
-          "description": "Build-host to local path mappings.",
+          "description": "%configuration.pathMappings%",
           "items": { "type": "object" }
         }
       }
@@ -68,27 +75,27 @@
     "commands": [
       {
         "command": "aospIde.goToJniPeer",
-        "title": "AOSP: Go to JNI Peer"
+        "title": "%command.jniPeer%"
       },
       {
         "command": "aospIde.goToAidlGeneratedPeer",
-        "title": "AOSP: Go to AIDL Generated Peer"
+        "title": "%command.aidlPeer%"
       },
       {
         "command": "aospIde.refreshCompdbOverlay",
-        "title": "AOSP: Refresh clangd Compilation Database"
+        "title": "%command.compdb%"
       },
       {
         "command": "aospIde.showStatus",
-        "title": "AOSP: Show Status"
+        "title": "%command.status%"
       },
       {
         "command": "aospIde.openProfile",
-        "title": "AOSP Workspace: Configure Profile"
+        "title": "%command.configure%"
       },
       {
         "command": "aospIde.refreshModules",
-        "title": "AOSP Workspace: Refresh Modules"
+        "title": "%command.refreshModules%"
       }
     ],
     "languages": [

@@ -26,6 +26,8 @@
   workspace-scoped rust-analyzer linked projects，缺少 Rust metadata 时不影响其他语言。
 - Workbench/Manage Modules、双语 UI、presets 和 Selection Planner 去重合同已确定；
   相同 source root、srcjar 和 library 必须只投影一次，Select All 不创建海量 IDE modules。
+- VS Code 已实现紧凑 Workbench、Manage Modules、默认 Platform presets、中英文资源和
+  grouped Selection Plan；旧 workspace 的一模块一 Target 配置会在首次启动时自动迁移。
 - engine 支持 macOS、Linux、Windows 的 bundled/shared/PATH 解析；JetBrains
   插件和 VS Code VSIX 有跨平台 engine 打包入口。
 - JetBrains 打包已区分 thin 开发包和 full 发布包；full ZIP 内置六平台 engine，
@@ -39,8 +41,8 @@
   不存在旧版私有 Pack reader。
 - JetBrains Settings 仍保留高级 Target 编辑器；日常入口已切换为 Tool Window 的模块发现
   列表。Android.bp parser 当前是有限属性解析器，复杂 Soong 表达式仍返回部分结果或诊断。
-- 客户端尚未实现 preset grouped targets 和 custom buckets；当前 selected module 仍主要
-  一对一生成 TargetSpec，不能把 Select All 视为已完成能力。
+- JetBrains 尚未切换到 Workbench/Manage Modules 和 ResourceBundle；Selection Planner
+  尚未实现 pinned targets、Select All 影响预估和 product-aware Automotive 默认策略。
 - 真实 IDE host 的完整 Java Language Server/Workspace Model 接线仍在完善，
   目前以 focused source roots、generated roots 和 libraries 投影为主。
 - JNI 采用静态源码和常见注册表分析；复杂宏、运行时 class 拼接和完整 C++

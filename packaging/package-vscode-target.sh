@@ -21,10 +21,13 @@ test -f "$engine"
 temp_root=$(mktemp -d)
 trap 'rm -rf "$temp_root"' EXIT
 stage="$temp_root/extension"
-mkdir -p "$stage/out" "$stage/engine/$target" "$stage/resources"
+mkdir -p "$stage/out" "$stage/engine/$target" "$stage/resources" "$stage/l10n"
 cp "$repo_root/clients/vscode/package.json" "$stage/"
+cp "$repo_root/clients/vscode/package.nls.json" "$stage/"
+cp "$repo_root/clients/vscode/package.nls.zh-cn.json" "$stage/"
 cp "$repo_root/clients/vscode/.vscodeignore" "$stage/"
 cp -R "$repo_root/clients/vscode/resources/." "$stage/resources/"
+cp -R "$repo_root/clients/vscode/l10n/." "$stage/l10n/"
 cp -R "$repo_root/clients/vscode/out/." "$stage/out/"
 cp "$engine" "$stage/engine/$target/$engine_name"
 chmod +x "$stage/engine/$target/$engine_name" 2>/dev/null || true

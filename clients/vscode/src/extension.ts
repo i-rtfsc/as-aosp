@@ -39,24 +39,26 @@ export function activate(context: vscode.ExtensionContext): void {
       pathMappings: config.get<unknown[]>("pathMappings") || [],
       buildIntegration: { mode: "read-only" },
     };
-    if (profile.targets.length === 0 && profile.workspaceViewRoot) {
-      const discovered = await engine.sourceModules(profile.workspaceViewRoot, profile.outRoot, context.storageUri?.fsPath);
-      const recommended = discovered.modules.filter((module) => module.recommended);
-      if (recommended.length > 0) {
-        profile.targets = recommended.map((module) => ({
-          id: module.name,
-          displayName: module.name,
-          kind: module.type.toLowerCase().includes("cc_") ? "native" :
-            module.type.toLowerCase().includes("android_") ? "android" : "java",
-          selectors: { modules: [module.name] },
-          includeDependencies: true,
-          includeGeneratedSources: true,
-          includeResources: module.type.toLowerCase().includes("android_"),
-          includeManifest: module.type.toLowerCase().includes("android_"),
-        }));
-        await config.update("targets", profile.targets, vscode.ConfigurationTarget.Workspace);
-        await config.update("selectedModules", recommended.map((module) => module.name), vscode.ConfigurationTarget.Workspace);
-      }
+    const presetInspection = config.inspect<string[]>("selectedPresets");
+    const selectionConfigured = presetInspection?.workspaceValue !== undefined;
+    if ((!selectionConfigured || profile.targets.length === 0) &&
+      profile.workspaceViewRoot) {
+      const catalog = await engine.selectionCatalog();
+      const presetIds = !selectionConfigured ?
+        catalog.defaultPresetIds : config.get<string[]>("selectedPresets") ?? [];
+      const manualModules = !selectionConfigured ? [] :
+        config.get<string[]>("selectedModules") ?? [];
+      const plan = await engine.selectionPlan({
+        workspaceViewRoot: profile.workspaceViewRoot,
+        outRoot: profile.outRoot,
+        cacheRoot: context.storageUri?.fsPath,
+        presetIds,
+        manualModules,
+      });
+      profile.targets = plan.targets;
+      await config.update("selectedPresets", plan.presetIds, vscode.ConfigurationTarget.Workspace);
+      await config.update("selectedModules", manualModules, vscode.ConfigurationTarget.Workspace);
+      await config.update("targets", plan.targets, vscode.ConfigurationTarget.Workspace);
     }
     if (profile.targets.length === 0) throw new Error("No Android.bp modules selected for indexing.");
     const status = await engine.startIndex(profile, rebuild);
@@ -101,9 +103,11 @@ export function activate(context: vscode.ExtensionContext): void {
     }
     return describe();
   };
-  const profileView = new ProfileViewProvider(context, async (workspaceRoot, outRoot, query) => {
+  const profileView = new ProfileViewProvider(context, async (workspaceRoot, outRoot, query, limit) => {
     await ensureEngine();
-    const result = await engine.sourceModules(workspaceRoot, outRoot, context.storageUri?.fsPath, query);
+    const result = await engine.sourceModules(
+      workspaceRoot, outRoot, context.storageUri?.fsPath, query, limit,
+    );
     return {
       modules: result.modules,
       diagnostics: result.diagnostics?.length ?? 0,
@@ -112,6 +116,12 @@ export function activate(context: vscode.ExtensionContext): void {
       buildBacked: result.buildBacked,
       total: result.total,
     };
+  }, async () => {
+    await ensureEngine();
+    return engine.selectionCatalog();
+  }, async (params) => {
+    await ensureEngine();
+    return engine.selectionPlan(params);
   }, startIndex);
   context.subscriptions.push(vscode.commands.registerCommand("aospIde.refreshModules", async () => {
     await ensureEngine();
