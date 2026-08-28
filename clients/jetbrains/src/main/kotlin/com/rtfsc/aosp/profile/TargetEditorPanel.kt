@@ -23,6 +23,7 @@ internal data class TargetDraft(
     val kind: String,
     val artifactKind: String,
     val artifact: String,
+    val artifactPath: String,
     val module: String,
     val sourceRoots: List<String>,
     val includeDependencies: Boolean,
@@ -37,7 +38,11 @@ internal data class TargetDraft(
         "selectors" to mapOf(
             "modules" to if (module.isBlank()) emptyList<String>() else listOf(module),
             "artifacts" to if (artifact.isBlank()) emptyList<Any>() else listOf(
-                mapOf("kind" to artifactKind, "name" to artifact),
+                buildMap {
+                    put("kind", artifactKind)
+                    put("name", artifact)
+                    if (artifactPath.isNotBlank()) put("relativePath", artifactPath)
+                },
             ),
             "sourceRoots" to sourceRoots,
         ),
@@ -64,6 +69,9 @@ internal object TargetDraftCodec {
                 kind = target.path("kind").asText("java"),
                 artifactKind = artifact?.path("kind")?.asText("jar") ?: "jar",
                 artifact = artifact?.path("name")?.asText().orEmpty(),
+                artifactPath = artifact?.path("relativePath")?.asText()
+                    ?.ifBlank { artifact.path("path").path("raw").asText() }
+                    .orEmpty(),
                 module = selectors.path("modules").firstOrNull()?.asText().orEmpty(),
                 sourceRoots = selectors.path("sourceRoots").map { it.asText() },
                 includeDependencies = target.path("includeDependencies").asBoolean(true),
@@ -77,8 +85,7 @@ internal object TargetDraftCodec {
 
 internal class TargetEditorPanel(
     private val project: Project,
-    private val metadataPackRoot: () -> String,
-    private val metadataRoot: () -> String = { "" },
+    private val outRoot: () -> String,
 ) : JPanel(BorderLayout()) {
     private data class ArtifactChoice(
         val id: String,
@@ -99,6 +106,7 @@ internal class TargetEditorPanel(
     private val artifactKind = JComboBox(arrayOf("jar", "apk", "srcjar", "aar", "output"))
     private val artifactCatalog = JComboBox<ArtifactChoice>()
     private val targetArtifact = JBTextField()
+    private val targetArtifactPath = JBTextField()
     private val targetModule = JBTextField()
     private val targetSources = JBTextField()
     private val includeDependencies = JCheckBox("Dependencies", true)
@@ -119,6 +127,7 @@ internal class TargetEditorPanel(
             .addLabeledComponent(JLabel("Artifact Kind"), artifactKind)
             .addLabeledComponent(JLabel("Artifact From Pack"), artifactCatalog)
             .addLabeledComponent(JLabel("Artifact"), targetArtifact)
+            .addLabeledComponent(JLabel("Artifact Relative Path"), targetArtifactPath)
             .addLabeledComponent(JLabel("Soong Module"), targetModule)
             .addLabeledComponent(JLabel("Source Roots"), targetSources)
             .panel
@@ -166,6 +175,7 @@ internal class TargetEditorPanel(
         kind = targetKind.selectedItem.toString(),
         artifactKind = artifactKind.selectedItem.toString(),
         artifact = targetArtifact.text.trim(),
+        artifactPath = targetArtifactPath.text.trim(),
         module = targetModule.text.trim(),
         sourceRoots = targetSources.text.split(',').map(String::trim).filter(String::isNotEmpty),
         includeDependencies = includeDependencies.isSelected,
@@ -184,6 +194,7 @@ internal class TargetEditorPanel(
         renderTargets()
         targetId.text = ""
         targetArtifact.text = ""
+        targetArtifactPath.text = ""
         targetModule.text = ""
         targetSources.text = ""
         targetPreview.text = "Target added. Save the profile to apply it."
@@ -205,10 +216,9 @@ internal class TargetEditorPanel(
     }
 
     private fun loadArtifacts() {
-        val packRoot = metadataPackRoot().trim()
-        val outRoot = metadataRoot().trim()
-        if (packRoot.isBlank() && outRoot.isBlank()) {
-            targetPreview.text = "Metadata Pack Root or Out Root is required."
+        val root = outRoot().trim()
+        if (root.isBlank()) {
+            targetPreview.text = "Out Root is required."
             return
         }
         loadArtifactsButton.isEnabled = false
@@ -217,7 +227,7 @@ internal class TargetEditorPanel(
 
             override fun run(indicator: ProgressIndicator) {
                 indicator.text = "Loading Artifact Catalog"
-                val params = mapper.writeValueAsString(mapOf("metadataPackRoot" to packRoot, "metadataRoot" to outRoot))
+                val params = mapper.writeValueAsString(mapOf("outRoot" to root))
                 val result = mapper.readTree(project.getService(ProjectEngineService::class.java).artifactsCatalog(params)).path("result")
                 choices = result.path("artifacts").map { artifact ->
                     ArtifactChoice(
@@ -255,20 +265,20 @@ internal class TargetEditorPanel(
     private fun selectArtifact() {
         val choice = artifactCatalog.selectedItem as? ArtifactChoice ?: return
         targetArtifact.text = choice.name
+        targetArtifactPath.text = choice.path
         choice.owners.firstOrNull()?.let { targetModule.text = it }
         targetPreview.text = "${choice.path} · ${choice.owners.joinToString(", ").ifBlank { "no owner" }}"
     }
 
     private fun resolveTarget() {
         val target = currentDraft()
-        val packRoot = metadataPackRoot().trim()
-        val outRoot = metadataRoot().trim()
+        val root = outRoot().trim()
         if (target.id.isBlank()) {
             targetPreview.text = "Enter a target name first."
             return
         }
-        if (packRoot.isBlank() && outRoot.isBlank()) {
-            targetPreview.text = "Metadata Pack Root or Out Root is required."
+        if (root.isBlank()) {
+            targetPreview.text = "Out Root is required."
             return
         }
         resolveTargetButton.isEnabled = false
@@ -279,8 +289,7 @@ internal class TargetEditorPanel(
                 indicator.text = "Resolving target through ProjectGraph"
                 val params = mapper.writeValueAsString(
                     mapOf(
-                        "metadataPackRoot" to packRoot,
-                        "metadataRoot" to outRoot,
+                        "outRoot" to root,
                         "targets" to listOf(target.toTargetSpec()),
                     ),
                 )

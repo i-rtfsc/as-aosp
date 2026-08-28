@@ -13,6 +13,7 @@ class TargetDraftCodecTest {
                 kind = "android",
                 artifactKind = "apk",
                 artifact = "SystemUI.apk",
+                artifactPath = "target/product/demo/system_ext/priv-app/SystemUI/SystemUI.apk",
                 module = "SystemUI",
                 sourceRoots = listOf("frameworks/base/packages/SystemUI"),
                 includeDependencies = true,

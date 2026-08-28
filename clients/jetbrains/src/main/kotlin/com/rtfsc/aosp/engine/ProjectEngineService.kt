@@ -31,11 +31,6 @@ internal class ProjectEngineService(
         return engineProcess.request("aosp/jni/peers", params)
     }
 
-    fun jniPackPeers(params: String): ByteArray {
-        if (!engineProcess.isRunning) start()
-        return engineProcess.request("aosp/jni/pack/peers", params)
-    }
-
     fun aidlResolve(params: String): ByteArray {
         if (!engineProcess.isRunning) start()
         return engineProcess.request("aosp/aidl/resolve", params)
@@ -49,21 +44,6 @@ internal class ProjectEngineService(
     fun aidlReferences(params: String): ByteArray {
         if (!engineProcess.isRunning) start()
         return engineProcess.request("aosp/aidl/references", params)
-    }
-
-    fun aidlPackResolve(params: String): ByteArray {
-        if (!engineProcess.isRunning) start()
-        return engineProcess.request("aosp/aidl/pack/resolve", params)
-    }
-
-    fun aidlPackReferences(params: String): ByteArray {
-        if (!engineProcess.isRunning) start()
-        return engineProcess.request("aosp/aidl/pack/references", params)
-    }
-
-    fun aidlPackPeers(params: String): ByteArray {
-        if (!engineProcess.isRunning) start()
-        return engineProcess.request("aosp/aidl/pack/peers", params)
     }
 
     fun projectGraph(params: String): ByteArray {
@@ -81,19 +61,14 @@ internal class ProjectEngineService(
         return engineProcess.request("aosp/modules/catalog", params)
     }
 
+    fun sourceModules(params: String): ByteArray {
+        if (!engineProcess.isRunning) start()
+        return engineProcess.request("aosp/source/modules", params)
+    }
+
     fun generatedMaterialize(params: String): ByteArray {
         if (!engineProcess.isRunning) start()
         return engineProcess.request("aosp/generated/materialize", params)
-    }
-
-    fun packInfo(params: String): ByteArray {
-        if (!engineProcess.isRunning) start()
-        return engineProcess.request("aosp/pack/info", params)
-    }
-
-    fun packValidate(params: String): ByteArray {
-        if (!engineProcess.isRunning) start()
-        return engineProcess.request("aosp/pack/validate", params)
     }
 
     fun indexStart(params: String, rebuild: Boolean): ByteArray {

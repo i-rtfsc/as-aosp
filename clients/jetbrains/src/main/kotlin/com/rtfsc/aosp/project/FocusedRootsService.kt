@@ -7,10 +7,12 @@ import com.intellij.openapi.module.EmptyModuleType
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.module.ModuleManager
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.application.PathManager
 import com.intellij.openapi.roots.ModuleRootManager
 import com.rtfsc.aosp.profile.EngineProfileSettings
 import com.rtfsc.aosp.engine.ProjectEngineService
 import java.nio.file.Paths
+import java.security.MessageDigest
 
 @Service(Service.Level.PROJECT)
 internal class FocusedRootsService(
@@ -35,7 +37,9 @@ internal class FocusedRootsService(
 
     fun applyBuildFacts(): BuildFactsProjectionResult {
         val engine = project.getService(ProjectEngineService::class.java)
-        val cacheRoot = Paths.get(project.basePath ?: System.getProperty("java.io.tmpdir"), ".aosp-ide", "cache")
+        val projectKey = project.basePath.orEmpty().toByteArray().let { MessageDigest.getInstance("SHA-256").digest(it) }
+            .joinToString("") { "%02x".format(it) }.take(24)
+        val cacheRoot = Paths.get(PathManager.getSystemPath(), "aosp-workspace", projectKey)
         val result = BuildFactsProjection.apply(
             settings.current,
             engine,

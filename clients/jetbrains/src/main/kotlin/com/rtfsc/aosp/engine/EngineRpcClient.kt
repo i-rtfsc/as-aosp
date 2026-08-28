@@ -44,6 +44,10 @@ internal class EngineRpcClient(
         return request(method = "aosp/modules/catalog", params = params)
     }
 
+    fun sourceModules(params: String): ByteArray {
+        return request(method = "aosp/source/modules", params = params)
+    }
+
     fun projectGraph(params: String): ByteArray {
         return request(method = "aosp/projects/graph", params = params)
     }
@@ -54,10 +58,6 @@ internal class EngineRpcClient(
 
     fun generatedMaterialize(params: String): ByteArray {
         return request(method = "aosp/generated/materialize", params = params)
-    }
-
-    fun packInfo(params: String): ByteArray {
-        return request(method = "aosp/pack/info", params = params)
     }
 
     fun request(method: String, params: String): ByteArray {

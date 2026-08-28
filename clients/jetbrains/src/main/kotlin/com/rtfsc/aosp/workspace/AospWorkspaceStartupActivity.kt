@@ -7,7 +7,7 @@ import com.rtfsc.aosp.profile.EngineProfileSettings
 internal class AospWorkspaceStartupActivity : ProjectActivity {
     override suspend fun execute(project: Project) {
         val state = project.getService(EngineProfileSettings::class.java).current
-        if (state.workspaceViewRoot.isNotBlank() && state.metadataPackRoot.isNotBlank()) {
+        if (state.workspaceViewRoot.isNotBlank() && state.outRoot.isNotBlank()) {
             project.getService(WorkspaceCoordinatorService::class.java).start(false)
         }
     }

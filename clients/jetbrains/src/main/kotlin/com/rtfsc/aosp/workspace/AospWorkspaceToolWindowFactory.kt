@@ -8,7 +8,7 @@ import com.intellij.ui.content.ContentFactory
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBPanel
 import com.rtfsc.aosp.profile.EngineProfileSettings
-import com.rtfsc.aosp.profile.TargetEditorPanel
+import com.rtfsc.aosp.profile.SourceModulePanel
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.FlowLayout
@@ -29,17 +29,17 @@ internal class AospWorkspaceToolWindowFactory : ToolWindowFactory {
         val coordinator = project.getService(WorkspaceCoordinatorService::class.java)
         val settings = project.getService(EngineProfileSettings::class.java)
         val root = JBLabel(settings.current.workspaceViewRoot.ifBlank { "Workspace not configured" })
-        val pack = JBLabel(settings.current.metadataPackRoot.ifBlank { "Metadata Pack not configured" })
         val state = JBLabel("Idle")
         val counts = JBLabel("0 source roots · 0 generated · 0 libraries")
         val diagnostics = JBLabel("0 diagnostics")
         val compdb = JBLabel("CompDB not refreshed")
-        val targetEditor = TargetEditorPanel(
+        val modulePanel = SourceModulePanel(
             project,
-            { settings.current.metadataPackRoot },
-            { settings.current.outRoot },
+            { settings.current.workspaceViewRoot },
+            { targets -> settings.update { it.targetsJson = targets } },
         )
-        targetEditor.load(settings.current.targetsJson)
+        modulePanel.loadSelected(settings.current.targetsJson)
+        modulePanel.refresh()
 
         val header = JBPanel<JBPanel<*>>(BorderLayout()).apply {
             border = BorderFactory.createEmptyBorder(12, 12, 10, 12)
@@ -50,7 +50,7 @@ internal class AospWorkspaceToolWindowFactory : ToolWindowFactory {
         val statusPanel = JPanel(GridLayout(0, 1, 0, 6)).apply {
             border = BorderFactory.createEmptyBorder(12, 12, 12, 12)
             add(JBLabel("WORKSPACE")); add(root)
-            add(JBLabel("METADATA PACK")); add(pack)
+            add(JBLabel("OUT ROOT")); add(root)
             add(JBLabel("INDEX STATUS")); add(state); add(counts); add(diagnostics)
             add(JBLabel("C/C++ COMPDB")); add(compdb)
         }
@@ -60,22 +60,13 @@ internal class AospWorkspaceToolWindowFactory : ToolWindowFactory {
             add(JButton("Refresh CompDB").apply { addActionListener { refreshCompdb(project, settings, compdb) } })
             add(JButton("Settings").apply { addActionListener { ShowSettingsUtil.getInstance().showSettingsDialog(project, "AOSP Workspace") } })
         }
-        val targetActions = JPanel(FlowLayout(FlowLayout.LEFT)).apply {
-            add(JButton("Save Targets").apply {
-                addActionListener {
-                    settings.update { it.targetsJson = targetEditor.serialize() }
-                    state.text = "CONFIGURED · Targets saved"
-                }
-            })
-        }
-        val targetSection = JPanel(BorderLayout()).apply {
-            add(JBLabel("TARGETS"), BorderLayout.NORTH)
-            add(targetEditor, BorderLayout.CENTER)
-            add(targetActions, BorderLayout.SOUTH)
+        val moduleSection = JPanel(BorderLayout()).apply {
+            add(JBLabel("DISCOVERED MODULES"), BorderLayout.NORTH)
+            add(modulePanel, BorderLayout.CENTER)
         }
         val center = JPanel(BorderLayout()).apply {
             add(statusPanel, BorderLayout.NORTH)
-            add(targetSection, BorderLayout.CENTER)
+            add(moduleSection, BorderLayout.CENTER)
         }
         val panel = JPanel(BorderLayout()).apply {
             add(header, BorderLayout.NORTH)
@@ -92,7 +83,6 @@ internal class AospWorkspaceToolWindowFactory : ToolWindowFactory {
         val settingsListener = settings.addListener { value ->
             SwingUtilities.invokeLater {
                 root.text = value.workspaceViewRoot.ifBlank { "Workspace not configured" }
-                pack.text = value.metadataPackRoot.ifBlank { "Metadata Pack not configured" }
             }
         }
         toolWindow.disposable?.let {
@@ -116,8 +106,7 @@ internal class AospWorkspaceToolWindowFactory : ToolWindowFactory {
                     ?: mapper.createArrayNode()
                 val params = mapper.writeValueAsString(
                     mapOf(
-                        "metadataRoot" to profile.outRoot,
-                        "metadataPackRoot" to profile.metadataPackRoot,
+                        "outRoot" to profile.outRoot,
                         "workspaceViewRoot" to profile.workspaceViewRoot,
                         "pathMappings" to mappings,
                     ),

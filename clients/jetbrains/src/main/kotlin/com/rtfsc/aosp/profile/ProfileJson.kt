@@ -19,7 +19,6 @@ internal object ProfileJson {
                     ),
                     "canonicalRepoRoot" to state.canonicalRepoRoot,
                     "outRoot" to state.outRoot,
-                    "metadataPackRoot" to state.metadataPackRoot,
                     "pathMappings" to (runCatching { mapper.readTree(state.pathMappings) }.getOrNull() ?: emptyList<Any>()),
                     "targets" to (runCatching { mapper.readTree(state.targetsJson) }.getOrNull() ?: emptyList<Any>()),
                     "visibilityPolicy" to mapOf("mode" to "strict-view"),

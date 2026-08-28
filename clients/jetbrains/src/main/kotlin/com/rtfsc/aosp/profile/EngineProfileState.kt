@@ -6,7 +6,6 @@ data class EngineProfileState(
     var focusedSourcePaths: String = "",
     var canonicalRepoRoot: String = "",
     var outRoot: String = "",
-    var metadataPackRoot: String = "",
     var pathMappings: String = "",
     var targetsJson: String = "",
     var engineExecutable: String = "",
