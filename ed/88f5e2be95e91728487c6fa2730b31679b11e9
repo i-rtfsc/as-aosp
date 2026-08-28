@@ -1,0 +1,44 @@
+protocol/aosp/rust_project.go
+  s_0fcc3f909ad4ee::t_0dbc304d746c5d 21-24,33-47
+  h_8b376749578497 1-20,25-32,48-78
+protocol/aosp/server_test.go
+  s_0fcc3f909ad4ee::t_7d238a8de06770 148-151,169
+  h_8b376749578497 152-168
+core/sourcecatalog/android_bp.go
+  s_0fcc3f909ad4ee::t_99036d978ec6f6 90-92
+core/rustproject/normalize.go
+  s_0fcc3f909ad4ee::t_fa8440617c21cd 13-40,49-72,79-88,96-97,101-128
+  s_0fcc3f909ad4ee::t_217cffe8412662 98-100
+  h_8b376749578497 1-12,41-48,73-78,89-95
+docs/roadmap/current-state.md
+  s_0fcc3f909ad4ee::t_8f4f0ac91192b3 25-26
+protocol/aosp/server.go
+  s_0fcc3f909ad4ee::t_0dbc304d746c5d 166
+  h_8b376749578497 165
+docs/design/protocol-and-profile-design.md
+  h_8b376749578497 170-179
+core/rustproject/normalize_test.go
+  s_0fcc3f909ad4ee::t_fa8440617c21cd 6-7
+  h_8b376749578497 1-5,8-31
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "ed88f5e2be95e91728487c6fa2730b31679b11e9",
+  "prompts": {},
+  "humans": {
+    "h_8b376749578497": {
+      "author": "Solo <anqi.huang@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
