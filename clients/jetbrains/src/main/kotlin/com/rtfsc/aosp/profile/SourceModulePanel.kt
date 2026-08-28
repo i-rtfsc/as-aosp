@@ -48,7 +48,7 @@ internal class SourceModulePanel(
         add(toolbar, BorderLayout.NORTH)
         add(JScrollPane(list), BorderLayout.CENTER)
         add(footer, BorderLayout.SOUTH)
-        query.addActionListener { render() }
+        query.addActionListener { refresh() }
     }
 
     fun loadSelected(raw: String) {
@@ -73,12 +73,15 @@ internal class SourceModulePanel(
                         "workspaceViewRoot" to root,
                         "outRoot" to outRoot().trim(),
                         "cacheRoot" to Paths.get(PathManager.getSystemPath(), "aosp-workspace", projectKey).toString(),
+                        "query" to query.text.trim(),
+                        "limit" to 500,
                     )),
                 )).path("result")
                 loaded = response.path("modules").map { node ->
                     Entry(node.path("name").asText(), node.path("type").asText(), node.path("status").asText(), node.path("recommended").asBoolean())
                 }
-                message = "${loaded.size} modules · ${response.path("buildBacked").asInt()} build-backed · " +
+                message = "${response.path("total").asInt()} matching · ${response.path("buildBacked").asInt()} build-backed · " +
+                    "showing ${loaded.size} · " +
                     "${response.path("filesScanned").asInt()} files · " +
                     if (response.path("cacheHit").asBoolean()) "cache reused" else "scanned"
             }

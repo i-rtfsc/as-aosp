@@ -128,6 +128,23 @@ func TestServerPersistsBuildFactCatalogInWorkspaceCache(t *testing.T) {
 	}
 }
 
+func TestServerPagesSourceModuleResults(t *testing.T) {
+	workspace := t.TempDir()
+	writeTestFile(t, workspace, "Android.bp", `
+java_library { name: "one" }
+java_library { name: "two" }
+`)
+	server := initializedServer(t)
+	response, _ := server.Handle(makeRequest(2, "aosp/source/modules", SourceModulesParams{
+		WorkspaceViewRoot: workspace, Limit: 1,
+	}))
+	var result SourceModuleResult
+	decodeResult(t, response, &result)
+	if result.Total != 2 || len(result.Modules) != 1 {
+		t.Fatalf("result=%+v", result)
+	}
+}
+
 func TestServerBuildsProjectGraphFromOut(t *testing.T) {
 	root := t.TempDir()
 	writeTestFile(t, root, "module-info.json", `{"framework":{"path":["frameworks/base/core/java"]}}`)

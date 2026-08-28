@@ -92,6 +92,7 @@ export function activate(context: vscode.ExtensionContext): void {
       filesScanned: result.filesScanned,
       cacheHit: result.cacheHit,
       buildBacked: result.buildBacked,
+      total: result.total,
     };
   }, startIndex);
   context.subscriptions.push(vscode.commands.registerCommand("aospIde.refreshModules", async () => {

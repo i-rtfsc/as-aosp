@@ -16,6 +16,7 @@ export interface ModuleDiscoveryResult {
   filesScanned: number;
   cacheHit: boolean;
   buildBacked: number;
+  total: number;
 }
 
 type IndexResult = {
@@ -119,7 +120,8 @@ export class ProfileViewProvider implements vscode.WebviewViewProvider {
         type: "moduleCatalog",
         modules: result.modules,
         selected: vscode.workspace.getConfiguration("aospIde").get<string[]>("selectedModules") ?? [],
-        summary: `${result.modules.length} modules · ${result.buildBacked} build-backed` +
+        summary: `${result.total} matching modules · ${result.buildBacked} build-backed` +
+          ` · showing ${result.modules.length}` +
           ` · ${result.filesScanned} files` +
           ` · ${result.cacheHit ? "cache reused" : "scanned"}` +
           ` · ${result.diagnostics} diagnostics`,
