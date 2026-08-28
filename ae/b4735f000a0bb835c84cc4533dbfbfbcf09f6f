@@ -1,0 +1,67 @@
+docs/architecture/system-architecture.md
+  s_0fcc3f909ad4ee::t_9f536fd93c0194 9-10,14-15,67-68
+  h_8b376749578497 61-66
+docs/design/protocol-and-profile-design.md
+  s_0fcc3f909ad4ee::t_5c4090cd929097 135-136
+  s_0fcc3f909ad4ee::t_e8ddb67c881bc9 166-168,238,245
+  h_8b376749578497 133
+docs/architecture/source-and-module-boundaries.md
+  h_8b376749578497 31
+docs/design/generated-source-store-design.md
+  s_0fcc3f909ad4ee::t_e8ddb67c881bc9 47-48
+docs/README.md
+  s_0fcc3f909ad4ee::t_e4874e3b992d3a 21
+  h_8b376749578497 27
+docs/design/jni-cross-language-index-design.md
+  s_0fcc3f909ad4ee::t_20ce253e8750ae 11
+  h_8b376749578497 10
+docs/engineering/aosp-index-cli-guide.md
+  s_0fcc3f909ad4ee::t_652d687931493e 160,251-252
+  s_0fcc3f909ad4ee::t_564889f472ee41 4,116,118-119,222-224,227-228,242,245-250,257,260,263-264,266
+  s_0fcc3f909ad4ee::t_cceb6f4298bab8 45-48
+  s_0fcc3f909ad4ee::t_45f1910236b03f 96
+  s_0fcc3f909ad4ee::t_0bc93689645201 43
+  s_0fcc3f909ad4ee::t_7f0a84064aac9e 213-214
+  s_0fcc3f909ad4ee::t_e4874e3b992d3a 296
+  h_8b376749578497 135-136
+docs/design/aosp-metadata-pack-design.md
+  s_0fcc3f909ad4ee::t_da87c57795d134 3
+docs/design/source-module-discovery-and-workspace-isolation-design.md
+  s_0fcc3f909ad4ee::t_74a2f4de4a011f 1-11,34-45,64-86,122-124
+  s_0fcc3f909ad4ee::t_1f3abb01069ba8 117-121,128-134
+  h_8b376749578497 12-33,46-63,87-116,125-127,135-170
+docs/roadmap/current-state.md
+  s_0fcc3f909ad4ee::t_caad3f41b39029 19
+  s_0fcc3f909ad4ee::t_ff25947dc9fb40 15-18,25-26,38-42,45-55
+  s_0fcc3f909ad4ee::t_ecc20ac448c90e 43-44
+  h_8b376749578497 3-14,20-24,27-37
+docs/design/profile-ui-and-multi-project-design.md
+  s_0fcc3f909ad4ee::t_918ee8feb199da 96-98
+  s_0fcc3f909ad4ee::t_5d1624abe5765a 104
+  s_0fcc3f909ad4ee::t_531f4ebf43c7c6 15-16,48-51,88-90
+  s_0fcc3f909ad4ee::t_6c1fedf0e4bc59 18-19
+  s_0fcc3f909ad4ee::t_e8ddb67c881bc9 14
+  s_0fcc3f909ad4ee::t_e4874e3b992d3a 57
+  h_8b376749578497 59,78-79
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "aeb4735f000a0bb835c84cc4533dbfbfbcf09f6f",
+  "prompts": {},
+  "humans": {
+    "h_8b376749578497": {
+      "author": "Solo <anqi.huang@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
