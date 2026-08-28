@@ -3,6 +3,7 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import { EngineClient } from "../engine/client";
 import { resolveRepoProjectionPath } from "./java_projection_paths";
+import { array, normalizeProjectionInput } from "./java_projection_model";
 
 type PathRef = { raw?: string; kind: string; repoPath?: string };
 
@@ -21,15 +22,15 @@ export async function applyJavaProjection(
   targets: unknown[] = [],
 ): Promise<JavaProjectionSummary> {
   const graphResult = await engine.projectGraph(outRoot, targets);
-  const archiveRefs = graphResult.graph.targets.flatMap((target) =>
-    target.libraries.filter((ref) => ref.raw?.toLowerCase().endsWith(".srcjar")).map((ref) => ref.raw),
+  const projection = normalizeProjectionInput(graphResult);
+  const generated = await engine.materializeGenerated(
+    outRoot, cacheRoot, projection.archiveRefs,
   );
-  const generated = await engine.materializeGenerated(outRoot, cacheRoot, archiveRefs);
-  const graphTargets = graphResult.diagnostics.length === 0 ? graphResult.graph.targets : [];
+  const graphTargets = projection.targets;
   const sourcePaths = new Set<string>();
   const referencedLibraries = new Set<string>();
-  let skipped = graphResult.diagnostics.length + generated.diagnostics.length;
-  for (const sourceRoot of generated.sourceRoots) sourcePaths.add(sourceRoot.root);
+  let skipped = projection.diagnostics + array(generated.diagnostics).length;
+  for (const sourceRoot of array(generated.sourceRoots)) sourcePaths.add(sourceRoot.root);
   const graphModules = graphTargets.flatMap((target) => ({
     sourceRoots: target.sourceRoots,
     sources: [],
@@ -54,7 +55,7 @@ export async function applyJavaProjection(
   return {
     sourcePaths: [...sourcePaths].sort(),
     referencedLibraries: [...referencedLibraries].sort(),
-    generatedRoots: generated.sourceRoots.length,
+    generatedRoots: array(generated.sourceRoots).length,
     skipped,
   };
 }

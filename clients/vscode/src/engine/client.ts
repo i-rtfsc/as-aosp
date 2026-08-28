@@ -67,24 +67,24 @@ export interface ModulesClosureResult {
 }
 
 export interface ProjectGraphResult {
-  graph: {
-    targets: Array<{
+  graph?: {
+    targets?: Array<{
       spec: { id: string; kind: string };
-      resolvedModules: string[];
-      resolvedArtifacts: Array<{ id: string; kind: string; name: string; path: { raw: string; repoPath?: string } }>;
-      sourceRoots: Array<{ raw: string; kind: string; repoPath?: string }>;
-      excludedSourceRoots: Array<{ raw: string; kind: string; repoPath?: string }>;
-      generatedRoots: Array<{ raw: string; kind: string; repoPath?: string }>;
-      libraries: Array<{ raw: string; kind: string; repoPath?: string }>;
-      dependencies: string[];
-      targetDependencies: string[];
-      diagnostics: unknown[];
+      resolvedModules?: string[];
+      resolvedArtifacts?: Array<{ id: string; kind: string; name: string; path: { raw: string; repoPath?: string } }>;
+      sourceRoots?: Array<{ raw: string; kind: string; repoPath?: string }>;
+      excludedSourceRoots?: Array<{ raw: string; kind: string; repoPath?: string }>;
+      generatedRoots?: Array<{ raw: string; kind: string; repoPath?: string }>;
+      libraries?: Array<{ raw: string; kind: string; repoPath?: string }>;
+      dependencies?: string[];
+      targetDependencies?: string[];
+      diagnostics?: unknown[];
     }>;
-    ownership: Array<{ repoPath: string; targetId: string }>;
-    duplicateSourceDecisions: string[];
-    diagnostics: unknown[];
+    ownership?: Array<{ repoPath: string; targetId: string }>;
+    duplicateSourceDecisions?: string[];
+    diagnostics?: unknown[] | null;
   };
-  diagnostics: unknown[];
+  diagnostics: unknown[] | null;
 }
 
 export interface ArtifactsCatalogResult {
@@ -143,8 +143,8 @@ export interface IndexSnapshot {
 }
 
 export interface GeneratedMaterializeResult {
-  sourceRoots: Array<{ archive: string; root: string; hash: string; entries: number }>;
-  diagnostics: unknown[];
+  sourceRoots?: Array<{ archive: string; root: string; hash: string; entries: number }> | null;
+  diagnostics: unknown[] | null;
 }
 
 export class EngineClient {
