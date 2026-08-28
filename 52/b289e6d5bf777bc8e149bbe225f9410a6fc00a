@@ -1,0 +1,33 @@
+scripts/export-full-aosp-pack.sh
+  s_0fcc3f909ad4ee::t_3a72a921fe77cd 42-49
+  h_8b376749578497 4-5,11-14,19-20,38-41,64-65,71,77,82-83,85-86,88
+Makefile
+  h_8b376749578497 46
+scripts/export-aosp-pack.sh
+  s_0fcc3f909ad4ee::t_58aff5cc0e1fe6 13
+  s_0fcc3f909ad4ee::t_d9deb0b6749b5a 41,54-56
+  s_0fcc3f909ad4ee::t_3a72a921fe77cd 25-27,39-40
+  s_0fcc3f909ad4ee::t_a3b4758812d4b4 51-53,57
+  h_8b376749578497 5,9,50
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "52b289e6d5bf777bc8e149bbe225f9410a6fc00a",
+  "prompts": {},
+  "humans": {
+    "h_8b376749578497": {
+      "author": "Solo <anqi.huang@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
