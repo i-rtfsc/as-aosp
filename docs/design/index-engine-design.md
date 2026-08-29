@@ -6,7 +6,8 @@
 
 engine 负责 profile、topology、metadata、fallback scan、generated cache、module graph、AIDL/JNI index 和 RPC 查询。它不负责 IDE UI、完整 C++ 类型系统或 AOSP build graph 求值。
 
-Profile 是内置的紧凑规则集，来源于开发期对 AOSP IDE metadata 的整理；engine 不需要把
+Profile 是内置的紧凑规则集，来源于开发期对 AOSP IDE metadata 的整理；`common.json` 记录
+其 Android release/tag 基线，其他 release 文件只保存 diff；engine 不需要把
 完整 `module_bp_java_deps.json`、`module_bp_cc_deps.json` 或 CMake tree 打进运行包。详细
 模块清单、压缩大小和存储边界见 `builtin-profile-catalog-and-storage-design.md`。
 

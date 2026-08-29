@@ -351,6 +351,74 @@ uncompressed: a few hundred KB to about 1 MB
 gzip-compressed: typically tens to a few hundred KB
 ```
 
+## 5.1 Profile File Layout
+
+There is one common base and small release deltas:
+
+```text
+profiles/
+  common.json
+  android-17.json
+  android-18.json
+```
+
+`common.json` is the base catalog, not a second copy of every Android release.
+It contains the current baseline release metadata so the origin of the rules
+is explicit:
+
+```json
+{
+  "schemaVersion": 1,
+  "baseline": {
+    "androidRelease": "android-17",
+    "androidTag": "<validated Android 17 tag>",
+    "generatedFrom": "AOSP IDE metadata pack",
+    "profileDataVersion": "2026-08-29"
+  },
+  "profiles": {}
+}
+```
+
+`android-17.json` and future release files contain only differences from the
+base. They never repeat the full common catalog:
+
+```json
+{
+  "schemaVersion": 1,
+  "base": "common",
+  "androidRelease": "android-17",
+  "profiles": {
+    "system-server": {
+      "moduleNames": {"add": ["services.new"]},
+      "sourceRoots": {"add": ["frameworks/base/services/new/java"]}
+    }
+  }
+}
+```
+
+Delta arrays use explicit `add`/`remove` operations instead of generic JSON
+array replacement. This prevents a small release change from accidentally
+discarding common modules, roots, or dependencies. The engine applies:
+
+```text
+common.json
+  -> selected release delta
+  -> vendor/workspace overrides
+  -> source validation and optional Out enrichment
+```
+
+If a release has no differences, its delta file is omitted and `common.json`
+is used directly. The baseline release in `common.json` is always reported in
+the UI and engine diagnostics.
+
+## 5.2 Profile Generation and Maintenance
+
+The development-time profile compiler reads representative Android 17 metadata
+and emits the compact common catalog plus only detected release differences.
+It never copies raw `module_bp_*`, `module-info`, compdb, or CMake data into the
+runtime package. A new Android release requires a new delta review, not a new
+full catalog.
+
 The shared Go engine owns this data using one of these equivalent packaging
 forms:
 
@@ -363,7 +431,8 @@ forms:
 
 The preferred release form is compressed JSON embedded in the Go engine plus a
 human-readable source copy in the repository. VS Code and JetBrains do not
-duplicate the catalog; they ask the engine for the profile catalog through RPC.
+duplicate the catalog; they ask the engine for the merged profile catalog
+through RPC.
 
 User overrides and derived caches are stored separately:
 

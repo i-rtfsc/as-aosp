@@ -34,8 +34,10 @@ Unified catalog
 ## 2. Source Module Parsing
 
 Built-in development profiles provide common AOSP module relationships and
-fallback source paths. They are knowledge compiled from representative AOSP
-build metadata, not a runtime copy of `module_bp_java_deps.json` or
+fallback source paths. `profiles/common.json` is the single baseline catalog
+and records the Android release/tag it was validated against; release files
+contain only explicit deltas. These are knowledge compiled from representative
+AOSP build metadata, not a runtime copy of `module_bp_java_deps.json` or
 `module_bp_cc_deps.json`. The complete profile list and storage rules are in
 `builtin-profile-catalog-and-storage-design.md`.
 
