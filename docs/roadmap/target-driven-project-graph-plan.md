@@ -37,12 +37,13 @@
 
 ## Phase 5：VS Code
 
-- current `java.project.*` 继续作为 fallback；
+- target-scoped Eclipse project descriptors 已实现，`java.project.*` unmanaged projection 已清空；
 - VS Code 先交付图形化 TargetSpec 列表/editor，删除 Targets JSON 用户入口；
-- 实现 JDT LS 多 project/importer 或 workspace-scoped project descriptions；
+- JDT LS 使用标准 EclipseProjectImporter 导入 workspace-scoped project descriptions；
 - target-scoped source/generated/classpath；
 - target-scoped clangd compdb overlay；
-- 验收：三个 targets 不被扁平为一个 unmanaged Java project。
+- 验收：Framework、Services、SystemUI 和 Generated 被导入为四个独立 projects；真实
+  `ActivityManagerService -> Bundle` definition 已通过。
 
 ## Phase 6：真实验证与增量
 

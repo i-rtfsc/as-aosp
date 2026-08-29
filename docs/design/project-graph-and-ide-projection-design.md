@@ -45,7 +45,9 @@ Generated source materialization 必须是 target-scoped：客户端先
 
 ## 3. VS Code
 
-- current `java.project.sourcePaths/referencedLibraries` is the initial ProjectGraph projection;
+- Target-scoped Eclipse project descriptors are the active ProjectGraph projection. The previous
+  `java.project.sourcePaths/referencedLibraries` unmanaged project is cleared and retained only as
+  archived migration history, not as a runtime fallback.
 - Java projection consumes only `java` and `android` ProjectGraph targets. Native targets are
   projected to clangd and Rust targets to rust-analyzer; they must never become JDT source roots.
 - Java source roots are derived from explicit `.java`/`.kt` source paths and package declarations.
@@ -72,6 +74,32 @@ Generated source materialization 必须是 target-scoped：客户端先
 - generated/source attachments are target-scoped;
 - clangd consumes target-scoped compdb overlays;
 - AIDL/JNI shared engine links remain cross-target actions.
+
+Generated layout:
+
+```text
+.aosp-ide/java/projects/
+  aosp-java-foundation/.project + .classpath
+  aosp-system-server-wms/.project + .classpath
+  aosp-system-ui/.project + .classpath
+  aosp-generated/.project + .classpath
+```
+
+Each source root is an Eclipse linked folder with a unique project-local name. This preserves the
+original AOSP file URI while preventing multiple `com/...` package roots from colliding inside one
+invisible project. Target dependencies become Eclipse project classpath entries; jars remain
+target-scoped library entries. Red Hat Java's standard `EclipseProjectImporter` discovers these
+descriptors recursively from the workspace.
+
+The Java server uses `Standard` mode for this projection. `Hybrid` syntax-server fallback is not
+used because it creates an invisible `jdt.ls-java-project` before target projects are imported.
+
+Verified against the local AOSP workspace:
+
+- four Eclipse projects imported in approximately 4.6 seconds;
+- no `aosp_<hash>` invisible project was created;
+- definition from `ActivityManagerService.java` resolved
+  `android.os.Bundle` to the original `frameworks/base/core/java/android/os/Bundle.java` URI.
 
 ## 4. Ownership
 

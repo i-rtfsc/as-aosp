@@ -5,6 +5,7 @@ import { EngineClient } from "../engine/client";
 import { normalizeWorkspacePath, resolveRepoProjectionPath } from "./java_projection_paths";
 import { array, normalizeProjectionInput } from "./java_projection_model";
 import { deriveJavaSourceRoots } from "./java_source_roots";
+import { JdtTargetProject, writeJdtProjects } from "../project/jdt_projects";
 
 type PathRef = { raw?: string; kind: string; repoPath?: string };
 
@@ -30,32 +31,52 @@ export async function applyJavaProjection(
   const graphTargets = projection.targets;
   const sourcePaths = new Set<string>();
   const referencedLibraries = new Set<string>();
+  const claimedRoots = new Set<string>();
+  const jdtTargets: JdtTargetProject[] = [];
   let skipped = projection.diagnostics + array(generated.diagnostics).length;
   const generatedRoots = array(generated.sourceRoots);
   const generatedOverlay = exposeGeneratedSourceRoots(workspaceRoot, generatedRoots);
-  if (generatedOverlay) sourcePaths.add(generatedOverlay);
-  else skipped += generatedRoots.length;
+  if (!generatedOverlay) skipped += generatedRoots.length;
   for (const target of graphTargets) {
     const derivedRoots = deriveJavaSourceRoots(workspaceRoot, target.sourceFiles);
+    const targetRoots = new Set<string>();
     if (derivedRoots.length > 0) {
-      for (const root of derivedRoots) sourcePaths.add(root);
+      for (const root of derivedRoots) targetRoots.add(root);
     } else {
       for (const ref of target.sourceRoots) {
         const pathName = resolveRepoPath(workspaceRoot, ref);
-        if (pathName && ref.repoPath) sourcePaths.add(normalizeWorkspacePath(ref.repoPath));
+        if (pathName && ref.repoPath) targetRoots.add(normalizeWorkspacePath(ref.repoPath));
         else skipped++;
       }
     }
+    const ownedRoots = [...targetRoots].filter((root) => {
+      if (claimedRoots.has(root)) return false;
+      claimedRoots.add(root);
+      sourcePaths.add(root);
+      return true;
+    }).map((root) => path.join(workspaceRoot, ...root.split("/")));
+    const targetLibraries: string[] = [];
     for (const ref of target.libraries) {
       const libraryPath = resolveLocalPath(outRoot, ref);
-      if (libraryPath) referencedLibraries.add(libraryPath);
+      if (libraryPath) {
+        referencedLibraries.add(libraryPath);
+        targetLibraries.push(libraryPath);
+      }
       else skipped++;
     }
+    jdtTargets.push({
+      id: target.id,
+      sourceRoots: ownedRoots,
+      libraries: targetLibraries,
+      dependencies: target.targetDependencies,
+    });
   }
+  const generatedPath = generatedOverlay ? path.join(workspaceRoot, ...generatedOverlay.split("/")) : undefined;
+  writeJdtProjects(workspaceRoot, jdtTargets, generatedPath);
   const config = vscode.workspace.getConfiguration("java.project");
-  await config.update("sourcePaths", [...sourcePaths].sort(), vscode.ConfigurationTarget.Workspace);
-  await config.update("referencedLibraries", [...referencedLibraries].sort(), vscode.ConfigurationTarget.Workspace);
-  await config.update("outputPath", ".aosp-ide/java/classes", vscode.ConfigurationTarget.Workspace);
+  await config.update("sourcePaths", [], vscode.ConfigurationTarget.Workspace);
+  await config.update("referencedLibraries", [], vscode.ConfigurationTarget.Workspace);
+  await config.update("outputPath", null, vscode.ConfigurationTarget.Workspace);
   await config.update("resourceFilters", [
     "node_modules", "\\.git", "\\.repo", "out", "prebuilts",
     "tests?", "benchmarks?", "testdata",
@@ -72,11 +93,17 @@ export async function applyJavaProjection(
   await vscode.workspace.getConfiguration("java.autobuild").update(
     "enabled", false, vscode.ConfigurationTarget.Workspace,
   );
+  await vscode.workspace.getConfiguration("java.server").update(
+    "launchMode", "Standard", vscode.ConfigurationTarget.Workspace,
+  );
   const jdt = vscode.workspace.getConfiguration("java.jdt.ls");
   if (jdt.inspect<string>("vmargs")?.workspaceValue === undefined) {
     const current = jdt.get<string>("vmargs") ?? "";
     const vmargs = /-Xmx\S+/.test(current) ? current.replace(/-Xmx\S+/, "-Xmx6G") : `${current} -Xmx6G`;
     await jdt.update("vmargs", vmargs.trim(), vscode.ConfigurationTarget.Workspace);
+  }
+  if (vscode.extensions.getExtension("redhat.java")?.isActive) {
+    await vscode.commands.executeCommand("java.projectConfiguration.update");
   }
   return {
     sourcePaths: [...sourcePaths].sort(),

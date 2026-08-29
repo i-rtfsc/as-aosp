@@ -5,11 +5,13 @@ export type ProjectionPathRef = {
 };
 
 export type ProjectionTarget = {
+  id: string;
   kind?: string;
   sourceRoots: ProjectionPathRef[];
   sourceFiles: ProjectionPathRef[];
   generatedRoots: ProjectionPathRef[];
   libraries: ProjectionPathRef[];
+  targetDependencies: string[];
 };
 
 export type ProjectionInput = {
@@ -22,6 +24,7 @@ export function normalizeProjectionInput(result: any): ProjectionInput {
   const diagnostics = array(result?.diagnostics).length +
     array(result?.graph?.diagnostics).length;
   const targets = array(result?.graph?.targets).map((target: any) => ({
+    id: typeof target?.spec?.id === "string" ? target.spec.id : "java-target",
     kind: typeof target?.spec?.kind === "string" ? target.spec.kind : undefined,
     sourceRoots: array<ProjectionPathRef>(target?.ownedSourceRoots ?? target?.sourceRoots),
     sourceFiles: array<ProjectionPathRef>(target?.ownedSources),
@@ -29,6 +32,7 @@ export function normalizeProjectionInput(result: any): ProjectionInput {
     libraries: array<ProjectionPathRef>(target?.libraries).filter(
       (ref: ProjectionPathRef) => !ref?.raw?.toLowerCase().endsWith(".srcjar"),
     ),
+    targetDependencies: array<string>(target?.targetDependencies),
   }));
   const javaTargets = targets.filter((target) => !target.kind ||
     target.kind === "java" || target.kind === "android");
