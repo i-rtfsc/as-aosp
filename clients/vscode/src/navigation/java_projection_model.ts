@@ -12,12 +12,14 @@ export type ProjectionTarget = {
   generatedRoots: ProjectionPathRef[];
   libraries: ProjectionPathRef[];
   targetDependencies: string[];
+  resolvedModules: string[];
 };
 
 export type ProjectionInput = {
   targets: ProjectionTarget[];
   archiveRefs: string[];
   diagnostics: number;
+  moduleCount: number;
 };
 
 export function normalizeProjectionInput(result: any): ProjectionInput {
@@ -33,13 +35,15 @@ export function normalizeProjectionInput(result: any): ProjectionInput {
       (ref: ProjectionPathRef) => !ref?.raw?.toLowerCase().endsWith(".srcjar"),
     ),
     targetDependencies: array<string>(target?.targetDependencies),
+    resolvedModules: array<string>(target?.resolvedModules),
   }));
   const javaTargets = targets.filter((target) => !target.kind ||
     target.kind === "java" || target.kind === "android");
   const archiveRefs = javaTargets.flatMap((target) => target.generatedRoots
     .filter((ref) => ref?.raw?.toLowerCase().endsWith(".srcjar"))
     .map((ref) => ref.raw as string));
-  return { targets: javaTargets, archiveRefs: [...new Set(archiveRefs)], diagnostics };
+  const moduleCount = new Set(javaTargets.flatMap((target) => target.resolvedModules)).size;
+  return { targets: javaTargets, archiveRefs: [...new Set(archiveRefs)], diagnostics, moduleCount };
 }
 
 export function array<T>(value: T[] | null | undefined): T[] {

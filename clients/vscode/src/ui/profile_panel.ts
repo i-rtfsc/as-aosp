@@ -31,6 +31,7 @@ type IndexResult = {
   stage: string;
   progress: number;
   modules: number;
+  projects: number;
   generated: number;
   diagnostics: number;
 };
@@ -237,7 +238,8 @@ function strings(value: unknown): string[] {
 
 function formatIndexStatus(status: IndexResult): string {
   return `${status.state} · ${status.stage} · ${status.progress}% · ` +
-    `${status.modules} modules · ${status.generated} generated · ` +
+    `${status.modules} modules · ${status.projects} projects · ` +
+    `${status.generated} generated · ` +
     `${status.diagnostics} diagnostics`;
 }
 

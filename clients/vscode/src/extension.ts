@@ -27,7 +27,7 @@ export function activate(context: vscode.ExtensionContext): void {
   };
   const startIndex = async (
     rebuild: boolean,
-    onProgress?: (status: { state: string; stage: string; progress: number; modules: number; generated: number; diagnostics: number }) => void,
+    onProgress?: (status: { state: string; stage: string; progress: number; modules: number; projects: number; generated: number; diagnostics: number }) => void,
   ) => {
     await ensureEngine();
     const config = vscode.workspace.getConfiguration("aospIde");
@@ -69,6 +69,7 @@ export function activate(context: vscode.ExtensionContext): void {
       stage: current.stage,
       progress: current.progress,
       modules: current.moduleCount,
+      projects: current.projectCount,
       generated: current.generatedCount,
       diagnostics: current.diagnostics?.length ?? 0,
     });
@@ -97,6 +98,9 @@ export function activate(context: vscode.ExtensionContext): void {
           sourceRoots: projection.sourcePaths.length,
           generatedRoots: projection.generatedRoots,
           libraries: projection.referencedLibraries.length,
+          modules: projection.moduleCount,
+          projects: projection.projectCount,
+          generated: projection.generatedEntries,
           skipped: projection.skipped,
           diagnostics: rust.diagnostics,
         });
@@ -148,12 +152,13 @@ export function activate(context: vscode.ExtensionContext): void {
         if (generation !== autoGeneration) return;
         profileView.updateIndexStatus(
           `${progress.state} · ${progress.stage} · ${progress.progress}% · ` +
-          `${progress.modules} modules · ${progress.generated} generated · ` +
+          `${progress.modules} modules · ${progress.projects} projects · ` +
+          `${progress.generated} generated · ` +
           `${progress.diagnostics} diagnostics`,
         );
       });
       if (generation !== autoGeneration) return;
-      profileView.updateIndexStatus(`${status.state} · ${status.stage} · ${status.progress}% · ${status.modules} modules · ${status.generated} generated · ${status.diagnostics} diagnostics`);
+      profileView.updateIndexStatus(`${status.state} · ${status.stage} · ${status.progress}% · ${status.modules} modules · ${status.projects} projects · ${status.generated} generated · ${status.diagnostics} diagnostics`);
     } catch (error) {
       if (generation !== autoGeneration) return;
       profileView.updateIndexStatus(`Index unavailable: ${error instanceof Error ? error.message : String(error)}`);

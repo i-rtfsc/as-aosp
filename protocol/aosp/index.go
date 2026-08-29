@@ -17,6 +17,9 @@ type IndexProjectionParams struct {
 	SourceRoots    int                `json:"sourceRoots"`
 	GeneratedRoots int                `json:"generatedRoots"`
 	Libraries      int                `json:"libraries"`
+	Modules        int                `json:"modules"`
+	Projects       int                `json:"projects"`
+	Generated      int                `json:"generated"`
 	Skipped        int                `json:"skipped"`
 	Diagnostics    []model.Diagnostic `json:"diagnostics"`
 }
@@ -29,6 +32,7 @@ type IndexSnapshot struct {
 	TotalStages        int                `json:"totalStages"`
 	Progress           int                `json:"progress"`
 	ModuleCount        int                `json:"moduleCount"`
+	ProjectCount       int                `json:"projectCount"`
 	GeneratedCount     int                `json:"generatedCount"`
 	SourceRootCount    int                `json:"sourceRootCount"`
 	GeneratedRootCount int                `json:"generatedRootCount"`
@@ -98,6 +102,9 @@ func (server *Server) indexProjection(request jsonrpc.Request) jsonrpc.Response 
 	server.coordinator.snapshot.SourceRootCount = params.SourceRoots
 	server.coordinator.snapshot.GeneratedRootCount = params.GeneratedRoots
 	server.coordinator.snapshot.LibraryCount = params.Libraries
+	server.coordinator.snapshot.ModuleCount = params.Modules
+	server.coordinator.snapshot.ProjectCount = params.Projects
+	server.coordinator.snapshot.GeneratedCount = params.Generated
 	server.coordinator.snapshot.SkippedCount = params.Skipped
 	server.coordinator.snapshot.Diagnostics = append(server.coordinator.snapshot.Diagnostics, params.Diagnostics...)
 	server.coordinator.snapshot.CompletedStages = appendUniqueStage(server.coordinator.snapshot.CompletedStages, "projection")

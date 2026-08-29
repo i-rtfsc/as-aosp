@@ -94,6 +94,11 @@ descriptors recursively from the workspace.
 The Java server uses `Standard` mode for this projection. `Hybrid` syntax-server fallback is not
 used because it creates an invisible `jdt.ls-java-project` before target projects are imported.
 
+Projection readiness is independent from JDT background import. Writing valid descriptors marks
+the AOSP projection ready; `java.projectConfiguration.update` runs asynchronously. The sidebar
+reports selected closure modules, generated entries, and JDT project count. It must not display
+the full Out catalog counts as if all modules were selected.
+
 Verified against the local AOSP workspace:
 
 - four Eclipse projects imported in approximately 4.6 seconds;

@@ -17,6 +17,7 @@ test("normalizes omitted project graph collections", () => {
   assert.deepEqual(input.targets[1].sourceRoots, []);
   assert.deepEqual(input.archiveRefs, []);
   assert.equal(input.diagnostics, 0);
+  assert.equal(input.moduleCount, 0);
 });
 
 test("collects srcjar archives from available libraries", () => {
@@ -44,4 +45,13 @@ test("excludes native targets from Java projection", () => {
   });
   assert.deepEqual(input.targets.map((target) => target.kind), ["java"]);
   assert.deepEqual(input.targets[0].sourceRoots, [{ raw: "frameworks/base", kind: "repo-relative" }]);
+});
+
+test("counts selected Java closure modules", () => {
+  const input = normalizeProjectionInput({ graph: { targets: [
+    { spec: { id: "java", kind: "java" }, resolvedModules: ["framework", "core"] },
+    { spec: { id: "services", kind: "java" }, resolvedModules: ["framework", "services"] },
+    { spec: { id: "native", kind: "native" }, resolvedModules: ["libbinder"] },
+  ] } });
+  assert.equal(input.moduleCount, 3);
 });

@@ -121,6 +121,24 @@ func TestServerIndexStatusPreservesEmptyArrays(t *testing.T) {
 	}
 }
 
+func TestServerProjectionReportsSelectedCounts(t *testing.T) {
+	server := initializedServer(t)
+	server.coordinator = &indexCoordinator{snapshot: IndexSnapshot{
+		ProfileID: "demo", State: "ready", TotalStages: 4,
+		CompletedStages: []string{}, Diagnostics: []model.Diagnostic{},
+	}}
+	response, _ := server.Handle(makeRequest(2, "aosp/index/projection", IndexProjectionParams{
+		ProfileID: "demo", SourceRoots: 184, GeneratedRoots: 500,
+		Libraries: 842, Modules: 2365, Projects: 4, Generated: 2350,
+	}))
+	var result IndexSnapshot
+	decodeResult(t, response, &result)
+	if result.ModuleCount != 2365 || result.ProjectCount != 4 ||
+		result.GeneratedCount != 2350 || result.State != "ready" {
+		t.Fatalf("result=%+v", result)
+	}
+}
+
 func TestServerPersistsBuildFactCatalogInWorkspaceCache(t *testing.T) {
 	out := t.TempDir()
 	cache := t.TempDir()

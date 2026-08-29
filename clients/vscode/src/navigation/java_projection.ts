@@ -13,6 +13,9 @@ export interface JavaProjectionSummary {
   sourcePaths: string[];
   referencedLibraries: string[];
   generatedRoots: number;
+  generatedEntries: number;
+  moduleCount: number;
+  projectCount: number;
   skipped: number;
 }
 
@@ -103,12 +106,17 @@ export async function applyJavaProjection(
     await jdt.update("vmargs", vmargs.trim(), vscode.ConfigurationTarget.Workspace);
   }
   if (vscode.extensions.getExtension("redhat.java")?.isActive) {
-    await vscode.commands.executeCommand("java.projectConfiguration.update");
+    setTimeout(() => {
+      void vscode.commands.executeCommand("java.projectConfiguration.update");
+    }, 0);
   }
   return {
     sourcePaths: [...sourcePaths].sort(),
     referencedLibraries: [...referencedLibraries].sort(),
     generatedRoots: array(generated.sourceRoots).length,
+    generatedEntries: generatedRoots.reduce((total, root) => total + root.entries, 0),
+    moduleCount: projection.moduleCount,
+    projectCount: jdtTargets.length + (generatedOverlay ? 1 : 0),
     skipped,
   };
 }

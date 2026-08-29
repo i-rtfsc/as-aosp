@@ -160,6 +160,7 @@ export interface IndexSnapshot {
   totalStages: number;
   progress: number;
   moduleCount: number;
+  projectCount: number;
   generatedCount: number;
   sourceRootCount: number;
   generatedRootCount: number;
@@ -317,7 +318,7 @@ export class EngineClient {
     return this.request("aosp/index/status", null);
   }
 
-  async reportProjection(params: { profileId: string; sourceRoots: number; generatedRoots: number; libraries: number; skipped: number; diagnostics: unknown[] }): Promise<IndexSnapshot> {
+  async reportProjection(params: { profileId: string; sourceRoots: number; generatedRoots: number; libraries: number; modules: number; projects: number; generated: number; skipped: number; diagnostics: unknown[] }): Promise<IndexSnapshot> {
     return this.request("aosp/index/projection", params);
   }
 
