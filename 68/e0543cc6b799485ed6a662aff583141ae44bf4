@@ -1,0 +1,48 @@
+core/projects/graph.go
+  s_0fcc3f909ad4ee::t_bd693a8c1bded4 77-81
+  h_8b376749578497 73-76
+core/metadata/types.go
+  s_0fcc3f909ad4ee::t_6b431a2e93bd98 59-61
+  h_8b376749578497 49-58
+core/modules/catalog_test.go
+  s_0fcc3f909ad4ee::t_06c565ef63d5d4 24-32
+  h_8b376749578497 33-37
+core/metadata/read_test.go
+  s_0fcc3f909ad4ee::t_06c565ef63d5d4 56-61,70-74
+  h_8b376749578497 62-69
+docs/design/project-graph-and-ide-projection-design.md
+  s_0fcc3f909ad4ee::t_5d005c2c75041d 56
+  h_8b376749578497 54-55
+core/projects/graph_test.go
+  s_0fcc3f909ad4ee::t_2f596a977766cb 74-84
+  h_8b376749578497 73,85-89
+core/modules/catalog.go
+  s_0fcc3f909ad4ee::t_bd693a8c1bded4 97-101,117-118
+  s_0fcc3f909ad4ee::t_6b431a2e93bd98 10-22
+  s_0fcc3f909ad4ee::t_db1a52b828315e 42,123
+  h_8b376749578497 102-116
+core/metadata/read.go
+  s_0fcc3f909ad4ee::t_b527fc5447ead5 9,83,101
+  h_8b376749578497 95-100
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "68e0543cc6b799485ed6a662aff583141ae44bf4",
+  "prompts": {},
+  "humans": {
+    "h_8b376749578497": {
+      "author": "Solo <anqi.huang@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
