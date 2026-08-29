@@ -30,6 +30,7 @@ export function webviewMessages(): Record<string, string> {
     searchHint: t("Enter at least two characters to search modules"),
     noResults: t("No matching modules"),
     recommended: t("Recommended"),
+    fromPreset: t("From preset"),
     all: t("All"),
     java: "Java",
     android: "Android",
