@@ -13,11 +13,16 @@
 ## 2. 数据来源
 
 ```text
-Android.bp / Android.mk -> Source Module Catalog
-Out Root Build Facts    -> 构建能力和产物增强
+Android.bp / Android.mk -> authoritative Source Module Catalog
+Out Root Build Facts    -> optional build/artifact/language enhancement
 两者合并               -> Unified Module Catalog
 用户勾选               -> TargetSpec / ProjectGraph
 ```
+
+该优先级是不可变的产品规则：没有 Out 时也必须可以发现和选择源码模块；
+Out 不能替代 Android.bp/Android.mk，也不能因为 product、variant 或 manifest
+不匹配而隐藏源码模块。详细的 build role、navigation capability、`TESTS`
+默认隐藏和 Advanced build modules 规则见 `source-first-module-catalog-design.md`。
 
 ### Android.bp
 
@@ -37,7 +42,7 @@ Out Root 可以是完整 AOSP `out` 或保持 `OUT_DIR` 相对路径的 Portable
 | `soong/module_bp_cc_deps.json` | C/C++ 源码、include 和 flags |
 | `soong/development/ide/compdb/compile_commands.json` | 单文件真实 native 编译命令 |
 
-Out 不负责唯一的模块发现，而是把源码模块标记为 `build-backed`、补充 generated/jar/
+Out 不负责模块发现，而是把源码模块标记为 `build-backed`、补充 generated/jar/
 srcjar/APK/CC facts，或提供没有源码的 `build-only` 模块。没有 Out 的模块为 `source-only`。
 同名模块必须结合 namespace、Android.bp 路径和 source path 消解，不能按 jar basename 猜 owner。
 

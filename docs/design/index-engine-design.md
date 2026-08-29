@@ -32,13 +32,17 @@ Profile
 
 ## 4. Metadata readers
 
-读取顺序：
+模块目录读取顺序：
 
-1. `module_bp_java_deps.json`；
-2. `module_bp_cc_deps.json`；
-3. 产品输出或 Soong 的 `module-info`；
-4. `development/ide/compdb/compile_commands.json`；
-5. metadata 引用的 srcjar/generated file。
+1. 可见 Workspace View 中的 `Android.bp` 和 `Android.mk`，建立权威源码模块库存；
+2. `module-info.json`，补充 class、installed artifact 和 build-only facts；
+3. `module_bp_java_deps.json`，补充 Java 源码、jar、srcjar 和 Java 依赖；
+4. `module_bp_cc_deps.json`，补充 C/C++ 源码、include 和 flags；
+5. `development/ide/compdb/compile_commands.json`，补充真实 native 编译命令；
+6. metadata 引用的 srcjar/generated file。
+
+没有 Out 时第 1 步仍必须产出 Source Module Catalog。后续步骤只能增强或标记
+catalog entry，不能创建新的主模块库存或覆盖有效的源码声明。
 
 reader 必须忽略未知字段，保留 source path、external path 和 fingerprint。不要把绝对路径直接当 symbol identity。
 
