@@ -1,0 +1,35 @@
+core/projects/graph.go
+  s_0fcc3f909ad4ee::t_5770fc8a172bc5 64
+  s_0fcc3f909ad4ee::t_b2e0c0eb794242 75-81,105,112,114
+  h_8b376749578497 18,21,66,73,84-90,110
+clients/vscode/src/navigation/java_projection_model.ts
+  s_0fcc3f909ad4ee::t_d6b8fef6bbb866 26-29
+  h_8b376749578497 10,25,33
+core/projects/graph_test.go
+  s_0fcc3f909ad4ee::t_16389c7459957d 46-47
+  h_8b376749578497 44-45
+clients/vscode/src/navigation/java_projection_model.test.ts
+  s_0fcc3f909ad4ee::t_3a5cb7655aed08 25,28
+  h_8b376749578497 27
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "c072a51841c114e631177d039d02e8296d8663da",
+  "prompts": {},
+  "humans": {
+    "h_8b376749578497": {
+      "author": "Solo <anqi.huang@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
