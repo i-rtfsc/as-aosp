@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { resolveRepoProjectionPath } from "./java_projection_paths";
+import { normalizeWorkspacePath, resolveRepoProjectionPath } from "./java_projection_paths";
 
 test("maps repo paths into the focused workspace root", () => {
   assert.equal(
@@ -14,4 +14,8 @@ test("does not map build-host absolute paths", () => {
     resolveRepoProjectionPath("/workspace/view", { kind: "external-absolute", raw: "/srv/aosp/frameworks/base" }),
     undefined,
   );
+});
+
+test("keeps Java source roots relative to the workspace", () => {
+	assert.equal(normalizeWorkspacePath("frameworks\\base\\core\\java"), "frameworks/base/core/java");
 });

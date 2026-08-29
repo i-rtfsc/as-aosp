@@ -18,6 +18,12 @@
 
 客户端不负责读取 Soong JSON、选择 Source Provider 或复制一套 index。
 
+VS Code 客户端在 AOSP 工作区检查语言能力扩展：`redhat.java` 提供 Java/Kotlin 语义服务，
+`llvm-vs-code-extensions.vscode-clangd` 提供 C/C++ 与 JNI 语义服务，
+`rust-lang.rust-analyzer` 提供 Rust 语义服务。缺失项显示能力和 required/optional 状态，
+用户确认后才调用 VS Code 扩展安装命令；插件不会静默安装扩展。Gradle、Bazel 扩展不是
+AOSP 导航依赖，AOSP 工作区会关闭其自动扫描。
+
 ## 2. JetBrains
 
 ### Current

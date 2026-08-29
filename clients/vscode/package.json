@@ -94,6 +94,10 @@
         "title": "%command.configure%"
       },
       {
+        "command": "aospIde.checkDependencies",
+        "title": "%command.checkDependencies%"
+      },
+      {
         "command": "aospIde.refreshModules",
         "title": "%command.refreshModules%"
       }

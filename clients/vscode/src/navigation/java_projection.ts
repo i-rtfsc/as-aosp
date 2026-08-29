@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import * as fs from "node:fs";
 import * as path from "node:path";
 import { EngineClient } from "../engine/client";
-import { resolveRepoProjectionPath } from "./java_projection_paths";
+import { normalizeWorkspacePath, resolveRepoProjectionPath } from "./java_projection_paths";
 import { array, normalizeProjectionInput } from "./java_projection_model";
 
 type PathRef = { raw?: string; kind: string; repoPath?: string };
@@ -30,7 +30,11 @@ export async function applyJavaProjection(
   const sourcePaths = new Set<string>();
   const referencedLibraries = new Set<string>();
   let skipped = projection.diagnostics + array(generated.diagnostics).length;
-  for (const sourceRoot of array(generated.sourceRoots)) sourcePaths.add(sourceRoot.root);
+  for (const sourceRoot of array(generated.sourceRoots)) {
+    const exposed = exposeGeneratedSourceRoot(workspaceRoot, sourceRoot.root, sourceRoot.hash);
+    if (exposed) sourcePaths.add(exposed);
+    else skipped++;
+  }
   const graphModules = graphTargets.flatMap((target) => ({
     sourceRoots: target.sourceRoots,
     sources: [],
@@ -40,7 +44,7 @@ export async function applyJavaProjection(
   for (const module of graphModules) {
     for (const ref of [...(module.sourceRoots ?? []), ...(module.sources ?? [])]) {
       const pathName = resolveRepoPath(workspaceRoot, ref);
-      if (pathName) sourcePaths.add(pathName);
+      if (pathName && ref.repoPath) sourcePaths.add(normalizeWorkspacePath(ref.repoPath));
       else skipped++;
     }
     for (const ref of [...(module.jars ?? []), ...(module.srcjars ?? [])]) {
@@ -58,6 +62,7 @@ export async function applyJavaProjection(
   const javaImport = vscode.workspace.getConfiguration("java.import");
   await javaImport.update("gradle.enabled", false, vscode.ConfigurationTarget.Workspace);
   await javaImport.update("maven.enabled", false, vscode.ConfigurationTarget.Workspace);
+  await config.update("importOnFirstTimeStartup", "disabled", vscode.ConfigurationTarget.Workspace);
   const gradle = vscode.workspace.getConfiguration("gradle");
   await gradle.update("autoDetect", "off", vscode.ConfigurationTarget.Workspace);
   await gradle.update("nestedProjects", false, vscode.ConfigurationTarget.Workspace);
@@ -71,6 +76,39 @@ export async function applyJavaProjection(
 
 function resolveRepoPath(workspaceRoot: string, ref: PathRef): string | undefined {
   return resolveRepoProjectionPath(workspaceRoot, ref);
+}
+
+function exposeGeneratedSourceRoot(
+  workspaceRoot: string,
+  generatedRoot: string,
+  hash: string,
+): string | undefined {
+  if (!generatedRoot || !hash || !fs.existsSync(path.join(generatedRoot, "entries"))) return undefined;
+  const relative = path.join(".aosp-ide", "java", "srcjar", hash);
+  const destination = path.join(workspaceRoot, relative);
+  try {
+    fs.mkdirSync(path.dirname(destination), { recursive: true });
+    const current = fs.lstatSync(destination);
+    if (current.isSymbolicLink() || current.isDirectory()) {
+      let sameRoot = false;
+      try { sameRoot = fs.realpathSync(destination) === fs.realpathSync(generatedRoot); } catch { /* stale link */ }
+      if (!sameRoot) fs.rmSync(destination, { recursive: true, force: true });
+    } else {
+      fs.rmSync(destination, { recursive: true, force: true });
+    }
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== "ENOENT") {
+      try { fs.rmSync(destination, { recursive: true, force: true }); } catch { return undefined; }
+    }
+  }
+  if (!fs.existsSync(destination)) {
+    try {
+      fs.symlinkSync(generatedRoot, destination, process.platform === "win32" ? "junction" : "dir");
+    } catch {
+      try { fs.cpSync(generatedRoot, destination, { recursive: true }); } catch { return undefined; }
+    }
+  }
+  return `${normalizeWorkspacePath(relative)}/entries`;
 }
 
 function resolveLocalPath(outRoot: string, ref: PathRef): string | undefined {

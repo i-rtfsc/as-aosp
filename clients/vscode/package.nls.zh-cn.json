@@ -15,5 +15,6 @@
   "command.compdb": "AOSP：刷新 clangd Compilation Database",
   "command.status": "AOSP：显示状态",
   "command.configure": "AOSP Workspace：配置",
+  "command.checkDependencies": "AOSP Workspace：检查导航扩展",
   "command.refreshModules": "AOSP Workspace：刷新模块目录"
 }

@@ -2,6 +2,10 @@ import * as path from "node:path";
 
 export type ProjectionPathRef = { raw?: string; kind: string; repoPath?: string };
 
+export function normalizeWorkspacePath(value: string): string {
+  return value.replaceAll("\\", "/").replace(/^\.\//, "");
+}
+
 export function resolveRepoProjectionPath(
   workspaceRoot: string,
   ref: ProjectionPathRef,

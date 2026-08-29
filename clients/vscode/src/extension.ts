@@ -13,6 +13,7 @@ import { JavaSourceDefinitionProvider } from "./navigation/java";
 import { applyJavaProjection } from "./navigation/java_projection";
 import { applyRustProjection } from "./navigation/rust_projection";
 import { normalizeOutRoot } from "./navigation/out_root";
+import { checkDependencies, isAospWorkspace } from "./dependencies";
 
 export function activate(context: vscode.ExtensionContext): void {
   const engine = new EngineClient();
@@ -210,6 +211,9 @@ export function activate(context: vscode.ExtensionContext): void {
       output.show(true);
     }),
     vscode.commands.registerCommand("aospIde.openProfile", async () => profileView.reveal()),
+    vscode.commands.registerCommand("aospIde.checkDependencies", async () => {
+      await checkDependencies(output);
+    }),
     vscode.workspace.onDidChangeConfiguration((event) => {
       if (event.affectsConfiguration("aospIde.engineExecutable") ||
         event.affectsConfiguration("aospIde.workspaceViewRoot") ||
@@ -241,6 +245,9 @@ export function activate(context: vscode.ExtensionContext): void {
   } else if (configuredRoot) {
     scheduleAutomaticIndex(false);
   }
+  setTimeout(() => {
+    if (isAospWorkspace()) void checkDependencies(output);
+  }, 1200);
 }
 
 export function deactivate(): void {
