@@ -141,6 +141,25 @@ func TestServerPersistsBuildFactCatalogInWorkspaceCache(t *testing.T) {
 	}
 }
 
+func TestServerInvalidatesOldBuildFactCacheSchema(t *testing.T) {
+	out := t.TempDir()
+	cache := t.TempDir()
+	writeTestFile(t, out, "module-info.json", `{"framework":{}}`)
+	writeTestFile(t, out, "module_bp_java_deps.json", `{"framework":{"static_libs":["core"]},"core":{}}`)
+	writeTestFile(t, cache, "build-facts/catalog.json", `{
+  "schema":1,
+  "outRoot":"stale",
+  "signature":"stale",
+  "catalog":{"modules":{"stale":{"name":"stale"}}}
+}`)
+	server := initializedServer(t)
+	catalog, diagnostics := server.loadBuildFactModuleCatalogCached(out, cache)
+	if len(diagnostics) != 0 || catalog.Modules["stale"].Name != "" ||
+		len(catalog.Modules["framework"].DirectDependencies) != 1 {
+		t.Fatalf("catalog=%+v diagnostics=%+v", catalog, diagnostics)
+	}
+}
+
 func TestServerPagesSourceModuleResults(t *testing.T) {
 	workspace := t.TempDir()
 	writeTestFile(t, workspace, "Android.bp", `

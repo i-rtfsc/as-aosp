@@ -14,6 +14,8 @@ import (
 	"github.com/i-rtfsc/as-aosp/core/modules"
 )
 
+const buildFactCacheSchema = 2
+
 func (server *Server) loadBuildFactCatalogs(outRoot string) (modules.Catalog, artifacts.Catalog, []model.Diagnostic) {
 	moduleCatalog, diagnostics := server.loadBuildFactModuleCatalog(outRoot)
 	if len(diagnostics) > 0 {
@@ -90,7 +92,7 @@ func loadBuildFactDiskCache(cacheRoot, outRoot, signature string) (modules.Catal
 		return modules.Catalog{}, false
 	}
 	var envelope buildFactCacheEnvelope
-	if json.Unmarshal(data, &envelope) != nil || envelope.Schema != 1 ||
+	if json.Unmarshal(data, &envelope) != nil || envelope.Schema != buildFactCacheSchema ||
 		envelope.OutRoot != outRoot || envelope.Signature != signature ||
 		len(envelope.Catalog.Modules) == 0 {
 		return modules.Catalog{}, false
@@ -107,7 +109,7 @@ func saveBuildFactDiskCache(cacheRoot, outRoot, signature string, catalog module
 		return
 	}
 	data, err := json.Marshal(buildFactCacheEnvelope{
-		Schema: 1, OutRoot: outRoot, Signature: signature, Catalog: catalog,
+		Schema: buildFactCacheSchema, OutRoot: outRoot, Signature: signature, Catalog: catalog,
 	})
 	if err != nil {
 		return
