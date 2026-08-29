@@ -57,6 +57,8 @@ Generated source materialization 必须是 target-scoped：客户端先
 - Target-scoped srcjar archives are materialized into one deduplicated
   `.aosp-ide/java/generated` overlay source root. A stable archive-hash manifest reuses the
   overlay; JDT must not receive hundreds of individual srcjar source roots.
+- JDT workspace resource filters exclude `.repo`, Out, prebuilts, test/testdata, and benchmark
+  directories. The generated Java overlay remains visible and is not filtered.
 - VS Code Java projection disables the Maven and Gradle importers for the workspace. AOSP
   contains embedded Gradle projects that are not standalone builds; allowing JDT LS to import
   them can fail workspace initialization and disable Java navigation even for local symbols.
