@@ -1,0 +1,31 @@
+docs/design/source-first-module-catalog-design.md
+  s_0fcc3f909ad4ee::t_d02b817520966a 39-41
+  h_8b376749578497 36-38
+docs/design/builtin-profile-catalog-and-storage-design.md
+  s_0fcc3f909ad4ee::t_d02b817520966a 1-6,64-71,88-97,109-114,130-147,162-169,180-195,205-216,227-235,244-262,274-282,309-329,337-353,396-410
+  h_8b376749578497 7-63,72-87,98-108,115-129,148-161,170-179,196-204,217-226,236-243,263-273,283-308,330-336,354-395
+docs/design/index-engine-design.md
+  s_0fcc3f909ad4ee::t_d02b817520966a 11-12
+  h_8b376749578497 9-10
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "8d5a5a9bb6f703220f06016444f9cbf46acc5c1a",
+  "prompts": {},
+  "humans": {
+    "h_8b376749578497": {
+      "author": "Solo <anqi.huang@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
