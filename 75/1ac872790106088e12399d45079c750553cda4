@@ -1,0 +1,59 @@
+clients/vscode/src/i18n/messages.ts
+  h_8b376749578497 34-36
+core/sourcecatalog/discovery_test.go
+  s_0fcc3f909ad4ee::t_13815cfe3c9426 31-32
+  h_8b376749578497 27-30
+core/sourcecatalog/module.go
+  s_0fcc3f909ad4ee::t_44ea4b503c3597 28-38
+  h_8b376749578497 15-24,26-27
+clients/vscode/src/engine/client.ts
+  h_8b376749578497 115-117
+clients/vscode/l10n/bundle.l10n.json
+  h_8b376749578497 30-32
+clients/vscode/src/ui/profile_panel.ts
+  s_0fcc3f909ad4ee::t_e0ec142502994b 255-270,280-297,304-308,315-392,407-417
+  s_0fcc3f909ad4ee::t_2431ca5935776d 250
+  h_8b376749578497 15-17,271-279,298-303,309-314,393-406
+core/sourcecatalog/classify.go
+  s_0fcc3f909ad4ee::t_d52b99e812ffd8 117-121
+  h_8b376749578497 1-116
+core/sourcecatalog/merge.go
+  s_0fcc3f909ad4ee::t_bd900ce67f0d46 34-51
+  h_8b376749578497 56-62
+clients/vscode/l10n/bundle.l10n.zh-cn.json
+  h_8b376749578497 30-32
+core/sourcecatalog/discovery.go
+  h_8b376749578497 14,76
+core/sourcecatalog/merge_test.go
+  s_0fcc3f909ad4ee::t_13815cfe3c9426 30
+  h_8b376749578497 29
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "751ac872790106088e12399d45079c750553cda4",
+  "prompts": {},
+  "humans": {
+    "h_8b376749578497": {
+      "author": "Solo <anqi.huang@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    },
+    "s_5f30dac179bcb2": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "019ffe38-b3cd-77e3-8987-f48bc62a086c",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
