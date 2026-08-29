@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { findLocalJavaDeclarations } from "./java_local_definition";
+import { findLocalJavaConstructors, findLocalJavaDeclarations } from "./java_local_definition";
 
 test("finds a private method declaration", () => {
   const source = `class Demo {
@@ -9,6 +9,17 @@ test("finds a private method declaration", () => {
 }`;
   const offsets = findLocalJavaDeclarations(source, "resetState");
   assert.deepEqual(offsets, [source.indexOf("resetState() {}")]);
+});
+
+test("finds a package-private multiline constructor", () => {
+  const source = `private final class AppDeathRecipient {
+  AppDeathRecipient(ProcessRecord app, int pid,
+      IApplicationThread thread) {}
+}`;
+  assert.deepEqual(
+    findLocalJavaConstructors(source, "AppDeathRecipient"),
+    [source.indexOf("AppDeathRecipient(ProcessRecord")],
+  );
 });
 
 test("finds fields and nested classes", () => {
