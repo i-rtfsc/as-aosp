@@ -1,0 +1,44 @@
+clients/vscode/l10n/bundle.l10n.zh-cn.json
+  s_0fcc3f909ad4ee::t_2ca99ea326993f 33
+docs/design/source-first-module-catalog-design.md
+  s_0fcc3f909ad4ee::t_971a8c8dc33672 108,115,118-123,164-165
+  h_8b376749578497 100-101
+clients/vscode/src/i18n/messages.ts
+  s_0fcc3f909ad4ee::t_2ca99ea326993f 37
+clients/vscode/l10n/bundle.l10n.json
+  h_8b376749578497 33
+clients/vscode/src/ui/profile_panel.ts
+  s_0fcc3f909ad4ee::t_0ca7aad7f48eab 265,297,303,370
+  s_0fcc3f909ad4ee::t_556fe7f5f717ea 250
+  h_8b376749578497 375-376
+core/sourcecatalog/discovery_test.go
+  s_0fcc3f909ad4ee::t_b96a31b94745f6 61-65,79-82
+  h_8b376749578497 66-78,83-88
+docs/design/module-selection-planner-design.md
+  s_0fcc3f909ad4ee::t_971a8c8dc33672 41
+  h_8b376749578497 38-40
+core/sourcecatalog/classify.go
+  s_0fcc3f909ad4ee::t_f76f0a6791577e 86
+  h_8b376749578497 88
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "95ce8933adfcb56c17fa0697be9a20160463542a",
+  "prompts": {},
+  "humans": {
+    "h_8b376749578497": {
+      "author": "Solo <anqi.huang@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
