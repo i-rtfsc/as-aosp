@@ -1,0 +1,31 @@
+clients/vscode/src/navigation/java_local_definition.ts
+  s_0fcc3f909ad4ee::t_26473b7a1abe32 10-18,27-29
+  h_8b376749578497 1-9,19-26
+clients/vscode/src/navigation/java_local_definition.test.ts
+  s_0fcc3f909ad4ee::t_26473b7a1abe32 7-20
+  h_8b376749578497 1-6,21
+clients/vscode/src/navigation/java.ts
+  s_0fcc3f909ad4ee::t_26473b7a1abe32 4,16-18
+  h_8b376749578497 15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "2d6d950c80aeedb8b691059c84a4c98526721e3d",
+  "prompts": {},
+  "humans": {
+    "h_8b376749578497": {
+      "author": "Solo <anqi.huang@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
