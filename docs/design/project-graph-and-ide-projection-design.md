@@ -54,6 +54,9 @@ Generated source materialization 必须是 target-scoped：客户端先
 - AOSP workspace projection uses a dedicated `.aosp-ide/java/classes` output directory, disables
   JDT auto-build diagnostics, and requests a 6 GiB JDT heap unless the workspace already has an
   explicit VM setting. Navigation must not wait for full AOSP diagnostics publication.
+- Target-scoped srcjar archives are materialized into one deduplicated
+  `.aosp-ide/java/generated` overlay source root. A stable archive-hash manifest reuses the
+  overlay; JDT must not receive hundreds of individual srcjar source roots.
 - VS Code Java projection disables the Maven and Gradle importers for the workspace. AOSP
   contains embedded Gradle projects that are not standalone builds; allowing JDT LS to import
   them can fail workspace initialization and disable Java navigation even for local symbols.

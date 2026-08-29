@@ -31,11 +31,10 @@ export async function applyJavaProjection(
   const sourcePaths = new Set<string>();
   const referencedLibraries = new Set<string>();
   let skipped = projection.diagnostics + array(generated.diagnostics).length;
-  for (const sourceRoot of array(generated.sourceRoots)) {
-    const exposed = exposeGeneratedSourceRoot(workspaceRoot, sourceRoot.root, sourceRoot.hash);
-    if (exposed) sourcePaths.add(exposed);
-    else skipped++;
-  }
+  const generatedRoots = array(generated.sourceRoots);
+  const generatedOverlay = exposeGeneratedSourceRoots(workspaceRoot, generatedRoots);
+  if (generatedOverlay) sourcePaths.add(generatedOverlay);
+  else skipped += generatedRoots.length;
   for (const target of graphTargets) {
     const derivedRoots = deriveJavaSourceRoots(workspaceRoot, target.sourceFiles);
     if (derivedRoots.length > 0) {
@@ -87,37 +86,61 @@ function resolveRepoPath(workspaceRoot: string, ref: PathRef): string | undefine
   return resolveRepoProjectionPath(workspaceRoot, ref);
 }
 
-function exposeGeneratedSourceRoot(
+function exposeGeneratedSourceRoots(
   workspaceRoot: string,
-  generatedRoot: string,
-  hash: string,
+  roots: Array<{ root: string; hash: string }>,
 ): string | undefined {
-  if (!generatedRoot || !hash || !fs.existsSync(path.join(generatedRoot, "entries"))) return undefined;
-  const relative = path.join(".aosp-ide", "java", "srcjar", hash);
+  const valid = roots.filter((root) => root.root && root.hash &&
+    fs.existsSync(path.join(root.root, "entries"))).sort((a, b) => a.hash.localeCompare(b.hash));
+  if (valid.length === 0) return undefined;
+  const relative = path.join(".aosp-ide", "java", "generated");
   const destination = path.join(workspaceRoot, relative);
+  const manifestPath = path.join(workspaceRoot, ".aosp-ide", "java", "generated.json");
+  const fingerprint = valid.map((root) => root.hash).join("\n");
   try {
-    fs.mkdirSync(path.dirname(destination), { recursive: true });
-    const current = fs.lstatSync(destination);
-    if (current.isSymbolicLink() || current.isDirectory()) {
-      let sameRoot = false;
-      try { sameRoot = fs.realpathSync(destination) === fs.realpathSync(generatedRoot); } catch { /* stale link */ }
-      if (!sameRoot) fs.rmSync(destination, { recursive: true, force: true });
-    } else {
-      fs.rmSync(destination, { recursive: true, force: true });
+    if (fs.existsSync(destination) && fs.readFileSync(manifestPath, "utf8") === fingerprint) {
+      return normalizeWorkspacePath(relative);
     }
-  } catch (error) {
-    if ((error as NodeJS.ErrnoException).code !== "ENOENT") {
-      try { fs.rmSync(destination, { recursive: true, force: true }); } catch { return undefined; }
+  } catch { /* rebuild an incomplete overlay */ }
+  const temporary = destination + `.tmp-${process.pid}`;
+  try {
+    fs.rmSync(temporary, { recursive: true, force: true });
+    fs.mkdirSync(temporary, { recursive: true });
+    for (const root of valid) {
+      linkGeneratedEntries(path.join(root.root, "entries"), temporary);
+    }
+    fs.rmSync(destination, { recursive: true, force: true });
+    fs.renameSync(temporary, destination);
+    fs.writeFileSync(manifestPath, fingerprint, "utf8");
+    return normalizeWorkspacePath(relative);
+  } catch {
+    try { fs.rmSync(temporary, { recursive: true, force: true }); } catch { /* best effort */ }
+    return undefined;
+  }
+}
+
+function linkGeneratedEntries(sourceRoot: string, destinationRoot: string): void {
+  const pending: Array<{ source: string; relative: string }> = [{ source: sourceRoot, relative: "" }];
+  while (pending.length > 0) {
+    const current = pending.pop()!;
+    for (const entry of fs.readdirSync(current.source, { withFileTypes: true })) {
+      const relative = path.join(current.relative, entry.name);
+      const source = path.join(current.source, entry.name);
+      if (entry.isDirectory()) {
+        pending.push({ source, relative });
+        continue;
+      }
+      if (!entry.isFile() || !/\.(?:java|kt)$/i.test(entry.name)) continue;
+      const destination = path.join(destinationRoot, relative);
+      if (fs.existsSync(destination)) continue;
+      fs.mkdirSync(path.dirname(destination), { recursive: true });
+      try {
+        fs.symlinkSync(source, destination, "file");
+      } catch {
+        fs.copyFileSync(source, destination, fs.constants.COPYFILE_EXCL);
+      }
     }
   }
-  if (!fs.existsSync(destination)) {
-    try {
-      fs.symlinkSync(generatedRoot, destination, process.platform === "win32" ? "junction" : "dir");
-    } catch {
-      try { fs.cpSync(generatedRoot, destination, { recursive: true }); } catch { return undefined; }
-    }
-  }
-  return `${normalizeWorkspacePath(relative)}/entries`;
 }
 
 function resolveLocalPath(outRoot: string, ref: PathRef): string | undefined {
