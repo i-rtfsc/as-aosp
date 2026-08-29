@@ -1,10 +1,12 @@
 package selection
 
 import (
+	"path"
 	"sort"
 	"strings"
 
 	"github.com/i-rtfsc/as-aosp/core/model"
+	"github.com/i-rtfsc/as-aosp/core/profiles"
 )
 
 type Preset struct {
@@ -12,6 +14,7 @@ type Preset struct {
 	Name        string           `json:"name"`
 	Kind        model.TargetKind `json:"kind"`
 	Modules     []string         `json:"modules"`
+	Patterns    []string         `json:"patterns,omitempty"`
 	Default     bool             `json:"default"`
 	Recommended bool             `json:"recommended"`
 	Priority    int              `json:"priority"`
@@ -25,27 +28,29 @@ type Plan struct {
 }
 
 func Catalog() []Preset {
-	return []Preset{
-		{ID: "java-foundation", Name: "Java Foundation", Kind: model.TargetJava,
-			Modules: []string{"core-oj", "core-libart", "ext", "framework-minus-apex", "framework"},
-			Default: true, Recommended: true, Priority: 700},
-		{ID: "system-server-wms", Name: "System Server & WMS", Kind: model.TargetJava,
-			Modules: []string{"services", "services.core"},
-			Default: true, Recommended: true, Priority: 600},
-		{ID: "system-ui", Name: "System UI", Kind: model.TargetAndroid,
-			Modules: []string{"SystemUI"}, Default: true, Recommended: true, Priority: 500},
-		{ID: "native-foundation", Name: "Native Foundation", Kind: model.TargetNative,
-			Modules: []string{"libbase", "libutils", "liblog", "libcutils", "libbinder", "libbinder_ndk", "libnativehelper"},
-			Default: true, Recommended: true, Priority: 400},
-		{ID: "graphics-surfaceflinger", Name: "Graphics & SurfaceFlinger", Kind: model.TargetNative,
-			Modules: []string{"libui", "libgui", "libnativewindow", "surfaceflinger"},
-			Default: true, Recommended: true, Priority: 300},
-		{ID: "input-stack", Name: "Input Stack", Kind: model.TargetNative,
-			Modules: []string{"libinput", "libinputflinger", "libinputdispatcher", "libinputreader", "libinputreporter"},
-			Default: true, Recommended: true, Priority: 200},
-		{ID: "automotive", Name: "Automotive", Kind: model.TargetMixed,
-			Modules:     []string{"android.car", "CarService", "CarServiceUpdatable", "CarSystemUI"},
-			Recommended: true, Priority: 100},
+	catalog := profiles.RuntimeCatalog("android-17", "android-17")
+	result := make([]Preset, 0, len(catalog.Profiles))
+	for _, profile := range catalog.Profiles {
+		result = append(result, Preset{
+			ID: profile.ID, Name: profile.Name, Kind: profileKind(profile.Kind),
+			Modules: profile.ModuleNames, Default: profile.Default,
+			Recommended: profile.Recommended, Priority: profile.Priority,
+			Patterns: profile.ModulePatterns,
+		})
+	}
+	return result
+}
+
+func profileKind(value string) model.TargetKind {
+	switch strings.ToLower(strings.TrimSpace(value)) {
+	case "android":
+		return model.TargetAndroid
+	case "native":
+		return model.TargetNative
+	case "mixed":
+		return model.TargetMixed
+	default:
+		return model.TargetJava
 	}
 }
 
@@ -59,7 +64,7 @@ func Build(presetIDs, manualModules []string, moduleKinds map[string]model.Targe
 		if !presetSet[preset.ID] {
 			continue
 		}
-		modules := unassigned(preset.Modules, assigned)
+		modules := unassigned(expand(preset, moduleKinds), assigned)
 		if len(modules) == 0 {
 			continue
 		}
@@ -117,6 +122,22 @@ func Build(presetIDs, manualModules []string, moduleKinds map[string]model.Targe
 	sort.Strings(result.PresetIDs)
 	sort.Strings(result.SelectedModules)
 	return result
+}
+
+func expand(preset Preset, available map[string]model.TargetKind) []string {
+	values := append([]string(nil), preset.Modules...)
+	if len(available) == 0 || len(preset.Patterns) == 0 {
+		return uniqueStrings(values)
+	}
+	for name := range available {
+		for _, pattern := range preset.Patterns {
+			if matched, err := path.Match(pattern, name); err == nil && matched {
+				values = append(values, name)
+				break
+			}
+		}
+	}
+	return uniqueStrings(values)
 }
 
 func DefaultPresetIDs() []string {

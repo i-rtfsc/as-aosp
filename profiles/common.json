@@ -1,0 +1,651 @@
+{
+  "schemaVersion": 1,
+  "baseline": {
+    "androidRelease": "android-17",
+    "androidTag": "android-17",
+    "generatedFrom": "AOSP IDE metadata pack",
+    "profileDataVersion": "2026-08-29"
+  },
+  "profiles": [
+    {
+      "id": "java-foundation",
+      "name": "Java Foundation",
+      "kind": "java",
+      "moduleNames": [
+        "core-oj",
+        "core-libart",
+        "ext",
+        "framework",
+        "framework-minus-apex"
+      ],
+      "sourceRoots": [
+        "libcore",
+        "frameworks/base/core/java"
+      ],
+      "sourcePatterns": [
+        "frameworks/base/**/java",
+        "frameworks/base/**/src"
+      ],
+      "recommended": true,
+      "default": true,
+      "priority": 700
+    },
+    {
+      "id": "system-server-wms",
+      "name": "System Server \u0026 WMS",
+      "kind": "java",
+      "moduleNames": [
+        "services",
+        "services.impl",
+        "services.core"
+      ],
+      "modulePatterns": [
+        "services.*",
+        "service-*"
+      ],
+      "sourceRoots": [
+        "frameworks/base/services"
+      ],
+      "sourcePatterns": [
+        "frameworks/base/services/**/java"
+      ],
+      "dependencies": [
+        "java-foundation"
+      ],
+      "generatedCapabilities": [
+        "aidl",
+        "sysprop",
+        "aconfig"
+      ],
+      "recommended": true,
+      "default": true,
+      "priority": 650
+    },
+    {
+      "id": "activity-manager",
+      "name": "ActivityManager",
+      "kind": "java",
+      "moduleNames": [
+        "services.core"
+      ],
+      "sourceRoots": [
+        "frameworks/base/services/core/java/com/android/server/am"
+      ],
+      "dependencies": [
+        "system-server-wms"
+      ],
+      "recommended": true,
+      "default": false,
+      "priority": 620
+    },
+    {
+      "id": "window-manager",
+      "name": "WindowManager",
+      "kind": "mixed",
+      "moduleNames": [
+        "services.core",
+        "WindowManager-Shell"
+      ],
+      "sourceRoots": [
+        "frameworks/base/services/core/java/com/android/server/wm"
+      ],
+      "nativeRoots": [
+        "frameworks/native/libs/ui",
+        "frameworks/native/libs/gui"
+      ],
+      "dependencies": [
+        "system-server-wms",
+        "graphics"
+      ],
+      "recommended": true,
+      "default": false,
+      "priority": 610
+    },
+    {
+      "id": "system-server-input",
+      "name": "System Server Input",
+      "kind": "mixed",
+      "moduleNames": [
+        "services.core"
+      ],
+      "sourceRoots": [
+        "frameworks/base/services/core/java/com/android/server/input"
+      ],
+      "nativeRoots": [
+        "frameworks/base/services/core/jni",
+        "frameworks/native/services/inputflinger"
+      ],
+      "dependencies": [
+        "system-server-wms",
+        "input-stack"
+      ],
+      "recommended": true,
+      "default": false,
+      "priority": 605
+    },
+    {
+      "id": "system-ui",
+      "name": "SystemUI",
+      "kind": "android",
+      "moduleNames": [
+        "SystemUI",
+        "SystemUI-application",
+        "SystemUI-core"
+      ],
+      "modulePatterns": [
+        "SystemUI*"
+      ],
+      "sourceRoots": [
+        "frameworks/base/packages/SystemUI"
+      ],
+      "sourcePatterns": [
+        "frameworks/base/packages/SystemUI/**/src"
+      ],
+      "dependencies": [
+        "java-foundation",
+        "window-manager"
+      ],
+      "recommended": true,
+      "default": true,
+      "priority": 500
+    },
+    {
+      "id": "system-ui-shell",
+      "name": "SystemUI Shell",
+      "kind": "mixed",
+      "moduleNames": [
+        "WindowManager-Shell",
+        "SystemUISharedLib"
+      ],
+      "nativeRoots": [
+        "frameworks/native/libs/gui",
+        "frameworks/native/services/surfaceflinger"
+      ],
+      "dependencies": [
+        "system-ui",
+        "graphics"
+      ],
+      "recommended": true,
+      "default": false,
+      "priority": 490
+    },
+    {
+      "id": "system-ui-keyguard",
+      "name": "SystemUI Keyguard",
+      "kind": "java",
+      "moduleNames": [
+        "SystemUI-core"
+      ],
+      "sourceRoots": [
+        "frameworks/base/packages/SystemUI/src/com/android/systemui/keyguard"
+      ],
+      "dependencies": [
+        "system-ui"
+      ],
+      "recommended": true,
+      "default": false,
+      "priority": 480
+    },
+    {
+      "id": "system-ui-compose",
+      "name": "SystemUI Compose",
+      "kind": "android",
+      "moduleNames": [
+        "SystemUI-core"
+      ],
+      "sourceRoots": [
+        "frameworks/base/packages/SystemUI/compose"
+      ],
+      "dependencies": [
+        "system-ui"
+      ],
+      "recommended": true,
+      "default": false,
+      "priority": 470
+    },
+    {
+      "id": "native-foundation",
+      "name": "Native Foundation",
+      "kind": "native",
+      "moduleNames": [
+        "libbase",
+        "libutils",
+        "liblog",
+        "libcutils",
+        "libbinder",
+        "libbinder_ndk",
+        "libnativehelper"
+      ],
+      "nativeRoots": [
+        "system/libbase",
+        "system/core/libutils",
+        "system/logging/liblog",
+        "system/core/libcutils",
+        "frameworks/native/libs/binder"
+      ],
+      "recommended": true,
+      "default": true,
+      "priority": 400
+    },
+    {
+      "id": "graphics",
+      "name": "Graphics",
+      "kind": "native",
+      "moduleNames": [
+        "libui",
+        "libgui",
+        "libnativewindow",
+        "libhwui",
+        "libandroidfw"
+      ],
+      "nativeRoots": [
+        "frameworks/native/libs/ui",
+        "frameworks/native/libs/gui",
+        "frameworks/native/libs/nativewindow",
+        "frameworks/base/libs/hwui",
+        "frameworks/base/libs/androidfw"
+      ],
+      "dependencies": [
+        "native-foundation"
+      ],
+      "recommended": true,
+      "default": false,
+      "priority": 350
+    },
+    {
+      "id": "graphics-surfaceflinger",
+      "name": "Graphics \u0026 SurfaceFlinger",
+      "kind": "native",
+      "moduleNames": [
+        "libui",
+        "libgui",
+        "libnativewindow",
+        "surfaceflinger",
+        "librenderengine",
+        "libskia_renderengine"
+      ],
+      "nativeRoots": [
+        "frameworks/native/libs/ui",
+        "frameworks/native/libs/gui",
+        "frameworks/native/libs/nativewindow",
+        "frameworks/native/services/surfaceflinger"
+      ],
+      "dependencies": [
+        "native-foundation"
+      ],
+      "recommended": true,
+      "default": true,
+      "priority": 340
+    },
+    {
+      "id": "render-engine",
+      "name": "RenderEngine",
+      "kind": "native",
+      "moduleNames": [
+        "librenderengine",
+        "libskia_renderengine"
+      ],
+      "nativeRoots": [
+        "frameworks/native/services/surfaceflinger/RenderEngine"
+      ],
+      "dependencies": [
+        "graphics"
+      ],
+      "recommended": true,
+      "default": false,
+      "priority": 330
+    },
+    {
+      "id": "input-stack",
+      "name": "Input Stack",
+      "kind": "native",
+      "moduleNames": [
+        "libinput",
+        "libinputflinger",
+        "libinputdispatcher",
+        "libinputreader",
+        "libinputreporter"
+      ],
+      "nativeRoots": [
+        "frameworks/native/services/inputflinger"
+      ],
+      "dependencies": [
+        "native-foundation"
+      ],
+      "recommended": true,
+      "default": true,
+      "priority": 300
+    },
+    {
+      "id": "media-framework",
+      "name": "Media Framework",
+      "kind": "mixed",
+      "moduleNames": [
+        "libmedia",
+        "libmediandk",
+        "MediaProvider"
+      ],
+      "nativeRoots": [
+        "frameworks/av/media/libmedia",
+        "frameworks/av/media/libstagefright"
+      ],
+      "dependencies": [
+        "native-foundation"
+      ],
+      "recommended": true,
+      "default": false,
+      "priority": 280
+    },
+    {
+      "id": "audio",
+      "name": "Audio",
+      "kind": "mixed",
+      "moduleNames": [
+        "libaudioclient",
+        "libaudioflinger",
+        "libaudiopolicy",
+        "libaudiohal"
+      ],
+      "modulePatterns": [
+        "android.hardware.audio.*"
+      ],
+      "nativeRoots": [
+        "frameworks/av/services/audioflinger",
+        "frameworks/av/services/audiopolicy",
+        "frameworks/av/media/libaudioclient"
+      ],
+      "dependencies": [
+        "media-framework"
+      ],
+      "recommended": true,
+      "default": false,
+      "priority": 270
+    },
+    {
+      "id": "camera",
+      "name": "Camera",
+      "kind": "mixed",
+      "moduleNames": [
+        "libcamera_client",
+        "libcameraservice",
+        "libcamera_metadata"
+      ],
+      "modulePatterns": [
+        "android.hardware.camera.*"
+      ],
+      "nativeRoots": [
+        "frameworks/av/camera",
+        "frameworks/av/services/camera"
+      ],
+      "dependencies": [
+        "graphics",
+        "native-foundation"
+      ],
+      "recommended": true,
+      "default": false,
+      "priority": 260
+    },
+    {
+      "id": "connectivity",
+      "name": "Connectivity",
+      "kind": "mixed",
+      "moduleNames": [
+        "framework-connectivity",
+        "Tethering",
+        "NetworkStack",
+        "CaptivePortalLogin"
+      ],
+      "modulePatterns": [
+        "connectivity*",
+        "framework-connectivity*"
+      ],
+      "sourceRoots": [
+        "packages/modules/Connectivity",
+        "packages/modules/NetworkStack"
+      ],
+      "nativeRoots": [
+        "system/netd"
+      ],
+      "recommended": true,
+      "default": false,
+      "priority": 240
+    },
+    {
+      "id": "wifi",
+      "name": "Wi-Fi",
+      "kind": "mixed",
+      "moduleNames": [
+        "wifi-service-pre-jarjar",
+        "WifiTrackerLib",
+        "wifi-modules-utils"
+      ],
+      "modulePatterns": [
+        "wifi-*",
+        "Wifi*"
+      ],
+      "sourceRoots": [
+        "packages/modules/Wifi",
+        "frameworks/opt/net/wifi"
+      ],
+      "nativeRoots": [
+        "hardware/interfaces/wifi"
+      ],
+      "recommended": true,
+      "default": false,
+      "priority": 230
+    },
+    {
+      "id": "bluetooth",
+      "name": "Bluetooth",
+      "kind": "mixed",
+      "moduleNames": [
+        "Bluetooth",
+        "BluetoothServices",
+        "BluetoothLib"
+      ],
+      "modulePatterns": [
+        "Bluetooth*",
+        "bluetooth-*"
+      ],
+      "sourceRoots": [
+        "packages/modules/Bluetooth"
+      ],
+      "nativeRoots": [
+        "packages/modules/Bluetooth/system"
+      ],
+      "recommended": true,
+      "default": false,
+      "priority": 220
+    },
+    {
+      "id": "telephony",
+      "name": "Telephony",
+      "kind": "mixed",
+      "moduleNames": [
+        "telephony-common",
+        "TelephonyProvider",
+        "ims-common"
+      ],
+      "modulePatterns": [
+        "android.hardware.radio.*"
+      ],
+      "sourceRoots": [
+        "packages/modules/Telephony",
+        "frameworks/opt/telephony",
+        "frameworks/opt/net/ims"
+      ],
+      "nativeRoots": [
+        "hardware/ril"
+      ],
+      "recommended": true,
+      "default": false,
+      "priority": 210
+    },
+    {
+      "id": "package-manager",
+      "name": "Package Manager",
+      "kind": "mixed",
+      "moduleNames": [
+        "PackageInstaller",
+        "services.core"
+      ],
+      "sourceRoots": [
+        "frameworks/base/packages/PackageInstaller",
+        "frameworks/base/services/core/java/com/android/server/pm"
+      ],
+      "dependencies": [
+        "system-server-wms"
+      ],
+      "recommended": true,
+      "default": false,
+      "priority": 190
+    },
+    {
+      "id": "permission-security",
+      "name": "Permission and Security",
+      "kind": "mixed",
+      "moduleNames": [
+        "PermissionController",
+        "Settings",
+        "SettingsProvider"
+      ],
+      "sourceRoots": [
+        "packages/modules/Permission",
+        "packages/apps/Settings",
+        "packages/providers/SettingsProvider"
+      ],
+      "nativeRoots": [
+        "system/security",
+        "external/selinux"
+      ],
+      "recommended": true,
+      "default": false,
+      "priority": 180
+    },
+    {
+      "id": "storage-vold",
+      "name": "Storage and Vold",
+      "kind": "mixed",
+      "moduleNames": [
+        "MediaProvider",
+        "DocumentsUI",
+        "vold"
+      ],
+      "sourceRoots": [
+        "packages/providers/MediaProvider",
+        "packages/apps/DocumentsUI"
+      ],
+      "nativeRoots": [
+        "system/vold",
+        "system/core/fs_mgr"
+      ],
+      "recommended": true,
+      "default": false,
+      "priority": 170
+    },
+    {
+      "id": "art-libcore",
+      "name": "ART and libcore",
+      "kind": "mixed",
+      "moduleNames": [
+        "core-oj",
+        "core-libart",
+        "libart",
+        "libartbase",
+        "libdexfile",
+        "libnativebridge"
+      ],
+      "sourceRoots": [
+        "art",
+        "libcore",
+        "dalvik"
+      ],
+      "nativeRoots": [
+        "art/runtime",
+        "art/libartbase",
+        "art/libdexfile",
+        "art/libnativebridge"
+      ],
+      "recommended": true,
+      "default": false,
+      "priority": 160
+    },
+    {
+      "id": "aidl-hidl",
+      "name": "AIDL and HIDL",
+      "kind": "mixed",
+      "modulePatterns": [
+        "android.hardware.*-V*-java",
+        "android.hardware.*-V*-cpp",
+        "android.hardware.*-V*-ndk",
+        "android.frameworks.*-V*",
+        "*-aidl-*"
+      ],
+      "sourceRoots": [
+        "hardware/interfaces",
+        "frameworks/hardware/interfaces"
+      ],
+      "dependencies": [
+        "java-foundation",
+        "native-foundation"
+      ],
+      "generatedCapabilities": [
+        "aidl"
+      ],
+      "recommended": true,
+      "default": false,
+      "priority": 150
+    },
+    {
+      "id": "automotive",
+      "name": "Automotive",
+      "kind": "mixed",
+      "moduleNames": [
+        "android.car",
+        "CarService",
+        "CarServiceUpdatable",
+        "CarSystemUI",
+        "CarSettings"
+      ],
+      "modulePatterns": [
+        "Car*",
+        "car-*"
+      ],
+      "sourceRoots": [
+        "packages/services/Car",
+        "packages/apps/Car"
+      ],
+      "nativeRoots": [
+        "hardware/interfaces/automotive"
+      ],
+      "recommended": true,
+      "default": false,
+      "priority": 100
+    },
+    {
+      "id": "common-system-apps",
+      "name": "Common System Apps",
+      "kind": "android",
+      "moduleNames": [
+        "Settings",
+        "SettingsProvider",
+        "PackageInstaller",
+        "DocumentsUI",
+        "Launcher3",
+        "PermissionController",
+        "MediaProvider",
+        "NetworkStack",
+        "Bluetooth",
+        "TelephonyProvider"
+      ],
+      "sourceRoots": [
+        "packages/apps",
+        "packages/providers",
+        "packages/modules"
+      ],
+      "recommended": false,
+      "default": false,
+      "priority": 0
+    }
+  ]
+}

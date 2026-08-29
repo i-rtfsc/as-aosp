@@ -4,12 +4,14 @@ import (
 	"strings"
 
 	"github.com/i-rtfsc/as-aosp/core/model"
+	"github.com/i-rtfsc/as-aosp/core/profiles"
 	"github.com/i-rtfsc/as-aosp/core/selection"
 	"github.com/i-rtfsc/as-aosp/core/sourcecatalog"
 	"github.com/i-rtfsc/as-aosp/protocol/jsonrpc"
 )
 
 type SelectionCatalogResult struct {
+	Baseline         profiles.Baseline  `json:"baseline"`
 	Presets          []selection.Preset `json:"presets"`
 	DefaultPresetIDs []string           `json:"defaultPresetIds"`
 }
@@ -23,8 +25,10 @@ type SelectionPlanParams struct {
 }
 
 func (server *Server) selectionCatalog(request jsonrpc.Request) jsonrpc.Response {
+	catalog := profiles.RuntimeCatalog("android-17", "android-17")
 	return jsonrpc.Success(request.ID, SelectionCatalogResult{
-		Presets: selection.Catalog(), DefaultPresetIDs: selection.DefaultPresetIDs(),
+		Baseline: catalog.Baseline, Presets: selection.Catalog(),
+		DefaultPresetIDs: selection.DefaultPresetIDs(),
 	})
 }
 
@@ -35,7 +39,7 @@ func (server *Server) selectionPlan(request jsonrpc.Request) jsonrpc.Response {
 	}
 	moduleKinds := map[string]model.TargetKind{}
 	root := strings.TrimSpace(params.WorkspaceViewRoot)
-	if root != "" && len(params.ManualModules) > 0 {
+	if root != "" {
 		report := sourcecatalog.Discover(root, params.CacheRoot)
 		if outRoot := strings.TrimSpace(params.OutRoot); outRoot != "" {
 			buildCatalog, _ := server.loadBuildFactModuleCatalogCached(

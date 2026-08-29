@@ -1,0 +1,6 @@
+{
+  "schemaVersion": 1,
+  "base": "common",
+  "androidRelease": "android-17",
+  "profiles": {}
+}

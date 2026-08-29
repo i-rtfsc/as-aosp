@@ -26,7 +26,7 @@ CMake projects, and product facts.
 
 ## 2. Profile Count and UI Groups
 
-The first built-in catalog contains 25 user-facing development profiles. The
+The first built-in catalog contains 28 user-facing development profiles. The
 UI shows these profiles, while the engine expands their module anchors,
 families, source roots, and dependencies.
 
@@ -280,7 +280,7 @@ An individual built-in entry is declarative and compact:
 
 ```json
 {
-  "id": "system-server",
+  "id": "system-server-wms",
   "kind": "java",
   "moduleNames": ["services", "services.impl", "services.core"],
   "modulePatterns": ["services.*", "service-*"],
@@ -346,7 +346,7 @@ Expected size for the initial catalog:
 ```text
 150-300 module anchors
 50-100 family/path rules
-25 profile descriptors
+28 profile descriptors
 uncompressed: a few hundred KB to about 1 MB
 gzip-compressed: typically tens to a few hundred KB
 ```
@@ -433,6 +433,13 @@ The preferred release form is compressed JSON embedded in the Go engine plus a
 human-readable source copy in the repository. VS Code and JetBrains do not
 duplicate the catalog; they ask the engine for the merged profile catalog
 through RPC.
+
+The repository source files are copied into `core/profiles/data` by
+`go generate ./core/profiles` and embedded with `go:embed`. Release builds
+therefore work without the checkout, while profile maintenance remains a
+reviewable JSON change under `profiles/`. `make profile-compile` regenerates
+the baseline and embedded copies; `make profile-validate` checks the baseline
+schema and profile identifiers.
 
 User overrides and derived caches are stored separately:
 

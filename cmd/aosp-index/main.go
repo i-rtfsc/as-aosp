@@ -33,7 +33,7 @@ type scanOutput struct {
 
 func main() {
 	if len(os.Args) < 2 {
-		fatal(errors.New("usage: aosp-index <doctor|scan|metadata|modules|aidl|jni|pack|serve> [options]"))
+		fatal(errors.New("usage: aosp-index <doctor|scan|metadata|modules|aidl|jni|profile|pack|serve> [options]"))
 	}
 	switch os.Args[1] {
 	case "doctor":
@@ -48,6 +48,8 @@ func main() {
 		runAidl(os.Args[2:])
 	case "jni":
 		runJni(os.Args[2:])
+	case "profile":
+		runProfile(os.Args[2:])
 	case "pack":
 		runPack(os.Args[2:])
 	case "serve":

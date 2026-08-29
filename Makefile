@@ -1,7 +1,7 @@
-.PHONY: help fmt fmt-check vet test-core test-protocol test-jetbrains test-vscode package package-jetbrains-thin package-jetbrains-full package-vscode-local install-vscode smoke metadata-smoke aidl-smoke jni-smoke pack-smoke pack-validate-smoke rpc-smoke pack-preflight export-pack commit-message-check check
+.PHONY: help fmt fmt-check vet test-core test-protocol test-jetbrains test-vscode package package-jetbrains-thin package-jetbrains-full package-vscode-local install-vscode smoke metadata-smoke aidl-smoke jni-smoke pack-smoke pack-validate-smoke rpc-smoke pack-preflight export-pack profile-compile profile-validate commit-message-check check
 
 help:
-	@printf '%s\n' 'make fmt                    Format Go source' 'make fmt-check              Check Go formatting' 'make vet                     Run Go static checks' 'make test-core               Run core tests' 'make test-protocol           Run protocol tests' 'make test-jetbrains          Run JetBrains tests' 'make test-vscode             Run VS Code tests' 'make package                 Build all release artifacts' 'make package-jetbrains-thin  Build development ZIP without engines' 'make package-jetbrains-full  Build release ZIP with six engines' 'make package-vscode-local    Build current-platform VSIX' 'make install-vscode          Install current-platform VSIX' 'make smoke                   Run CLI fixture smoke' 'make metadata-smoke          Read metadata fixture' 'make aidl-smoke              Read AIDL fixture' 'make jni-smoke               Read JNI fixture' 'make rpc-smoke               Run JSON-RPC daemon smoke' 'make commit-message-check    Check message width and Change-Id' 'make check                   Run all checks'
+	@printf '%s\n' 'make fmt                    Format Go source' 'make fmt-check              Check Go formatting' 'make vet                     Run Go static checks' 'make test-core               Run core tests' 'make test-protocol           Run protocol tests' 'make test-jetbrains          Run JetBrains tests' 'make test-vscode             Run VS Code tests' 'make package                 Build all release artifacts' 'make package-jetbrains-thin  Build development ZIP without engines' 'make package-jetbrains-full  Build release ZIP with six engines' 'make package-vscode-local    Build current-platform VSIX' 'make install-vscode          Install current-platform VSIX' 'make profile-compile         Compile embedded Profile data' 'make profile-validate        Validate Profile data' 'make smoke                   Run CLI fixture smoke' 'make metadata-smoke          Read metadata fixture' 'make aidl-smoke              Read AIDL fixture' 'make jni-smoke               Read JNI fixture' 'make rpc-smoke              Run JSON-RPC daemon smoke' 'make commit-message-check    Check message width and Change-Id' 'make check                   Run all checks'
 
 fmt:
 	gofmt -w core protocol cmd
@@ -70,7 +70,14 @@ export-pack:
 pack-preflight:
 	go run ./cmd/aosp-index pack preflight --out-root "$${OUT_DIR}"
 
+profile-compile:
+	go run ./cmd/aosp-index profile compile --out-root "$${OUT_DIR}" --release "$${ANDROID_RELEASE:-android-17}" --tag "$${ANDROID_TAG:-$${ANDROID_RELEASE:-android-17}}" --output profiles/common.json
+	go generate ./core/profiles
+
+profile-validate:
+	go run ./cmd/aosp-index profile validate --input profiles/common.json
+
 commit-message-check:
 	bash scripts/check-commit-messages.sh
 
-check: fmt-check vet test-core test-protocol test-vscode smoke metadata-smoke aidl-smoke jni-smoke pack-smoke pack-validate-smoke rpc-smoke commit-message-check
+check: fmt-check vet test-core test-protocol profile-validate test-vscode smoke metadata-smoke aidl-smoke jni-smoke pack-smoke pack-validate-smoke rpc-smoke commit-message-check

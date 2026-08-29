@@ -141,6 +141,12 @@ export interface SelectionPreset {
 }
 
 export interface SelectionCatalogResult {
+  baseline: {
+    androidRelease: string;
+    androidTag: string;
+    generatedFrom: string;
+    profileDataVersion: string;
+  };
   presets: SelectionPreset[];
   defaultPresetIds: string[];
 }

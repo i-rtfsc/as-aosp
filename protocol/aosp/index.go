@@ -5,6 +5,8 @@ import (
 	"sync"
 
 	"github.com/i-rtfsc/as-aosp/core/model"
+	"github.com/i-rtfsc/as-aosp/core/modules"
+	"github.com/i-rtfsc/as-aosp/core/sourcecatalog"
 	"github.com/i-rtfsc/as-aosp/protocol/jsonrpc"
 )
 
@@ -165,7 +167,29 @@ func (server *Server) runIndex(profileID string, profile model.Profile, cancel c
 	if !server.indexStillRunning(cancel) {
 		return
 	}
-	catalog, diagnostics := server.loadBuildFactModuleCatalog(profile.OutRoot)
+	buildCatalog := modules.Catalog{Modules: map[string]modules.Module{}}
+	diagnostics := []model.Diagnostic{}
+	if strings.TrimSpace(profile.OutRoot) != "" {
+		var buildDiagnostics []model.Diagnostic
+		buildCatalog, buildDiagnostics = server.loadBuildFactModuleCatalog(profile.OutRoot)
+		diagnostics = append(diagnostics, buildDiagnostics...)
+	}
+	sourceCount := 0
+	if strings.TrimSpace(profile.WorkspaceViewRoot) != "" {
+		report := sourcecatalog.Discover(profile.WorkspaceViewRoot, "")
+		diagnostics = append(diagnostics, report.Diagnostics...)
+		if len(report.Catalog.Modules) > 0 {
+			merged := sourcecatalog.MergeBuildFacts(report.Catalog.Modules, buildCatalog)
+			sourceCount = len(merged)
+		}
+	}
+	if strings.TrimSpace(profile.WorkspaceViewRoot) == "" &&
+		strings.TrimSpace(profile.OutRoot) == "" {
+		diagnostics = append(diagnostics, model.Diagnostic{
+			Code: "INDEX_INPUTS_MISSING", Severity: model.SeverityError,
+			Stage: "index", Message: "workspaceViewRoot or outRoot is required",
+		})
+	}
 	if !server.updateIndex(profileID, "catalog", 2, diagnostics, cancel) {
 		return
 	}
@@ -173,10 +197,13 @@ func (server *Server) runIndex(profileID string, profile model.Profile, cancel c
 		return
 	}
 	generated := 0
-	for _, module := range catalog.Modules {
+	for _, module := range buildCatalog.Modules {
 		generated += len(module.Generated) + len(module.SrcJars)
 	}
-	server.updateIndexCounts(profileID, len(catalog.Modules), generated, cancel)
+	if sourceCount == 0 {
+		sourceCount = len(buildCatalog.Modules)
+	}
+	server.updateIndexCounts(profileID, sourceCount, generated, cancel)
 	if !server.updateIndex(profileID, "generated", 3, nil, cancel) {
 		return
 	}

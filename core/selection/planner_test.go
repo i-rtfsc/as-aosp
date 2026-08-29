@@ -41,3 +41,23 @@ func TestDefaultPresetIDsUsePlatformScope(t *testing.T) {
 		}
 	}
 }
+
+func TestBuildExpandsProfilePatternsAgainstSourceModules(t *testing.T) {
+	plan := Build(
+		[]string{"system-server-wms"}, nil,
+		map[string]model.TargetKind{
+			"services.core": model.TargetJava,
+			"services.foo":  model.TargetJava,
+			"unrelated":     model.TargetJava,
+		},
+	)
+	if len(plan.Targets) != 1 {
+		t.Fatalf("targets=%+v", plan.Targets)
+	}
+	modules := plan.Targets[0].Selectors.Modules
+	if len(modules) != 4 || modules[0] != "services" ||
+		modules[1] != "services.core" || modules[2] != "services.foo" ||
+		modules[3] != "services.impl" {
+		t.Fatalf("modules=%v", modules)
+	}
+}

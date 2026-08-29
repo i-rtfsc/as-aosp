@@ -368,6 +368,23 @@ func TestServerKeepsMissingPackIndexPartial(t *testing.T) {
 	}
 }
 
+func TestServerIndexesSourceWithoutOut(t *testing.T) {
+	workspace := t.TempDir()
+	writeTestFile(t, workspace, "frameworks/base/Android.bp", `
+java_library {
+    name: "framework-minus-apex",
+    srcs: ["core/java/**/*.java"],
+}`)
+	server := initializedServer(t)
+	server.Handle(makeRequest(2, "aosp/index/start", IndexStartParams{
+		Profile: model.Profile{ID: "source-only", WorkspaceViewRoot: workspace},
+	}))
+	result := waitForIndexState(t, server, "ready")
+	if result.ModuleCount != 1 || len(result.Diagnostics) != 0 {
+		t.Fatalf("result=%+v", result)
+	}
+}
+
 func TestServerMaterializesOutSrcJars(t *testing.T) {
 	pack := t.TempDir()
 	archive := filepath.Join(pack, "soong", "framework.srcjar")
