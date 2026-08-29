@@ -48,6 +48,12 @@ Generated source materialization 必须是 target-scoped：客户端先
 - current `java.project.sourcePaths/referencedLibraries` is the initial ProjectGraph projection;
 - Java projection consumes only `java` and `android` ProjectGraph targets. Native targets are
   projected to clangd and Rust targets to rust-analyzer; they must never become JDT source roots.
+- Java source roots are derived from explicit `.java`/`.kt` source paths and package declarations.
+  A broad module path such as `frameworks/base` is only a fallback when no explicit Java sources
+  are available; it must not be preferred over `frameworks/base/core/java`.
+- AOSP workspace projection uses a dedicated `.aosp-ide/java/classes` output directory, disables
+  JDT auto-build diagnostics, and requests a 6 GiB JDT heap unless the workspace already has an
+  explicit VM setting. Navigation must not wait for full AOSP diagnostics publication.
 - VS Code Java projection disables the Maven and Gradle importers for the workspace. AOSP
   contains embedded Gradle projects that are not standalone builds; allowing JDT LS to import
   them can fail workspace initialization and disable Java navigation even for local symbols.

@@ -7,6 +7,7 @@ export type ProjectionPathRef = {
 export type ProjectionTarget = {
   kind?: string;
   sourceRoots: ProjectionPathRef[];
+  sourceFiles: ProjectionPathRef[];
   generatedRoots: ProjectionPathRef[];
   libraries: ProjectionPathRef[];
 };
@@ -23,6 +24,7 @@ export function normalizeProjectionInput(result: any): ProjectionInput {
   const targets = array(result?.graph?.targets).map((target: any) => ({
     kind: typeof target?.spec?.kind === "string" ? target.spec.kind : undefined,
     sourceRoots: array<ProjectionPathRef>(target?.ownedSourceRoots ?? target?.sourceRoots),
+    sourceFiles: array<ProjectionPathRef>(target?.ownedSources),
     generatedRoots: array<ProjectionPathRef>(target?.ownedGeneratedRoots ?? target?.generatedRoots),
     libraries: array<ProjectionPathRef>(target?.libraries).filter(
       (ref: ProjectionPathRef) => !ref?.raw?.toLowerCase().endsWith(".srcjar"),

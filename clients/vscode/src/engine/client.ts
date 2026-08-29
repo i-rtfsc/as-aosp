@@ -73,6 +73,7 @@ export interface ProjectGraphResult {
       resolvedModules?: string[];
       resolvedArtifacts?: Array<{ id: string; kind: string; name: string; path: { raw: string; repoPath?: string } }>;
       sourceRoots?: Array<{ raw: string; kind: string; repoPath?: string }>;
+      ownedSources?: Array<{ raw: string; kind: string; repoPath?: string }>;
       excludedSourceRoots?: Array<{ raw: string; kind: string; repoPath?: string }>;
       generatedRoots?: Array<{ raw: string; kind: string; repoPath?: string }>;
       libraries?: Array<{ raw: string; kind: string; repoPath?: string }>;

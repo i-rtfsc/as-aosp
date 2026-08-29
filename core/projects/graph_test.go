@@ -11,7 +11,7 @@ import (
 
 func TestBuildResolvesFrameworkServicesAndSystemUIProjects(t *testing.T) {
 	catalog := modules.Catalog{Modules: map[string]modules.Module{
-		"framework": {Name: "framework", SourceRoots: []metadata.PathRef{metadata.NewPathRef("frameworks/base/core/java")}, Dependencies: []string{"base"}},
+		"framework": {Name: "framework", SourceRoots: []metadata.PathRef{metadata.NewPathRef("frameworks/base/core/java")}, Sources: []metadata.PathRef{metadata.NewPathRef("frameworks/base/core/java/android/os/Binder.java")}, Dependencies: []string{"base"}},
 		"base":      {Name: "base", SourceRoots: []metadata.PathRef{metadata.NewPathRef("frameworks/base")}},
 		"services":  {Name: "services", SourceRoots: []metadata.PathRef{metadata.NewPathRef("frameworks/base/services")}, Dependencies: []string{"framework"}},
 		"SystemUI":  {Name: "SystemUI", SourceRoots: []metadata.PathRef{metadata.NewPathRef("frameworks/base/packages/SystemUI")}},
@@ -44,6 +44,10 @@ func TestBuildResolvesFrameworkServicesAndSystemUIProjects(t *testing.T) {
 	if len(framework.OwnedSourceRoots) != 1 ||
 		framework.OwnedSourceRoots[0].Raw != "frameworks/base/core/java" {
 		t.Fatalf("framework owned roots=%v", framework.OwnedSourceRoots)
+	}
+	if len(framework.OwnedSources) != 1 ||
+		framework.OwnedSources[0].Raw != "frameworks/base/core/java/android/os/Binder.java" {
+		t.Fatalf("framework owned sources=%v", framework.OwnedSources)
 	}
 	if len(framework.ExcludedSourceRoots) != 2 ||
 		framework.ExcludedSourceRoots[0].Raw != "frameworks/base/packages/SystemUI" ||

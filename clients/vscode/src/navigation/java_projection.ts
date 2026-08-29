@@ -4,6 +4,7 @@ import * as path from "node:path";
 import { EngineClient } from "../engine/client";
 import { normalizeWorkspacePath, resolveRepoProjectionPath } from "./java_projection_paths";
 import { array, normalizeProjectionInput } from "./java_projection_model";
+import { deriveJavaSourceRoots } from "./java_source_roots";
 
 type PathRef = { raw?: string; kind: string; repoPath?: string };
 
@@ -35,27 +36,27 @@ export async function applyJavaProjection(
     if (exposed) sourcePaths.add(exposed);
     else skipped++;
   }
-  const graphModules = graphTargets.flatMap((target) => ({
-    sourceRoots: target.sourceRoots,
-    sources: [],
-    jars: target.libraries,
-    srcjars: [],
-  }));
-  for (const module of graphModules) {
-    for (const ref of [...(module.sourceRoots ?? []), ...(module.sources ?? [])]) {
-      const pathName = resolveRepoPath(workspaceRoot, ref);
-      if (pathName && ref.repoPath) sourcePaths.add(normalizeWorkspacePath(ref.repoPath));
-      else skipped++;
+  for (const target of graphTargets) {
+    const derivedRoots = deriveJavaSourceRoots(workspaceRoot, target.sourceFiles);
+    if (derivedRoots.length > 0) {
+      for (const root of derivedRoots) sourcePaths.add(root);
+    } else {
+      for (const ref of target.sourceRoots) {
+        const pathName = resolveRepoPath(workspaceRoot, ref);
+        if (pathName && ref.repoPath) sourcePaths.add(normalizeWorkspacePath(ref.repoPath));
+        else skipped++;
+      }
     }
-    for (const ref of [...(module.jars ?? []), ...(module.srcjars ?? [])]) {
-      const pathName = resolveLocalPath(outRoot, ref);
-      if (pathName) referencedLibraries.add(pathName);
+    for (const ref of target.libraries) {
+      const libraryPath = resolveLocalPath(outRoot, ref);
+      if (libraryPath) referencedLibraries.add(libraryPath);
       else skipped++;
     }
   }
   const config = vscode.workspace.getConfiguration("java.project");
   await config.update("sourcePaths", [...sourcePaths].sort(), vscode.ConfigurationTarget.Workspace);
   await config.update("referencedLibraries", [...referencedLibraries].sort(), vscode.ConfigurationTarget.Workspace);
+  await config.update("outputPath", ".aosp-ide/java/classes", vscode.ConfigurationTarget.Workspace);
   // AOSP contains unrelated Gradle projects whose build scripts are not a
   // complete standalone build. Let JDT use this projection instead of trying
   // to import those projects and failing workspace initialization.
@@ -65,6 +66,15 @@ export async function applyJavaProjection(
   const gradle = vscode.workspace.getConfiguration("gradle");
   await gradle.update("autoDetect", "off", vscode.ConfigurationTarget.Workspace);
   await gradle.update("nestedProjects", false, vscode.ConfigurationTarget.Workspace);
+  await vscode.workspace.getConfiguration("java.autobuild").update(
+    "enabled", false, vscode.ConfigurationTarget.Workspace,
+  );
+  const jdt = vscode.workspace.getConfiguration("java.jdt.ls");
+  if (jdt.inspect<string>("vmargs")?.workspaceValue === undefined) {
+    const current = jdt.get<string>("vmargs") ?? "";
+    const vmargs = /-Xmx\S+/.test(current) ? current.replace(/-Xmx\S+/, "-Xmx6G") : `${current} -Xmx6G`;
+    await jdt.update("vmargs", vmargs.trim(), vscode.ConfigurationTarget.Workspace);
+  }
   return {
     sourcePaths: [...sourcePaths].sort(),
     referencedLibraries: [...referencedLibraries].sort(),

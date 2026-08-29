@@ -16,6 +16,7 @@ type TargetProject struct {
 	ResolvedArtifacts   []artifacts.Artifact `json:"resolvedArtifacts,omitempty"`
 	SourceRoots         []metadata.PathRef   `json:"sourceRoots,omitempty"`
 	OwnedSourceRoots    []metadata.PathRef   `json:"ownedSourceRoots,omitempty"`
+	OwnedSources        []metadata.PathRef   `json:"ownedSources,omitempty"`
 	ExcludedSourceRoots []metadata.PathRef   `json:"excludedSourceRoots,omitempty"`
 	GeneratedRoots      []metadata.PathRef   `json:"generatedRoots,omitempty"`
 	OwnedGeneratedRoots []metadata.PathRef   `json:"ownedGeneratedRoots,omitempty"`
@@ -75,6 +76,7 @@ func Build(catalog modules.Catalog, artifactCatalog artifacts.Catalog, targets [
 			for _, name := range explicit {
 				if module, ok := catalog.Modules[name]; ok {
 					project.OwnedSourceRoots = append(project.OwnedSourceRoots, module.SourceRoots...)
+					project.OwnedSources = append(project.OwnedSources, module.Sources...)
 					project.OwnedGeneratedRoots = append(project.OwnedGeneratedRoots, module.Generated...)
 					project.OwnedGeneratedRoots = append(project.OwnedGeneratedRoots, module.SrcJars...)
 				}
@@ -84,6 +86,7 @@ func Build(catalog modules.Catalog, artifactCatalog artifacts.Catalog, targets [
 			for _, name := range moduleNames {
 				if module, ok := catalog.Modules[name]; ok {
 					project.OwnedSourceRoots = append(project.OwnedSourceRoots, module.SourceRoots...)
+					project.OwnedSources = append(project.OwnedSources, module.Sources...)
 					project.OwnedGeneratedRoots = append(project.OwnedGeneratedRoots, module.Generated...)
 					project.OwnedGeneratedRoots = append(project.OwnedGeneratedRoots, module.SrcJars...)
 				}
@@ -108,6 +111,7 @@ func Build(catalog modules.Catalog, artifactCatalog artifacts.Catalog, targets [
 		project.Dependencies = unique(project.Dependencies)
 		project.SourceRoots = uniquePaths(project.SourceRoots)
 		project.OwnedSourceRoots = uniquePaths(project.OwnedSourceRoots)
+		project.OwnedSources = uniquePaths(project.OwnedSources)
 		project.GeneratedRoots = uniquePaths(project.GeneratedRoots)
 		project.OwnedGeneratedRoots = uniquePaths(project.OwnedGeneratedRoots)
 		project.Libraries = uniquePaths(project.Libraries)
