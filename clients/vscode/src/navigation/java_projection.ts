@@ -52,6 +52,12 @@ export async function applyJavaProjection(
   const config = vscode.workspace.getConfiguration("java.project");
   await config.update("sourcePaths", [...sourcePaths].sort(), vscode.ConfigurationTarget.Workspace);
   await config.update("referencedLibraries", [...referencedLibraries].sort(), vscode.ConfigurationTarget.Workspace);
+  // AOSP contains unrelated Gradle projects whose build scripts are not a
+  // complete standalone build. Let JDT use this projection instead of trying
+  // to import those projects and failing workspace initialization.
+  const javaImport = vscode.workspace.getConfiguration("java.import");
+  await javaImport.update("gradle.enabled", false, vscode.ConfigurationTarget.Workspace);
+  await javaImport.update("maven.enabled", false, vscode.ConfigurationTarget.Workspace);
   return {
     sourcePaths: [...sourcePaths].sort(),
     referencedLibraries: [...referencedLibraries].sort(),
