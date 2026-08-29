@@ -1,0 +1,84 @@
+protocol/aosp/index.go
+  s_0fcc3f909ad4ee::t_d23f4c34bbd445 186-192
+  s_0fcc3f909ad4ee::t_8d2cf903885679 170-174
+  h_8b376749578497 8-9,175-185,200,203-206
+core/profiles/data/common.json
+  s_0fcc3f909ad4ee::t_0766e90fa5b508 33-35,48-50,71-95,103-111,131-136,152-157,168-177,197-207,246-249,285-301,327,346-354,381-397,427-431,443-448,485-516,520-526,537-558,570-577,630-651
+  h_8b376749578497 1-32,36-47,51-70,96-102,112-130,137-151,158-167,178-196,208-245,250-284,302-326,328-345,355-380,398-426,432-442,449-484,517-519,527-536,559-569,578-629
+Makefile
+  h_8b376749578497 1,4,73-79,83
+profiles/common.json
+  s_0fcc3f909ad4ee::t_fab5ddcd992db2 24-33,36-40,78-91,116-118,120-136,141-147,165-174,180-181,198-219,230-246,258-259,263-267,305-320,337-340,350-362,383-390,406-414,443-477,484-496,498-517,526-549,568-584,593-610,618-629,638-641
+  h_8b376749578497 1-23,41-77,92-115,137-140,148-164,175-179,182-197,220-229,247-257,268-304,321-336,341-349,363-382,391-405,415-442,478-483,518-525,550-567,585-592,611-617,630-637,642-651
+  s_0fcc3f909ad4ee::t_71fa75802177d7 34-35,119,260-262,497
+core/selection/planner_test.go
+  h_8b376749578497 54-57
+  s_0fcc3f909ad4ee::t_d3f43da689f297 44-53,58-63
+docs/design/builtin-profile-catalog-and-storage-design.md
+  s_0fcc3f909ad4ee::t_133b3d9e827efd 443
+  s_0fcc3f909ad4ee::t_cc6e93f7ce5f86 349
+  h_8b376749578497 29,437-442
+  s_0fcc3f909ad4ee::t_84da6567b488bb 283
+core/profiles/embedded.go
+  s_0fcc3f909ad4ee::t_244d58990ab625 1-6,11,14-22,27-56
+  s_0fcc3f909ad4ee::t_bb1c89263100d3 13
+  h_8b376749578497 7-10,23-26
+  s_0fcc3f909ad4ee::t_d52e0a1b8bf184 12
+clients/vscode/src/engine/client.ts
+  h_8b376749578497 144-147
+  s_0fcc3f909ad4ee::t_59de6f2d0f4906 148-149
+protocol/aosp/selection.go
+  h_8b376749578497 7,28,30,42
+  s_0fcc3f909ad4ee::t_d52e0a1b8bf184 14
+  s_0fcc3f909ad4ee::t_5ea47d3dc1f76d 31
+core/profiles/delta.go
+  h_8b376749578497 1-21,27-38
+  s_0fcc3f909ad4ee::t_99576edc3584f0 22-26,39-46
+core/profiles/data/android-17.json
+  h_8b376749578497 1-6
+core/profiles/catalog_test.go
+  s_0fcc3f909ad4ee::t_99576edc3584f0 1-9,11-14,16-26,37-41,45-57
+  h_8b376749578497 33-35,42-44
+  s_0fcc3f909ad4ee::t_c5571bde9b63b5 10,15,27-32,36
+profiles/android-17.json
+  h_8b376749578497 1-6
+protocol/aosp/server_test.go
+  h_8b376749578497 371-379
+  s_0fcc3f909ad4ee::t_0ce118e16c066c 380-387
+core/selection/planner.go
+  s_0fcc3f909ad4ee::t_ed046105caa55b 142
+  h_8b376749578497 4,9,17,31-53,67,127-141
+cmd/aosp-index/profile.go
+  s_0fcc3f909ad4ee::t_c7ceb8b196f0a6 35
+  s_0fcc3f909ad4ee::t_2a0525dbd58b7b 19-34,36-37
+  h_8b376749578497 1-18,38-61
+core/profiles/catalog.go
+  s_0fcc3f909ad4ee::t_0fe32d3614c9e4 21-23,36-41,44-61,65-68,74-86,88-91,94,108-114,116,137-148,155,163-188,206-211
+  s_0fcc3f909ad4ee::t_c7ceb8b196f0a6 24-26,42-43,62-64,69-73,87,92-93
+  s_0fcc3f909ad4ee::t_573aabb3fd56e9 115,117
+  h_8b376749578497 1-20,27-35,95-107,118-136,149-154,156-162,189-205
+cmd/aosp-index/main.go
+  s_0fcc3f909ad4ee::t_2a0525dbd58b7b 36
+  h_8b376749578497 51-52
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "bf3e4fbbbc524fceae9df3c06aead4a0d90ac569",
+  "prompts": {},
+  "humans": {
+    "h_8b376749578497": {
+      "author": "Solo <anqi.huang@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": null
+    }
+  }
+}
