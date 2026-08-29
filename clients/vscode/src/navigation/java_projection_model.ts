@@ -7,6 +7,7 @@ export type ProjectionPathRef = {
 export type ProjectionTarget = {
   kind?: string;
   sourceRoots: ProjectionPathRef[];
+  generatedRoots: ProjectionPathRef[];
   libraries: ProjectionPathRef[];
 };
 
@@ -21,12 +22,15 @@ export function normalizeProjectionInput(result: any): ProjectionInput {
     array(result?.graph?.diagnostics).length;
   const targets = array(result?.graph?.targets).map((target: any) => ({
     kind: typeof target?.spec?.kind === "string" ? target.spec.kind : undefined,
-    sourceRoots: array<ProjectionPathRef>(target?.sourceRoots),
-    libraries: array<ProjectionPathRef>(target?.libraries),
+    sourceRoots: array<ProjectionPathRef>(target?.ownedSourceRoots ?? target?.sourceRoots),
+    generatedRoots: array<ProjectionPathRef>(target?.ownedGeneratedRoots ?? target?.generatedRoots),
+    libraries: array<ProjectionPathRef>(target?.libraries).filter(
+      (ref: ProjectionPathRef) => !ref?.raw?.toLowerCase().endsWith(".srcjar"),
+    ),
   }));
   const javaTargets = targets.filter((target) => !target.kind ||
     target.kind === "java" || target.kind === "android");
-  const archiveRefs = javaTargets.flatMap((target) => target.libraries
+  const archiveRefs = javaTargets.flatMap((target) => target.generatedRoots
     .filter((ref) => ref?.raw?.toLowerCase().endsWith(".srcjar"))
     .map((ref) => ref.raw as string));
   return { targets: javaTargets, archiveRefs: [...new Set(archiveRefs)], diagnostics };

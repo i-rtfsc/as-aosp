@@ -22,9 +22,10 @@ test("normalizes omitted project graph collections", () => {
 test("collects srcjar archives from available libraries", () => {
   const input = normalizeProjectionInput({
     graph: {
-      targets: [{ libraries: [
-        { raw: "out/a.jar", kind: "generated" },
+      targets: [{ ownedGeneratedRoots: [
         { raw: "out/a.srcjar", kind: "generated" },
+      ], libraries: [
+        { raw: "out/a.jar", kind: "generated" },
       ] }],
       diagnostics: [{}],
     },

@@ -15,8 +15,10 @@ type TargetProject struct {
 	ResolvedModules     []string             `json:"resolvedModules,omitempty"`
 	ResolvedArtifacts   []artifacts.Artifact `json:"resolvedArtifacts,omitempty"`
 	SourceRoots         []metadata.PathRef   `json:"sourceRoots,omitempty"`
+	OwnedSourceRoots    []metadata.PathRef   `json:"ownedSourceRoots,omitempty"`
 	ExcludedSourceRoots []metadata.PathRef   `json:"excludedSourceRoots,omitempty"`
 	GeneratedRoots      []metadata.PathRef   `json:"generatedRoots,omitempty"`
+	OwnedGeneratedRoots []metadata.PathRef   `json:"ownedGeneratedRoots,omitempty"`
 	Libraries           []metadata.PathRef   `json:"libraries,omitempty"`
 	Dependencies        []string             `json:"dependencies,omitempty"`
 	TargetDependencies  []string             `json:"targetDependencies,omitempty"`
@@ -59,16 +61,33 @@ func Build(catalog modules.Catalog, artifactCatalog artifacts.Catalog, targets [
 			for _, artifact := range resolution.Artifacts {
 				moduleNames = append(moduleNames, artifact.OwnerModules...)
 				project.SourceRoots = append(project.SourceRoots, artifact.SourceAttachments...)
+				project.OwnedSourceRoots = append(project.OwnedSourceRoots, artifact.SourceAttachments...)
 				project.GeneratedRoots = append(project.GeneratedRoots, artifact.GeneratedRoots...)
+				project.OwnedGeneratedRoots = append(project.OwnedGeneratedRoots, artifact.GeneratedRoots...)
 				if artifact.Kind == model.ArtifactJar || artifact.Kind == model.ArtifactAAR {
 					project.Libraries = append(project.Libraries, artifact.Path)
 				}
 			}
 		}
 		if spec.IncludeDependencies {
+			explicit := unique(moduleNames)
 			moduleNames = catalog.Closure(moduleNames)
+			for _, name := range explicit {
+				if module, ok := catalog.Modules[name]; ok {
+					project.OwnedSourceRoots = append(project.OwnedSourceRoots, module.SourceRoots...)
+					project.OwnedGeneratedRoots = append(project.OwnedGeneratedRoots, module.Generated...)
+					project.OwnedGeneratedRoots = append(project.OwnedGeneratedRoots, module.SrcJars...)
+				}
+			}
 		} else {
 			moduleNames = unique(moduleNames)
+			for _, name := range moduleNames {
+				if module, ok := catalog.Modules[name]; ok {
+					project.OwnedSourceRoots = append(project.OwnedSourceRoots, module.SourceRoots...)
+					project.OwnedGeneratedRoots = append(project.OwnedGeneratedRoots, module.Generated...)
+					project.OwnedGeneratedRoots = append(project.OwnedGeneratedRoots, module.SrcJars...)
+				}
+			}
 		}
 		project.ResolvedModules = moduleNames
 		for _, name := range moduleNames {
@@ -83,13 +102,16 @@ func Build(catalog modules.Catalog, artifactCatalog artifacts.Catalog, targets [
 		}
 		for _, path := range spec.Selectors.SourceRoots {
 			project.SourceRoots = append(project.SourceRoots, metadata.NewPathRef(string(path)))
+			project.OwnedSourceRoots = append(project.OwnedSourceRoots, metadata.NewPathRef(string(path)))
 		}
 		project.ResolvedModules = unique(project.ResolvedModules)
 		project.Dependencies = unique(project.Dependencies)
 		project.SourceRoots = uniquePaths(project.SourceRoots)
+		project.OwnedSourceRoots = uniquePaths(project.OwnedSourceRoots)
 		project.GeneratedRoots = uniquePaths(project.GeneratedRoots)
+		project.OwnedGeneratedRoots = uniquePaths(project.OwnedGeneratedRoots)
 		project.Libraries = uniquePaths(project.Libraries)
-		for _, root := range project.SourceRoots {
+		for _, root := range project.OwnedSourceRoots {
 			path := string(root.RepoPath)
 			if path == "" {
 				continue

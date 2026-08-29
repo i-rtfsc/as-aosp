@@ -41,6 +41,10 @@ func TestBuildResolvesFrameworkServicesAndSystemUIProjects(t *testing.T) {
 		t.Fatalf("services target dependencies=%v", services.TargetDependencies)
 	}
 	framework := graph.Targets[0]
+	if len(framework.OwnedSourceRoots) != 1 ||
+		framework.OwnedSourceRoots[0].Raw != "frameworks/base/core/java" {
+		t.Fatalf("framework owned roots=%v", framework.OwnedSourceRoots)
+	}
 	if len(framework.ExcludedSourceRoots) != 2 ||
 		framework.ExcludedSourceRoots[0].Raw != "frameworks/base/packages/SystemUI" ||
 		framework.ExcludedSourceRoots[1].Raw != "frameworks/base/services" {
