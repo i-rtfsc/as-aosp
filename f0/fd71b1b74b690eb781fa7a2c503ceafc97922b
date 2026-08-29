@@ -1,0 +1,50 @@
+clients/vscode/package.json
+  s_0fcc3f909ad4ee::t_c1876abc58014c 115
+clients/vscode/src/navigation/java_projection.ts
+  s_0fcc3f909ad4ee::t_cdfe2299b5921b 52-58
+  h_8b376749578497 8,34-35,39,42,44,48,61-64,67-72,74-75,77-79,96-98,105-107
+docs/design/project-graph-and-ide-projection-design.md
+  s_0fcc3f909ad4ee::t_aecdc6888375cb 50,90-100
+  h_8b376749578497 48-49,78-89,101-103
+clients/vscode/src/project/jdt_projects.test.ts
+  s_0fcc3f909ad4ee::t_5641cf2ed84e4e 1-8,16-17
+  h_8b376749578497 9-15
+clients/vscode/src/navigation/java_projection_model.ts
+  s_0fcc3f909ad4ee::t_2235d42f4bb9a3 27
+  h_8b376749578497 8,14,35
+clients/vscode/src/project/jdt_projects.ts
+  s_0fcc3f909ad4ee::t_5641cf2ed84e4e 1-9,13-17,27-42,87-125,134-144
+  h_8b376749578497 10-12,18-26,43-86,126-133
+docs/roadmap/target-driven-project-graph-plan.md
+  s_0fcc3f909ad4ee::t_aecdc6888375cb 40,45-46
+  h_8b376749578497 42
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "f0fd71b1b74b690eb781fa7a2c503ceafc97922b",
+  "prompts": {},
+  "humans": {
+    "h_8b376749578497": {
+      "author": "Solo <anqi.huang@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    },
+    "s_267910f8be38a3": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "54a0878b-d37b-4115-b5dd-326dbc1e0e1f",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
