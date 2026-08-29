@@ -5,7 +5,6 @@ import { EngineClient } from "../engine/client";
 import { normalizeWorkspacePath, resolveRepoProjectionPath } from "./java_projection_paths";
 import { array, normalizeProjectionInput, preferredLibraries } from "./java_projection_model";
 import { deriveJavaSourceRoots } from "./java_source_roots";
-import { JdtTargetProject, writeJdtProjects } from "../project/jdt_projects";
 
 type PathRef = { raw?: string; kind: string; repoPath?: string };
 
@@ -33,13 +32,13 @@ export async function applyJavaProjection(
   );
   const graphTargets = projection.targets;
   const sourcePaths = new Set<string>();
-  const referencedLibraries = new Set<string>();
+  const libraryCandidates: string[] = [];
   const claimedRoots = new Set<string>();
-  const jdtTargets: JdtTargetProject[] = [];
   let skipped = projection.diagnostics + array(generated.diagnostics).length;
   const generatedRoots = array(generated.sourceRoots);
   const generatedOverlay = exposeGeneratedSourceRoots(workspaceRoot, generatedRoots);
   if (!generatedOverlay) skipped += generatedRoots.length;
+  else sourcePaths.add(generatedOverlay);
   for (const target of graphTargets) {
     const derivedRoots = deriveJavaSourceRoots(workspaceRoot, target.sourceFiles);
     const targetRoots = new Set<string>();
@@ -58,28 +57,26 @@ export async function applyJavaProjection(
       sourcePaths.add(root);
       return true;
     }).map((root) => path.join(workspaceRoot, ...root.split("/")));
-    const targetLibraries: string[] = [];
     for (const ref of target.libraries) {
       const libraryPath = resolveLocalPath(outRoot, ref);
-      if (libraryPath) {
-        referencedLibraries.add(libraryPath);
-        targetLibraries.push(libraryPath);
-      }
+	  if (libraryPath) libraryCandidates.push(libraryPath);
       else skipped++;
     }
-    jdtTargets.push({
-      id: target.id,
-      sourceRoots: ownedRoots,
-	  libraries: preferredLibraries(targetLibraries),
-      dependencies: target.targetDependencies,
-    });
   }
-  const generatedPath = generatedOverlay ? path.join(workspaceRoot, ...generatedOverlay.split("/")) : undefined;
-  writeJdtProjects(workspaceRoot, jdtTargets, generatedPath);
+	const referencedLibraries = preferredLibraries(libraryCandidates);
+	fs.rmSync(path.join(workspaceRoot, ".aosp-ide", "java", "projects"), {
+	  recursive: true, force: true,
+	});
   const config = vscode.workspace.getConfiguration("java.project");
-  await config.update("sourcePaths", [], vscode.ConfigurationTarget.Workspace);
-  await config.update("referencedLibraries", [], vscode.ConfigurationTarget.Workspace);
-  await config.update("outputPath", null, vscode.ConfigurationTarget.Workspace);
+	await config.update(
+	  "sourcePaths", [...sourcePaths].sort(), vscode.ConfigurationTarget.Workspace,
+	);
+	await config.update(
+	  "referencedLibraries", referencedLibraries, vscode.ConfigurationTarget.Workspace,
+	);
+	await config.update(
+	  "outputPath", ".aosp-ide/java/classes", vscode.ConfigurationTarget.Workspace,
+	);
   await config.update("resourceFilters", [
     "node_modules", "\\.git", "\\.repo", "out", "prebuilts",
     "tests?", "benchmarks?", "testdata",
@@ -112,11 +109,11 @@ export async function applyJavaProjection(
   }
   return {
     sourcePaths: [...sourcePaths].sort(),
-    referencedLibraries: [...referencedLibraries].sort(),
+	  referencedLibraries,
     generatedRoots: array(generated.sourceRoots).length,
     generatedEntries: generatedRoots.reduce((total, root) => total + root.entries, 0),
     moduleCount: projection.moduleCount,
-    projectCount: jdtTargets.length + (generatedOverlay ? 1 : 0),
+	  projectCount: sourcePaths.size > 0 ? 1 : 0,
     skipped,
   };
 }

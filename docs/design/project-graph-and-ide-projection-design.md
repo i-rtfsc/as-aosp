@@ -45,9 +45,9 @@ Generated source materialization 必须是 target-scoped：客户端先
 
 ## 3. VS Code
 
-- Target-scoped Eclipse project descriptors are the active ProjectGraph projection. The previous
-  `java.project.sourcePaths/referencedLibraries` unmanaged project is cleared and retained only as
-  archived migration history, not as a runtime fallback.
+- VS Code uses one focused unmanaged JDT project backed by
+  `java.project.sourcePaths/referencedLibraries`. The paths are generated from
+  the selected ProjectGraph, not from a whole-tree scan.
 - Java projection consumes only `java` and `android` ProjectGraph targets. Native targets are
   projected to clangd and Rust targets to rust-analyzer; they must never become JDT source roots.
 - Java source roots are derived from explicit `.java`/`.kt` source paths and package declarations.
@@ -70,7 +70,7 @@ Generated source materialization 必须是 target-scoped：客户端先
 - The VS Code Gradle extension is also configured with `gradle.autoDetect=off` and
   `gradle.nestedProjects=false`; its independent Gradle server must not scan AOSP sample and
   vendor projects. This does not disable AOSP builds from a terminal.
-- ProjectGraph targets become separate JDT project descriptions/importer inputs;
+- ProjectGraph Java targets are merged into one focused VS Code build path;
 - generated/source attachments are target-scoped;
 - clangd consumes target-scoped compdb overlays;
 - AIDL/JNI shared engine links remain cross-target actions.
@@ -78,33 +78,33 @@ Generated source materialization 必须是 target-scoped：客户端先
 Generated layout:
 
 ```text
-.aosp-ide/java/projects/
-  aosp-java-foundation/.project + .classpath
-  aosp-system-server-wms/.project + .classpath
-  aosp-system-ui/.project + .classpath
-  aosp-generated/.project + .classpath
+.aosp-ide/java/generated/
+.aosp-ide/java/classes/
 ```
 
-Each source root is an Eclipse linked folder with a unique project-local name. This preserves the
-original AOSP file URI while preventing multiple `com/...` package roots from colliding inside one
-invisible project. Target dependencies become Eclipse project classpath entries; jars remain
-target-scoped library entries. Red Hat Java's standard `EclipseProjectImporter` discovers these
-descriptors recursively from the workspace.
+The projection writes repository-relative Java roots directly to
+`java.project.sourcePaths`. Therefore a file opened at its original AOSP URI is
+on the default project's build path. Generated sources use one overlay root.
+Dependency jars are reduced to one preferred Android/header variant per jar
+basename before they are written to `java.project.referencedLibraries`.
 
-The Java server uses `Standard` mode for this projection. `Hybrid` syntax-server fallback is not
-used because it creates an invisible `jdt.ls-java-project` before target projects are imported.
+Nested Eclipse projects with linked resources were rejected after host
+verification. Red Hat Java imported the default `aosp_<hash>` project instead
+of the descriptors below `.aosp-ide`, and original AOSP files produced
+`is not on its project's build path`. Linked descriptors are not a supported
+runtime path for VS Code unless a dedicated JDT importer extension is added.
 
-Projection readiness is independent from JDT background import. Writing valid descriptors marks
-the AOSP projection ready; `java.projectConfiguration.update` runs asynchronously. The sidebar
-reports selected closure modules, generated entries, and JDT project count. It must not display
-the full Out catalog counts as if all modules were selected.
+The Java server uses `Standard` mode for this projection.
 
-Verified against the local AOSP workspace:
+Projection readiness is independent from JDT background indexing. Writing the
+focused build path marks the AOSP projection ready;
+`java.projectConfiguration.update` runs asynchronously. The sidebar reports
+selected closure modules and generated entries. It must not display the full
+Out catalog counts as if all modules were selected.
 
-- four Eclipse projects imported in approximately 4.6 seconds;
-- no `aosp_<hash>` invisible project was created;
-- definition from `ActivityManagerService.java` resolved
-  `android.os.Bundle` to the original `frameworks/base/core/java/android/os/Bundle.java` URI.
+Host acceptance requires the original
+`frameworks/base/services/core/java/...` URI to be on the default project's
+build path and cross-file definition requests to resolve without linked paths.
 
 ## 4. Ownership
 
@@ -125,5 +125,5 @@ source root in multiple Java modules.
 1. Build ProjectGraph DTO and RPC.
 2. Require explicit TargetSpec configuration before projection.
 3. Upgrade JetBrains module projection.
-4. Add VS Code JDT project/importer integration.
+4. Generate the focused VS Code unmanaged-project build path.
 5. Keep source-only only for missing facts; do not add a separate project-selection fallback.
