@@ -1,0 +1,57 @@
+docs/design/project-graph-and-ide-projection-design.md
+  s_0fcc3f909ad4ee::t_7f199f619538b6 98-101
+  h_8b376749578497 97
+clients/vscode/src/navigation/java_projection.ts
+  s_0fcc3f909ad4ee::t_306320eeabf3f8 16-18,109-111,119
+  h_8b376749578497 117-118
+clients/vscode/src/engine/client.ts
+  s_0fcc3f909ad4ee::t_41c9ee48d3947e 163,321
+protocol/aosp/server_test.go
+  s_0fcc3f909ad4ee::t_031180830e17e4 124-130,139-141
+  h_8b376749578497 131-138
+clients/vscode/src/navigation/java_projection_model.ts
+  s_0fcc3f909ad4ee::t_306320eeabf3f8 15
+  h_8b376749578497 22,38,45-46
+protocol/aosp/index.go
+  s_0fcc3f909ad4ee::t_41c9ee48d3947e 35,106-107
+  h_8b376749578497 20-22,105
+clients/vscode/src/extension.ts
+  s_0fcc3f909ad4ee::t_c6aae67ced321c 72,101-103,155-156,161
+  h_8b376749578497 30
+clients/vscode/src/navigation/java_projection_model.test.ts
+  s_0fcc3f909ad4ee::t_031180830e17e4 56
+  s_1be01843e3626e::t_89000f3a2910c2 57
+  h_8b376749578497 20,49-55
+clients/vscode/src/ui/profile_panel.ts
+  s_0fcc3f909ad4ee::t_c6aae67ced321c 242
+  h_8b376749578497 34,241
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "553601b141aa6fe7584dd8b4b5c35585891207b8",
+  "prompts": {},
+  "humans": {
+    "h_8b376749578497": {
+      "author": "Solo <anqi.huang@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    },
+    "s_1be01843e3626e": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a01506-2ce8-7b21-a22e-b01cb404b6f1",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
