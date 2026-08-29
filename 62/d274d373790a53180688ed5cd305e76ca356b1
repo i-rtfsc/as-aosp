@@ -1,0 +1,50 @@
+clients/vscode/src/navigation/java_source_roots.test.ts
+  s_0fcc3f909ad4ee::t_61c770fc56e440 1-5,13-23
+  h_8b376749578497 6-12
+clients/vscode/src/navigation/java_source_roots.ts
+  s_0fcc3f909ad4ee::t_61c770fc56e440 13-32,37-52
+  h_8b376749578497 1-12,33-36
+clients/vscode/src/engine/client.ts
+  h_8b376749578497 76
+core/projects/graph_test.go
+  h_8b376749578497 14,48-51
+core/projects/graph.go
+  s_0fcc3f909ad4ee::t_8105527ae2524d 89,114
+  h_8b376749578497 19,79
+docs/design/project-graph-and-ide-projection-design.md
+  s_0fcc3f909ad4ee::t_a2577ee1c37071 53-56
+  h_8b376749578497 51-52
+clients/vscode/src/navigation/java_projection_model.ts
+  h_8b376749578497 10,27
+clients/vscode/src/navigation/java_projection.ts
+  h_8b376749578497 7,39-48,50-52,59,69-77
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "62d274d373790a53180688ed5cd305e76ca356b1",
+  "prompts": {},
+  "humans": {
+    "h_8b376749578497": {
+      "author": "Solo <anqi.huang@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    },
+    "s_c53787a0ef0941": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "db1ed2bb-4d03-40a3-a929-0d2d3ef1cbcb",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
