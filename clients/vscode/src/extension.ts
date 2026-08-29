@@ -3,7 +3,7 @@ import { EngineClient } from "./engine/client";
 import { AidlDefinitionProvider } from "./navigation/aidl";
 import { goToAidlGeneratedPeer } from "./navigation/aidl_peers";
 import { AidlReferenceProvider } from "./navigation/aidl_references";
-import { goToJniPeer, JniDefinitionProvider } from "./navigation/jni";
+import { goToJniPeer, JniDefinitionProvider, shouldResolveJniDefinition } from "./navigation/jni";
 import { refreshCompdbOverlay } from "./navigation/compdb";
 import { createAospStatusBar } from "./status";
 import { resolveEngineExecutable } from "./engine/resolve";
@@ -186,6 +186,7 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.languages.registerDefinitionProvider(
       ["java", "kotlin", "c", "cpp", "objective-c", "objective-cpp"].map((language) => ({ language })), {
       provideDefinition: async (document, position, token) => {
+        if (!shouldResolveJniDefinition(document, position)) return undefined;
         await ensureEngine();
         return new JniDefinitionProvider(engine).provideDefinition(document, position, token);
       },

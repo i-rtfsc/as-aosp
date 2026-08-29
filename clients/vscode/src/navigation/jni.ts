@@ -2,7 +2,18 @@ import * as vscode from "vscode";
 import { EngineClient } from "../engine/client";
 import { repoPath, targetUri, workspaceViewRoot } from "./paths";
 import { selectJniDefinitionTarget } from "./jni_selection";
+import { shouldTriggerJniDefinition } from "./jni_trigger";
 export { selectJniDefinitionTarget } from "./jni_selection";
+
+export function shouldResolveJniDefinition(
+  document: vscode.TextDocument,
+  position: vscode.Position,
+): boolean {
+  const start = Math.max(0, position.line - 3);
+  const end = Math.min(document.lineCount - 1, position.line + 3);
+  const context = document.getText(new vscode.Range(start, 0, end, document.lineAt(end).text.length));
+  return shouldTriggerJniDefinition(document.languageId, context);
+}
 
 export class JniDefinitionProvider implements vscode.DefinitionProvider {
   constructor(private readonly engine: EngineClient) {}
