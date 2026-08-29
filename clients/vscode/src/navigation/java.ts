@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import { repoPath, targetUri, workspaceViewRoot } from "./paths";
 import { javaCandidatePaths } from "./java_paths";
+import { findLocalJavaDeclarations } from "./java_local_definition";
 export { javaCandidatePaths } from "./java_paths";
 
 export class JavaSourceDefinitionProvider implements vscode.DefinitionProvider {
@@ -11,6 +12,10 @@ export class JavaSourceDefinitionProvider implements vscode.DefinitionProvider {
     if (!word) return undefined;
     const name = document.getText(word);
     const source = document.getText();
+    const local = findLocalJavaDeclarations(source, name);
+    if (local.length > 0) {
+      return local.map((offset) => new vscode.Location(document.uri, document.positionAt(offset)));
+    }
     const packageName = /\bpackage\s+([\w.]+)\s*;/.exec(source)?.[1] ?? "";
     const imports = [...source.matchAll(/\bimport\s+([\w.]+)\s*;/g)].map((match) => match[1]);
     for (const relative of javaCandidatePaths(packageName, imports, name)) {
