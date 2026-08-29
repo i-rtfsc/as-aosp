@@ -42,8 +42,7 @@ export function activate(context: vscode.ExtensionContext): void {
     };
     const presetInspection = config.inspect<string[]>("selectedPresets");
     const selectionConfigured = presetInspection?.workspaceValue !== undefined;
-    if ((!selectionConfigured || profile.targets.length === 0) &&
-      profile.workspaceViewRoot) {
+	if (profile.workspaceViewRoot) {
       const catalog = await engine.selectionCatalog();
       const presetIds = !selectionConfigured ?
         catalog.defaultPresetIds : config.get<string[]>("selectedPresets") ?? [];
@@ -89,6 +88,11 @@ export function activate(context: vscode.ExtensionContext): void {
         });
         const cacheRoot = context.storageUri?.fsPath || context.globalStorageUri.fsPath;
         const projection = await applyJavaProjection(engine, profile.workspaceViewRoot, profile.outRoot, cacheRoot, profile.targets);
+		output.appendLine(
+		  `Java projection: ${projection.projectCount} projects; ` +
+		  `${projection.sourcePaths.length} roots; ` +
+		  `${projection.referencedLibraries.length} libraries`,
+		);
         const rust = await applyRustProjection(
           engine, profile.workspaceViewRoot, profile.outRoot, cacheRoot,
           profile.pathMappings,
@@ -113,6 +117,10 @@ export function activate(context: vscode.ExtensionContext): void {
     const result = await engine.sourceModules(
       workspaceRoot, outRoot, context.storageUri?.fsPath, query, limit,
     );
+	output.appendLine(
+	  `source modules: ${result.modules.length}/${result.total}; ` +
+	  `files: ${result.filesScanned}; cache: ${result.cacheHit}`,
+	);
     return {
       modules: result.modules,
       diagnostics: result.diagnostics?.length ?? 0,

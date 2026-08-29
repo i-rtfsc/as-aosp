@@ -18,12 +18,25 @@ type SourceModulesParams struct {
 }
 
 type SourceModuleResult struct {
-	Modules      []sourcecatalog.Module `json:"modules"`
-	Diagnostics  []model.Diagnostic     `json:"diagnostics"`
-	FilesScanned int                    `json:"filesScanned"`
-	CacheHit     bool                   `json:"cacheHit"`
-	BuildBacked  int                    `json:"buildBacked"`
-	Total        int                    `json:"total"`
+	Modules      []SourceModuleSummary `json:"modules"`
+	Diagnostics  []model.Diagnostic    `json:"diagnostics"`
+	FilesScanned int                   `json:"filesScanned"`
+	CacheHit     bool                  `json:"cacheHit"`
+	BuildBacked  int                   `json:"buildBacked"`
+	Total        int                   `json:"total"`
+}
+
+type SourceModuleSummary struct {
+	Name           string                     `json:"name"`
+	Type           string                     `json:"type"`
+	Blueprint      model.RepoPath             `json:"blueprint,omitempty"`
+	Directory      model.RepoPath             `json:"directory,omitempty"`
+	Status         sourcecatalog.ModuleStatus `json:"status"`
+	Capabilities   []string                   `json:"capabilities,omitempty"`
+	Recommended    bool                       `json:"recommended"`
+	BuildRole      sourcecatalog.BuildRole    `json:"buildRole"`
+	OutputKinds    []string                   `json:"outputKinds,omitempty"`
+	DefaultVisible bool                       `json:"defaultVisible"`
 }
 
 func (server *Server) sourceModules(request jsonrpc.Request) jsonrpc.Response {
@@ -34,7 +47,7 @@ func (server *Server) sourceModules(request jsonrpc.Request) jsonrpc.Response {
 	root := strings.TrimSpace(params.WorkspaceViewRoot)
 	if root == "" {
 		return jsonrpc.Success(request.ID, SourceModuleResult{
-			Modules: []sourcecatalog.Module{},
+			Modules: []SourceModuleSummary{},
 			Diagnostics: []model.Diagnostic{{
 				Code: "SOURCE_ROOT_MISSING", Severity: model.SeverityError,
 				Stage: "source-catalog", Message: "workspaceViewRoot is required",
@@ -53,6 +66,13 @@ func (server *Server) sourceModules(request jsonrpc.Request) jsonrpc.Response {
 			report.Catalog.Modules = sourcecatalog.MergeBuildFacts(
 				report.Catalog.Modules, buildCatalog,
 			)
+			sourceBacked := make([]sourcecatalog.Module, 0, len(report.Catalog.Modules))
+			for _, module := range report.Catalog.Modules {
+				if module.Status != sourcecatalog.StatusBuildOnly {
+					sourceBacked = append(sourceBacked, module)
+				}
+			}
+			report.Catalog.Modules = sourceBacked
 		}
 	}
 	if query := strings.ToLower(strings.TrimSpace(params.Query)); query != "" {
@@ -86,11 +106,22 @@ func (server *Server) sourceModules(request jsonrpc.Request) jsonrpc.Response {
 	if limit <= 0 || limit > 1000 {
 		limit = 500
 	}
-	if len(report.Catalog.Modules) > limit {
-		report.Catalog.Modules = report.Catalog.Modules[:limit]
+	modules := report.Catalog.Modules
+	if len(modules) > limit {
+		modules = modules[:limit]
+	}
+	summaries := make([]SourceModuleSummary, 0, len(modules))
+	for _, module := range modules {
+		summaries = append(summaries, SourceModuleSummary{
+			Name: module.Name, Type: module.Type, Blueprint: module.Blueprint,
+			Directory: module.Directory, Status: module.Status,
+			Capabilities: module.Capabilities, Recommended: module.Recommended,
+			BuildRole: module.BuildRole, OutputKinds: module.OutputKinds,
+			DefaultVisible: module.DefaultVisible,
+		})
 	}
 	return jsonrpc.Success(request.ID, SourceModuleResult{
-		Modules: report.Catalog.Modules, Diagnostics: diagnostics,
+		Modules: summaries, Diagnostics: diagnostics,
 		FilesScanned: report.FilesScanned, CacheHit: report.CacheHit,
 		BuildBacked: buildBacked, Total: total,
 	})

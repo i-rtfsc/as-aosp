@@ -135,6 +135,7 @@ export interface SelectionPreset {
   name: string;
   kind: string;
   modules: string[];
+  patterns?: string[];
   default: boolean;
   recommended: boolean;
   priority: number;

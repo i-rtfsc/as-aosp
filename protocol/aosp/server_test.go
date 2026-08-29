@@ -236,6 +236,39 @@ func TestServerBuildsGroupedSelectionPlan(t *testing.T) {
 	}
 }
 
+func TestSelectionPatternsUseVisibleSourceModulesOnly(t *testing.T) {
+	workspace := t.TempDir()
+	out := t.TempDir()
+	writeTestFile(t, workspace, "frameworks/base/services/Android.bp", `
+java_library { name: "service-real" }
+java_library { name: "service-real-tests" }
+`)
+	writeTestFile(t, out, "module-info.json", `{
+  "service-build-only":{"class":["JAVA_LIBRARIES"]}
+}`)
+	server := initializedServer(t)
+	response, _ := server.Handle(makeRequest(2, "aosp/selection/plan", SelectionPlanParams{
+		WorkspaceViewRoot: workspace, OutRoot: out,
+		PresetIDs: []string{"system-server-wms"},
+	}))
+	var result struct {
+		Targets []model.TargetSpec `json:"targets"`
+	}
+	decodeResult(t, response, &result)
+	if len(result.Targets) != 1 {
+		t.Fatalf("result=%+v", result)
+	}
+	modules := result.Targets[0].Selectors.Modules
+	selected := map[string]bool{}
+	for _, name := range modules {
+		selected[name] = true
+	}
+	if !selected["service-real"] || selected["service-real-tests"] ||
+		selected["service-build-only"] {
+		t.Fatalf("modules=%v", modules)
+	}
+}
+
 func TestServerBuildsProjectGraphFromOut(t *testing.T) {
 	root := t.TempDir()
 	writeTestFile(t, root, "module-info.json", `{"framework":{"path":["frameworks/base/core/java"]}}`)

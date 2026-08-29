@@ -55,6 +55,15 @@ func profileKind(value string) model.TargetKind {
 }
 
 func Build(presetIDs, manualModules []string, moduleKinds map[string]model.TargetKind) Plan {
+	return BuildWithCandidates(
+		presetIDs, manualModules, moduleKinds, moduleKinds,
+	)
+}
+
+func BuildWithCandidates(
+	presetIDs, manualModules []string,
+	moduleKinds, profileCandidates map[string]model.TargetKind,
+) Plan {
 	result := Plan{Targets: []model.TargetSpec{}, Diagnostics: []model.Diagnostic{}}
 	presetSet := stringSet(presetIDs)
 	knownPresets := map[string]bool{}
@@ -64,7 +73,7 @@ func Build(presetIDs, manualModules []string, moduleKinds map[string]model.Targe
 		if !presetSet[preset.ID] {
 			continue
 		}
-		modules := unassigned(expand(preset, moduleKinds), assigned)
+		modules := unassigned(expand(preset, profileCandidates), assigned)
 		if len(modules) == 0 {
 			continue
 		}

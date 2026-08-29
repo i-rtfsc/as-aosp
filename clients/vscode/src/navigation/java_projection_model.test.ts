@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { normalizeProjectionInput } from "./java_projection_model";
+import { normalizeProjectionInput, preferredLibraries } from "./java_projection_model";
 
 test("normalizes omitted project graph collections", () => {
   const input = normalizeProjectionInput({
@@ -54,4 +54,17 @@ test("counts selected Java closure modules", () => {
     { spec: { id: "native", kind: "native" }, resolvedModules: ["libbinder"] },
   ] } });
   assert.equal(input.moduleCount, 3);
+});
+
+test("keeps one preferred Android jar for each basename", () => {
+  const libraries = preferredLibraries([
+    "/out/module/android_common_apex31/combined/example.jar",
+    "/out/module/linux_glibc_common/javac-header/example.jar",
+    "/out/module/android_common/turbine-combined/example.jar",
+    "/out/other/android_common/turbine-combined/other.jar",
+  ]);
+  assert.deepEqual(libraries, [
+    "/out/module/android_common/turbine-combined/example.jar",
+    "/out/other/android_common/turbine-combined/other.jar",
+  ]);
 });

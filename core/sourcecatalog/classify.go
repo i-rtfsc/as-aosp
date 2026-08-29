@@ -8,6 +8,9 @@ import (
 
 func classifySourceModule(module Module) Module {
 	module.BuildRole = roleForType(module.Type)
+	if isTestModuleName(module.Name) {
+		module.BuildRole = RoleTest
+	}
 	module.OutputKinds = outputKindsForType(module.Type)
 	module.DefaultVisible = isDefaultVisible(module.BuildRole, module.Capabilities)
 	return module
@@ -21,10 +24,27 @@ func classifyBuildModule(module Module, facts modules.Module) Module {
 		module.Type = facts.Types[0]
 	}
 	module.BuildRole = mergeRole(module.BuildRole, roleForTypes(facts.Types))
+	if isTestModuleName(module.Name) {
+		module.BuildRole = RoleTest
+	}
 	module.OutputKinds = uniqueStrings(append(module.OutputKinds, outputKindsForFacts(facts)...))
 	module.DefaultVisible = module.DefaultVisible ||
 		isDefaultVisible(module.BuildRole, module.Capabilities)
 	return module
+}
+
+func isTestModuleName(value string) bool {
+	lower := strings.ToLower(strings.TrimSpace(value))
+	return strings.HasPrefix(lower, "test") ||
+		strings.HasSuffix(lower, "test") ||
+		strings.Contains(lower, "tests") ||
+		strings.Contains(lower, "-test") ||
+		strings.Contains(lower, "_test") ||
+		strings.Contains(lower, ".test") ||
+		strings.Contains(lower, "unittest") ||
+		strings.Contains(lower, "testdata") ||
+		strings.Contains(lower, "testfixture") ||
+		strings.Contains(lower, "testutil")
 }
 
 func roleForTypes(types []string) BuildRole {

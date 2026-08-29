@@ -11,7 +11,7 @@ import (
 	"github.com/i-rtfsc/as-aosp/core/model"
 )
 
-const cacheSchema = 5
+const cacheSchema = 6
 
 type cacheEnvelope struct {
 	Schema       int               `json:"schema"`

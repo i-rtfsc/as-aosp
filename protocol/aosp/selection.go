@@ -38,6 +38,7 @@ func (server *Server) selectionPlan(request jsonrpc.Request) jsonrpc.Response {
 		return jsonrpc.Failure(request.ID, jsonrpc.InvalidParams(err.Error()))
 	}
 	moduleKinds := map[string]model.TargetKind{}
+	profileCandidates := map[string]model.TargetKind{}
 	root := strings.TrimSpace(params.WorkspaceViewRoot)
 	if root != "" {
 		report := sourcecatalog.Discover(root, params.CacheRoot)
@@ -50,10 +51,17 @@ func (server *Server) selectionPlan(request jsonrpc.Request) jsonrpc.Response {
 			)
 		}
 		for _, module := range report.Catalog.Modules {
-			moduleKinds[module.Name] = selectionModuleKind(module)
+			kind := selectionModuleKind(module)
+			moduleKinds[module.Name] = kind
+			if module.Status != sourcecatalog.StatusBuildOnly &&
+				module.DefaultVisible && module.BuildRole != sourcecatalog.RoleTest {
+				profileCandidates[module.Name] = kind
+			}
 		}
 	}
-	plan := selection.Build(params.PresetIDs, params.ManualModules, moduleKinds)
+	plan := selection.BuildWithCandidates(
+		params.PresetIDs, params.ManualModules, moduleKinds, profileCandidates,
+	)
 	return jsonrpc.Success(request.ID, plan)
 }
 

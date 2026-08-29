@@ -268,8 +268,21 @@ let showTests=false;
 let timer;
 const esc=v=>String(v??'').replaceAll('&','&amp;').replaceAll('<','&lt;')
   .replaceAll('>','&gt;').replaceAll('"','&quot;');
+const glob=(pattern,value)=>{
+  const parts=String(pattern||'').split('*');
+  let offset=0;
+  if(!pattern.startsWith('*')&&!value.startsWith(parts[0]))return false;
+  for(const part of parts){
+    if(!part)continue;
+    const found=value.indexOf(part,offset);
+    if(found<0)return false;
+    offset=found+part.length;
+  }
+  return pattern.endsWith('*')||value.endsWith(parts[parts.length-1]);
+};
 const presetModules=()=>new Set(presets.filter(p=>selectedPresets.has(p.id))
-  .flatMap(p=>p.modules));
+  .flatMap(p=>[...(p.modules||[]),...modules.filter(m=>(p.patterns||[])
+    .some(pattern=>glob(pattern,m.name))).map(m=>m.name)]));
 const count=()=>{
   const n=new Set([...presetModules(),...selectedModules]).size;
   $('selectionCount').textContent=T.selected.replace('{0}',n);
@@ -279,7 +292,7 @@ const count=()=>{
 const renderEnabled=()=>{
   $('enabledPresets').innerHTML=presets.filter(p=>selectedPresets.has(p.id))
     .map(p=>'<div class="preset-row"><span>'+esc(p.name)+'</span><span class="count">'
-      +p.modules.length+'</span></div>').join('')
+      +(p.modules||[]).length+'</span></div>').join('')
     ||'<div class="empty">'+esc(T.notStarted)+'</div>';
   count();
 };
@@ -288,8 +301,8 @@ const renderPresets=()=>{
     +'type="checkbox" data-preset="'+esc(p.id)+'" '
     +(selectedPresets.has(p.id)?'checked':'')+'><div><div class="option-name">'
     +esc(p.name)+(p.recommended?' <span class="recommended">'+esc(T.recommended)
-    +'</span>':'')+'</div><div class="option-meta">'+p.modules.map(esc).join(' · ')
-    +'</div></div><span class="count">'+p.modules.length+'</span></label>').join('');
+    +'</span>':'')+'</div><div class="option-meta">'+(p.modules||[]).map(esc).join(' · ')
+    +'</div></div><span class="count">'+(p.modules||[]).length+'</span></label>').join('');
   document.querySelectorAll('[data-preset]').forEach(i=>i.onchange=()=>{
     i.checked?selectedPresets.add(i.dataset.preset):selectedPresets.delete(i.dataset.preset);
     renderEnabled();
@@ -299,7 +312,7 @@ const renderPresets=()=>{
 const match=m=>(showTests||m.buildRole!=='test')&&(filter==='all'&&m.defaultVisible
   ||filter==='recommended'&&m.recommended
   ||filter==='java'&&m.capabilities?.includes('java')
-  ||filter==='android'&&m.type.toLowerCase().includes('android')
+  ||filter==='android'&&String(m.type||'').toLowerCase().includes('android')
   ||filter==='native'&&m.capabilities?.includes('native')
   ||filter==='rust'&&m.capabilities?.includes('rust')
   ||filter==='advanced'&&!m.defaultVisible);
@@ -390,15 +403,15 @@ window.addEventListener('message',e=>{
     }
   }
   if(d.type==='presetCatalog'){
-    presets=d.presets;selectedPresets=new Set(d.selected);
-    selectedModules=new Set(d.manualModules);renderPresets();renderEnabled();renderModules();
+    presets=Array.isArray(d.presets)?d.presets:[];selectedPresets=new Set(d.selected||[]);
+    selectedModules=new Set(d.manualModules||[]);renderPresets();renderEnabled();renderModules();
   }
   if(d.type==='moduleLoading'){
     $('catalogSummary').textContent=T.discovering;
     if(d.query)$('searchSummary').textContent=T.discovering;
   }
   if(d.type==='moduleCatalog'){
-    modules=d.modules;
+    modules=Array.isArray(d.modules)?d.modules:[];
     if(d.query)$('searchSummary').textContent=T.matching.replace('{0}',d.total)
       +' · '+T.showing.replace('{0}',d.modules.length);
     else{

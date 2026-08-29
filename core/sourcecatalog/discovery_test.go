@@ -64,6 +64,9 @@ func TestDiscoverClassifiesTestsAndBuildSupport(t *testing.T) {
 	path := filepath.Join(root, "Android.bp")
 	source := `
 java_test { name: "framework-tests" }
+java_library { name: "SystemUI_test_fixtures" }
+java_library { name: "service-art-tests" }
+java_library { name: "latest-api" }
 se_build_files { name: "202604.board.ignore.map" }
 cc_library_shared { name: "libbinder" }
 `
@@ -77,6 +80,14 @@ cc_library_shared { name: "libbinder" }
 	}
 	if byName["framework-tests"].BuildRole != RoleTest || byName["framework-tests"].DefaultVisible {
 		t.Fatalf("test classification=%+v", byName["framework-tests"])
+	}
+	for _, name := range []string{"SystemUI_test_fixtures", "service-art-tests"} {
+		if byName[name].BuildRole != RoleTest || byName[name].DefaultVisible {
+			t.Fatalf("named test classification=%+v", byName[name])
+		}
+	}
+	if byName["latest-api"].BuildRole != RoleLibrary || !byName["latest-api"].DefaultVisible {
+		t.Fatalf("latest must not be classified as test: %+v", byName["latest-api"])
 	}
 	if byName["202604.board.ignore.map"].BuildRole != RoleBuildSupport || byName["202604.board.ignore.map"].DefaultVisible {
 		t.Fatalf("support classification=%+v", byName["202604.board.ignore.map"])

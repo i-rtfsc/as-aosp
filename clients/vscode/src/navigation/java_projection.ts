@@ -3,7 +3,7 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import { EngineClient } from "../engine/client";
 import { normalizeWorkspacePath, resolveRepoProjectionPath } from "./java_projection_paths";
-import { array, normalizeProjectionInput } from "./java_projection_model";
+import { array, normalizeProjectionInput, preferredLibraries } from "./java_projection_model";
 import { deriveJavaSourceRoots } from "./java_source_roots";
 import { JdtTargetProject, writeJdtProjects } from "../project/jdt_projects";
 
@@ -70,7 +70,7 @@ export async function applyJavaProjection(
     jdtTargets.push({
       id: target.id,
       sourceRoots: ownedRoots,
-      libraries: targetLibraries,
+	  libraries: preferredLibraries(targetLibraries),
       dependencies: target.targetDependencies,
     });
   }
