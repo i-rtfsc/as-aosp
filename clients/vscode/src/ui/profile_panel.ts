@@ -334,7 +334,7 @@ const showManage=()=>{
 };
 const showWorkbench=()=>{
   $('manageView').classList.remove('visible');
-  $('workbench').classList.add('visible');
+  $('workbench').classList.remove('hidden');
   renderEnabled();
 };
 const search=()=>{
