@@ -53,6 +53,25 @@ func TestLoadDirectoryIsolatesMissingReader(t *testing.T) {
 	}
 }
 
+func TestJavaDepsKeepsStaticLibrariesAsOwnershipDependencies(t *testing.T) {
+	modules := map[string]JavaModule{}
+	err := decodeJavaDeps([]byte(`{
+  "services":{"module_type":"system_java_library","static_libs":["services.impl"]},
+  "combiner":{"module_type":"java_genrule_combiner","dependencies":["part.one"]}
+}`), &modules)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(modules["services"].DirectDependencies) != 1 ||
+		modules["services"].DirectDependencies[0] != "services.impl" {
+		t.Fatalf("services=%+v", modules["services"])
+	}
+	if len(modules["combiner"].DirectDependencies) != 1 ||
+		modules["combiner"].DirectDependencies[0] != "part.one" {
+		t.Fatalf("combiner=%+v", modules["combiner"])
+	}
+}
+
 func TestNewPathRefKeepsExternalAbsolutePath(t *testing.T) {
 	ref := NewPathRef(`/srv/aosp/frameworks/base/core/java/Foo.java`)
 	if ref.Kind != PathExternalAbsolute || ref.RepoPath != "" || ref.ExternalPath == "" {

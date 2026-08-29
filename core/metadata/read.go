@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
+	"strings"
 
 	"github.com/i-rtfsc/as-aosp/core/model"
 )
@@ -79,6 +80,7 @@ type rawJavaInfo struct {
 	ResourceDirs    []string `json:"resource_dirs,omitempty"`
 	Javacflags      []string `json:"javacflags,omitempty"`
 	Kotlincflags    []string `json:"kotlincflags,omitempty"`
+	StaticLibs      []string `json:"static_libs,omitempty"`
 	Aidl            *struct {
 		Srcs []string `json:"srcs,omitempty"`
 	} `json:"aidl,omitempty"`
@@ -90,7 +92,13 @@ func decodeJavaDeps(data []byte, destination *map[string]JavaModule) error {
 		return err
 	}
 	for name, item := range raw {
-		module := JavaModule{Name: name, ModuleType: item.ModuleType, Dependencies: uniqueStrings(item.Deps), CompilerFlags: uniqueStrings(append(item.Javacflags, item.Kotlincflags...))}
+		direct := append([]string(nil), item.StaticLibs...)
+		if strings.Contains(item.ModuleType, "combiner") || strings.Contains(item.ModuleType, "genrule") {
+			direct = append(direct, item.Deps...)
+		}
+		module := JavaModule{Name: name, ModuleType: item.ModuleType,
+			Dependencies: uniqueStrings(item.Deps), DirectDependencies: uniqueStrings(direct),
+			CompilerFlags: uniqueStrings(append(item.Javacflags, item.Kotlincflags...))}
 		module.Paths = pathRefs(item.Paths)
 		module.Sources = pathRefs(item.Srcs)
 		module.Jars = pathRefs(item.Jars)

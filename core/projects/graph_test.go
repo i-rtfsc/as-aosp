@@ -70,3 +70,20 @@ func TestBuildReportsMissingArtifact(t *testing.T) {
 		t.Fatalf("missing artifact diagnostics=%+v", graph)
 	}
 }
+
+func TestBuildOwnsSourcesFromStaticComposition(t *testing.T) {
+	catalog := modules.Catalog{Modules: map[string]modules.Module{
+		"services": {Name: "services", DirectDependencies: []string{"services.impl"}},
+		"services.impl": {Name: "services.impl", Sources: []metadata.PathRef{
+			metadata.NewPathRef("frameworks/base/services/java/com/android/server/SystemServer.java"),
+		}},
+	}}
+	graph := Build(catalog, artifacts.Catalog{Artifacts: map[string]artifacts.Artifact{}}, []model.TargetSpec{{
+		ID: "services", Kind: model.TargetJava,
+		Selectors: model.TargetSelectors{Modules: []string{"services"}}, IncludeDependencies: true,
+	}})
+	if len(graph.Targets) != 1 || len(graph.Targets[0].OwnedSources) != 1 ||
+		graph.Targets[0].OwnedSources[0].Raw != "frameworks/base/services/java/com/android/server/SystemServer.java" {
+		t.Fatalf("graph=%+v", graph)
+	}
+}

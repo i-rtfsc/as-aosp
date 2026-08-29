@@ -46,18 +46,19 @@ func isAbsolute(value string) bool {
 }
 
 type JavaModule struct {
-	Name            string    `json:"name"`
-	ModuleType      string    `json:"module_type,omitempty"`
-	Paths           []PathRef `json:"paths,omitempty"`
-	Sources         []PathRef `json:"sources,omitempty"`
-	Generated       []PathRef `json:"generated,omitempty"`
-	Dependencies    []string  `json:"dependencies,omitempty"`
-	Jars            []PathRef `json:"jars,omitempty"`
-	SrcJars         []PathRef `json:"srcjars,omitempty"`
-	AidlIncludeDirs []PathRef `json:"aidlIncludeDirs,omitempty"`
-	AidlSources     []PathRef `json:"aidlSources,omitempty"`
-	ResourceDirs    []PathRef `json:"resourceDirs,omitempty"`
-	CompilerFlags   []string  `json:"compilerFlags,omitempty"`
+	Name               string    `json:"name"`
+	ModuleType         string    `json:"module_type,omitempty"`
+	Paths              []PathRef `json:"paths,omitempty"`
+	Sources            []PathRef `json:"sources,omitempty"`
+	Generated          []PathRef `json:"generated,omitempty"`
+	Dependencies       []string  `json:"dependencies,omitempty"`
+	DirectDependencies []string  `json:"directDependencies,omitempty"`
+	Jars               []PathRef `json:"jars,omitempty"`
+	SrcJars            []PathRef `json:"srcjars,omitempty"`
+	AidlIncludeDirs    []PathRef `json:"aidlIncludeDirs,omitempty"`
+	AidlSources        []PathRef `json:"aidlSources,omitempty"`
+	ResourceDirs       []PathRef `json:"resourceDirs,omitempty"`
+	CompilerFlags      []string  `json:"compilerFlags,omitempty"`
 }
 
 type CCModule struct {

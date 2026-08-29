@@ -70,27 +70,19 @@ func Build(catalog modules.Catalog, artifactCatalog artifacts.Catalog, targets [
 				}
 			}
 		}
-		if spec.IncludeDependencies {
-			explicit := unique(moduleNames)
-			moduleNames = catalog.Closure(moduleNames)
-			for _, name := range explicit {
-				if module, ok := catalog.Modules[name]; ok {
-					project.OwnedSourceRoots = append(project.OwnedSourceRoots, module.SourceRoots...)
-					project.OwnedSources = append(project.OwnedSources, module.Sources...)
-					project.OwnedGeneratedRoots = append(project.OwnedGeneratedRoots, module.Generated...)
-					project.OwnedGeneratedRoots = append(project.OwnedGeneratedRoots, module.SrcJars...)
-				}
+		ownedModuleNames := catalog.OwnershipClosure(moduleNames)
+		for _, name := range ownedModuleNames {
+			if module, ok := catalog.Modules[name]; ok {
+				project.OwnedSourceRoots = append(project.OwnedSourceRoots, module.SourceRoots...)
+				project.OwnedSources = append(project.OwnedSources, module.Sources...)
+				project.OwnedGeneratedRoots = append(project.OwnedGeneratedRoots, module.Generated...)
+				project.OwnedGeneratedRoots = append(project.OwnedGeneratedRoots, module.SrcJars...)
 			}
+		}
+		if spec.IncludeDependencies {
+			moduleNames = catalog.Closure(moduleNames)
 		} else {
 			moduleNames = unique(moduleNames)
-			for _, name := range moduleNames {
-				if module, ok := catalog.Modules[name]; ok {
-					project.OwnedSourceRoots = append(project.OwnedSourceRoots, module.SourceRoots...)
-					project.OwnedSources = append(project.OwnedSources, module.Sources...)
-					project.OwnedGeneratedRoots = append(project.OwnedGeneratedRoots, module.Generated...)
-					project.OwnedGeneratedRoots = append(project.OwnedGeneratedRoots, module.SrcJars...)
-				}
-			}
 		}
 		project.ResolvedModules = moduleNames
 		for _, name := range moduleNames {

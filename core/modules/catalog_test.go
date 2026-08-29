@@ -21,3 +21,17 @@ func TestClosureIncludesDependencies(t *testing.T) {
 		t.Fatalf("closure=%v", closure)
 	}
 }
+
+func TestOwnershipClosureOnlyFollowsStaticComposition(t *testing.T) {
+	catalog := Catalog{Modules: map[string]Module{
+		"services":      {Name: "services", Dependencies: []string{"framework"}, DirectDependencies: []string{"services.impl"}},
+		"services.impl": {Name: "services.impl", DirectDependencies: []string{"services.core"}},
+		"services.core": {Name: "services.core"},
+		"framework":     {Name: "framework"},
+	}}
+	closure := catalog.OwnershipClosure([]string{"services"})
+	if len(closure) != 3 || closure[0] != "services" || closure[1] != "services.core" ||
+		closure[2] != "services.impl" {
+		t.Fatalf("closure=%v", closure)
+	}
+}

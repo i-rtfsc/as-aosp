@@ -51,6 +51,9 @@ Generated source materialization 必须是 target-scoped：客户端先
 - Java source roots are derived from explicit `.java`/`.kt` source paths and package declarations.
   A broad module path such as `frameworks/base` is only a fallback when no explicit Java sources
   are available; it must not be preferred over `frameworks/base/core/java`.
+- Aggregator modules follow source-composition edges such as `static_libs` to find their owned
+  sources (`services -> services.impl`, `SystemUI -> SystemUI-application -> SystemUI-core`).
+  Ordinary classpath dependencies remain libraries and do not transfer source ownership.
 - AOSP workspace projection uses a dedicated `.aosp-ide/java/classes` output directory, disables
   JDT auto-build diagnostics, and requests a 6 GiB JDT heap unless the workspace already has an
   explicit VM setting. Navigation must not wait for full AOSP diagnostics publication.

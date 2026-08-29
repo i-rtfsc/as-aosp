@@ -7,18 +7,19 @@ import (
 )
 
 type Module struct {
-	Name            string             `json:"name"`
-	Origins         []string           `json:"origins"`
-	Types           []string           `json:"types,omitempty"`
-	Paths           []metadata.PathRef `json:"paths,omitempty"`
-	Sources         []metadata.PathRef `json:"sources,omitempty"`
-	SourceRoots     []metadata.PathRef `json:"sourceRoots,omitempty"`
-	Generated       []metadata.PathRef `json:"generated,omitempty"`
-	Jars            []metadata.PathRef `json:"jars,omitempty"`
-	SrcJars         []metadata.PathRef `json:"srcjars,omitempty"`
-	Dependencies    []string           `json:"dependencies,omitempty"`
-	AidlIncludeDirs []metadata.PathRef `json:"aidlIncludeDirs,omitempty"`
-	CompilerFlags   []string           `json:"compilerFlags,omitempty"`
+	Name               string             `json:"name"`
+	Origins            []string           `json:"origins"`
+	Types              []string           `json:"types,omitempty"`
+	Paths              []metadata.PathRef `json:"paths,omitempty"`
+	Sources            []metadata.PathRef `json:"sources,omitempty"`
+	SourceRoots        []metadata.PathRef `json:"sourceRoots,omitempty"`
+	Generated          []metadata.PathRef `json:"generated,omitempty"`
+	Jars               []metadata.PathRef `json:"jars,omitempty"`
+	SrcJars            []metadata.PathRef `json:"srcjars,omitempty"`
+	Dependencies       []string           `json:"dependencies,omitempty"`
+	DirectDependencies []string           `json:"directDependencies,omitempty"`
+	AidlIncludeDirs    []metadata.PathRef `json:"aidlIncludeDirs,omitempty"`
+	CompilerFlags      []string           `json:"compilerFlags,omitempty"`
 }
 
 type Catalog struct {
@@ -38,6 +39,7 @@ func Build(snapshot metadata.Snapshot) Catalog {
 		module.Jars = appendPathRefs(module.Jars, java.Jars...)
 		module.SrcJars = appendPathRefs(module.SrcJars, java.SrcJars...)
 		module.Dependencies = appendUnique(module.Dependencies, java.Dependencies...)
+		module.DirectDependencies = appendUnique(module.DirectDependencies, java.DirectDependencies...)
 		module.AidlIncludeDirs = appendPathRefs(module.AidlIncludeDirs, java.AidlIncludeDirs...)
 		module.CompilerFlags = appendUnique(module.CompilerFlags, java.CompilerFlags...)
 		catalog.Modules[name] = normalize(module)
@@ -92,10 +94,33 @@ func (catalog Catalog) Closure(names []string) []string {
 	return result
 }
 
+func (catalog Catalog) OwnershipClosure(names []string) []string {
+	seen := make(map[string]bool)
+	queue := append([]string(nil), names...)
+	for len(queue) > 0 {
+		name := queue[0]
+		queue = queue[1:]
+		if seen[name] {
+			continue
+		}
+		seen[name] = true
+		if module, ok := catalog.Modules[name]; ok {
+			queue = append(queue, module.DirectDependencies...)
+		}
+	}
+	result := make([]string, 0, len(seen))
+	for name := range seen {
+		result = append(result, name)
+	}
+	sort.Strings(result)
+	return result
+}
+
 func normalize(module Module) Module {
 	sort.Strings(module.Origins)
 	sort.Strings(module.Types)
 	sort.Strings(module.Dependencies)
+	sort.Strings(module.DirectDependencies)
 	sort.Strings(module.CompilerFlags)
 	sortPathRefs(module.Paths)
 	sortPathRefs(module.Sources)
