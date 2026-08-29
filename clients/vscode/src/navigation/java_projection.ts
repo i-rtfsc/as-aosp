@@ -62,7 +62,6 @@ export async function applyJavaProjection(
   const javaImport = vscode.workspace.getConfiguration("java.import");
   await javaImport.update("gradle.enabled", false, vscode.ConfigurationTarget.Workspace);
   await javaImport.update("maven.enabled", false, vscode.ConfigurationTarget.Workspace);
-  await config.update("importOnFirstTimeStartup", "disabled", vscode.ConfigurationTarget.Workspace);
   const gradle = vscode.workspace.getConfiguration("gradle");
   await gradle.update("autoDetect", "off", vscode.ConfigurationTarget.Workspace);
   await gradle.update("nestedProjects", false, vscode.ConfigurationTarget.Workspace);
