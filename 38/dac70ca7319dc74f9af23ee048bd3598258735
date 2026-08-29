@@ -1,0 +1,50 @@
+clients/vscode/package.nls.json
+  s_0fcc3f909ad4ee::t_4993d23867429e 18
+clients/vscode/src/dependencies.ts
+  s_0fcc3f909ad4ee::t_4993d23867429e 1-6,44-48,50-69
+  h_8b376749578497 7-43,49
+docs/design/ide-client-and-navigation-design.md
+  s_0fcc3f909ad4ee::t_4993d23867429e 22-26
+  h_8b376749578497 21
+clients/vscode/src/navigation/java_projection.ts
+  s_0fcc3f909ad4ee::t_9653490dba351f 81-90,102-107,109-111
+  s_0fcc3f909ad4ee::t_d82fd26478d1c7 96-101
+  s_0fcc3f909ad4ee::t_7ba46c3b3fd404 112-113
+  h_8b376749578497 5,33-37,47,65,91-95,108
+clients/vscode/package.json
+  s_0fcc3f909ad4ee::t_4993d23867429e 97-99
+  s_0fcc3f909ad4ee::t_fdbcf60f957733 96
+clients/vscode/src/navigation/java_projection_paths.ts
+  s_0fcc3f909ad4ee::t_d82fd26478d1c7 6-8
+  h_8b376749578497 5
+clients/vscode/src/navigation/java_projection.test.ts
+  s_0fcc3f909ad4ee::t_d82fd26478d1c7 3
+  s_0fcc3f909ad4ee::t_9653490dba351f 21
+  h_8b376749578497 18-20
+clients/vscode/src/extension.ts
+  s_0fcc3f909ad4ee::t_4993d23867429e 216,248-250
+  h_8b376749578497 16,214-215
+clients/vscode/package.nls.zh-cn.json
+  h_8b376749578497 18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "38dac70ca7319dc74f9af23ee048bd3598258735",
+  "prompts": {},
+  "humans": {
+    "h_8b376749578497": {
+      "author": "Solo <anqi.huang@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
