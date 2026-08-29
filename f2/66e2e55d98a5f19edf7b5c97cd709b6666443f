@@ -1,0 +1,28 @@
+clients/vscode/src/navigation/java_projection.ts
+  s_0fcc3f909ad4ee::t_4de870e1e866ef 35,41,62,69,71-79,112,116
+  h_8b376749578497 66-68
+docs/design/project-graph-and-ide-projection-design.md
+  s_0fcc3f909ad4ee::t_df3d3e3cf0a587 92-95
+  h_8b376749578497 48-50,73,81-82,85-89,91,97,99-103,105-107,128
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "f266e2e55d98a5f19edf7b5c97cd709b6666443f",
+  "prompts": {},
+  "humans": {
+    "h_8b376749578497": {
+      "author": "Solo <anqi.huang@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
