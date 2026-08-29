@@ -97,21 +97,29 @@ must not pollute the default code module list.
 
 The default module view contains product modules and modules with a meaningful
 navigation capability. It excludes `TESTS` and build-support modules by
-default. The UI provides an explicit advanced view for all source-discovered
+default, regardless of whether the Java, Android, Native, or Rust filter is
+selected. The UI provides an explicit advanced view for all source-discovered
 build modules, so source-first discovery is never lost.
 
 Recommended views:
 
 ```text
 Recommended
+All code modules
 Java
 Android
 Native
 Rust
 Generated / AIDL
-All code modules
 Advanced build modules
+  [ ] Include test modules
 ```
+
+`Include test modules` is an explicit Advanced setting and is disabled by
+default. Until enabled, modules classified as `TESTS`, `java_test`,
+`android_test`, `cc_test`, or equivalent test types are hidden from every
+default filter. Enabling it makes test modules available in Advanced and
+language-specific filters without changing the selected presets.
 
 Each result shows the source module name, module type, build role, capability,
 source/build evidence, output kind when known, and the Android.bp/Android.mk
@@ -153,6 +161,7 @@ absent or marked unavailable.
   code targets when present in source configuration.
 - `202604.board.ignore.map` and other `ETC`/`se_build_files` entries are not
   default modules but remain available in Advanced build modules.
-- `TESTS` modules are hidden from defaults and presets.
+- `TESTS` modules are hidden from defaults and presets, and require the
+  Advanced `Include test modules` switch before they are shown.
 - The same source module has one identity whether or not matching Out facts
   are available.

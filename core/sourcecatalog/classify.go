@@ -83,9 +83,9 @@ func outputKindsForType(value string) []string {
 	switch {
 	case strings.Contains(lower, "app"):
 		return []string{"apk"}
-	case strings.Contains(lower, "shared_library"):
+	case strings.Contains(lower, "shared_library") || strings.Contains(lower, "library_shared"):
 		return []string{"so"}
-	case strings.Contains(lower, "static_library"):
+	case strings.Contains(lower, "static_library") || strings.Contains(lower, "library_static"):
 		return []string{"a"}
 	case strings.Contains(lower, "binary") || strings.Contains(lower, "executable"):
 		return []string{"bin"}

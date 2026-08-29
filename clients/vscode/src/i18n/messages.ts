@@ -34,6 +34,7 @@ export function webviewMessages(): Record<string, string> {
     allCode: t("All code"),
     advancedBuild: t("Advanced build"),
     buildSupport: t("Build support"),
+    includeTests: t("Include test modules"),
     all: t("All"),
     java: "Java",
     android: "Android",

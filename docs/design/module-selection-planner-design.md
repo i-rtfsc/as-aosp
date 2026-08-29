@@ -35,6 +35,10 @@ dependency-only
 
 Preset、manual 和 dependency 可以同时指向同一个 module，最终只产生一个 canonical entry。
 
+所有 `TESTS` 模块（包括 `java_test`、`android_test`、`cc_test` 和等价类型）默认不进入
+推荐列表、语言筛选或 presets。只有用户在 Advanced module view 显式启用 `Include test
+modules` 后，测试模块才可见和可手动选择；该开关不改变默认 presets。
+
 ## 3. Module identity
 
 首选 key：
