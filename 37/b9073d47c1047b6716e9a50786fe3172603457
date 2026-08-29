@@ -1,0 +1,70 @@
+clients/vscode/src/ui/profile_panel.ts
+  s_0fcc3f909ad4ee::t_b00bc5040accc5 279-282,315
+  h_8b376749578497 271-278,284-285,295,304-305,406-407,414
+clients/vscode/src/navigation/java_projection_model.ts
+  s_0fcc3f909ad4ee::t_f9005c81fa1e2b 52-60,71-73
+  h_8b376749578497 61-70,74-79
+clients/vscode/src/navigation/java_projection_model.test.ts
+  s_0fcc3f909ad4ee::t_cf362fa331145e 3,67-69
+  s_5f30dac179bcb2::t_dc1215a1887e70 70
+  h_8b376749578497 58-66
+protocol/aosp/selection.go
+  s_0fcc3f909ad4ee::t_81376e585198cb 41,62-64
+  h_8b376749578497 54-59
+core/sourcecatalog/classify.go
+  s_0fcc3f909ad4ee::t_7fa821f48935e9 11-13,27-29,43-47
+  s_0fcc3f909ad4ee::t_0c7a1db94e86ed 48-49
+  h_8b376749578497 36-42
+clients/vscode/src/extension.ts
+  s_0fcc3f909ad4ee::t_a3f939efb032d5 93-95
+  h_8b376749578497 45,91-92,120-123
+core/sourcecatalog/discovery_test.go
+  s_0fcc3f909ad4ee::t_77e20d18754818 67-69,87-91
+  h_8b376749578497 84-86
+protocol/aosp/source_modules.go
+  s_0fcc3f909ad4ee::t_06089c9c447901 33-39,50,109-116
+  s_0fcc3f909ad4ee::t_a2aba5bbea8a90 69-75
+  h_8b376749578497 21-32,117-121,124
+clients/vscode/src/engine/client.ts
+  s_0fcc3f909ad4ee::t_b00bc5040accc5 138
+core/selection/planner.go
+  s_0fcc3f909ad4ee::t_16564d5ec376af 58-66
+  h_8b376749578497 76
+core/sourcecatalog/discovery.go
+  s_0fcc3f909ad4ee::t_81376e585198cb 14
+protocol/aosp/server_test.go
+  s_0fcc3f909ad4ee::t_fb16817337736a 239-248
+  h_8b376749578497 249-271
+clients/vscode/src/navigation/java_projection.ts
+  s_0fcc3f909ad4ee::t_a77af15c0e0b98 73
+  s_0fcc3f909ad4ee::t_f9005c81fa1e2b 6
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "37b9073d47c1047b6716e9a50786fe3172603457",
+  "prompts": {},
+  "humans": {
+    "h_8b376749578497": {
+      "author": "Solo <anqi.huang@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "gpt-5.5"
+      },
+      "human_author": null
+    },
+    "s_5f30dac179bcb2": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "019ffe38-b3cd-77e3-8987-f48bc62a086c",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
