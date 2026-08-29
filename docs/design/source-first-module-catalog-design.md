@@ -33,6 +33,12 @@ Unified catalog
 
 ## 2. Source Module Parsing
 
+Built-in development profiles provide common AOSP module relationships and
+fallback source paths. They are knowledge compiled from representative AOSP
+build metadata, not a runtime copy of `module_bp_java_deps.json` or
+`module_bp_cc_deps.json`. The complete profile list and storage rules are in
+`builtin-profile-catalog-and-storage-design.md`.
+
 The parser reads module name, module type, build file path, namespace/package,
 source roots, source files, declared dependencies, generated inputs, AIDL
 properties, native include hints, Android resources, and manifests. It does
