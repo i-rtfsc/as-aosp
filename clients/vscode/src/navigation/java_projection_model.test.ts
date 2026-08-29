@@ -33,3 +33,14 @@ test("collects srcjar archives from available libraries", () => {
   assert.deepEqual(input.archiveRefs, ["out/a.srcjar"]);
   assert.equal(input.diagnostics, 2);
 });
+
+test("excludes native targets from Java projection", () => {
+  const input = normalizeProjectionInput({
+    graph: { targets: [
+      { spec: { kind: "native" }, sourceRoots: [{ raw: "system/core", kind: "repo-relative" }] },
+      { spec: { kind: "java" }, sourceRoots: [{ raw: "frameworks/base", kind: "repo-relative" }] },
+    ] },
+  });
+  assert.deepEqual(input.targets.map((target) => target.kind), ["java"]);
+  assert.deepEqual(input.targets[0].sourceRoots, [{ raw: "frameworks/base", kind: "repo-relative" }]);
+});
