@@ -1,0 +1,31 @@
+docs/design/builtin-profile-catalog-and-storage-design.md
+  s_0fcc3f909ad4ee::t_93acea066c5033 360-367,386-395,407-421
+  h_8b376749578497 354-359,368-385,396-406,434-435
+docs/design/source-first-module-catalog-design.md
+  s_0fcc3f909ad4ee::t_93acea066c5033 38-40
+  h_8b376749578497 37
+docs/design/index-engine-design.md
+  s_0fcc3f909ad4ee::t_93acea066c5033 10
+  h_8b376749578497 9
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "3c2c193a5f5a146cebc6baea5a992824f7c97e2b",
+  "prompts": {},
+  "humans": {
+    "h_8b376749578497": {
+      "author": "Solo <anqi.huang@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_0fcc3f909ad4ee": {
+      "agent_id": {
+        "tool": "copilot",
+        "id": "01a02c4b-ef85-7322-bd97-b25abef30ced",
+        "model": "auto"
+      },
+      "human_author": "Solo <anqi.huang@outlook.com>"
+    }
+  }
+}
