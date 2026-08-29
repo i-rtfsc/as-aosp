@@ -112,6 +112,9 @@ export interface SourceModuleResult {
     status: string;
     capabilities?: string[];
     recommended: boolean;
+    buildRole: string;
+    outputKinds?: string[];
+    defaultVisible: boolean;
   }>;
   diagnostics: unknown[] | null;
   filesScanned: number;

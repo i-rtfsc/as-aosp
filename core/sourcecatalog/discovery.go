@@ -11,7 +11,7 @@ import (
 	"github.com/i-rtfsc/as-aosp/core/model"
 )
 
-const cacheSchema = 4
+const cacheSchema = 5
 
 type cacheEnvelope struct {
 	Schema       int               `json:"schema"`
@@ -73,6 +73,7 @@ func Discover(root, cacheRoot string) Report {
 		return modules[i].Blueprint < modules[j].Blueprint
 	})
 	for i := range modules {
+		modules[i] = classifySourceModule(modules[i])
 		modules[i].Recommended = isRecommended(modules[i])
 	}
 	report.Catalog = Catalog{Modules: modules, Fingerprints: fingerprints}

@@ -26,7 +26,8 @@ func TestMergeBuildFactsUpgradesSourceModule(t *testing.T) {
 	merged := MergeBuildFacts(source, build)
 	if merged[0].Status != StatusBuildBacked ||
 		!contains(merged[0].Capabilities, "generated") ||
-		!contains(merged[0].Capabilities, "artifact") {
+		!contains(merged[0].Capabilities, "artifact") ||
+		merged[0].BuildRole != RoleLibrary || !contains(merged[0].OutputKinds, "jar") {
 		t.Fatalf("merged=%+v", merged[0])
 	}
 }

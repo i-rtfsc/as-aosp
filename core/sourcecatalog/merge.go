@@ -31,8 +31,33 @@ func MergeBuildFacts(source []Module, build modules.Catalog) []Module {
 		)
 		result[index].Recommended = result[index].Recommended ||
 			isBuildRecommended(result[index], facts)
+		result[index] = classifyBuildModule(result[index], facts)
+	}
+	seen := make(map[string]bool, len(result))
+	for _, module := range result {
+		seen[module.Name] = true
+	}
+	for name, facts := range build.Modules {
+		if seen[name] {
+			continue
+		}
+		module := classifyBuildModule(Module{
+			Name: name, Type: first(facts.Types), Status: StatusBuildOnly,
+			Capabilities: mergedCapabilities(nil, facts),
+		}, facts)
+		module.Recommended = isRecommended(module)
+		module.SourceRoots = repoPaths(facts.SourceRoots)
+		module.Sources = repoPaths(facts.Sources)
+		result = append(result, module)
 	}
 	return result
+}
+
+func first(values []string) string {
+	if len(values) == 0 {
+		return ""
+	}
+	return values[0]
 }
 
 func mergedCapabilities(values []string, facts modules.Module) []string {

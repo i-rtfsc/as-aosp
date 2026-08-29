@@ -24,6 +24,12 @@ android_app { name: "SystemUI", srcs: ["src/**/*.java"], }`
 	if !report.Catalog.Modules[0].Recommended || report.Catalog.Modules[0].Name != "SystemUI" && report.Catalog.Modules[1].Name != "SystemUI" {
 		t.Fatalf("modules=%+v", report.Catalog.Modules)
 	}
+	for _, module := range report.Catalog.Modules {
+		if module.Name == "SystemUI" && (module.BuildRole != RoleProduct || !module.DefaultVisible ||
+			!contains(module.OutputKinds, "apk")) {
+			t.Fatalf("SystemUI classification=%+v", module)
+		}
+	}
 	second := Discover(root, filepath.Join(root, ".cache"))
 	if !second.CacheHit || len(second.Catalog.Modules) != 2 {
 		t.Fatalf("second=%+v", second)
