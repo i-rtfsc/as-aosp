@@ -49,6 +49,9 @@ Generated source materialization 必须是 target-scoped：客户端先
 - VS Code Java projection disables the Maven and Gradle importers for the workspace. AOSP
   contains embedded Gradle projects that are not standalone builds; allowing JDT LS to import
   them can fail workspace initialization and disable Java navigation even for local symbols.
+- The VS Code Gradle extension is also configured with `gradle.autoDetect=off` and
+  `gradle.nestedProjects=false`; its independent Gradle server must not scan AOSP sample and
+  vendor projects. This does not disable AOSP builds from a terminal.
 - ProjectGraph targets become separate JDT project descriptions/importer inputs;
 - generated/source attachments are target-scoped;
 - clangd consumes target-scoped compdb overlays;
