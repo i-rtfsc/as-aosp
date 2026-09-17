@@ -2,12 +2,7 @@ name: Sync to Gitee
 
 on:
   push:
-    branches:
-      - '*'      # 监听所有分支的推送，包括新创建的分支
-  pull_request:
-    branches:
-      - '*'      # 监听所有 PR 的合并
-
+  workflow_dispatch:
 jobs:
   sync:
     runs-on: ubuntu-latest
